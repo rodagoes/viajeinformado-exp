@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
+from urllib.parse import quote
 
 from .models import (
     ContactoSucursalEstablecimiento,
@@ -311,23 +312,56 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
             })
             urls_agregadas.add(imagen.imagen.url)
 
-    # Dirección preparada para Google Maps.
-    # Se usa str() para evitar depender de campos como distrito.nombre.
-    direccion_mapa = ""
+    # Datos preparados para Google Maps.
+    # Importante: las coordenadas se formatean con punto decimal para evitar que
+    # Google Maps reciba valores localizados con coma, por ejemplo -9,9320000.
+    def coord_to_string(value):
+        if value is None:
+            return ""
+        return format(value, "f")
 
-    if sucursal_principal and sucursal_principal.direccion:
-        direccion_partes = [sucursal_principal.direccion]
+    def build_sucursal_mapa(sucursal):
+        direccion = sucursal.direccion or ""
+        referencia = sucursal.referencia or ""
+        horario = sucursal.horario_atencion or ""
+        distrito = str(sucursal.distrito) if sucursal.distrito else ""
+        localidad = str(sucursal.localidad) if sucursal.localidad else ""
+        latitud = coord_to_string(sucursal.latitud)
+        longitud = coord_to_string(sucursal.longitud)
 
-        if sucursal_principal.distrito:
-            direccion_partes.append(str(sucursal_principal.distrito))
+        direccion_partes = [direccion, distrito, localidad, "Huánuco", "Perú"]
+        direccion_mapa = ", ".join([parte for parte in direccion_partes if parte])
 
-        if sucursal_principal.localidad:
-            direccion_partes.append(str(sucursal_principal.localidad))
+        if latitud and longitud:
+            maps_query = f"{latitud},{longitud}"
+        else:
+            maps_query = direccion_mapa
 
-        direccion_partes.append("Huánuco")
-        direccion_partes.append("Perú")
+        maps_query_encoded = quote(maps_query)
 
-        direccion_mapa = ", ".join(direccion_partes)
+        return {
+            "id": sucursal.id,
+            "nombre": sucursal.nombre or "Local principal",
+            "label": "Local principal" if sucursal.es_principal else "Sucursal",
+            "tab_label": "Local principal" if sucursal.es_principal else sucursal.nombre,
+            "direccion": direccion,
+            "referencia": referencia,
+            "horario": horario,
+            "distrito": distrito,
+            "localidad": localidad,
+            "latitud": latitud,
+            "longitud": longitud,
+            "es_principal": sucursal.es_principal,
+            "maps_query": maps_query,
+            "maps_query_encoded": maps_query_encoded,
+            "open_url": f"https://www.google.com/maps/search/?api=1&query={maps_query_encoded}" if maps_query else "",
+            "route_url": f"https://www.google.com/maps/dir/?api=1&destination={maps_query_encoded}" if maps_query else "",
+            "embed_url": f"https://www.google.com/maps?q={maps_query_encoded}&z=17&hl=es&output=embed" if maps_query else "",
+        }
+
+    sucursales_mapa = [build_sucursal_mapa(sucursal) for sucursal in sucursales]
+    sucursal_mapa_principal = sucursales_mapa[0] if sucursales_mapa else None
+    direccion_mapa = sucursal_mapa_principal["maps_query"] if sucursal_mapa_principal else ""
 
     # Recomendaciones Top 3 para la sección "Sobre el establecimiento".
     recomendaciones = list(establecimiento.recomendaciones.all()[:3])
@@ -348,6 +382,8 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         # Datos preparados para el detalle
         "sucursales": sucursales,
         "sucursal_principal": sucursal_principal,
+        "sucursales_mapa": sucursales_mapa,
+        "sucursal_mapa_principal": sucursal_mapa_principal,
         "contacto_whatsapp": contacto_whatsapp,
         "contacto_telefono": contacto_telefono,
         "contacto_correo": contacto_correo,
@@ -364,4 +400,4 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
     }
 
     return render(request, "establecimientos/detalle_establecimiento.html", context)
-    
+

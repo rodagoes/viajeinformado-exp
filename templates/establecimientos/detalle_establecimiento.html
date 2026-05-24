@@ -683,108 +683,193 @@
                     </section>
                     {% endif %}
 
-                    {% if direccion_mapa %}
-                    <section class="detalle-bloque detalle-bloque-mapa" id="detalle-ubicacion">
-                        <div class="detalle-bloque-encabezado detalle-bloque-encabezado-flex">
+                    {% if sucursal_mapa_principal %}
+                    <section class="detalle-bloque du-card" id="detalle-ubicacion" data-detalle-ubicacion
+                        data-lat="{{ sucursal_mapa_principal.latitud }}" data-lng="{{ sucursal_mapa_principal.longitud }}"
+                        data-nombre="{{ sucursal_mapa_principal.nombre|default:'Local principal' }}"
+                        data-label="{{ sucursal_mapa_principal.label }}" data-direccion="{{ sucursal_mapa_principal.direccion|default:'' }}"
+                        data-referencia="{{ sucursal_mapa_principal.referencia|default:'' }}"
+                        data-horario="{{ sucursal_mapa_principal.horario|default:'' }}"
+                        data-open-url="{{ sucursal_mapa_principal.open_url }}" data-route-url="{{ sucursal_mapa_principal.route_url }}"
+                        data-embed-url="{{ sucursal_mapa_principal.embed_url }}"
+                        data-es-principal="{% if sucursal_mapa_principal.es_principal %}true{% else %}false{% endif %}">
+
+                        <!-- Encabezado -->
+                        <div class="du-hd">
                             <div>
-                                <span>Cómo llegar</span>
-                                <h2>Ubicación</h2>
-                            </div>
-
-                            <div class="detalle-mapa-acciones-superior">
-                                <a href="https://www.google.com/maps/search/?api=1&query={{ direccion_mapa|urlencode }}"
-                                    target="_blank" rel="noopener">
-                                    <i class="bi bi-map"></i>
-                                    Abrir mapa
-                                </a>
-
-                                <a href="https://www.google.com/maps/dir/?api=1&destination={{ direccion_mapa|urlencode }}"
-                                    target="_blank" rel="noopener">
-                                    <i class="bi bi-signpost-2"></i>
+                                <div class="du-kicker">
+                                    {% if sucursales_mapa|length > 1 %}
+                                    {{ sucursales_mapa|length }} sucursales en Huánuco
+                                    {% else %}
                                     Cómo llegar
-                                </a>
+                                    {% endif %}
+                                </div>
+
+                                <h2 class="du-title">
+                                    {% if sucursales_mapa|length > 1 %}
+                                    Ubicaciones
+                                    {% else %}
+                                    Ubicación
+                                    {% endif %}
+                                </h2>
                             </div>
+
+                            {% if sucursal_mapa_principal.es_principal %}
+                            <span class="du-pill-solid">Sucursal Principal</span>
+                            {% endif %}
                         </div>
 
-                        <div class="detalle-mapa">
-                            <iframe src="https://www.google.com/maps?q={{ direccion_mapa|urlencode }}&output=embed"
-                                loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen>
+                        <!-- Tabs de sucursales -->
+                        {% if sucursales_mapa|length > 1 %}
+                        <div class="du-branch-tabs" aria-label="Sucursales disponibles">
+                            {% for sucursal in sucursales_mapa %}
+                            <button type="button" class="du-branch-tab {% if forloop.first %}is-active{% endif %}"
+                                data-detalle-ubicacion-sucursal data-lat="{{ sucursal.latitud }}" data-lng="{{ sucursal.longitud }}"
+                                data-nombre="{{ sucursal.nombre|default:'Sucursal' }}" data-label="{{ sucursal.label }}"
+                                data-direccion="{{ sucursal.direccion|default:'' }}" data-referencia="{{ sucursal.referencia|default:'' }}"
+                                data-horario="{{ sucursal.horario|default:'' }}" data-open-url="{{ sucursal.open_url }}"
+                                data-route-url="{{ sucursal.route_url }}" data-embed-url="{{ sucursal.embed_url }}"
+                                data-es-principal="{% if sucursal.es_principal %}true{% else %}false{% endif %}"
+                                aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+
+                                <span>{{ sucursal.nombre|default:sucursal.label }}</span>
+
+                                {% if sucursal.es_principal %}
+                                <small class="du-tab-badge">Principal</small>
+                                {% endif %}
+                            </button>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Mapa -->
+                        <div class="du-map-wrap">
+                            <iframe src="{{ sucursal_mapa_principal.embed_url }}" loading="lazy" allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade" data-detalle-ubicacion-map
+                                title="Mapa de {{ establecimiento.nombre }}">
                             </iframe>
-                        </div>
-                    </section>
-                    {% endif %}
 
-                    {% if sucursales %}
-                    <section class="detalle-bloque">
-                        <div class="detalle-bloque-encabezado">
-                            <span>
-                                {% if sucursales|length > 1 %}
-                                Sucursales
-                                {% else %}
-                                Local principal
-                                {% endif %}
-                            </span>
+                            <!-- Overlay superior izquierdo -->
+                            <div class="du-map-overlay">
+                                <div class="du-map-overlay-marker">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </div>
 
-                            <h2>
-                                {% if sucursales|length > 1 %}
-                                Ubicaciones disponibles
-                                {% else %}
-                                Dirección principal
-                                {% endif %}
-                            </h2>
-                        </div>
-
-                        <div class="detalle-sucursales">
-                            {% for sucursal in sucursales %}
-                            <article class="detalle-sucursal">
-                                <div class="detalle-sucursal-header">
-                                    <div>
-                                        <h3>{{ sucursal.nombre }}</h3>
-
-                                        {% if sucursal.es_principal %}
-                                        <span>Local principal</span>
-                                        {% endif %}
+                                <div class="du-map-overlay-info">
+                                    <div class="du-map-overlay-ttl" data-detalle-ubicacion-badge>
+                                        {{ sucursal_mapa_principal.label }}
+                                    </div>
+                                    <div class="du-map-overlay-val" data-detalle-ubicacion-panel-direccion>
+                                        {{ sucursal_mapa_principal.direccion|default:"" }}
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="detalle-sucursal-datos">
+                        <!-- Acciones debajo del mapa -->
+                        <div class="du-route-actions" data-du-cta-default>
+                            <button type="button" class="du-action primary" data-du-show-dir>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                </svg>
+                                <span>Cómo llegar</span>
+                            </button>
 
-                                    {% if sucursal.direccion %}
-                                    <p>
-                                        <i class="bi bi-geo-alt"></i>
-                                        <span>{{ sucursal.direccion }}</span>
-                                    </p>
-                                    {% endif %}
+                            <a href="{{ sucursal_mapa_principal.open_url }}" target="_blank" rel="noopener" class="du-action"
+                                data-detalle-ubicacion-open>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                                </svg>
+                                <span>Abrir mapa</span>
+                            </a>
+                        </div>
 
-                                    {% if sucursal.referencia %}
-                                    <p>
-                                        <i class="bi bi-signpost"></i>
-                                        <span>{{ sucursal.referencia }}</span>
-                                    </p>
-                                    {% endif %}
+                        <!-- Panel desplegable de ruta, dentro del mismo card -->
+                        <div class="du-directions" data-du-directions hidden>
+                            <div class="du-directions-hd">
+                                <h5>Cómo llegar</h5>
+                                <button type="button" class="du-directions-close" data-du-hide-dir aria-label="Cerrar">×</button>
+                            </div>
 
-                                    {% if sucursal.distrito %}
-                                    <p>
-                                        <i class="bi bi-map"></i>
-                                        <span>
-                                            {{ sucursal.distrito }}
-                                            {% if sucursal.localidad %}
-                                            , {{ sucursal.localidad }}
-                                            {% endif %}
-                                        </span>
-                                    </p>
-                                    {% endif %}
+                            <div class="du-directions-label">Desde</div>
+                            <input class="du-direction-input" type="text" value="Mi ubicación actual" data-du-origin readonly>
 
-                                    {% if sucursal.horario_atencion %}
-                                    <p>
-                                        <i class="bi bi-clock"></i>
-                                        <span>{{ sucursal.horario_atencion }}</span>
-                                    </p>
-                                    {% endif %}
+                            <div class="du-directions-label">Hasta</div>
+                            <input class="du-direction-input" type="text" value="{{ sucursal_mapa_principal.direccion|default:'' }}"
+                                data-du-dest readonly>
 
-                                </div>
-                            </article>
-                            {% endfor %}
+                            <div class="du-direction-modes" aria-label="Modo de traslado">
+                                <button type="button" class="du-mode is-active" data-du-mode="walking">
+                                    <i class="bi bi-person-walking"></i>
+                                    <span>A pie</span>
+                                </button>
+
+                                <button type="button" class="du-mode" data-du-mode="driving">
+                                    <i class="bi bi-car-front"></i>
+                                    <span>En auto</span>
+                                </button>
+                            </div>
+
+                            <a href="{{ sucursal_mapa_principal.route_url }}&travelmode=walking" class="du-action primary du-action-full"
+                                target="_blank" rel="noopener" data-du-route-link data-detalle-ubicacion-route>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                                </svg>
+                                <span>Iniciar ruta en Google Maps</span>
+                            </a>
+                        </div>
+
+                        <!-- Datos de la sucursal seleccionada -->
+                        <div class="du-branch">
+                            <div class="du-branch-hd">
+                                <h3 class="du-branch-name" data-detalle-ubicacion-nombre>
+                                    {{ sucursal_mapa_principal.nombre|default:"Local principal" }}
+                                </h3>
+
+                                <span class="du-pill-solid" data-du-branch-pill {% if not sucursal_mapa_principal.es_principal %}hidden{% endif %}>
+                                    Sucursal Principal
+                                </span>
+                            </div>
+
+                            <div class="du-branch-row" data-detalle-ubicacion-row="direccion">
+                                <span class="du-branch-ico">
+                                    <i class="bi bi-geo-alt"></i>
+                                </span>
+                                <strong data-detalle-ubicacion-direccion>
+                                    {{ sucursal_mapa_principal.direccion|default:"Dirección no registrada" }}
+                                </strong>
+                            </div>
+
+                            <div class="du-branch-row" data-detalle-ubicacion-row="referencia">
+                                <span class="du-branch-ico">
+                                    <i class="bi bi-signpost-2"></i>
+                                </span>
+                                <span data-detalle-ubicacion-referencia>
+                                    {{ sucursal_mapa_principal.referencia|default:"" }}
+                                </span>
+                            </div>
+
+                            <div class="du-branch-row" data-detalle-ubicacion-row="horario">
+                                <span class="du-branch-ico">
+                                    <i class="bi bi-clock"></i>
+                                </span>
+                                <span data-detalle-ubicacion-horario>
+                                    {{ sucursal_mapa_principal.horario|default:"" }}
+                                </span>
+                            </div>
                         </div>
                     </section>
                     {% endif %}
@@ -986,5 +1071,6 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="{% static 'assets/js/swiper-detalle-est.js' %}"></script>
 <script src="{% static 'assets/js/detalle-galeria-est.js' %}"></script>
+<script src="{% static 'assets/js/detalle-ubicacion-est.js' %}"></script>
 
 {% endblock %}
