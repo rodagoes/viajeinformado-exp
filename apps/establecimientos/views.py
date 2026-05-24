@@ -7,6 +7,7 @@ from .models import (
     Establecimiento,
     CategoriaEstablecimiento,
     ImagenEstablecimiento,
+    RecomendacionEstablecimiento,
     ServicioEstablecimiento,
     SucursalEstablecimiento,
 )
@@ -246,6 +247,12 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
                     activo=True
                 ).order_by("orden", "id")
             ),
+            Prefetch(
+                "recomendaciones",
+                queryset=RecomendacionEstablecimiento.objects.filter(
+                    activo=True
+                ).order_by("orden", "id")
+            ),
             sucursales_prefetch
         ),
         slug=slug
@@ -322,6 +329,17 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
 
         direccion_mapa = ", ".join(direccion_partes)
 
+    # Recomendaciones Top 3 para la sección "Sobre el establecimiento".
+    recomendaciones = list(establecimiento.recomendaciones.all()[:3])
+
+    # Carta pública para restaurantes: PDF interno primero; URL externa como alternativa.
+    carta_publica_url = ""
+    if tipo_establecimiento == "restaurante":
+        if establecimiento.carta_pdf:
+            carta_publica_url = establecimiento.carta_pdf.url
+        elif establecimiento.carta_url:
+            carta_publica_url = establecimiento.carta_url
+
     context = {
         "establecimiento": establecimiento,
         "es_restaurante": tipo_establecimiento == "restaurante",
@@ -336,6 +354,8 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         "media_items": media_items,
         "media_items_count": len(media_items),
         "direccion_mapa": direccion_mapa,
+        "recomendaciones": recomendaciones,
+        "carta_publica_url": carta_publica_url,
 
         # URL de retorno
         "volver_url_name": "establecimientos:listado_restaurantes"
