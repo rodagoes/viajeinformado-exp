@@ -518,56 +518,168 @@
                     {% endif %}
 
                     {% if establecimiento.precio_desde or establecimiento.precio_hasta %}
-                    <section class="detalle-bloque" id="detalle-tarifas">
-                        <div class="detalle-bloque-encabezado">
-                            <span>
-                                {% if es_restaurante %}
-                                Rango de precios por plato
-                                {% else %}
-                                Rango de precios por noche
-                                {% endif %}
-                            </span>
+                    <section class="detalle-bloque detalle-tarifas-card" id="detalle-tarifas">
+                        <div class="detalle-tarifas-top">
+                            <div class="detalle-tarifas-heading">
+                                <span class="detalle-tarifas-eyebrow">
+                                    {% if es_restaurante %}
+                                    Rango de precios
+                                    {% else %}
+                                    Tarifas referenciales
+                                    {% endif %}
+                                </span>
 
-                            <h2>Tarifas</h2>
+                                <h2>
+                                    {% if es_restaurante %}
+                                    Precios de referencia
+                                    {% else %}
+                                    Tarifas de alojamiento
+                                    {% endif %}
+                                </h2>
+                            </div>
+
+                            <div class="detalle-tarifas-moneda" aria-label="Moneda principal: soles peruanos">
+                                <span class="detalle-tarifas-moneda-icon" aria-hidden="true">S/</span>
+                                <span>Moneda: PEN</span>
+                            </div>
                         </div>
 
-                        <div class="detalle-tarifas-grid">
+                        <div class="detalle-tarifas-main-grid">
+                            <article class="detalle-tarifas-pen-card">
+                                <div class="detalle-tarifas-card-head">
+                                    <div class="detalle-tarifas-pen-icon" aria-hidden="true">
+                                        {% if es_restaurante %}
+                                        <svg viewBox="0 0 48 48" role="img" focusable="false">
+                                            <path d="M15 5v17"></path>
+                                            <path d="M10 5v9c0 4.4 2.2 8 5 8s5-3.6 5-8V5"></path>
+                                            <path d="M15 22v21"></path>
+                                            <path d="M32 5c-4.2 4.7-6.3 10.2-6.3 16.4 0 3.2 2.2 5.6 5.3 5.6H33v16"></path>
+                                            <path d="M33 5v38"></path>
+                                        </svg>
+                                        {% else %}
+                                        <svg viewBox="0 0 48 48" role="img" focusable="false">
+                                            <path d="M7 23h34"></path>
+                                            <path d="M9 23V14a4 4 0 0 1 4-4h22a4 4 0 0 1 4 4v9"></path>
+                                            <path d="M7 23v16"></path>
+                                            <path d="M41 23v16"></path>
+                                            <path d="M7 33h34"></path>
+                                            <path d="M14 20v-3a3 3 0 0 1 3-3h5a3 3 0 0 1 3 3v3"></path>
+                                            <path d="M25 20v-3a3 3 0 0 1 3-3h5a3 3 0 0 1 3 3v3"></path>
+                                        </svg>
+                                        {% endif %}
+                                    </div>
 
-                            {% if establecimiento.precio_desde %}
-                            <div class="detalle-tarifa-card">
-                                <small>
-                                    {% if es_restaurante %}
-                                    Plato individual desde
-                                    {% else %}
-                                    Habitación estándar
+                                    <span class="detalle-tarifas-card-label">
+                                        {% if es_restaurante %}
+                                        Consumo aproximado por plato
+                                        {% else %}
+                                        Rango aproximado por noche
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="detalle-tarifas-price-row">
+                                    {% if establecimiento.precio_desde and establecimiento.precio_hasta %}
+                                    <div class="detalle-tarifas-price-item">
+                                        <strong>S/. {{ establecimiento.precio_desde|floatformat:0 }}</strong>
+                                        <small>
+                                            {% if es_restaurante %}
+                                            Precio desde
+                                            {% else %}
+                                            Tarifa desde
+                                            {% endif %}
+                                        </small>
+                                    </div>
+
+                                    <span class="detalle-tarifas-price-separator" aria-hidden="true"></span>
+
+                                    <div class="detalle-tarifas-price-item">
+                                        <strong>S/. {{ establecimiento.precio_hasta|floatformat:0 }}</strong>
+                                        <small>
+                                            {% if es_restaurante %}
+                                            Precio hasta
+                                            {% else %}
+                                            Tarifa hasta
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    {% elif establecimiento.precio_desde %}
+                                    <div class="detalle-tarifas-price-item detalle-tarifas-price-item--single">
+                                        <strong>S/. {{ establecimiento.precio_desde|floatformat:0 }}</strong>
+                                        <small>
+                                            {% if es_restaurante %}
+                                            Precio desde
+                                            {% else %}
+                                            Tarifa desde
+                                            {% endif %}
+                                        </small>
+                                    </div>
+                                    {% elif establecimiento.precio_hasta %}
+                                    <div class="detalle-tarifas-price-item detalle-tarifas-price-item--single">
+                                        <strong>S/. {{ establecimiento.precio_hasta|floatformat:0 }}</strong>
+                                        <small>
+                                            {% if es_restaurante %}
+                                            Precio hasta
+                                            {% else %}
+                                            Tarifa hasta
+                                            {% endif %}
+                                        </small>
+                                    </div>
                                     {% endif %}
-                                </small>
+                                </div>
 
-                                <strong>S/. {{ establecimiento.precio_desde|floatformat:0 }}</strong>
-
-                                <span>Precio referencial en soles. Conversión a dólares próximamente con tipo de cambio
-                                    actualizado.</span>
-                            </div>
-                            {% endif %}
-
-                            {% if establecimiento.precio_hasta %}
-                            <div class="detalle-tarifa-card detalle-tarifa-card--destacada">
-                                <small>
+                                <p>
                                     {% if es_restaurante %}
-                                    Plato premium hasta
+                                    Precios referenciales en soles peruanos (PEN)
                                     {% else %}
-                                    Suite / opción premium
+                                    Tarifas referenciales en soles peruanos (PEN)
                                     {% endif %}
-                                </small>
+                                </p>
+                            </article>
 
-                                <strong>S/. {{ establecimiento.precio_hasta|floatformat:0 }}</strong>
+                            <article class="detalle-tarifas-usd-card detalle-tarifas-usd-card--pendiente">
+                                <div class="detalle-tarifas-usd-icon" aria-hidden="true">$</div>
 
-                                <span>Precio referencial en soles. Conversión a dólares próximamente con tipo de cambio
-                                    actualizado.</span>
-                            </div>
-                            {% endif %}
+                                <div class="detalle-tarifas-usd-body">
+                                    <span class="detalle-tarifas-card-label">Conversión referencial a USD</span>
 
+                                    <strong>Próximamente</strong>
+
+                                    <p>
+                                        Aquí se mostrará la conversión referencial en dólares cuando se conecte la API de tipo de cambio actualizado.
+                                    </p>
+
+                                    <div class="detalle-tarifas-api-pill">
+                                        <i class="bi bi-clock-history"></i>
+                                        <span>Pendiente de API</span>
+                                    </div>
+                                </div>
+                            </article>
                         </div>
+
+                        <article class="detalle-tarifas-info-card">
+                            <div class="detalle-tarifas-info-icon" aria-hidden="true">
+                                <img src="{% static 'assets/img/icons/alert-tarifa-rango-de-precios-iconvi.svg' %}" alt="">
+                            </div>
+
+                            <div>
+                                <strong>
+                                    {% if es_restaurante %}
+                                    Precios referenciales
+                                    {% else %}
+                                    Tarifas referenciales
+                                    {% endif %}
+                                </strong>
+
+                                <p>
+                                    {% if es_restaurante %}
+                                    Los precios pueden variar según temporada, disponibilidad, presentación del plato y promociones del establecimiento.
+                                    {% else %}
+                                    Las tarifas pueden variar según temporada, disponibilidad, categoría de habitación y condiciones de reserva.
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </article>
                     </section>
                     {% endif %}
 

@@ -307,7 +307,7 @@
     contain: paint;
 }
 
-.detalle-marquee-track > span {
+.detalle-marquee-track>span {
     flex: 0 0 auto;
 }
 
@@ -331,13 +331,23 @@
 }
 
 @keyframes detalleDireccionMarquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(calc(-50% - 23px)); }
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(-50% - 23px));
+    }
 }
 
 @keyframes detalleDireccionMarqueeMobileStable {
-    from { margin-left: 0; }
-    to { margin-left: calc(-50% - 23px); }
+    from {
+        margin-left: 0;
+    }
+
+    to {
+        margin-left: calc(-50% - 23px);
+    }
 }
 
 /* =========================================================
@@ -565,8 +575,13 @@
     background-color: transparent;
 }
 
-.detalle-swiper-pagination { gap: 10px; }
-.detalle-mobile-pagination { gap: 7px; }
+.detalle-swiper-pagination {
+    gap: 10px;
+}
+
+.detalle-mobile-pagination {
+    gap: 7px;
+}
 
 .detalle-swiper-pagination .swiper-pagination-bullet,
 .detalle-mobile-pagination .swiper-pagination-bullet {
@@ -629,8 +644,13 @@
 }
 
 @keyframes detalleBulletProgress {
-    from { width: 0%; }
-    to { width: 100%; }
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
 }
 
 .detalle-swiper-arrows {
@@ -942,7 +962,7 @@
     margin-top: 18px;
 }
 
-.detalle-mobile-meta > div,
+.detalle-mobile-meta>div,
 .detalle-mobile-rating-preview,
 .detalle-mobile-direccion {
     display: flex;
@@ -1084,7 +1104,7 @@
     max-width: 720px;
     margin: 0;
     color: #07101e;
-    font-size: clamp(2.35rem, 3.25vw, 3.35rem);
+    font-size: clamp(2rem, 3vw, 2.55rem);
     font-weight: 800;
     line-height: 1.04;
     letter-spacing: -0.035em;
@@ -1332,9 +1352,17 @@
     overflow: visible;
 }
 
-.detalle-habitaciones-preview .detalle-habitacion-card:nth-child(1) { order: 2; }
-.detalle-habitaciones-preview .detalle-habitacion-card:nth-child(2) { order: 1; }
-.detalle-habitaciones-preview .detalle-habitacion-card:nth-child(3) { order: 3; }
+.detalle-habitaciones-preview .detalle-habitacion-card:nth-child(1) {
+    order: 2;
+}
+
+.detalle-habitaciones-preview .detalle-habitacion-card:nth-child(2) {
+    order: 1;
+}
+
+.detalle-habitaciones-preview .detalle-habitacion-card:nth-child(3) {
+    order: 3;
+}
 
 .detalle-habitacion-card,
 .detalle-habitacion-card--secundaria {
@@ -1409,7 +1437,7 @@
     max-height: 44px;
 }
 
-.detalle-habitacion-icono-wrap > i {
+.detalle-habitacion-icono-wrap>i {
     width: 100%;
     height: 100%;
     display: inline-flex;
@@ -1421,12 +1449,12 @@
     line-height: 1;
 }
 
-.detalle-habitacion-card--principal .detalle-habitacion-icono-wrap > i {
+.detalle-habitacion-card--principal .detalle-habitacion-icono-wrap>i {
     font-size: 1.7rem;
 }
 
 .detalle-habitacion-icono-img,
-.detalle-habitacion-icono-wrap > img {
+.detalle-habitacion-icono-wrap>img {
     display: block;
     width: 100%;
     height: 100%;
@@ -1603,63 +1631,630 @@
 }
 
 /* =========================================================
-   13. Tarifas
+   13. Tarifas / rango de precios - Diseño preparado para futura conversión USD vía API
 ========================================================= */
 
-.detalle-tarifas-grid {
+.detalle-tarifas-card {
+    --tarifa-azul: #002d89;
+    --tarifa-azul-vivo: #0755d8;
+    --tarifa-texto: #07101e;
+    --tarifa-muted: #596a7f;
+    --tarifa-borde: rgba(0, 45, 137, 0.13);
+    --tarifa-fondo: #F8F8FF;
+    overflow: hidden;
+    padding: 48px 40px 44px;
+    background: var(--tarifa-fondo);
+}
+
+.detalle-tarifas-top {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 24px;
+    margin-bottom: 34px;
 }
 
-.detalle-tarifa-card {
-    padding: 24px;
-    border-radius: 20px;
-    background-color: rgba(0, 45, 137, 0.055);
-    border: 1px solid rgba(0, 45, 137, 0.10);
+.detalle-tarifas-heading {
+    min-width: 0;
 }
 
-.detalle-tarifa-card--destacada {
-    background: var(--est-acento-gradiente);
-    color: #ffffff;
-}
-
-.detalle-tarifa-card small {
+.detalle-tarifas-eyebrow {
     display: block;
-    margin-bottom: 10px;
-    color: rgba(0, 45, 137, 0.70);
-    font-size: 0.8rem;
+    margin-bottom: 14px;
+    color: var(--tarifa-azul);
+    font-size: 0.76rem;
     font-weight: 900;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.22em;
+    line-height: 1.2;
     text-transform: uppercase;
 }
 
-.detalle-tarifa-card--destacada small {
-    color: rgba(255, 255, 255, 0.82);
-}
-
-.detalle-tarifa-card strong {
-    display: block;
-    color: var(--est-azul-oscuro);
-    font-size: 2.4rem;
-    font-weight: 800;
+.detalle-tarifas-heading h2 {
+    max-width: 720px;
+    margin: 0;
+    color: var(--tarifa-texto);
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2rem, 3vw, 2.55rem);
+    font-weight: 550;
     line-height: 1;
+    letter-spacing: -0.045em;
 }
 
-.detalle-tarifa-card--destacada strong {
+.detalle-tarifas-moneda {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    padding: 0 18px;
+    border: 1px solid rgba(0, 45, 137, 0.18);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--tarifa-azul);
+    box-shadow: 0 12px 28px rgba(0, 45, 137, 0.055);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.detalle-tarifas-moneda-icon {
+    width: 26px;
+    height: 26px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 999px;
+    background: rgba(0, 45, 137, 0.09);
+    color: var(--tarifa-azul);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: -0.06em;
+}
+
+.detalle-tarifas-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 28px;
+}
+
+.detalle-tarifas-pen-card,
+.detalle-tarifas-usd-card,
+.detalle-tarifas-info-card {
+    border: 1px solid var(--tarifa-borde);
+    border-radius: 24px;
+    box-shadow: 0 18px 42px rgba(0, 45, 137, 0.055);
+}
+
+.detalle-tarifas-pen-card {
+    min-height: 288px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 34px 34px 32px;
+    background: linear-gradient(135deg, var(--tarifa-azul) 0%, var(--tarifa-azul-vivo) 100%);
     color: #ffffff;
 }
 
-.detalle-tarifa-card span {
+.detalle-tarifas-card-head {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 24px;
+}
+
+.detalle-tarifas-pen-icon,
+.detalle-tarifas-usd-icon,
+.detalle-tarifas-info-icon {
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+}
+
+.detalle-tarifas-pen-icon {
+    width: 76px;
+    height: 76px;
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+}
+
+.detalle-tarifas-pen-icon svg {
+    width: 38px;
+    height: 38px;
     display: block;
-    margin-top: 8px;
-    color: var(--est-texto-secundario);
-    font-size: 0.92rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.detalle-tarifas-card-label {
+    display: block;
+    color: inherit;
+    font-size: 0.88rem;
+    font-weight: 900;
+    letter-spacing: 0.10em;
+    line-height: 1.28;
+    text-transform: uppercase;
+}
+
+.detalle-tarifas-price-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+}
+
+.detalle-tarifas-price-item {
+    min-width: 0;
+    text-align: center;
+}
+
+.detalle-tarifas-price-item--single {
+    grid-column: 1 / -1;
+    justify-self: start;
+    text-align: left;
+}
+
+.detalle-tarifas-price-item strong {
+    display: block;
+    color: inherit;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.35rem, 3.35vw, 3.25rem);
+    font-weight: 400;
+    line-height: 0.96;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+}
+
+.detalle-tarifas-price-item small {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--tarifa-azul);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.detalle-tarifas-price-separator {
+    width: clamp(28px, 3.4vw, 50px);
+    height: 2px;
+    align-self: start;
+    margin-top: clamp(1.52rem, 2.22vw, 2.12rem);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.detalle-tarifas-pen-card p {
+    margin: 24px 0 0;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.98rem;
+    font-weight: 700;
     line-height: 1.45;
 }
 
-.detalle-tarifa-card--destacada span {
-    color: rgba(255, 255, 255, 0.82);
+.detalle-tarifas-usd-card {
+    min-height: 288px;
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    align-items: center;
+    gap: 28px;
+    padding: 34px;
+    background: #ffffff;
+    color: var(--tarifa-azul);
+}
+
+.detalle-tarifas-usd-icon {
+    width: 76px;
+    height: 76px;
+    background: rgba(0, 45, 137, 0.08);
+    color: var(--tarifa-azul);
+    font-family: "Playfair Display", serif;
+    font-size: 2.7rem;
+    line-height: 1;
+}
+
+.detalle-tarifas-usd-body {
+    min-width: 0;
+}
+
+.detalle-tarifas-usd-body .detalle-tarifas-card-label {
+    margin-bottom: 16px;
+    color: var(--tarifa-azul);
+}
+
+.detalle-tarifas-usd-body strong {
+    display: block;
+    max-width: 100%;
+    margin: 0 0 14px;
+    overflow-wrap: anywhere;
+    color: var(--tarifa-azul);
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.8rem, 2.3vw, 2.28rem);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+}
+
+.detalle-tarifas-usd-body p {
+    margin: 0;
+    color: var(--tarifa-muted);
+    font-size: 0.94rem;
+    line-height: 1.58;
+}
+
+.detalle-tarifas-api-pill {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 45, 137, 0.14);
+    background: rgba(0, 45, 137, 0.055);
+    color: var(--tarifa-azul);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.detalle-tarifas-api-pill i {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.detalle-tarifas-info-card {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: center;
+    gap: 18px;
+    margin-top: 28px;
+    padding: 22px 28px;
+    background: #ffffff;
+}
+
+.detalle-tarifas-info-icon {
+    width: 58px;
+    height: 58px;
+    background: rgba(0, 45, 137, 0.08);
+    color: var(--tarifa-azul);
+    font-size: 1.45rem;
+}
+
+.detalle-tarifas-info-icon img {
+    width: 30px;
+    height: 30px;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+}
+
+.detalle-tarifas-info-card strong {
+    display: block;
+    margin: 0 0 6px;
+    color: var(--tarifa-azul);
+    font-size: 1.18rem;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.detalle-tarifas-info-card p {
+    margin: 0;
+    color: var(--tarifa-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Ajuste desktop: alinea la card USD con la card principal PEN */
+@media (min-width: 992px) {
+    .detalle-tarifas-usd-card {
+        align-items: start;
+        padding-top: 34px;
+        padding-bottom: 32px;
+    }
+
+    .detalle-tarifas-usd-icon {
+        margin-top: 0;
+    }
+
+    .detalle-tarifas-usd-body {
+        padding-top: 2px;
+    }
+
+    .detalle-tarifas-usd-body .detalle-tarifas-card-label {
+        margin-bottom: 14px;
+        line-height: 1.28;
+    }
+
+    .detalle-tarifas-usd-body strong {
+        font-size: clamp(1.55rem, 2vw, 2rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .detalle-tarifas-card {
+        padding: 36px 30px;
+    }
+
+    .detalle-tarifas-main-grid {
+        gap: 18px;
+    }
+
+    .detalle-tarifas-pen-card,
+    .detalle-tarifas-usd-card {
+        min-height: 250px;
+        padding: 28px;
+    }
+
+    .detalle-tarifas-card-head,
+    .detalle-tarifas-usd-card {
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: 18px;
+    }
+
+    .detalle-tarifas-pen-icon,
+    .detalle-tarifas-usd-icon {
+        width: 64px;
+        height: 64px;
+    }
+
+    .detalle-tarifas-pen-icon svg {
+        width: 31px;
+        height: 31px;
+    }
+
+    .detalle-tarifas-usd-icon {
+        font-size: 2.28rem;
+    }
+
+    .detalle-tarifas-price-item strong {
+        font-size: clamp(2rem, 4.6vw, 2.8rem);
+    }
+
+    .detalle-tarifas-price-item small {
+        padding: 0 12px;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .detalle-tarifas-card {
+        padding: 28px 18px;
+        border-radius: 22px;
+    }
+
+    .detalle-tarifas-top {
+        display: block;
+        margin-bottom: 26px;
+    }
+
+    .detalle-tarifas-eyebrow {
+        margin-bottom: 14px;
+        font-size: 0.74rem;
+        letter-spacing: 0.20em;
+    }
+
+    .detalle-tarifas-heading h2 {
+        max-width: 100%;
+        font-size: clamp(2.05rem, 9.4vw, 2.85rem);
+        line-height: 1;
+        letter-spacing: -0.045em;
+    }
+
+    .detalle-tarifas-moneda {
+        min-height: 42px;
+        margin-top: 22px;
+        padding: 0 16px;
+        font-size: 0.76rem;
+    }
+
+    .detalle-tarifas-main-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .detalle-tarifas-pen-card {
+        min-height: auto;
+        padding: 26px 24px;
+        border-radius: 22px;
+    }
+
+    .detalle-tarifas-card-head {
+        grid-template-columns: 70px minmax(0, 1fr);
+        gap: 18px;
+        margin-bottom: 26px;
+    }
+
+    .detalle-tarifas-pen-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .detalle-tarifas-pen-icon svg {
+        width: 34px;
+        height: 34px;
+    }
+
+    .detalle-tarifas-card-label {
+        font-size: 0.82rem;
+        letter-spacing: 0.13em;
+    }
+
+    .detalle-tarifas-price-row {
+        gap: 8px;
+    }
+
+    .detalle-tarifas-price-item strong {
+        font-size: clamp(2.38rem, 11vw, 3.2rem);
+        letter-spacing: -0.06em;
+    }
+
+    .detalle-tarifas-price-item small {
+        min-height: 29px;
+        margin-top: 10px;
+        padding: 0 13px;
+        font-size: 0.72rem;
+    }
+
+    .detalle-tarifas-price-separator {
+        width: 28px;
+        height: 2px;
+        margin-top: clamp(1.75rem, 8vw, 2.28rem);
+    }
+
+    .detalle-tarifas-pen-card p {
+        margin-top: 22px;
+        font-size: 0.96rem;
+        line-height: 1.45;
+    }
+
+    .detalle-tarifas-usd-card {
+        min-height: auto;
+        grid-template-columns: 70px minmax(0, 1fr);
+        align-items: start;
+        gap: 18px;
+        padding: 26px 24px;
+        border-radius: 22px;
+    }
+
+    .detalle-tarifas-usd-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2.55rem;
+    }
+
+    .detalle-tarifas-usd-body .detalle-tarifas-card-label {
+        margin-bottom: 10px;
+    }
+
+    .detalle-tarifas-usd-body strong {
+        margin-bottom: 14px;
+        font-family: inherit;
+        font-size: 1.72rem;
+        font-weight: 900;
+        letter-spacing: -0.025em;
+    }
+
+    .detalle-tarifas-usd-body p {
+        font-size: 0.92rem;
+        line-height: 1.56;
+    }
+
+    .detalle-tarifas-api-pill {
+        min-height: 32px;
+        margin-top: 16px;
+        padding: 0 12px;
+        font-size: 0.66rem;
+    }
+
+    .detalle-tarifas-info-card {
+        grid-template-columns: 58px minmax(0, 1fr);
+        align-items: start;
+        gap: 14px;
+        margin-top: 18px;
+        padding: 20px 18px;
+        border-radius: 22px;
+        text-align: left;
+    }
+
+    .detalle-tarifas-info-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 1.22rem;
+    }
+
+    .detalle-tarifas-info-card strong {
+        font-size: 1.04rem;
+    }
+
+    .detalle-tarifas-info-card p {
+        font-size: 0.86rem;
+        line-height: 1.45;
+    }
+}
+
+@media (max-width: 420px) {
+    .detalle-tarifas-card {
+        padding: 24px 14px;
+    }
+
+    .detalle-tarifas-heading h2 {
+        font-size: clamp(1.95rem, 8.8vw, 2.6rem);
+    }
+
+    .detalle-tarifas-pen-card,
+    .detalle-tarifas-usd-card {
+        padding: 22px 18px;
+    }
+
+    .detalle-tarifas-card-head,
+    .detalle-tarifas-usd-card {
+        grid-template-columns: 60px minmax(0, 1fr);
+        gap: 14px;
+    }
+
+    .detalle-tarifas-pen-icon,
+    .detalle-tarifas-usd-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .detalle-tarifas-pen-icon svg {
+        width: 29px;
+        height: 29px;
+    }
+
+    .detalle-tarifas-usd-icon {
+        font-size: 2.18rem;
+    }
+
+    .detalle-tarifas-price-item strong {
+        font-size: clamp(2rem, 9.8vw, 2.75rem);
+    }
+
+    .detalle-tarifas-price-item small {
+        min-height: 27px;
+        padding: 0 10px;
+        font-size: 0.66rem;
+    }
+
+    .detalle-tarifas-price-separator {
+        width: 22px;
+        margin-top: clamp(1.48rem, 7vw, 1.95rem);
+    }
+
+    .detalle-tarifas-pen-card p {
+        font-size: 0.88rem;
+    }
+
+    .detalle-tarifas-usd-body strong {
+        font-size: 1.46rem;
+    }
+
+    .detalle-tarifas-usd-body p {
+        font-size: 0.86rem;
+    }
 }
 
 /* =========================================================
@@ -1970,7 +2565,7 @@
     gap: 16px;
 }
 
-.detalle-comentarios-empty > i {
+.detalle-comentarios-empty>i {
     flex: 0 0 auto;
     width: 46px;
     height: 46px;
@@ -2031,7 +2626,7 @@
     pointer-events: none;
 }
 
-.detalle-gallery-header > div,
+.detalle-gallery-header>div,
 .detalle-gallery-close {
     pointer-events: auto;
 }
@@ -2121,8 +2716,13 @@
     -webkit-backdrop-filter: blur(14px);
 }
 
-.detalle-gallery-prev { left: -70px; }
-.detalle-gallery-next { right: -70px; }
+.detalle-gallery-prev {
+    left: -70px;
+}
+
+.detalle-gallery-next {
+    right: -70px;
+}
 
 .detalle-gallery-pagination {
     position: absolute;
@@ -2393,7 +2993,7 @@ body.detalle-gallery-locked {
         gap: 13px;
     }
 
-    .detalle-mobile-meta > div,
+    .detalle-mobile-meta>div,
     .detalle-mobile-rating-preview,
     .detalle-mobile-direccion {
         display: grid;
@@ -2407,18 +3007,18 @@ body.detalle-gallery-locked {
         flex-wrap: nowrap;
     }
 
-    .detalle-mobile-meta > div > i,
-    .detalle-mobile-rating-preview > i,
-    .detalle-mobile-direccion > i {
+    .detalle-mobile-meta>div>i,
+    .detalle-mobile-rating-preview>i,
+    .detalle-mobile-direccion>i {
         grid-column: 1;
         justify-self: start;
         align-self: center;
         margin: 0;
     }
 
-    .detalle-mobile-meta > div > span:not(.detalle-marquee),
-    .detalle-mobile-rating-preview > span,
-    .detalle-mobile-direccion > .detalle-marquee {
+    .detalle-mobile-meta>div>span:not(.detalle-marquee),
+    .detalle-mobile-rating-preview>span,
+    .detalle-mobile-direccion>.detalle-marquee {
         grid-column: 2;
         min-width: 0;
     }
@@ -2729,8 +3329,8 @@ body.detalle-gallery-locked {
         margin: 0 auto;
     }
 
-    .detalle-recomendaciones-alojamiento .detalle-habitacion-icono-wrap > i,
-    .detalle-recomendaciones-alojamiento .detalle-habitacion-card--principal .detalle-habitacion-icono-wrap > i {
+    .detalle-recomendaciones-alojamiento .detalle-habitacion-icono-wrap>i,
+    .detalle-recomendaciones-alojamiento .detalle-habitacion-card--principal .detalle-habitacion-icono-wrap>i {
         font-size: 1.12rem;
     }
 
@@ -2814,7 +3414,7 @@ body.detalle-gallery-locked {
         gap: 13px;
     }
 
-    .detalle-comentarios-empty > i {
+    .detalle-comentarios-empty>i {
         width: 42px;
         height: 42px;
         border-radius: 14px;
