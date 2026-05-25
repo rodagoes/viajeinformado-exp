@@ -1,9 +1,16 @@
-from django.shortcuts import render
+import re
+from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
+from urllib.parse import quote
+
 from .models import (
+    ContactoSucursalEstablecimiento,
     Establecimiento,
     CategoriaEstablecimiento,
+    ImagenEstablecimiento,
+    RecomendacionEstablecimiento,
+    ServicioEstablecimiento,
     SucursalEstablecimiento,
 )
 
@@ -112,49 +119,49 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
     # Opciones de orden preparadas para el template.
     # Así el select muestra correctamente la opción seleccionada.
     opciones_orden = [
-    {
-        "value": "",
-        "label": "Seleccione",
-        "selected": orden == "",
-    },
-    {
-        "value": "nombre_asc",
-        "label": "Nombre Ascendente",
-        "selected": orden == "nombre_asc",
-    },
-    {
-        "value": "nombre_desc",
-        "label": "Nombre Descendente",
-        "selected": orden == "nombre_desc",
-    },
-    {
-        "value": "precio_asc",
-        "label": "Menor a Mayor Precio",
-        "selected": orden == "precio_asc",
-    },
-    {
-        "value": "precio_desc",
-        "label": "Mayor a Menor Precio",
-        "selected": orden == "precio_desc",
-    },
+        {
+            "value": "",
+            "label": "Seleccione",
+            "selected": orden == "",
+        },
+        {
+            "value": "nombre_asc",
+            "label": "Nombre Ascendente",
+            "selected": orden == "nombre_asc",
+        },
+        {
+            "value": "nombre_desc",
+            "label": "Nombre Descendente",
+            "selected": orden == "nombre_desc",
+        },
+        {
+            "value": "precio_asc",
+            "label": "Menor a Mayor Precio",
+            "selected": orden == "precio_asc",
+        },
+        {
+            "value": "precio_desc",
+            "label": "Mayor a Menor Precio",
+            "selected": orden == "precio_desc",
+        },
     ]
 
     context = {
-    "page_obj": page_obj,
-    "titulo": titulo,
-    "subtitulo": subtitulo,
-    "tipo": tipo_establecimiento,
-    "q": q,
-    "categoria_sel": categoria_id,
-    "orden_sel": orden,
-    "categorias": categorias,
-    "categorias_opciones": categorias_opciones,
-    "opciones_orden": opciones_orden,
-    "total_resultados": paginator.count,
+        "page_obj": page_obj,
+        "titulo": titulo,
+        "subtitulo": subtitulo,
+        "tipo": tipo_establecimiento,
+        "q": q,
+        "categoria_sel": categoria_id,
+        "orden_sel": orden,
+        "categorias": categorias,
+        "categorias_opciones": categorias_opciones,
+        "opciones_orden": opciones_orden,
+        "total_resultados": paginator.count,
 
-    # Switcher de apartados
-    "es_restaurante": tipo_establecimiento == "restaurante",
-    "es_alojamiento": tipo_establecimiento == "alojamiento",
+        # Switcher de apartados
+        "es_restaurante": tipo_establecimiento == "restaurante",
+        "es_alojamiento": tipo_establecimiento == "alojamiento",
     }
 
     return context
@@ -178,3 +185,287 @@ def listado_alojamientos(request):
         "Encuentra el lugar perfecto para descansar y disfrutar de tu estadía."
     )
     return render(request, "establecimientos/listado_establecimientos.html", context)
+
+
+def detalle_establecimiento(request, tipo_establecimiento, slug):
+    """
+    Vista pública de detalle para restaurantes y alojamientos.
+
+    Prepara datos existentes para:
+    - Hero / carrusel visual.
+    - Contactos reales.
+    - Sucursal principal.
+    - Dirección para mapa.
+    - Diferenciación visual entre restaurante y alojamiento.
+    """
+
+    sucursales_prefetch = Prefetch(
+        "sucursales",
+        queryset=SucursalEstablecimiento.objects.filter(
+            activo=True
+        ).select_related(
+            "distrito",
+            "localidad"
+        ).prefetch_related(
+            Prefetch(
+                "contactos",
+                queryset=ContactoSucursalEstablecimiento.objects.filter(
+                    activo=True
+                ).order_by(
+                    "-es_principal",
+                    "orden",
+                    "id"
+                )
+            )
+        ).order_by(
+            "-es_principal",
+            "nombre",
+            "id"
+        )
+    )
+
+    establecimiento = get_object_or_404(
+        Establecimiento.objects.filter(
+            activo=True,
+            tipo=tipo_establecimiento
+        ).select_related(
+            "categoria_principal"
+        ).prefetch_related(
+            Prefetch(
+                "categorias_secundarias",
+                queryset=CategoriaEstablecimiento.objects.filter(
+                    activo=True
+                ).order_by("nombre")
+            ),
+            Prefetch(
+                "servicios",
+                queryset=ServicioEstablecimiento.objects.filter(
+                    activo=True
+                ).order_by("nombre")
+            ),
+            Prefetch(
+                "imagenes",
+                queryset=ImagenEstablecimiento.objects.filter(
+                    activo=True
+                ).order_by("orden", "id")
+            ),
+            Prefetch(
+                "recomendaciones",
+                queryset=RecomendacionEstablecimiento.objects.filter(
+                    activo=True
+                ).order_by("orden", "id")
+            ),
+            sucursales_prefetch
+        ),
+        slug=slug
+    )
+
+    # Sucursales ordenadas: principal primero.
+    sucursales = list(establecimiento.sucursales.all())
+    sucursal_principal = sucursales[0] if sucursales else None
+
+    # Contactos principales.
+    # Orden de prioridad:
+    # 1. Contacto guardado directamente en Establecimiento.
+    # 2. Contacto guardado en Sucursal.
+    # 3. Contacto adicional registrado en ContactoSucursalEstablecimiento.
+    contacto_whatsapp = establecimiento.whatsapp
+    contacto_telefono = establecimiento.telefono
+    contacto_correo = establecimiento.correo
+
+    for sucursal in sucursales:
+        if not contacto_whatsapp and sucursal.whatsapp:
+            contacto_whatsapp = sucursal.whatsapp
+
+        if not contacto_telefono and sucursal.telefono:
+            contacto_telefono = sucursal.telefono
+
+        if not contacto_correo and sucursal.correo:
+            contacto_correo = sucursal.correo
+
+        for contacto in sucursal.contactos.all():
+            if not contacto_whatsapp and contacto.tipo_contacto == "whatsapp":
+                contacto_whatsapp = contacto.valor
+
+            if not contacto_telefono and contacto.tipo_contacto in [
+                "telefono",
+                "celular",
+                "reservas",
+                "atencion_cliente",
+            ]:
+                contacto_telefono = contacto.valor
+
+            if not contacto_correo and contacto.tipo_contacto == "correo":
+                contacto_correo = contacto.valor
+
+    # Imágenes para el carrusel del detalle.
+    # Solo usamos las imágenes registradas en "Imágenes de establecimientos".
+    # La imagen principal del establecimiento queda reservada para el listado.
+    media_items = []
+    urls_agregadas = set()
+
+    for imagen in establecimiento.imagenes.all():
+        if imagen.imagen and imagen.imagen.url not in urls_agregadas:
+            media_items.append({
+                "url": imagen.imagen.url,
+                "alt": imagen.texto_alt or imagen.titulo or establecimiento.nombre,
+                "titulo": imagen.titulo,
+            })
+            urls_agregadas.add(imagen.imagen.url)
+
+    # Datos preparados para Google Maps.
+    # Importante: las coordenadas se formatean con punto decimal para evitar que
+    # Google Maps reciba valores localizados con coma, por ejemplo -9,9320000.
+    def coord_to_string(value):
+        if value is None:
+            return ""
+        return format(value, "f")
+
+    def build_sucursal_mapa(sucursal):
+        direccion  = sucursal.direccion or ""
+        referencia = sucursal.referencia or ""
+        horario    = sucursal.horario_atencion or ""
+        distrito   = str(sucursal.distrito) if sucursal.distrito else ""
+        localidad  = str(sucursal.localidad) if sucursal.localidad else ""
+        latitud    = coord_to_string(sucursal.latitud)
+        longitud   = coord_to_string(sucursal.longitud)
+        maps_url   = (sucursal.maps_url or "").strip()
+        embed_code = (sucursal.embed_maps or "").strip()
+
+        # Dirección textual de respaldo
+        direccion_partes = [direccion, distrito, localidad, "Huánuco", "Perú"]
+        direccion_mapa   = ", ".join([p for p in direccion_partes if p])
+
+        # ── Extraer el src del iframe embed ──────────────────────────────────
+        # Soporta el código iframe completo o solo la URL directamente.
+        embed_src = ""
+        if embed_code:
+            match = re.search(r'src=["\']([^"\']+)["\']', embed_code)
+            if match:
+                embed_src = match.group(1)
+            elif embed_code.startswith("https://"):
+                embed_src = embed_code  # pegaron solo la URL
+
+        # ── Prioridad para el embed visual del mapa ──────────────────────────
+        # 1. embed_maps  → muestra el pin con el nombre real del negocio (gratis, sin API key)
+        # 2. lat / lng   → establecimientos no indexados en Google Maps
+        # 3. dirección   → fallback final
+        if embed_src:
+            embed_url = embed_src
+        elif latitud and longitud:
+            embed_url = f"https://www.google.com/maps?q={quote(latitud + ',' + longitud)}&z=17&hl=es&output=embed"
+        elif direccion_mapa:
+            embed_url = f"https://www.google.com/maps?q={quote(direccion_mapa)}&z=17&hl=es&output=embed"
+        else:
+            embed_url = ""
+
+        # ── Prioridad para open_url (botón "Abrir mapa") ─────────────────────
+        # 1. maps_url    → abre la ficha exacta del negocio en Google Maps
+        # 2. lat / lng   → abre el mapa centrado en las coordenadas
+        # 3. dirección   → búsqueda textual
+        if maps_url:
+            open_url = maps_url
+        elif latitud and longitud:
+            q = quote(latitud + "," + longitud)
+            open_url = f"https://www.google.com/maps/search/?api=1&query={q}"
+        elif direccion_mapa:
+            open_url = f"https://www.google.com/maps/search/?api=1&query={quote(direccion_mapa)}"
+        else:
+            open_url = ""
+
+        # ── Prioridad para route_url (botón "Cómo llegar") ───────────────────
+        # &destination solo acepta texto, dirección o coordenadas, nunca una URL.
+        # Google Maps incrusta dos juegos de coordenadas en la URL de la ficha:
+        #   @lat,lng         → centro de la vista del mapa (puede estar desplazado)
+        #   !3d<lat>!4d<lng> → coordenadas exactas del pin del negocio (las correctas)
+        # Extraemos primero !3d/!4d; si no existen usamos @lat,lng como fallback.
+        coords_from_url = ""
+        if maps_url:
+            match_3d4d = re.search(r'!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)', maps_url)
+            if match_3d4d:
+                coords_from_url = f"{match_3d4d.group(1)},{match_3d4d.group(2)}"
+            else:
+                match_at = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', maps_url)
+                if match_at:
+                    coords_from_url = f"{match_at.group(1)},{match_at.group(2)}"
+
+        if coords_from_url:
+            route_url = f"https://www.google.com/maps/dir/?api=1&destination={quote(coords_from_url)}"
+        elif latitud and longitud:
+            q = quote(latitud + "," + longitud)
+            route_url = f"https://www.google.com/maps/dir/?api=1&destination={q}"
+        elif direccion_mapa:
+            route_url = f"https://www.google.com/maps/dir/?api=1&destination={quote(direccion_mapa)}"
+        else:
+            route_url = ""
+
+        # maps_query se mantiene para compatibilidad y para el overlay de dirección
+        if latitud and longitud:
+            maps_query = f"{latitud},{longitud}"
+        else:
+            maps_query = direccion_mapa
+
+        return {
+            "id":           sucursal.id,
+            "nombre":       sucursal.nombre or "Local principal",
+            "label":        "Local principal" if sucursal.es_principal else "Sucursal",
+            "tab_label":    "Local principal" if sucursal.es_principal else sucursal.nombre,
+            "direccion":    direccion,
+            "referencia":   referencia,
+            "horario":      horario,
+            "distrito":     distrito,
+            "localidad":    localidad,
+            "latitud":      latitud,
+            "longitud":     longitud,
+            "es_principal": sucursal.es_principal,
+            "maps_query":   maps_query,
+            "embed_url":    embed_url,
+            "open_url":     open_url,
+            "route_url":    route_url,
+        }
+
+    sucursales_mapa = [build_sucursal_mapa(sucursal) for sucursal in sucursales]
+    sucursal_mapa_principal = sucursales_mapa[0] if sucursales_mapa else None
+    direccion_mapa = sucursal_mapa_principal["maps_query"] if sucursal_mapa_principal else ""
+
+    # Recomendaciones Top 3 para la sección "Sobre el establecimiento".
+    recomendaciones = list(establecimiento.recomendaciones.all()[:3])
+
+    # Carta pública para restaurantes: PDF interno primero; URL externa como alternativa.
+    carta_publica_url = ""
+    if tipo_establecimiento == "restaurante":
+        if establecimiento.carta_pdf:
+            carta_publica_url = establecimiento.carta_pdf.url
+        elif establecimiento.carta_url:
+            carta_publica_url = establecimiento.carta_url
+
+    context = {
+        "establecimiento": establecimiento,
+        "es_restaurante": tipo_establecimiento == "restaurante",
+        "es_alojamiento": tipo_establecimiento == "alojamiento",
+
+        # Datos preparados para el detalle
+        "sucursales": sucursales,
+        "sucursal_principal": sucursal_principal,
+        "sucursales_mapa": sucursales_mapa,
+        "sucursal_mapa_principal": sucursal_mapa_principal,
+        "contacto_whatsapp": contacto_whatsapp,
+        "contacto_telefono": contacto_telefono,
+        "contacto_correo": contacto_correo,
+        "contacto_facebook": establecimiento.facebook or "",
+        "contacto_instagram": establecimiento.instagram or "",
+        "contacto_sitio_web": establecimiento.sitio_web or "",
+        "media_items": media_items,
+        "media_items_count": len(media_items),
+        "direccion_mapa": direccion_mapa,
+        "recomendaciones": recomendaciones,
+        "carta_publica_url": carta_publica_url,
+
+        # URL de retorno
+        "volver_url_name": "establecimientos:listado_restaurantes"
+        if tipo_establecimiento == "restaurante"
+        else "establecimientos:listado_alojamientos",
+    }
+
+    return render(request, "establecimientos/detalle_establecimiento.html", context)
+

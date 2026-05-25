@@ -107,6 +107,17 @@ class Establecimiento(models.Model):
     sitio_web = models.URLField(blank=True)
     facebook = models.URLField(blank=True)
     instagram = models.URLField(blank=True)
+    carta_pdf = models.FileField(
+        upload_to="establecimientos/cartas/",
+        blank=True,
+        verbose_name="Carta en PDF",
+        help_text="Opcional. Para restaurantes: sube la carta en formato PDF. Se abrirá en una nueva pestaña."
+    )
+    carta_url = models.URLField(
+        blank=True,
+        verbose_name="URL de carta externa",
+        help_text="Opcional. Úsalo si la carta está publicada en una URL externa."
+    )
     
     rango_precio = models.CharField(max_length=20, choices=RANGO_PRECIO_CHOICES, default="consultar")
     precio_desde = models.DecimalField(
@@ -146,6 +157,11 @@ class Establecimiento(models.Model):
                 "precio_hasta": "El precio hasta no puede ser menor que el precio desde."
             })
 
+        if self.carta_pdf and not self.carta_pdf.name.lower().endswith(".pdf"):
+            raise ValidationError({
+                "carta_pdf": "La carta debe ser un archivo PDF."
+            })
+
     def __str__(self):
         return self.nombre
 
@@ -164,6 +180,33 @@ class SucursalEstablecimiento(models.Model):
     horario_atencion = models.CharField(max_length=180, blank=True)
     latitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
     longitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+
+    # Google Maps: dos campos opcionales para máxima precisión.
+    # Úsalos cuando el establecimiento sí aparece en Google Maps.
+    # Con ambos campos, el pin muestra el nombre real del negocio
+    # y los botones "Abrir mapa" / "Cómo llegar" van a la ficha exacta.
+    embed_maps = models.TextField(
+        blank=True,
+        verbose_name="Código embed de Google Maps",
+        help_text=(
+            "Pega aquí el código &lt;iframe&gt; completo que te da Google Maps en "
+            "'Compartir → Insertar un mapa'. "
+            "Muestra el pin con el nombre real del establecimiento. "
+            "Déjalo vacío si el local no aparece en Google Maps."
+        )
+    )
+    maps_url = models.TextField(
+        blank=True,
+        verbose_name="URL de la ficha en Google Maps",
+        help_text=(
+            "Pega aquí la URL de la ficha del negocio en Google Maps "
+            "(la dirección que ves en el navegador al abrir el lugar). "
+            "Se usa para los botones 'Abrir mapa' y 'Cómo llegar' "
+            "apuntando exactamente a la ficha del establecimiento. "
+            "Déjalo vacío si el local no aparece en Google Maps."
+        )
+    )
+
     es_principal = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)
     creado = models.DateTimeField(auto_now_add=True)
@@ -203,6 +246,57 @@ class ImagenEstablecimiento(models.Model):
 
     def __str__(self):
         return self.titulo if self.titulo else f"Imagen de {self.establecimiento.nombre}"
+
+
+class RecomendacionEstablecimiento(models.Model):
+    establecimiento = models.ForeignKey(
+        Establecimiento,
+        related_name="recomendaciones",
+        on_delete=models.CASCADE
+    )
+    nombre = models.CharField(
+        max_length=140,
+        help_text="Ejemplo restaurante: Pachamanca. Ejemplo alojamiento: Habitación individual."
+    )
+    imagen = models.ImageField(
+        upload_to="establecimientos/recomendaciones/",
+        blank=True,
+        help_text="Opcional. En restaurantes puede usarse para la imagen del plato. En alojamientos no se mostrará en el detalle público."
+    )
+    icono_archivo = models.FileField(
+        upload_to="establecimientos/recomendaciones/iconos/",
+        blank=True,
+        verbose_name="Ícono para alojamiento",
+        help_text="Opcional. Para alojamientos: sube un ícono SVG, PNG, JPG o WebP para esta recomendación."
+    )
+    orden = models.PositiveSmallIntegerField(
+        default=1,
+        help_text="Orden de visualización. Usar 1, 2 o 3."
+    )
+    activo = models.BooleanField(default=True)
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Recomendación de establecimiento"
+        verbose_name_plural = "Recomendaciones de establecimientos"
+        ordering = ["establecimiento__nombre", "orden", "id"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["establecimiento", "orden"],
+                name="unique_recomendacion_orden_por_establecimiento"
+            )
+        ]
+
+    def clean(self):
+        super().clean()
+        if self.orden < 1 or self.orden > 3:
+            raise ValidationError({
+                "orden": "El orden debe estar entre 1 y 3."
+            })
+
+    def __str__(self):
+        return f"{self.establecimiento.nombre} - #{self.orden} {self.nombre}"
 
 
 class ContactoSucursalEstablecimiento(models.Model):

@@ -5,6 +5,7 @@ from .models import (
     Establecimiento, 
     SucursalEstablecimiento,
     ImagenEstablecimiento,
+    RecomendacionEstablecimiento,
     ContactoSucursalEstablecimiento
 )
 
@@ -69,6 +70,19 @@ class SucursalEstablecimientoInline(admin.StackedInline):
                 ("latitud", "longitud"),
             )
         }),
+        ("Google Maps (precisión exacta)", {
+            "description": (
+                "Rellena estos campos solo si el establecimiento aparece en Google Maps. "
+                "Permiten mostrar el pin con el nombre real del negocio y que los botones "
+                "'Abrir mapa' y 'Cómo llegar' apunten a la ficha exacta. "
+                "Si el local no aparece en Google Maps, déjalos vacíos y se usarán las coordenadas o la dirección."
+            ),
+            "fields": (
+                "embed_maps",
+                "maps_url",
+            ),
+            "classes": ("collapse",),
+        }),
         ("Contacto rápido", {
             "fields": (
                 ("telefono", "whatsapp"),
@@ -83,6 +97,15 @@ class ImagenEstablecimientoInline(admin.TabularInline):
     extra = 1
     fields = ("imagen", "titulo", "texto_alt", "orden", "activo")
 
+class RecomendacionEstablecimientoInline(admin.TabularInline):
+    model = RecomendacionEstablecimiento
+    extra = 1
+    max_num = 3
+    fields = ("orden", "nombre", "imagen", "icono_archivo", "activo")
+    ordering = ("orden", "id")
+    verbose_name = "Recomendación Top 3"
+    verbose_name_plural = "Recomendaciones Top 3"
+
 class ContactoSucursalEstablecimientoInline(admin.TabularInline):
     model = ContactoSucursalEstablecimiento
     extra = 1
@@ -91,40 +114,44 @@ class ContactoSucursalEstablecimientoInline(admin.TabularInline):
 @admin.register(Establecimiento)
 class EstablecimientoAdmin(admin.ModelAdmin):
     list_display = (
-        "nombre", "tipo", "categoria_principal", 
-        "total_sucursales", "sucursal_principal", 
-        "rango_precio", "rango_precios_soles", "destacado", "activo"
+        "nombre", "tipo", "categoria_principal",
+        "total_sucursales", "sucursal_principal",
+        "rango_precio", "rango_precios_soles", "total_recomendaciones", "destacado", "activo"
     )
     # list_editable = ("destacado", "activo")
     ordering = ("tipo", "nombre")
     search_fields = (
-        "nombre", "descripcion_corta", "descripcion", 
-        "categoria_principal__nombre", "categorias_secundarias__nombre", 
-        "servicios__nombre", "sucursales__nombre", 
-        "sucursales__direccion", "sucursales__distrito__nombre_oficial", 
+        "nombre", "descripcion_corta", "descripcion",
+        "categoria_principal__nombre", "categorias_secundarias__nombre",
+        "servicios__nombre", "recomendaciones__nombre", "sucursales__nombre",
+        "sucursales__direccion", "sucursales__distrito__nombre_oficial",
         "sucursales__localidad__nombre"
     )
     list_filter = (
-        "tipo", "categoria_principal", "categorias_secundarias", 
-        "servicios", "rango_precio", "destacado", "activo", 
-        "sucursales__distrito__provincia__departamento", 
+        "tipo", "categoria_principal", "categorias_secundarias",
+        "servicios", "rango_precio", "destacado", "activo",
+        "sucursales__distrito__provincia__departamento",
         "sucursales__distrito__provincia", "sucursales__distrito"
     )
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = ("categoria_principal",)
     filter_horizontal = ("categorias_secundarias", "servicios")
     readonly_fields = ("creado", "actualizado")
-    inlines = [SucursalEstablecimientoInline, ImagenEstablecimientoInline]
+    inlines = [SucursalEstablecimientoInline, ImagenEstablecimientoInline, RecomendacionEstablecimientoInline]
     
     fieldsets = (
         ("Información principal", {
             "fields": (
-                "tipo", "categoria_principal", "categorias_secundarias", 
+                "tipo", "categoria_principal", "categorias_secundarias",
                 "servicios", "nombre", "slug", "descripcion_corta", "descripcion"
             )
         }),
         ("Contacto general y redes", {
             "fields": ("telefono", "whatsapp", "correo", "sitio_web", "facebook", "instagram")
+        }),
+        ("Carta digital (solo restaurantes)", {
+            "fields": ("carta_pdf", "carta_url"),
+            "description": "Opcional. Si se carga un PDF o URL, el botón Ver carta se abrirá en una nueva pestaña."
         }),
         ("Precios", {
             "fields": ("rango_precio", "precio_desde", "precio_hasta")
@@ -140,6 +167,10 @@ class EstablecimientoAdmin(admin.ModelAdmin):
     def total_sucursales(self, obj):
         return obj.sucursales.count()
     total_sucursales.short_description = "Sucursales"
+
+    def total_recomendaciones(self, obj):
+        return obj.recomendaciones.count()
+    total_recomendaciones.short_description = "Recomendaciones"
 
     def sucursal_principal(self, obj):
         sucursal = obj.sucursales.filter(es_principal=True).first()
@@ -160,7 +191,7 @@ class EstablecimientoAdmin(admin.ModelAdmin):
 @admin.register(SucursalEstablecimiento)
 class SucursalEstablecimientoAdmin(admin.ModelAdmin):
     list_display = (
-        "establecimiento", "nombre", "distrito", 
+        "establecimiento", "nombre", "distrito",
         "localidad", "es_principal", "activo"
     )
     # list_editable = ("es_principal", "activo")
@@ -170,12 +201,12 @@ class SucursalEstablecimientoAdmin(admin.ModelAdmin):
         "nombre",
     )
     search_fields = (
-        "establecimiento__nombre", "nombre", "direccion", 
+        "establecimiento__nombre", "nombre", "direccion",
         "referencia", "distrito__nombre_oficial", "localidad__nombre"
     )
     list_filter = (
-        "activo", "es_principal", 
-        "distrito__provincia__departamento", 
+        "activo", "es_principal",
+        "distrito__provincia__departamento",
         "distrito__provincia", "distrito"
     )
     prepopulated_fields = {"slug": ("nombre",)}
@@ -189,6 +220,16 @@ class SucursalEstablecimientoAdmin(admin.ModelAdmin):
         }),
         ("Ubicación", {
             "fields": ("distrito", "localidad", "direccion", "referencia", "latitud", "longitud")
+        }),
+        ("Google Maps (precisión exacta)", {
+            "description": (
+                "Rellena estos campos solo si el establecimiento aparece en Google Maps. "
+                "Permiten mostrar el pin con el nombre real del negocio y que los botones "
+                "'Abrir mapa' y 'Cómo llegar' apunten a la ficha exacta. "
+                "Si el local no aparece en Google Maps, déjalos vacíos y se usarán las coordenadas o la dirección."
+            ),
+            "fields": ("embed_maps", "maps_url"),
+            "classes": ("collapse",),
         }),
         ("Contacto", {
             "fields": ("telefono", "whatsapp", "correo", "horario_atencion")
@@ -220,6 +261,37 @@ class ImagenEstablecimientoAdmin(admin.ModelAdmin):
         "establecimiento",
     )
     list_per_page = 25
+
+
+@admin.register(RecomendacionEstablecimiento)
+class RecomendacionEstablecimientoAdmin(admin.ModelAdmin):
+    list_display = ("establecimiento", "orden", "nombre", "tiene_imagen", "tiene_icono", "activo", "creado")
+    ordering = ("establecimiento__nombre", "orden", "id")
+    search_fields = ("establecimiento__nombre", "nombre")
+    list_filter = ("activo", "orden", "establecimiento__tipo")
+    autocomplete_fields = ("establecimiento",)
+    readonly_fields = ("creado", "actualizado")
+    list_per_page = 25
+
+    fieldsets = (
+        ("Establecimiento", {
+            "fields": ("establecimiento",)
+        }),
+        ("Recomendación", {
+            "fields": ("orden", "nombre", "imagen", "icono_archivo")
+        }),
+        ("Configuración", {
+            "fields": ("activo", "creado", "actualizado")
+        }),
+    )
+
+    def tiene_imagen(self, obj):
+        return "Sí" if obj.imagen else "No"
+    tiene_imagen.short_description = "Imagen"
+
+    def tiene_icono(self, obj):
+        return "Sí" if obj.icono_archivo else "No"
+    tiene_icono.short_description = "Ícono alojamiento"
 
 @admin.register(ContactoSucursalEstablecimiento)
 class ContactoSucursalEstablecimientoAdmin(admin.ModelAdmin):

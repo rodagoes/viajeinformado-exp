@@ -194,9 +194,15 @@
                             </div>
 
                             <div class="est-accion">
-                                <a href="#" class="btn btn-contorno-dorado text-uppercase">
-                                    Ver Más &rarr;
-                                </a>
+                                {% if est.tipo == 'restaurante' %}
+                                    <a href="{% url 'establecimientos:detalle_restaurante' est.slug %}" class="btn btn-contorno-dorado text-uppercase">
+                                        Ver Más &rarr;
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'establecimientos:detalle_alojamiento' est.slug %}" class="btn btn-contorno-dorado text-uppercase">
+                                        Ver Más &rarr;
+                                    </a>
+                                {% endif %}
                             </div>
 
                         </article>

@@ -39,3 +39,6 @@ node_modules/
 
 # Archivos locales de importación
 data/
+
+# Backups locales
+backups_detalle/
