@@ -152,43 +152,45 @@
 
             </div>
 
-            <!-- Barra flotante escritorio -->
-            <div class="detalle-hero-barra">
+        </div>
+    </section>
 
-                <div class="detalle-hero-acciones">
+    <!-- Barra flotante escritorio — fuera del hero para quedar exactamente a caballo -->
+    <div class="detalle-hero-barra-wrap">
+        <div class="detalle-hero-barra">
 
-                    <button type="button" class="detalle-accion-icono" aria-label="Agregar a favoritos">
-                        <i class="bi bi-heart"></i>
-                    </button>
+            <div class="detalle-hero-acciones">
 
-                    <button type="button" class="detalle-accion-boton">
-                        <i class="bi bi-calendar2-check"></i>
-                        <span>
-                            {% if es_restaurante %}
-                            Ver disponibilidad
-                            {% else %}
-                            Consultar disponibilidad
-                            {% endif %}
-                        </span>
-                    </button>
+                <button type="button" class="detalle-accion-icono" aria-label="Agregar a favoritos">
+                    <i class="bi bi-heart"></i>
+                </button>
 
-                    <button type="button" class="detalle-accion-boton">
-                        <i class="bi bi-share"></i>
-                        <span>Compartir</span>
-                    </button>
+                <button type="button" class="detalle-accion-boton">
+                    <i class="bi bi-calendar2-check"></i>
+                    <span>
+                        {% if es_restaurante %}
+                        Ver disponibilidad
+                        {% else %}
+                        Consultar disponibilidad
+                        {% endif %}
+                    </span>
+                </button>
 
-                </div>
-
-                <div class="detalle-hero-tags">
-                    {% if establecimiento.categoria_principal %}
-                    <span>{{ establecimiento.categoria_principal.nombre }}</span>
-                    {% endif %}
-                </div>
+                <button type="button" class="detalle-accion-boton">
+                    <i class="bi bi-share"></i>
+                    <span>Compartir</span>
+                </button>
 
             </div>
 
+            <div class="detalle-hero-tags">
+                {% if establecimiento.categoria_principal %}
+                <span>{{ establecimiento.categoria_principal.nombre }}</span>
+                {% endif %}
+            </div>
+
         </div>
-    </section>
+    </div>
 
     <!-- HERO TABLET / MÓVIL -->
     <section class="detalle-mobile-hero">
@@ -317,7 +319,13 @@
                     </button>
                     {% endif %}
 
-                    {% if direccion_mapa %}
+                    {% if sucursal_mapa_principal.route_url %}
+                    <a href="{{ sucursal_mapa_principal.route_url }}"
+                        target="_blank" rel="noopener">
+                        <i class="bi bi-send"></i>
+                        <span>Cómo llegar</span>
+                    </a>
+                    {% elif direccion_mapa %}
                     <a href="https://www.google.com/maps/dir/?api=1&destination={{ direccion_mapa|urlencode }}"
                         target="_blank" rel="noopener">
                         <i class="bi bi-send"></i>
@@ -754,25 +762,7 @@
                                 title="Mapa de {{ establecimiento.nombre }}">
                             </iframe>
 
-                            <!-- Overlay superior izquierdo -->
-                            <div class="du-map-overlay">
-                                <div class="du-map-overlay-marker">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                        <circle cx="12" cy="10" r="3"></circle>
-                                    </svg>
-                                </div>
-
-                                <div class="du-map-overlay-info">
-                                    <div class="du-map-overlay-ttl" data-detalle-ubicacion-badge>
-                                        {{ sucursal_mapa_principal.label }}
-                                    </div>
-                                    <div class="du-map-overlay-val" data-detalle-ubicacion-panel-direccion>
-                                        {{ sucursal_mapa_principal.direccion|default:"" }}
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Overlay eliminado: el embed de Google Maps ya muestra el pin con el nombre del establecimiento -->
                         </div>
 
                         <!-- Acciones debajo del mapa -->
@@ -983,34 +973,65 @@
                             {% endif %}
                         </h2>
 
-                        <div class="detalle-acciones-contacto">
+                        <div class="dpc-botones">
 
                             {% if contacto_whatsapp %}
                             <a href="https://wa.me/{{ contacto_whatsapp }}" target="_blank" rel="noopener"
-                                class="detalle-contacto-whatsapp">
-                                <i class="bi bi-whatsapp"></i>
-                                WhatsApp
+                                class="dpc-btn dpc-whatsapp" aria-label="Contactar por WhatsApp">
+                                <span class="dpc-btn-ico">
+                                    <i class="bi bi-whatsapp"></i>
+                                </span>
+                                <span class="dpc-btn-txt">WhatsApp</span>
+                            </a>
+                            {% endif %}
+
+                            {% if contacto_facebook %}
+                            <a href="{{ contacto_facebook }}" target="_blank" rel="noopener"
+                                class="dpc-btn dpc-facebook" aria-label="Ver Facebook">
+                                <span class="dpc-btn-ico">
+                                    <i class="bi bi-facebook"></i>
+                                </span>
+                                <span class="dpc-btn-txt">Facebook</span>
+                            </a>
+                            {% endif %}
+
+                            {% if contacto_instagram %}
+                            <a href="{{ contacto_instagram }}" target="_blank" rel="noopener"
+                                class="dpc-btn dpc-instagram" aria-label="Ver Instagram">
+                                <span class="dpc-btn-ico">
+                                    <i class="bi bi-instagram"></i>
+                                </span>
+                                <span class="dpc-btn-txt">Instagram</span>
+                            </a>
+                            {% endif %}
+
+                            {% if contacto_sitio_web %}
+                            <a href="{{ contacto_sitio_web }}" target="_blank" rel="noopener"
+                                class="dpc-btn dpc-web" aria-label="Visitar sitio web">
+                                <span class="dpc-btn-ico">
+                                    <i class="bi bi-globe2"></i>
+                                </span>
+                                <span class="dpc-btn-txt">Sitio web</span>
                             </a>
                             {% endif %}
 
                             {% if contacto_telefono %}
-                            <a href="tel:{{ contacto_telefono }}">
-                                <i class="bi bi-telephone"></i>
-                                {{ contacto_telefono }}
+                            <a href="tel:{{ contacto_telefono }}"
+                                class="dpc-btn dpc-telefono" aria-label="Llamar">
+                                <span class="dpc-btn-ico">
+                                    <i class="bi bi-telephone-fill"></i>
+                                </span>
+                                <span class="dpc-btn-txt">{{ contacto_telefono }}</span>
                             </a>
                             {% endif %}
 
                             {% if contacto_correo %}
-                            <a href="mailto:{{ contacto_correo }}">
-                                <i class="bi bi-envelope"></i>
-                                {{ contacto_correo }}
-                            </a>
-                            {% endif %}
-
-                            {% if establecimiento.sitio_web %}
-                            <a href="{{ establecimiento.sitio_web }}" target="_blank" rel="noopener">
-                                <i class="bi bi-globe2"></i>
-                                {{ establecimiento.sitio_web|cut:"https://"|cut:"http://" }}
+                            <a href="mailto:{{ contacto_correo }}"
+                                class="dpc-btn dpc-correo" aria-label="Enviar correo">
+                                <span class="dpc-btn-ico">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </span>
+                                <span class="dpc-btn-txt">{{ contacto_correo }}</span>
                             </a>
                             {% endif %}
 

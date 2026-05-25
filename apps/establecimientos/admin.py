@@ -70,6 +70,19 @@ class SucursalEstablecimientoInline(admin.StackedInline):
                 ("latitud", "longitud"),
             )
         }),
+        ("Google Maps (precisión exacta)", {
+            "description": (
+                "Rellena estos campos solo si el establecimiento aparece en Google Maps. "
+                "Permiten mostrar el pin con el nombre real del negocio y que los botones "
+                "'Abrir mapa' y 'Cómo llegar' apunten a la ficha exacta. "
+                "Si el local no aparece en Google Maps, déjalos vacíos y se usarán las coordenadas o la dirección."
+            ),
+            "fields": (
+                "embed_maps",
+                "maps_url",
+            ),
+            "classes": ("collapse",),
+        }),
         ("Contacto rápido", {
             "fields": (
                 ("telefono", "whatsapp"),
@@ -207,6 +220,16 @@ class SucursalEstablecimientoAdmin(admin.ModelAdmin):
         }),
         ("Ubicación", {
             "fields": ("distrito", "localidad", "direccion", "referencia", "latitud", "longitud")
+        }),
+        ("Google Maps (precisión exacta)", {
+            "description": (
+                "Rellena estos campos solo si el establecimiento aparece en Google Maps. "
+                "Permiten mostrar el pin con el nombre real del negocio y que los botones "
+                "'Abrir mapa' y 'Cómo llegar' apunten a la ficha exacta. "
+                "Si el local no aparece en Google Maps, déjalos vacíos y se usarán las coordenadas o la dirección."
+            ),
+            "fields": ("embed_maps", "maps_url"),
+            "classes": ("collapse",),
         }),
         ("Contacto", {
             "fields": ("telefono", "whatsapp", "correo", "horario_atencion")

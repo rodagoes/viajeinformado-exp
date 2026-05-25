@@ -31,7 +31,7 @@
 
 .detalle-bloque,
 .detalle-panel-contacto {
-    background: linear-gradient(180deg, #ffffff 0%, var(--est-tarjeta-fondo) 100%);
+    background: #F8F8FF;
     border: 1px solid rgba(0, 45, 137, 0.11);
     border-radius: 28px;
     box-shadow: 0 18px 46px rgba(0, 45, 137, 0.08);
@@ -131,7 +131,7 @@
     gap: 64px;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 108px;
+    padding-bottom: 72px;
 }
 
 .detalle-hero-info {
@@ -691,30 +691,48 @@
    7. Barra flotante escritorio
 ========================================================= */
 
+/* Wrapper que se superpone exactamente a caballo entre el hero y el contenido.
+   margin-top negativo = mitad de la altura de la barra → 50% dentro del hero,
+   50% fuera. z-index alto para quedar sobre ambos fondos. */
+.detalle-hero-barra-wrap {
+    position: relative;
+    z-index: 20;
+    margin-top: -38px;
+    margin-bottom: 0;
+}
+
 .detalle-hero-barra {
     position: relative;
-    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 28px;
+    gap: 24px;
     width: min(1180px, calc(100% - 96px));
-    margin: -38px auto 0;
-    padding: 18px 28px;
+    min-height: 76px;
+    margin: 0 auto;
+    padding: 14px 20px;
     border-radius: 24px;
-    background-color: rgba(255, 255, 255, 0.96);
-    border: 1px solid rgba(0, 45, 137, 0.08);
+    background-color: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(0, 45, 137, 0.09);
     box-shadow: 0 24px 58px rgba(0, 45, 137, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
 }
 
-.detalle-hero-acciones,
+.detalle-hero-acciones {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
 .detalle-hero-tags {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 .detalle-accion-icono,
@@ -722,32 +740,46 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 52px;
+    min-height: 48px;
     border-radius: 999px;
-    border: 1px solid rgba(0, 45, 137, 0.10);
+    border: 1px solid rgba(0, 45, 137, 0.12);
     background-color: #ffffff;
     color: var(--est-azul-oscuro);
     font-weight: 900;
     text-decoration: none;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
 }
 
 .detalle-accion-icono {
-    width: 52px;
+    width: 48px;
     padding: 0;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
 }
 
 .detalle-accion-boton {
-    gap: 10px;
-    padding: 0 24px;
-    font-size: 0.95rem;
+    gap: 9px;
+    padding: 0 20px;
+    font-size: 0.88rem;
+    letter-spacing: 0.01em;
 }
 
 .detalle-accion-icono:hover,
 .detalle-accion-boton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 32px rgba(0, 45, 137, 0.10);
+    background-color: #F8F8FF;
+    box-shadow: 0 10px 26px rgba(0, 45, 137, 0.10);
+}
+
+/* Separador vertical entre grupo izquierdo y tag de categoría */
+.detalle-hero-acciones::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 28px;
+    background: rgba(0, 45, 137, 0.12);
+    margin-left: 4px;
+    flex-shrink: 0;
 }
 
 .detalle-hero-tags span,
@@ -765,9 +797,9 @@
 }
 
 .detalle-hero-tags span {
-    min-height: 42px;
+    min-height: 44px;
     padding: 0 22px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
 }
 
 /* =========================================================
@@ -2257,8 +2289,7 @@
 }
 
 /* =========================================================
-   14. Ubicación / mapa — Rediseño VI consolidado
-   Acciones debajo del mapa + panel desplegable interno
+   14. Ubicación / mapa - Acciones debajo del mapa y panel desplegable interno
 ========================================================= */
 
 .du-card {
@@ -2283,7 +2314,7 @@
     max-width: 100%;
     overflow: hidden;
     padding: 28px 32px 32px;
-    background: var(--du-white);
+    background: #F8F8FF;
     font-family: var(--du-sans);
     color: var(--du-ink);
 }
@@ -2906,7 +2937,7 @@
 }
 
 /* =========================================================
-   15. Panel de contacto
+   15. Panel de contacto — rediseño dinámico dpc-*
 ========================================================= */
 
 .detalle-panel-contacto {
@@ -2920,41 +2951,178 @@
 }
 
 .detalle-panel-contacto h2 {
-    margin-bottom: 24px;
+    margin-bottom: 22px;
     font-size: clamp(1.9rem, 2.8vw, 2.45rem);
 }
 
-.detalle-acciones-contacto {
-    width: 100%;
-    min-width: 0;
+/* ── Grid de botones de contacto ── */
+.dpc-botones {
     display: grid;
-    gap: 13px;
-    overflow: hidden;
-}
-
-.detalle-acciones-contacto a {
+    grid-template-columns: 1fr;
+    gap: 10px;
     width: 100%;
-    max-width: 100%;
-    min-height: 54px;
-    padding: 12px 14px;
+}
+
+/* ── Botón base ── */
+.dpc-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 52px;
+    padding: 0 18px;
+    border-radius: 14px;
+    border: none;
+    text-decoration: none;
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
     box-sizing: border-box;
-    border-radius: 15px;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-height: 1.24;
-    text-align: center;
-    font-size: 0.92rem;
+    overflow: hidden;
+    position: relative;
+    /* Animación de entrada escalonada vía JS — se activa con .dpc-visible */
+    opacity: 0;
+    transform: translateX(-14px);
+    transition:
+        opacity 0.38s ease,
+        transform 0.38s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
 }
 
-.detalle-acciones-contacto a i {
-    flex: 0 0 auto;
+.dpc-btn.dpc-visible {
+    opacity: 1;
+    transform: translateX(0);
 }
 
-.detalle-acciones-contacto .detalle-contacto-whatsapp {
-    background: linear-gradient(135deg, #18d26e, #00b85b);
-    border-color: transparent;
+/* Efecto shimmer al hover */
+.dpc-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.18) 50%,
+        transparent 100%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.42s ease;
+    pointer-events: none;
+}
+
+.dpc-btn:hover::after {
+    transform: translateX(100%);
+}
+
+.dpc-btn:hover {
+    text-decoration: none;
+    transform: translateY(-2px) translateX(0);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.06);
+}
+
+.dpc-btn:active {
+    transform: translateY(0) translateX(0);
+    filter: brightness(0.96);
+}
+
+/* Ícono circular */
+.dpc-btn-ico {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 0.22s ease;
+}
+
+.dpc-btn:hover .dpc-btn-ico {
+    transform: scale(1.12) rotate(-6deg);
+}
+
+/* Texto del botón */
+.dpc-btn-txt {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+/* ── Colores por red / canal ── */
+
+/* WhatsApp */
+.dpc-whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #128C5E 100%);
     color: #ffffff;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.28);
+}
+
+/* Facebook */
+.dpc-facebook {
+    background: linear-gradient(135deg, #1877F2 0%, #0a5abf 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(24, 119, 242, 0.28);
+}
+
+/* Instagram */
+.dpc-instagram {
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(220, 39, 67, 0.28);
+}
+
+/* Sitio web */
+.dpc-web {
+    background: linear-gradient(135deg, #002d89 0%, #007FFF 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 45, 137, 0.22);
+}
+
+/* Teléfono / celular */
+.dpc-telefono {
+    background: #ffffff;
+    color: #002d89;
+    border: 1.5px solid rgba(0, 45, 137, 0.16);
+    box-shadow: 0 4px 14px rgba(0, 45, 137, 0.07);
+}
+
+.dpc-telefono .dpc-btn-ico {
+    background: rgba(0, 45, 137, 0.08);
+    color: #002d89;
+}
+
+.dpc-telefono:hover {
+    color: #002d89;
+    border-color: rgba(0, 45, 137, 0.32);
+}
+
+/* Correo */
+.dpc-correo {
+    background: #ffffff;
+    color: #002d89;
+    border: 1.5px solid rgba(0, 45, 137, 0.16);
+    box-shadow: 0 4px 14px rgba(0, 45, 137, 0.07);
+}
+
+.dpc-correo .dpc-btn-ico {
+    background: rgba(0, 45, 137, 0.08);
+    color: #002d89;
+}
+
+.dpc-correo:hover {
+    color: #002d89;
+    border-color: rgba(0, 45, 137, 0.32);
+}
+
+.dpc-correo .dpc-btn-txt {
+    font-size: 0.82rem;
 }
 
 /* =========================================================
@@ -3384,6 +3552,10 @@ body.detalle-gallery-locked {
         display: none;
     }
 
+    .detalle-hero-barra-wrap {
+        display: none;
+    }
+
     .detalle-mobile-hero {
         display: block;
         padding: 0;
@@ -3670,9 +3842,8 @@ body.detalle-gallery-locked {
         font-size: clamp(1.75rem, 8vw, 2.2rem);
     }
 
-    .detalle-acciones-contacto a {
+    .dpc-btn {
         min-height: 52px;
-        font-size: 0.9rem;
     }
 
     /* Sobre */

@@ -180,6 +180,33 @@ class SucursalEstablecimiento(models.Model):
     horario_atencion = models.CharField(max_length=180, blank=True)
     latitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
     longitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+
+    # Google Maps: dos campos opcionales para máxima precisión.
+    # Úsalos cuando el establecimiento sí aparece en Google Maps.
+    # Con ambos campos, el pin muestra el nombre real del negocio
+    # y los botones "Abrir mapa" / "Cómo llegar" van a la ficha exacta.
+    embed_maps = models.TextField(
+        blank=True,
+        verbose_name="Código embed de Google Maps",
+        help_text=(
+            "Pega aquí el código &lt;iframe&gt; completo que te da Google Maps en "
+            "'Compartir → Insertar un mapa'. "
+            "Muestra el pin con el nombre real del establecimiento. "
+            "Déjalo vacío si el local no aparece en Google Maps."
+        )
+    )
+    maps_url = models.TextField(
+        blank=True,
+        verbose_name="URL de la ficha en Google Maps",
+        help_text=(
+            "Pega aquí la URL de la ficha del negocio en Google Maps "
+            "(la dirección que ves en el navegador al abrir el lugar). "
+            "Se usa para los botones 'Abrir mapa' y 'Cómo llegar' "
+            "apuntando exactamente a la ficha del establecimiento. "
+            "Déjalo vacío si el local no aparece en Google Maps."
+        )
+    )
+
     es_principal = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)
     creado = models.DateTimeField(auto_now_add=True)

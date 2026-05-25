@@ -247,3 +247,51 @@
         init();
     }
 })();
+
+/* =========================================================
+   Animación de entrada escalonada — botones de contacto (dpc-*)
+   Se activa con IntersectionObserver cuando el panel entra
+   en el viewport, añadiendo la clase .dpc-visible a cada botón
+   con un retardo incremental para el efecto cascada.
+========================================================= */
+(function () {
+    "use strict";
+
+    function initContactAnimation() {
+        var btns = document.querySelectorAll(".dpc-btn");
+        if (!btns.length) return;
+
+        // Si el navegador no soporta IntersectionObserver, mostramos todo de golpe
+        if (!("IntersectionObserver" in window)) {
+            btns.forEach(function (btn) { btn.classList.add("dpc-visible"); });
+            return;
+        }
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+
+                // Obtener todos los botones del contenedor
+                var container = entry.target;
+                var visibleBtns = container.querySelectorAll(".dpc-btn");
+
+                visibleBtns.forEach(function (btn, i) {
+                    setTimeout(function () {
+                        btn.classList.add("dpc-visible");
+                    }, i * 80); // 80ms entre cada botón → efecto cascada
+                });
+
+                observer.unobserve(container);
+            });
+        }, { threshold: 0.15 });
+
+        var container = document.querySelector(".dpc-botones");
+        if (container) observer.observe(container);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initContactAnimation);
+    } else {
+        initContactAnimation();
+    }
+})();

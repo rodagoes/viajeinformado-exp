@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
@@ -321,42 +322,106 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         return format(value, "f")
 
     def build_sucursal_mapa(sucursal):
-        direccion = sucursal.direccion or ""
+        direccion  = sucursal.direccion or ""
         referencia = sucursal.referencia or ""
-        horario = sucursal.horario_atencion or ""
-        distrito = str(sucursal.distrito) if sucursal.distrito else ""
-        localidad = str(sucursal.localidad) if sucursal.localidad else ""
-        latitud = coord_to_string(sucursal.latitud)
-        longitud = coord_to_string(sucursal.longitud)
+        horario    = sucursal.horario_atencion or ""
+        distrito   = str(sucursal.distrito) if sucursal.distrito else ""
+        localidad  = str(sucursal.localidad) if sucursal.localidad else ""
+        latitud    = coord_to_string(sucursal.latitud)
+        longitud   = coord_to_string(sucursal.longitud)
+        maps_url   = (sucursal.maps_url or "").strip()
+        embed_code = (sucursal.embed_maps or "").strip()
 
+        # Dirección textual de respaldo
         direccion_partes = [direccion, distrito, localidad, "Huánuco", "Perú"]
-        direccion_mapa = ", ".join([parte for parte in direccion_partes if parte])
+        direccion_mapa   = ", ".join([p for p in direccion_partes if p])
 
+        # ── Extraer el src del iframe embed ──────────────────────────────────
+        # Soporta el código iframe completo o solo la URL directamente.
+        embed_src = ""
+        if embed_code:
+            match = re.search(r'src=["\']([^"\']+)["\']', embed_code)
+            if match:
+                embed_src = match.group(1)
+            elif embed_code.startswith("https://"):
+                embed_src = embed_code  # pegaron solo la URL
+
+        # ── Prioridad para el embed visual del mapa ──────────────────────────
+        # 1. embed_maps  → muestra el pin con el nombre real del negocio (gratis, sin API key)
+        # 2. lat / lng   → establecimientos no indexados en Google Maps
+        # 3. dirección   → fallback final
+        if embed_src:
+            embed_url = embed_src
+        elif latitud and longitud:
+            embed_url = f"https://www.google.com/maps?q={quote(latitud + ',' + longitud)}&z=17&hl=es&output=embed"
+        elif direccion_mapa:
+            embed_url = f"https://www.google.com/maps?q={quote(direccion_mapa)}&z=17&hl=es&output=embed"
+        else:
+            embed_url = ""
+
+        # ── Prioridad para open_url (botón "Abrir mapa") ─────────────────────
+        # 1. maps_url    → abre la ficha exacta del negocio en Google Maps
+        # 2. lat / lng   → abre el mapa centrado en las coordenadas
+        # 3. dirección   → búsqueda textual
+        if maps_url:
+            open_url = maps_url
+        elif latitud and longitud:
+            q = quote(latitud + "," + longitud)
+            open_url = f"https://www.google.com/maps/search/?api=1&query={q}"
+        elif direccion_mapa:
+            open_url = f"https://www.google.com/maps/search/?api=1&query={quote(direccion_mapa)}"
+        else:
+            open_url = ""
+
+        # ── Prioridad para route_url (botón "Cómo llegar") ───────────────────
+        # &destination solo acepta texto, dirección o coordenadas, nunca una URL.
+        # Google Maps incrusta dos juegos de coordenadas en la URL de la ficha:
+        #   @lat,lng         → centro de la vista del mapa (puede estar desplazado)
+        #   !3d<lat>!4d<lng> → coordenadas exactas del pin del negocio (las correctas)
+        # Extraemos primero !3d/!4d; si no existen usamos @lat,lng como fallback.
+        coords_from_url = ""
+        if maps_url:
+            match_3d4d = re.search(r'!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)', maps_url)
+            if match_3d4d:
+                coords_from_url = f"{match_3d4d.group(1)},{match_3d4d.group(2)}"
+            else:
+                match_at = re.search(r'@(-?\d+\.\d+),(-?\d+\.\d+)', maps_url)
+                if match_at:
+                    coords_from_url = f"{match_at.group(1)},{match_at.group(2)}"
+
+        if coords_from_url:
+            route_url = f"https://www.google.com/maps/dir/?api=1&destination={quote(coords_from_url)}"
+        elif latitud and longitud:
+            q = quote(latitud + "," + longitud)
+            route_url = f"https://www.google.com/maps/dir/?api=1&destination={q}"
+        elif direccion_mapa:
+            route_url = f"https://www.google.com/maps/dir/?api=1&destination={quote(direccion_mapa)}"
+        else:
+            route_url = ""
+
+        # maps_query se mantiene para compatibilidad y para el overlay de dirección
         if latitud and longitud:
             maps_query = f"{latitud},{longitud}"
         else:
             maps_query = direccion_mapa
 
-        maps_query_encoded = quote(maps_query)
-
         return {
-            "id": sucursal.id,
-            "nombre": sucursal.nombre or "Local principal",
-            "label": "Local principal" if sucursal.es_principal else "Sucursal",
-            "tab_label": "Local principal" if sucursal.es_principal else sucursal.nombre,
-            "direccion": direccion,
-            "referencia": referencia,
-            "horario": horario,
-            "distrito": distrito,
-            "localidad": localidad,
-            "latitud": latitud,
-            "longitud": longitud,
+            "id":           sucursal.id,
+            "nombre":       sucursal.nombre or "Local principal",
+            "label":        "Local principal" if sucursal.es_principal else "Sucursal",
+            "tab_label":    "Local principal" if sucursal.es_principal else sucursal.nombre,
+            "direccion":    direccion,
+            "referencia":   referencia,
+            "horario":      horario,
+            "distrito":     distrito,
+            "localidad":    localidad,
+            "latitud":      latitud,
+            "longitud":     longitud,
             "es_principal": sucursal.es_principal,
-            "maps_query": maps_query,
-            "maps_query_encoded": maps_query_encoded,
-            "open_url": f"https://www.google.com/maps/search/?api=1&query={maps_query_encoded}" if maps_query else "",
-            "route_url": f"https://www.google.com/maps/dir/?api=1&destination={maps_query_encoded}" if maps_query else "",
-            "embed_url": f"https://www.google.com/maps?q={maps_query_encoded}&z=17&hl=es&output=embed" if maps_query else "",
+            "maps_query":   maps_query,
+            "embed_url":    embed_url,
+            "open_url":     open_url,
+            "route_url":    route_url,
         }
 
     sucursales_mapa = [build_sucursal_mapa(sucursal) for sucursal in sucursales]
@@ -387,6 +452,9 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         "contacto_whatsapp": contacto_whatsapp,
         "contacto_telefono": contacto_telefono,
         "contacto_correo": contacto_correo,
+        "contacto_facebook": establecimiento.facebook or "",
+        "contacto_instagram": establecimiento.instagram or "",
+        "contacto_sitio_web": establecimiento.sitio_web or "",
         "media_items": media_items,
         "media_items_count": len(media_items),
         "direccion_mapa": direccion_mapa,
