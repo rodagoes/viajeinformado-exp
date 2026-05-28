@@ -1,0 +1,1071 @@
+/* =====================================================================
+   DETALLE DE LUGAR TURÍSTICO — detalle-lugar-turistico.css
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+/* =====================================================================
+   BASE
+   ===================================================================== */
+
+.detalle-lugar {
+    --dl-dark:    #1a2035;
+    --dl-dark2:   #0e1322;
+    --dl-navy:    #002d89;
+    --dl-blue:    #007FFF;
+    --dl-white:   #ffffff;
+    --dl-light:   #f5f7ff;
+    --dl-muted:   rgba(255, 255, 255, 0.70);
+    --dl-line-d:  rgba(255, 255, 255, 0.08);
+    --dl-serif:   'Playfair Display', Georgia, serif;
+    --dl-sans:    'DM Sans', 'Inter', system-ui, sans-serif;
+
+    background-color: var(--dl-dark);
+    color: var(--dl-white);
+    font-family: var(--dl-sans);
+}
+
+/* =====================================================================
+   1. BREADCRUMB
+   ===================================================================== */
+
+.dl-crumb-bar {
+    position: relative;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--dl-line-d);
+}
+
+.dl-crumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.50);
+    flex-wrap: wrap;
+}
+
+.dl-crumb a {
+    color: rgba(255, 255, 255, 0.50);
+    text-decoration: none;
+    transition: color .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dl-crumb a:hover { color: #fff; }
+
+.dl-crumb-sep { opacity: 0.30; font-size: 9px; display: inline-flex; align-items: center; }
+
+.dl-crumb-cur {
+    color: #fff;
+    font-weight: 700;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =====================================================================
+   2. BANNER HERO (Spectral-style)
+   ===================================================================== */
+
+.dl-banner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 70vh;
+    min-height: 420px;
+    overflow: hidden;
+    background-color: var(--dl-dark2);
+    cursor: default;
+}
+
+.dl-banner-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.dl-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.28) 0%,
+        rgba(0, 0, 0, 0.58) 100%
+    );
+}
+
+.dl-banner-inner {
+    position: relative;
+    z-index: 2;
+    padding: 0 2em;
+    max-width: 900px;
+}
+
+/* Category pills above title */
+.dl-banner-pills {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.6em;
+}
+
+.dl-banner-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 16px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(4px);
+}
+
+.dl-banner-pill-gold {
+    background: rgba(255, 215, 0, 0.18);
+    border-color: rgba(255, 215, 0, 0.55);
+    color: #ffe066;
+}
+
+/* Spectral-style title with top/bottom bars */
+.dl-banner-title {
+    font-family: var(--dl-serif);
+    font-weight: 900;
+    font-size: clamp(1.75rem, 4.5vw, 3.5rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: #fff;
+    margin: 0 0 1.2em;
+    padding: 0.4em 0;
+    display: inline-block;
+    position: relative;
+}
+
+.dl-banner-title::before,
+.dl-banner-title::after {
+    content: '';
+    display: block;
+    height: 2px;
+    background: #fff;
+    position: absolute;
+    width: 100%;
+    left: 0;
+}
+
+.dl-banner-title::before { top: 0; }
+.dl-banner-title::after  { bottom: 0; }
+
+/* Subtitle (location, difficulty) */
+.dl-banner-sub {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 12px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+}
+
+.dl-banner-sub span { display: inline-flex; align-items: center; gap: 5px; }
+.dl-banner-sub i { color: rgba(255, 255, 255, 0.45); }
+
+/* Scroll arrow indicator */
+.dl-banner-scroll {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 7em;
+    width: 13em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 1em;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 10px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.dl-banner-scroll i {
+    font-size: 1.4rem;
+    animation: dl-bounce 2s ease-in-out infinite;
+}
+
+@keyframes dl-bounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(7px); }
+}
+
+/* =====================================================================
+   3. SOBRE EL LUGAR — white section (Spectral "Section One")
+   ===================================================================== */
+
+.dl-section-sobre {
+    background: var(--dl-white);
+    color: #333;
+    padding: 5.5em 0;
+    text-align: center;
+}
+
+.dl-sobre-inner {
+    max-width: 56em;
+    margin: 0 auto;
+    padding: 0 2em;
+}
+
+/* Section heading (Spectral header.major style) */
+.dl-section-title {
+    font-family: var(--dl-serif);
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 0.03em;
+    color: var(--dl-navy);
+    margin-bottom: 0.4em;
+    line-height: 1.2;
+}
+
+.dl-section-title::after {
+    content: '';
+    display: block;
+    width: 54px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--dl-blue), var(--dl-navy));
+    border-radius: 2px;
+    margin: 14px auto 0;
+}
+
+.dl-section-title.light {
+    color: #fff;
+}
+
+.dl-section-title.light::after {
+    background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
+}
+
+/* Description text */
+.dl-prose {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #555;
+    margin-top: 1.6em;
+    text-align: left;
+}
+
+.dl-prose p { margin-bottom: 0.9em; }
+.dl-prose p:last-child { margin-bottom: 0; }
+
+.dl-prose.dark { color: var(--dl-muted); text-align: left; }
+
+/* Spectral-style large icon circles (ul.icons major) */
+.dl-sobre-icons {
+    display: flex;
+    gap: 36px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 3.5em;
+}
+
+.dl-icon-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.dl-icon-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2.5px solid;
+    display: grid;
+    place-items: center;
+    font-size: 2.2rem;
+    cursor: pointer;
+    transition: all .3s cubic-bezier(.34, 1.56, .64, 1);
+    background: transparent;
+    text-decoration: none;
+    position: relative;
+    outline: none;
+}
+
+.dl-icon-circle:focus-visible {
+    box-shadow: 0 0 0 3px rgba(0, 127, 255, 0.35);
+}
+
+/* Style 1 — blue (favorito) */
+.dl-icon-circle.s1 { border-color: var(--dl-blue); color: var(--dl-blue); }
+.dl-icon-circle.s1:hover { background: rgba(0, 127, 255, 0.08); transform: scale(1.1); }
+.dl-icon-circle.s1.is-active { background: var(--dl-blue); color: #fff; transform: scale(1.05); }
+
+/* Style 2 — navy (mapa/ubicación) */
+.dl-icon-circle.s2 { border-color: var(--dl-navy); color: var(--dl-navy); }
+.dl-icon-circle.s2:hover { background: rgba(0, 45, 137, 0.07); transform: scale(1.1); }
+
+/* Style 3 — medium blue (compartir) */
+.dl-icon-circle.s3 { border-color: #4a6aaa; color: #4a6aaa; }
+.dl-icon-circle.s3:hover { background: rgba(74, 106, 170, 0.07); transform: scale(1.1); }
+
+.dl-icon-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: #999;
+    text-align: center;
+}
+
+/* =====================================================================
+   4 & 5. SPOTLIGHT SECTIONS (Spectral "Section Two")
+   ===================================================================== */
+
+.dl-section-spots {
+    background: var(--dl-dark);
+    padding: 0;
+}
+
+/* Individual spotlight row */
+.dl-spotlight {
+    display: flex;
+    align-items: stretch;
+    min-height: 420px;
+}
+
+/* Alternate direction on even spotlights */
+.dl-spotlight:nth-child(2n) {
+    flex-direction: row-reverse;
+}
+
+/* Progressive darkening (Spectral pattern) */
+.dl-spotlight:nth-child(1) { background: rgba(0, 0, 0, 0.07); }
+.dl-spotlight:nth-child(2) { background: rgba(0, 0, 0, 0.15); }
+.dl-spotlight:nth-child(3) { background: rgba(0, 0, 0, 0.22); }
+.dl-spotlight:nth-child(4) { background: rgba(0, 0, 0, 0.30); }
+
+/* Image column */
+.dl-spot-img {
+    width: 40%;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.dl-spot-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .8s ease;
+}
+
+.dl-spot-img:hover img { transform: scale(1.04); }
+
+.dl-spot-img-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(0,45,137,0.35), rgba(0,127,255,0.15));
+    font-size: 5rem;
+    color: rgba(255, 255, 255, 0.15);
+}
+
+/* Map column (for ubicación spotlight) */
+.dl-spot-map {
+    width: 40%;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.dl-spot-map iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border: 0;
+    display: block;
+}
+
+.dl-spot-map-nomap {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(0, 45, 137, 0.2);
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 14px;
+}
+
+.dl-spot-map-nomap i { font-size: 3rem; opacity: 0.3; }
+
+/* Content column */
+.dl-spot-content {
+    flex: 1;
+    padding: 3.5em 4em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.dl-spot-content h2 {
+    font-family: var(--dl-serif);
+    font-weight: 700;
+    font-size: 1.55rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 1.2em;
+    line-height: 1.35;
+}
+
+.dl-spot-content .dl-spot-prose {
+    font-size: 14.5px;
+    line-height: 1.78;
+    color: var(--dl-muted);
+}
+
+.dl-spot-content .dl-spot-prose p { margin-bottom: 0.85em; }
+.dl-spot-content .dl-spot-prose p:last-child { margin-bottom: 0; }
+
+/* Meta rows for ubicación */
+.dl-spot-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 1.8em;
+}
+
+.dl-spot-meta-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--dl-muted);
+}
+
+.dl-spot-meta-row i {
+    color: var(--dl-blue);
+    font-size: 1.05rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+/* Buttons inside spotlights */
+.dl-spot-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 1.8em;
+}
+
+.dl-spot-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: all .2s;
+    font-family: var(--dl-sans);
+    white-space: nowrap;
+}
+
+.dl-spot-btn-primary {
+    background: linear-gradient(135deg, var(--dl-blue), var(--dl-navy));
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0, 127, 255, 0.28);
+}
+
+.dl-spot-btn-primary:hover { color: #fff; opacity: 0.88; transform: translateY(-1px); }
+
+.dl-spot-btn-ghost {
+    background: rgba(255, 255, 255, 0.10);
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+
+.dl-spot-btn-ghost:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+
+/* =====================================================================
+   GALLERY SECTION (dark, full-width grid)
+   ===================================================================== */
+
+.dl-section-gallery {
+    background: var(--dl-dark2);
+    padding: 5em 0;
+}
+
+.dl-section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2em;
+}
+
+/* Generic section heading (dark bg) */
+.dl-section-hd {
+    text-align: center;
+    margin-bottom: 2.8em;
+}
+
+.dl-section-hd h2 {
+    font-family: var(--dl-serif);
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 0;
+    display: inline-block;
+    padding-bottom: 14px;
+    position: relative;
+}
+
+.dl-section-hd h2::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--dl-blue), var(--dl-navy));
+    border-radius: 1px;
+}
+
+.dl-section-hd p {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.38);
+    margin-top: 12px;
+}
+
+/* Gallery grid */
+.dl-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.dl-gallery-item {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.04);
+    border: none;
+    padding: 0;
+    display: block;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.dl-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s ease;
+}
+
+.dl-gallery-item:hover img { transform: scale(1.07); }
+
+.dl-gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 45, 137, 0);
+    display: grid;
+    place-items: center;
+    transition: background .25s;
+}
+
+.dl-gallery-item:hover .dl-gallery-overlay {
+    background: rgba(0, 45, 137, 0.48);
+}
+
+.dl-gallery-zoom {
+    color: #fff;
+    font-size: 1.7rem;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all .25s;
+}
+
+.dl-gallery-item:hover .dl-gallery-zoom {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.dl-gallery-more-badge {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 45, 137, 0.78);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-family: var(--dl-serif);
+    font-weight: 900;
+    font-size: 1.6rem;
+    backdrop-filter: blur(3px);
+}
+
+.dl-gallery-more-badge small {
+    font-family: var(--dl-sans);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+
+.dl-gallery-empty {
+    text-align: center;
+    padding: 3em;
+    color: var(--dl-muted);
+    font-size: 14px;
+    grid-column: 1 / -1;
+}
+
+.dl-gallery-empty i {
+    display: block;
+    font-size: 3rem;
+    opacity: 0.20;
+    margin-bottom: 12px;
+}
+
+/* =====================================================================
+   6. DATOS DEL LUGAR — white section
+   ===================================================================== */
+
+.dl-section-datos {
+    background: var(--dl-white);
+    color: #333;
+    padding: 5.5em 0;
+    text-align: center;
+}
+
+.dl-section-datos .dl-section-title {
+    color: var(--dl-navy);
+}
+
+.dl-datos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 3em auto 0;
+    text-align: center;
+}
+
+.dl-dato-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 20px;
+    background: var(--dl-light);
+    border-radius: 18px;
+    border: 1px solid rgba(0, 45, 137, 0.07);
+    transition: box-shadow .2s, transform .2s;
+}
+
+.dl-dato-card:hover {
+    box-shadow: 0 8px 28px rgba(0, 45, 137, 0.10);
+    transform: translateY(-2px);
+}
+
+.dl-dato-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--dl-blue), var(--dl-navy));
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 1.35rem;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(0, 127, 255, 0.25);
+}
+
+.dl-dato-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 6px;
+}
+
+.dl-dato-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.45;
+}
+
+.dl-dato-val.free    { color: #15803d; }
+.dl-dato-val.muted   { color: #888; font-weight: 500; }
+
+/* Difficulty badges */
+.dl-dif-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 700;
+}
+
+.dl-dif-facil    { background: rgba(26, 156, 91, 0.12); color: #15803d; }
+.dl-dif-moderada { background: rgba(212, 138, 0, 0.12);  color: #b87400; }
+.dl-dif-dificil  { background: rgba(192, 57, 43, 0.12);  color: #c0392b; }
+
+/* Secondary categories in datos */
+.dl-sec-cats {
+    margin-top: 2.5em;
+    padding-top: 2em;
+    border-top: 1px solid rgba(0, 45, 137, 0.08);
+}
+
+.dl-sec-cats-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 12px;
+}
+
+.dl-sec-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.dl-sec-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(0, 45, 137, 0.07);
+    color: var(--dl-navy);
+}
+
+/* =====================================================================
+   8. VALORACIONES — dark centered section
+   ===================================================================== */
+
+.dl-section-val {
+    background: var(--dl-dark2);
+    padding: 6em 0;
+    text-align: center;
+}
+
+.dl-val-inner {
+    max-width: 34em;
+    margin: 0 auto;
+    padding: 0 2em;
+}
+
+.dl-val-icon {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    display: grid;
+    place-items: center;
+    margin: 0 auto 1.6em;
+    font-size: 2.3rem;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.dl-val-title {
+    font-family: var(--dl-serif);
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 1em;
+}
+
+.dl-val-text {
+    font-size: 14px;
+    line-height: 1.80;
+    color: var(--dl-muted);
+    letter-spacing: 0.03em;
+    margin: 0;
+}
+
+.dl-stars-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 1.8em;
+}
+
+.dl-stars-row i { font-size: 1.7rem; color: #d4a017; }
+
+/* =====================================================================
+   LIGHTBOX
+   ===================================================================== */
+
+.dl-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 7, 20, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 80px;
+}
+
+.dl-lightbox[hidden] { display: none; }
+
+.dl-lb-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    max-width: 100%;
+}
+
+.dl-lb-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    border-radius: 6px;
+    object-fit: contain;
+    display: block;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+
+.dl-lb-cap {
+    padding: 8px 22px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.72);
+    border-radius: 999px;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(8px);
+    text-align: center;
+}
+
+.dl-lb-close {
+    position: fixed; top: 18px; right: 22px;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10); color: #fff;
+    border: none; font-size: 1.2rem; cursor: pointer;
+    display: grid; place-items: center;
+    transition: background .15s; z-index: 10;
+}
+.dl-lb-close:hover { background: rgba(255, 255, 255, 0.22); }
+
+.dl-lb-nav {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 50px; height: 50px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10); color: #fff;
+    border: none; font-size: 1.2rem; cursor: pointer;
+    display: grid; place-items: center;
+    transition: background .15s; z-index: 10;
+}
+.dl-lb-nav:hover { background: rgba(255, 255, 255, 0.22); }
+.dl-lb-prev { left: 18px; }
+.dl-lb-next { right: 18px; }
+
+/* =====================================================================
+   MOBILE STICKY CTA
+   ===================================================================== */
+
+.dl-m-sticky {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 10px 16px;
+    background: rgba(10, 14, 30, 0.97);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    display: none;
+    gap: 8px;
+    z-index: 100;
+}
+
+.dl-m-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-family: var(--dl-sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+    transition: all .2s;
+    white-space: nowrap;
+}
+
+.dl-m-btn-primary {
+    background: linear-gradient(135deg, var(--dl-blue), var(--dl-navy));
+    color: #fff;
+    flex: 1;
+    box-shadow: 0 4px 16px rgba(0, 127, 255, 0.28);
+}
+
+.dl-m-btn-primary:hover { color: #fff; opacity: 0.90; }
+
+.dl-m-btn-ghost {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, 0.20);
+}
+
+.dl-m-btn-ghost:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+
+/* Tablet */
+@media screen and (max-width: 1280px) {
+    .dl-spot-img  { width: 45%; }
+    .dl-spot-map  { width: 45%; }
+}
+
+/* Landscape tablet / small desktop */
+@media screen and (max-width: 980px) {
+    .dl-spotlight { display: block; }
+
+    .dl-spot-img { width: 100%; height: 300px; }
+    .dl-spot-img img { height: 300px; }
+    .dl-spot-img-placeholder { min-height: 240px; }
+
+    .dl-spot-map { width: 100%; }
+    .dl-spot-map iframe { height: 280px; min-height: 280px; }
+    .dl-spot-map-nomap { min-height: 200px; }
+
+    .dl-spot-content {
+        padding: 3em 2.5em;
+        text-align: center;
+    }
+
+    .dl-spot-btns { justify-content: center; }
+    .dl-spot-meta { align-items: center; }
+    .dl-spot-meta-row { justify-content: center; }
+
+    .dl-gallery { grid-template-columns: repeat(3, 1fr); }
+    .dl-datos-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .dl-m-sticky { display: flex; }
+    .detalle-lugar { padding-bottom: 72px; }
+}
+
+/* Mobile */
+@media screen and (max-width: 736px) {
+    .dl-banner { height: 55vh; min-height: 300px; }
+    .dl-banner-title { font-size: clamp(1.3rem, 5vw, 1.9rem); padding: 0.35em 0; }
+    .dl-banner-sub { font-size: 10px; letter-spacing: 0.14em; gap: 10px; }
+
+    .dl-section-sobre,
+    .dl-section-datos { padding: 4em 0; }
+    .dl-section-gallery,
+    .dl-section-val { padding: 3.5em 0; }
+
+    .dl-sobre-icons { gap: 22px; }
+    .dl-icon-circle { width: 82px; height: 82px; font-size: 1.85rem; }
+
+    .dl-spot-content { padding: 2.5em 1.5em; }
+    .dl-spot-img { height: 240px; }
+    .dl-spot-img img { height: 240px; }
+    .dl-spot-map iframe { height: 240px; min-height: 240px; }
+
+    .dl-gallery { grid-template-columns: repeat(2, 1fr); gap: 5px; }
+
+    .dl-datos-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .dl-dato-card { padding: 22px 14px; }
+
+    .dl-lightbox { padding: 12px 52px; }
+    .dl-lb-prev { left: 10px; }
+    .dl-lb-next { right: 10px; }
+}
+
+/* Small mobile */
+@media screen and (max-width: 480px) {
+    .dl-banner { height: 50vh; }
+    .dl-gallery { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+    .dl-datos-grid { grid-template-columns: 1fr; gap: 10px; }
+    .dl-dato-card { flex-direction: row; text-align: left; gap: 14px; padding: 16px; }
+    .dl-dato-icon { flex-shrink: 0; margin-bottom: 0; }
+    .dl-sobre-icons { gap: 16px; }
+    .dl-icon-circle { width: 72px; height: 72px; font-size: 1.6rem; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .dl-banner-scroll i { animation: none; }
+    .dl-spot-img img,
+    .dl-gallery-item img,
+    .dl-icon-circle,
+    .dl-dato-card { transition: none; }
+}

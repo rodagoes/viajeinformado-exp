@@ -97,6 +97,14 @@ class LugarTuristico(models.Model):
     referencia = models.CharField(max_length=255, blank=True)
     latitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
     longitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
+    embed_maps = models.TextField(
+        blank=True,
+        help_text="Pega el código iframe completo de Google Maps o solo la URL src. Se usa para el mapa visual (gratuito, sin API key)."
+    )
+    maps_url = models.TextField(
+        blank=True,
+        help_text="URL larga de la ficha del lugar en Google Maps. Conservar las coordenadas !3d y !4d para generar la ruta precisa en Cómo llegar."
+    )
 
     horario_visita = models.CharField(max_length=180, blank=True)
     tipo_costo = models.CharField(max_length=20, choices=TIPO_COSTO_CHOICES, default="consultar")

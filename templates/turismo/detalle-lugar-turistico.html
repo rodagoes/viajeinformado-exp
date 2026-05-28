@@ -1,0 +1,718 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ lugar.nombre }} · Lugares Turísticos · Viaje Informado Huánuco{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'assets/css/detalle-lugar-turistico.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="detalle-lugar">
+
+  {# ================================================================ #}
+  {# 1. BREADCRUMB                                                    #}
+  {# ================================================================ #}
+  <div class="dl-crumb-bar">
+    <div class="container-xl">
+      <nav aria-label="Ruta de navegación">
+        <ol class="dl-crumb">
+          <li>
+            <a href="/"><i class="bi bi-house-fill" aria-hidden="true"></i> Inicio</a>
+          </li>
+          <li><span class="dl-crumb-sep"><i class="bi bi-chevron-right" aria-hidden="true"></i></span></li>
+          <li>
+            <a href="{% url 'turismo:listado_lugares' %}">Lugares turísticos</a>
+          </li>
+          {% if lugar.categoria_principal %}
+          <li><span class="dl-crumb-sep"><i class="bi bi-chevron-right" aria-hidden="true"></i></span></li>
+          <li>
+            <a href="{% url 'turismo:listado_lugares' %}?categoria={{ lugar.categoria_principal.id }}">
+              {{ lugar.categoria_principal.nombre }}
+            </a>
+          </li>
+          {% endif %}
+          <li><span class="dl-crumb-sep"><i class="bi bi-chevron-right" aria-hidden="true"></i></span></li>
+          <li><span class="dl-crumb-cur">{{ lugar.nombre }}</span></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  {# ================================================================ #}
+  {# 2. BANNER HERO — Spectral-style full image with title overlay    #}
+  {# ================================================================ #}
+  <section class="dl-banner" id="dl-top" aria-label="{{ lugar.nombre }}">
+
+    {% if lugar.imagen_principal %}
+    <img
+      src="{{ lugar.imagen_principal.url }}"
+      alt="{{ lugar.texto_alt_imagen|default:lugar.nombre }}"
+      class="dl-banner-img"
+      loading="eager"
+      fetchpriority="high"
+    >
+    {% endif %}
+
+    <div class="dl-banner-overlay" aria-hidden="true"></div>
+
+    <div class="dl-banner-inner">
+
+      {# Category / featured pills #}
+      <div class="dl-banner-pills">
+        {% if lugar.destacado %}
+        <span class="dl-banner-pill dl-banner-pill-gold">
+          <i class="bi bi-star-fill" aria-hidden="true"></i> Destacado
+        </span>
+        {% endif %}
+        {% if lugar.categoria_principal %}
+        <span class="dl-banner-pill">
+          <i class="bi bi-tag-fill" aria-hidden="true"></i> {{ lugar.categoria_principal.nombre }}
+        </span>
+        {% endif %}
+      </div>
+
+      {# Place name — Spectral bars above/below #}
+      <h1 class="dl-banner-title">{{ lugar.nombre }}</h1>
+
+      {# Meta subtitle #}
+      <p class="dl-banner-sub">
+        {% if lugar.distrito %}
+        <span>
+          <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+          {{ lugar.distrito.nombre }}{% if lugar.localidad %}, {{ lugar.localidad.nombre }}{% endif %}
+        </span>
+        {% endif %}
+        {% if lugar.dificultad and lugar.dificultad != 'no_aplica' %}
+        <span>{{ lugar.get_dificultad_display }}</span>
+        {% endif %}
+        {% if lugar.tiempo_visita_estimado %}
+        <span>
+          <i class="bi bi-clock" aria-hidden="true"></i> {{ lugar.tiempo_visita_estimado }}
+        </span>
+        {% endif %}
+      </p>
+
+    </div>
+
+    {# Scroll indicator (Spectral "conocer más") #}
+    <a href="#dl-sobre" class="dl-banner-scroll" aria-label="Ver más información">
+      <span>Conocer más</span>
+      <i class="bi bi-chevron-down" aria-hidden="true"></i>
+    </a>
+
+  </section>
+
+  {# ================================================================ #}
+  {# 3. SOBRE EL LUGAR — white section (Spectral "Section One")      #}
+  {#    Description + 3 large icon circles: favorites, map, share    #}
+  {# ================================================================ #}
+  <section class="dl-section-sobre" id="dl-sobre" aria-labelledby="dl-sobre-title">
+    <div class="container-xl">
+      <div class="dl-sobre-inner">
+
+        <h2 class="dl-section-title" id="dl-sobre-title">Sobre el lugar</h2>
+
+        {# Description text #}
+        {% if lugar.descripcion or lugar.descripcion_corta %}
+        <div class="dl-prose">
+          {% if lugar.descripcion %}
+            {{ lugar.descripcion|linebreaks }}
+          {% else %}
+            <p>{{ lugar.descripcion_corta }}</p>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {# Spectral icon circles: Favorito · Ubicación · Compartir #}
+        <div class="dl-sobre-icons" role="group" aria-label="Acciones del lugar">
+
+          <div class="dl-icon-wrap">
+            <button
+              class="dl-icon-circle s1"
+              type="button"
+              data-action="favorite"
+              aria-label="Añadir a favoritos"
+              title="Favorito"
+            >
+              <i class="bi bi-heart" aria-hidden="true"></i>
+            </button>
+            <span class="dl-icon-label">Favorito</span>
+          </div>
+
+          <div class="dl-icon-wrap">
+            <a
+              href="#dl-ubicacion"
+              class="dl-icon-circle s2"
+              aria-label="Ver ubicación en el mapa"
+              title="Ver en mapa"
+            >
+              <i class="bi bi-map-fill" aria-hidden="true"></i>
+            </a>
+            <span class="dl-icon-label">Ubicación</span>
+          </div>
+
+          <div class="dl-icon-wrap">
+            <button
+              class="dl-icon-circle s3"
+              type="button"
+              data-action="share"
+              aria-label="Compartir este lugar"
+              title="Compartir"
+            >
+              <i class="bi bi-share-fill" aria-hidden="true"></i>
+            </button>
+            <span class="dl-icon-label">Compartir</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# ================================================================ #}
+  {# 4 & 5. SPOTLIGHTS — Historia + Recomendaciones                  #}
+  {#         (Spectral dark "Section Two" with alternating layout)    #}
+  {# ================================================================ #}
+  {% if lugar.historia or lugar.recomendaciones %}
+  <section class="dl-section-spots">
+
+    {# ── Spotlight: Historia ── #}
+    {% if lugar.historia %}
+    <div class="dl-spotlight" id="dl-historia" aria-labelledby="dl-historia-title">
+
+      <div class="dl-spot-img">
+        {% if media_items %}
+        <img
+          src="{{ media_items.0.url }}"
+          alt="{{ media_items.0.alt|default:lugar.nombre }}"
+          loading="lazy"
+        >
+        {% elif lugar.imagen_principal %}
+        <img
+          src="{{ lugar.imagen_principal.url }}"
+          alt="{{ lugar.texto_alt_imagen|default:lugar.nombre }}"
+          loading="lazy"
+        >
+        {% else %}
+        <div class="dl-spot-img-placeholder" aria-hidden="true">
+          <i class="bi bi-book-half"></i>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="dl-spot-content">
+        <h2 id="dl-historia-title">Historia y contexto cultural</h2>
+        <div class="dl-spot-prose">
+          {{ lugar.historia|linebreaks }}
+        </div>
+      </div>
+
+    </div>
+    {% endif %}
+
+    {# ── Spotlight: Recomendaciones ── #}
+    {% if lugar.recomendaciones %}
+    <div class="dl-spotlight" id="dl-recomendaciones" aria-labelledby="dl-reco-title">
+
+      <div class="dl-spot-img">
+        {% if media_items.1 %}
+        <img
+          src="{{ media_items.1.url }}"
+          alt="{{ media_items.1.alt|default:lugar.nombre }}"
+          loading="lazy"
+        >
+        {% elif media_items %}
+        <img
+          src="{{ media_items.0.url }}"
+          alt="{{ media_items.0.alt|default:lugar.nombre }}"
+          loading="lazy"
+        >
+        {% elif lugar.imagen_principal %}
+        <img
+          src="{{ lugar.imagen_principal.url }}"
+          alt="{{ lugar.texto_alt_imagen|default:lugar.nombre }}"
+          loading="lazy"
+        >
+        {% else %}
+        <div class="dl-spot-img-placeholder" aria-hidden="true">
+          <i class="bi bi-lightbulb-fill"></i>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="dl-spot-content">
+        <h2 id="dl-reco-title">Recomendaciones para el visitante</h2>
+        <div class="dl-spot-prose">
+          {{ lugar.recomendaciones|linebreaks }}
+        </div>
+      </div>
+
+    </div>
+    {% endif %}
+
+  </section>
+  {% endif %}
+
+  {# ================================================================ #}
+  {# 5b. GALERÍA DE IMÁGENES (interactive lightbox)                  #}
+  {# ================================================================ #}
+  {% if media_items %}
+  <section class="dl-section-gallery" id="dl-galeria" aria-labelledby="dl-galeria-title">
+    <div class="dl-section-inner">
+
+      <div class="dl-section-hd">
+        <h2 id="dl-galeria-title">Galería de fotos</h2>
+        <p>{{ media_count }} foto{% if media_count != 1 %}s{% endif %} · {{ lugar.nombre }}</p>
+      </div>
+
+      <div class="dl-gallery" role="list" aria-label="Galería de imágenes de {{ lugar.nombre }}">
+        {% for item in media_items|slice:":8" %}
+        <button
+          class="dl-gallery-item"
+          type="button"
+          data-lb-open="{{ forloop.counter0 }}"
+          aria-label="Ver foto {{ forloop.counter }}: {{ item.titulo|default:lugar.nombre }}"
+          role="listitem"
+        >
+          <img
+            src="{{ item.url }}"
+            alt="{{ item.alt|default:lugar.nombre }}"
+            loading="{% if forloop.counter <= 4 %}lazy{% else %}lazy{% endif %}"
+          >
+          <div class="dl-gallery-overlay" aria-hidden="true">
+            {% if forloop.counter == 8 and media_count > 8 %}
+            <div class="dl-gallery-more-badge">
+              +{{ media_count|add:"-8" }}
+              <small>más fotos</small>
+            </div>
+            {% else %}
+            <i class="bi bi-zoom-in dl-gallery-zoom"></i>
+            {% endif %}
+          </div>
+        </button>
+        {% endfor %}
+      </div>
+
+    </div>
+  </section>
+  {% endif %}
+
+  
+  {# ================================================================ #}
+  {# 7. UBICACIÓN + MAPA — spotlight (Spectral dark section)         #}
+  {# ================================================================ #}
+  <section class="dl-section-spots" id="dl-ubicacion" aria-labelledby="dl-ubic-title">
+    <div class="dl-spotlight">
+
+      {# Map as the "image" column #}
+      <div class="dl-spot-map">
+        {% if embed_url %}
+        <iframe
+          src="{{ embed_url }}"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Mapa de {{ lugar.nombre }}"
+        ></iframe>
+        {% else %}
+        <div class="dl-spot-map-nomap">
+          <i class="bi bi-map" aria-hidden="true"></i>
+          <span>Mapa no disponible</span>
+        </div>
+        {% endif %}
+      </div>
+
+      {# Content column #}
+      <div class="dl-spot-content">
+        <h2 id="dl-ubic-title">Ubicación</h2>
+
+        {# Address and info #}
+        <div class="dl-spot-meta">
+          {% if direccion_texto %}
+          <div class="dl-spot-meta-row">
+            <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+            <span>{{ direccion_texto }}</span>
+          </div>
+          {% endif %}
+          {% if lugar.distrito %}
+          <div class="dl-spot-meta-row">
+            <i class="bi bi-signpost-2-fill" aria-hidden="true"></i>
+            <span>
+              {{ lugar.distrito.nombre }}{% if lugar.localidad %}, {{ lugar.localidad.nombre }}{% endif %}
+              {% if lugar.direccion %} — {{ lugar.direccion }}{% endif %}
+            </span>
+          </div>
+          {% endif %}
+          {% if lugar.horario_visita %}
+          <div class="dl-spot-meta-row">
+            <i class="bi bi-clock-fill" aria-hidden="true"></i>
+            <span>{{ lugar.horario_visita }}</span>
+          </div>
+          {% endif %}
+        </div>
+
+        {# Action buttons #}
+        <div class="dl-spot-btns">
+          {% if route_url %}
+          <a
+            href="{{ route_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="dl-spot-btn dl-spot-btn-primary"
+            aria-label="Cómo llegar a {{ lugar.nombre }} en Google Maps"
+          >
+            <i class="bi bi-signpost-split-fill" aria-hidden="true"></i>
+            Cómo llegar
+          </a>
+          {% endif %}
+          {% if open_url %}
+          <a
+            href="{{ open_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="dl-spot-btn dl-spot-btn-ghost"
+            aria-label="Abrir {{ lugar.nombre }} en Google Maps"
+          >
+            <i class="bi bi-map" aria-hidden="true"></i>
+            Abrir en Maps
+          </a>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {# ================================================================ #}
+  {# 6. DATOS DEL LUGAR — white section with icon cards              #}
+  {# ================================================================ #}
+  <section class="dl-section-datos" id="dl-datos" aria-labelledby="dl-datos-title">
+    <div class="container-xl">
+
+      <h2 class="dl-section-title" id="dl-datos-title">Datos del lugar</h2>
+
+      <div class="dl-datos-grid" aria-label="Ficha técnica de {{ lugar.nombre }}">
+
+        {# Categoría #}
+        {% if lugar.categoria_principal %}
+        <div class="dl-dato-card">
+          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-tag-fill"></i></div>
+          <p class="dl-dato-label">Categoría</p>
+          <p class="dl-dato-val">{{ lugar.categoria_principal.nombre }}</p>
+        </div>
+        {% endif %}
+
+        {# Distrito #}
+        {% if lugar.distrito %}
+        <div class="dl-dato-card">
+          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></div>
+          <p class="dl-dato-label">Distrito</p>
+          <p class="dl-dato-val">
+            {{ lugar.distrito.nombre }}{% if lugar.localidad %}<br>{{ lugar.localidad.nombre }}{% endif %}
+          </p>
+        </div>
+        {% endif %}
+
+        {# Dificultad #}
+        {% if lugar.dificultad and lugar.dificultad != 'no_aplica' %}
+        <div class="dl-dato-card">
+          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-bar-chart-fill"></i></div>
+          <p class="dl-dato-label">Dificultad</p>
+          <p class="dl-dato-val">
+            <span class="dl-dif-badge dl-dif-{{ lugar.dificultad }}">
+              {% if lugar.dificultad == 'facil' %}<i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+              {% elif lugar.dificultad == 'moderada' %}<i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+              {% elif lugar.dificultad == 'dificil' %}<i class="bi bi-x-circle-fill" aria-hidden="true"></i>
+              {% endif %}
+              {{ lugar.get_dificultad_display }}
+            </span>
+          </p>
+        </div>
+        {% endif %}
+
+        {# Duración estimada #}
+        {% if lugar.tiempo_visita_estimado %}
+        <div class="dl-dato-card">
+          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-clock-fill"></i></div>
+          <p class="dl-dato-label">Duración estimada</p>
+          <p class="dl-dato-val">{{ lugar.tiempo_visita_estimado }}</p>
+        </div>
+        {% endif %}
+
+        {# Horario #}
+        {% if lugar.horario_visita %}
+        <div class="dl-dato-card">
+          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-calendar3"></i></div>
+          <p class="dl-dato-label">Horario</p>
+          <p class="dl-dato-val">{{ lugar.horario_visita }}</p>
+        </div>
+        {% endif %}
+
+        {# Entrada / Costo #}
+        <div class="dl-dato-card">
+          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-ticket-perforated-fill"></i></div>
+          <p class="dl-dato-label">Entrada</p>
+          <p class="dl-dato-val
+            {% if lugar.tipo_costo == 'libre' %} free{% endif %}
+          ">
+            {% if lugar.tipo_costo == 'libre' %}
+              <i class="bi bi-check-circle-fill" aria-hidden="true"></i> Acceso libre
+            {% elif lugar.tipo_costo == 'pago' %}
+              {% if lugar.precio_desde %}
+                Desde S/. {{ lugar.precio_desde }}{% if lugar.precio_hasta %} — S/. {{ lugar.precio_hasta }}{% endif %}
+              {% else %}
+                Con costo
+              {% endif %}
+            {% elif lugar.tipo_costo == 'mixto' %}
+              Parcialmente libre
+            {% else %}
+              <span class="muted">Consultar</span>
+            {% endif %}
+          </p>
+        </div>
+
+      </div>{# /.dl-datos-grid #}
+
+      {# Secondary categories #}
+      {% if lugar.categorias_secundarias.all %}
+      <div class="dl-sec-cats" aria-label="Categorías adicionales">
+        <p class="dl-sec-cats-label">También en</p>
+        <div class="dl-sec-tags">
+          {% for cat in lugar.categorias_secundarias.all %}
+          <span class="dl-sec-tag"><i class="bi bi-tag" aria-hidden="true"></i> {{ cat.nombre }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </section>
+
+  {# ================================================================ #}
+  {# 8. VALORACIONES — dark centered placeholder                     #}
+  {# ================================================================ #}
+  <section class="dl-section-val" id="dl-valoraciones" aria-labelledby="dl-val-title">
+    <div class="dl-val-inner">
+
+      <div class="dl-val-icon" aria-hidden="true">
+        <i class="bi bi-star-half"></i>
+      </div>
+
+      <h2 class="dl-val-title" id="dl-val-title">Valoraciones y reseñas</h2>
+
+      <p class="dl-val-text">
+        Pronto podrás dejar tu reseña y calificación.
+        Tu opinión ayuda a otros viajeros a planificar mejor su visita a {{ lugar.nombre }}.
+      </p>
+
+      <div class="dl-stars-row" aria-label="Calificación de ejemplo" role="img">
+        <i class="bi bi-star-fill" aria-hidden="true"></i>
+        <i class="bi bi-star-fill" aria-hidden="true"></i>
+        <i class="bi bi-star-fill" aria-hidden="true"></i>
+        <i class="bi bi-star-fill" aria-hidden="true"></i>
+        <i class="bi bi-star-half" aria-hidden="true"></i>
+      </div>
+
+    </div>
+  </section>
+
+  {# ── Mobile sticky CTA ── #}
+  <div class="dl-m-sticky d-lg-none" aria-label="Acciones rápidas">
+    {% if route_url %}
+    <a
+      href="{{ route_url }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="dl-m-btn dl-m-btn-primary"
+    >
+      <i class="bi bi-signpost-split-fill" aria-hidden="true"></i> Cómo llegar
+    </a>
+    {% endif %}
+    <button class="dl-m-btn dl-m-btn-ghost" type="button" data-action="share" aria-label="Compartir">
+      <i class="bi bi-share-fill" aria-hidden="true"></i>
+    </button>
+    <button class="dl-m-btn dl-m-btn-ghost" type="button" data-action="favorite" aria-label="Favorito">
+      <i class="bi bi-heart" aria-hidden="true"></i>
+    </button>
+  </div>
+
+</div>{# /.detalle-lugar #}
+
+{# ================================================================ #}
+{# LIGHTBOX                                                         #}
+{# ================================================================ #}
+<div
+  class="dl-lightbox"
+  id="dl-lightbox"
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-label="Visor de fotos — {{ lugar.nombre }}"
+>
+  <button class="dl-lb-close" id="dl-lb-close" type="button" aria-label="Cerrar">
+    <i class="bi bi-x-lg" aria-hidden="true"></i>
+  </button>
+  <button class="dl-lb-nav dl-lb-prev" id="dl-lb-prev" type="button" aria-label="Foto anterior">
+    <i class="bi bi-chevron-left" aria-hidden="true"></i>
+  </button>
+  <button class="dl-lb-nav dl-lb-next" id="dl-lb-next" type="button" aria-label="Foto siguiente">
+    <i class="bi bi-chevron-right" aria-hidden="true"></i>
+  </button>
+  <div class="dl-lb-inner">
+    <img src="" alt="" class="dl-lb-img" id="dl-lb-img">
+    <p class="dl-lb-cap" id="dl-lb-cap" aria-live="polite"></p>
+  </div>
+</div>
+
+{# Photos data for JS lightbox #}
+<script id="dl-photos-data" type="application/json">
+[{% for item in media_items %}{"src":"{{ item.url }}","alt":"{{ item.alt|default:lugar.nombre|escapejs }}","caption":"{{ item.titulo|default:lugar.nombre|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]
+</script>
+
+{% endblock %}
+
+{# ================================================================ #}
+{# JAVASCRIPT                                                       #}
+{# ================================================================ #}
+{% block extra_js %}
+<script>
+(function () {
+  'use strict';
+
+  /* ── Lightbox ── */
+  var photos = [];
+  try {
+    var node = document.getElementById('dl-photos-data');
+    if (node) photos = JSON.parse(node.textContent);
+  } catch (e) { console.warn('Gallery data error', e); }
+
+  var lb      = document.getElementById('dl-lightbox');
+  var lbImg   = document.getElementById('dl-lb-img');
+  var lbCap   = document.getElementById('dl-lb-cap');
+  var lbClose = document.getElementById('dl-lb-close');
+  var lbPrev  = document.getElementById('dl-lb-prev');
+  var lbNext  = document.getElementById('dl-lb-next');
+  var current = 0;
+
+  function renderPhoto(i) {
+    current = (i + photos.length) % photos.length;
+    var p = photos[current];
+    lbImg.src = p.src;
+    lbImg.alt = p.alt || '';
+    lbCap.textContent = (p.caption || p.alt || '') + ' · ' + (current + 1) + ' / ' + photos.length;
+  }
+
+  function openLB(i) {
+    if (!photos.length) return;
+    renderPhoto(i);
+    lb.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (lbClose) lbClose.focus();
+  }
+
+  function closeLB() {
+    lb.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-lb-open]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      openLB(parseInt(btn.dataset.lbOpen, 10) || 0);
+    });
+  });
+
+  if (lb) {
+    lbClose.addEventListener('click', closeLB);
+    lbPrev.addEventListener('click', function (e) { e.stopPropagation(); renderPhoto(current - 1); });
+    lbNext.addEventListener('click', function (e) { e.stopPropagation(); renderPhoto(current + 1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) closeLB(); });
+
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape')     closeLB();
+      if (e.key === 'ArrowLeft')  renderPhoto(current - 1);
+      if (e.key === 'ArrowRight') renderPhoto(current + 1);
+    });
+
+    /* Touch swipe in lightbox */
+    var swipeX = null;
+    lb.addEventListener('touchstart', function (e) { swipeX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+      if (swipeX === null) return;
+      var dx = e.changedTouches[0].clientX - swipeX;
+      if (dx >  50) renderPhoto(current - 1);
+      if (dx < -50) renderPhoto(current + 1);
+      swipeX = null;
+    });
+  }
+
+  /* ── Smooth scroll for anchor links ── */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  /* ── Favorito toggle ── */
+  document.querySelectorAll('[data-action="favorite"]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var active = btn.classList.toggle('is-active');
+      btn.querySelectorAll('i').forEach(function (ic) {
+        ic.className = active ? 'bi bi-heart-fill' : 'bi bi-heart';
+      });
+      btn.setAttribute('aria-label', active ? 'Quitar de favoritos' : 'Añadir a favoritos');
+    });
+  });
+
+  /* ── Share ── */
+  function doShare() {
+    if (navigator.share) {
+      navigator.share({
+        title: '{{ lugar.nombre|escapejs }}',
+        text: '{{ lugar.nombre|escapejs }} — Viaje Informado Huánuco',
+        url: window.location.href
+      }).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(function () {
+        showToast('Enlace copiado al portapapeles');
+      });
+    }
+  }
+
+  document.querySelectorAll('[data-action="share"]').forEach(function (btn) {
+    btn.addEventListener('click', doShare);
+  });
+
+  /* ── Toast ── */
+  function showToast(msg) {
+    var t = document.createElement('div');
+    t.setAttribute('role', 'status');
+    t.setAttribute('aria-live', 'polite');
+    t.textContent = msg;
+    t.style.cssText = [
+      'position:fixed', 'bottom:90px', 'left:50%',
+      'transform:translateX(-50%)', 'background:#002d89',
+      'color:#fff', 'padding:10px 24px', 'border-radius:999px',
+      'font-size:13px', 'font-weight:600', 'z-index:9999',
+      'box-shadow:0 4px 18px rgba(0,45,137,0.35)',
+      'transition:opacity .3s', 'font-family:inherit',
+      'white-space:nowrap'
+    ].join(';');
+    document.body.appendChild(t);
+    setTimeout(function () {
+      t.style.opacity = '0';
+      setTimeout(function () { t.remove(); }, 330);
+    }, 2600);
+  }
+
+})();
+</script>
+{% endblock %}

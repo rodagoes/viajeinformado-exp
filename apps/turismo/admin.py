@@ -87,7 +87,8 @@ class LugarTuristicoAdmin(admin.ModelAdmin):
         ("Ubicación", {
             "fields": (
                 "distrito", "localidad", "direccion", "referencia",
-                "latitud", "longitud"
+                "latitud", "longitud",
+                "embed_maps", "maps_url",
             )
         }),
         ("Información para el turista", {

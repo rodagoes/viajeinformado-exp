@@ -4,13 +4,13 @@
 
 /* Contenedor principal de página */
 .vi-page {
-    padding-top: 150px;
+    padding-top: 120px;  /* header fijo: 82px + 12px top + 26px buffer */
     padding-bottom: 3rem;
 }
 
 /* Variante compacta */
 .vi-page--compact {
-    padding-top: 120px;
+    padding-top: 100px;
     padding-bottom: 2rem;
 }
 
