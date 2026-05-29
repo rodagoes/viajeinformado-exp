@@ -1,12 +1,6 @@
-/* =========================================================
-   Detalle público de Establecimiento - Viaje Informado
-   Fase 6C-1A.7: CSS consolidado
-   Archivo independiente para NO afectar el listado
-========================================================= */
+/* ==== Detalle Establecimiento - Viaje Informado ==== */
 
-/* =========================================================
-   1. Base general
-========================================================= */
+/* ==== 1. Base general ==== */
 
 .detalle-establecimiento-pagina {
     background-color: var(--est-fondo-suave);
@@ -80,9 +74,7 @@
     letter-spacing: -0.02em;
 }
 
-/* =========================================================
-   2. Hero escritorio
-========================================================= */
+/* ==== 2. Hero escritorio ==== */
 
 .detalle-hero {
     position: relative;
@@ -167,9 +159,7 @@
     color: rgba(255, 255, 255, 0.86);
 }
 
-/* =========================================================
-   3. Breadcrumb escritorio
-========================================================= */
+/* ==== 3. Breadcrumb escritorio ==== */
 
 .detalle-breadcrumb {
     width: fit-content;
@@ -229,9 +219,7 @@
     color: #ffffff;
 }
 
-/* =========================================================
-   4. Meta del hero y dirección animada
-========================================================= */
+/* ====   4. Meta del hero y dirección animada ==== */
 
 .detalle-hero-meta {
     display: grid;
@@ -349,9 +337,7 @@
     }
 }
 
-/* =========================================================
-   5. Carrusel hero escritorio
-========================================================= */
+/* ==== 5. Carrusel hero escritorio ==== */
 
 .detalle-hero-media,
 .detalle-swiper,
@@ -438,9 +424,7 @@
     font-size: 4rem;
 }
 
-/* =========================================================
-   6. Botones y controles de carrusel
-========================================================= */
+/* ==== 6. Botones y controles de carrusel ==== */
 
 .detalle-gallery-expand,
 .detalle-mobile-gallery-expand {
@@ -687,13 +671,8 @@
     font-size: 1.12rem;
 }
 
-/* =========================================================
-   7. Barra flotante escritorio
-========================================================= */
+/* ==== 7. Barra flotante escritorio ==== */
 
-/* Wrapper que se superpone exactamente a caballo entre el hero y el contenido.
-   margin-top negativo = mitad de la altura de la barra → 50% dentro del hero,
-   50% fuera. z-index alto para quedar sobre ambos fondos. */
 .detalle-hero-barra-wrap {
     position: relative;
     z-index: 20;
@@ -802,9 +781,7 @@
     font-size: 0.82rem;
 }
 
-/* =========================================================
-   8. Hero tablet / móvil
-========================================================= */
+/* ==== 8. Hero tablet / móvil ==== */
 
 .detalle-mobile-hero {
     display: none;
@@ -1075,9 +1052,7 @@
     text-decoration: none;
 }
 
-/* =========================================================
-   9. Layout de contenido
-========================================================= */
+/* ==== 9. Layout de contenido ==== */
 
 .detalle-contenido {
     background-color: var(--est-fondo-suave);
@@ -1100,9 +1075,7 @@
     min-width: 0;
 }
 
-/* =========================================================
-   10. Sobre el establecimiento
-========================================================= */
+/* ==== 10. Sobre el establecimiento ==== */
 
 .detalle-sobre-card--nuevo {
     position: relative;
@@ -1207,9 +1180,7 @@
     cursor: not-allowed;
 }
 
-/* =========================================================
-   11. Recomendaciones
-========================================================= */
+/* ==== 11. Recomendaciones ==== */
 
 .detalle-recomendaciones-card {
     position: relative;
@@ -1518,9 +1489,7 @@
     hyphens: none;
 }
 
-/* =========================================================
-   12. Servicios / amenidades
-========================================================= */
+/* ==== 12. Servicios / amenidades ==== */
 
 .detalle-servicios-card {
     background: #F8F8FF;
@@ -1661,9 +1630,7 @@
     }
 }
 
-/* =========================================================
-   13. Tarifas / rango de precios - Diseño preparado para futura conversión USD vía API
-========================================================= */
+/* ==== 13. Tarifas / rango de precios ==== */
 
 .detalle-tarifas-card {
     --tarifa-azul: #002d89;
@@ -1760,12 +1727,13 @@
     box-shadow: 0 18px 42px rgba(0, 45, 137, 0.055);
 }
 
+/* Card PEN - SOLES */
 .detalle-tarifas-pen-card {
     min-height: 288px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 34px 34px 32px;
+    justify-content: flex-start;
+    padding: 32px 34px;
     background: linear-gradient(135deg, var(--tarifa-azul) 0%, var(--tarifa-azul-vivo) 100%);
     color: #ffffff;
 }
@@ -1775,7 +1743,7 @@
     grid-template-columns: 76px minmax(0, 1fr);
     align-items: center;
     gap: 22px;
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 }
 
 .detalle-tarifas-pen-icon,
@@ -1838,7 +1806,7 @@
 .detalle-tarifas-price-item strong {
     display: block;
     color: inherit;
-    font-family: "Playfair Display", serif;
+    font-family: "PT Serif", serif;
     font-size: clamp(2.35rem, 3.35vw, 3.25rem);
     font-weight: 400;
     line-height: 0.96;
@@ -1854,7 +1822,7 @@
     margin-top: 12px;
     padding: 0 16px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.82);
     color: var(--tarifa-azul);
     font-size: 0.76rem;
     font-weight: 800;
@@ -1866,93 +1834,209 @@
     width: clamp(28px, 3.4vw, 50px);
     height: 2px;
     align-self: start;
-    margin-top: clamp(1.52rem, 2.22vw, 2.12rem);
+    margin-top: clamp(1.08rem, 1.55vw, 1.38rem);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.88);
 }
 
 .detalle-tarifas-pen-card p {
-    margin: 24px 0 0;
+    margin: 22px 0 0;
     color: rgba(255, 255, 255, 0.92);
     font-size: 0.98rem;
     font-weight: 700;
     line-height: 1.45;
 }
 
+/* Card USD - DOLARES */
 .detalle-tarifas-usd-card {
     min-height: 288px;
-    display: grid;
-    grid-template-columns: 76px minmax(0, 1fr);
-    align-items: center;
-    gap: 28px;
-    padding: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 32px 32px 30px;
     background: #ffffff;
     color: var(--tarifa-azul);
 }
 
+.detalle-tarifas-usd-topline {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
 .detalle-tarifas-usd-icon {
-    width: 76px;
-    height: 76px;
+    width: 72px;
+    height: 72px;
     background: rgba(0, 45, 137, 0.08);
     color: var(--tarifa-azul);
     font-family: "Playfair Display", serif;
-    font-size: 2.7rem;
+    font-size: 2.55rem;
     line-height: 1;
 }
 
+.detalle-tarifas-usd-topline .detalle-tarifas-card-label {
+    margin: 0;
+    color: var(--tarifa-azul);
+    font-size: 0.86rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1.18;
+    text-transform: none;
+}
+
 .detalle-tarifas-usd-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+}
+
+.detalle-tarifas-usd-conversion {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 18px;
     min-width: 0;
 }
 
-.detalle-tarifas-usd-body .detalle-tarifas-card-label {
-    margin-bottom: 16px;
-    color: var(--tarifa-azul);
+.detalle-tarifas-usd-amount {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 7px;
+    width: 100%;
+    min-width: 0;
+    color: #071344;
+    font-family: "PT Serif", serif;
+    font-size: clamp(1.98rem, 2.45vw, 2.36rem);
+    font-weight: 400;
+    line-height: 0.96;
+    letter-spacing: -0.058em;
+    white-space: nowrap;
 }
 
-.detalle-tarifas-usd-body strong {
+.detalle-tarifas-usd-aprox {
+    margin-right: -2px;
+}
+
+.detalle-tarifas-usd-separator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    color: rgba(0, 45, 137, 0.62);
+    letter-spacing: -0.02em;
+}
+
+.detalle-tarifas-usd-labels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: min(100%, 320px);
+    margin: 14px auto 0;
+}
+
+.detalle-tarifas-usd-labels--single {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(100%, 170px);
+}
+
+.detalle-tarifas-usd-labels small {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: var(--tarifa-azul);
+    font-size: 0.75rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.detalle-tarifas-usd-body > strong {
     display: block;
-    max-width: 100%;
     margin: 0 0 14px;
-    overflow-wrap: anywhere;
     color: var(--tarifa-azul);
     font-family: "Playfair Display", serif;
-    font-size: clamp(1.8rem, 2.3vw, 2.28rem);
+    font-size: clamp(1.55rem, 2vw, 2rem);
     font-weight: 700;
-    line-height: 1.04;
-    letter-spacing: -0.035em;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
 }
 
 .detalle-tarifas-usd-body p {
     margin: 0;
     color: var(--tarifa-muted);
-    font-size: 0.94rem;
-    line-height: 1.58;
+    font-size: 0.84rem;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.detalle-tarifas-tc-value {
+    color: var(--tarifa-azul);
+    font-weight: 900;
+    white-space: nowrap;
 }
 
 .detalle-tarifas-api-pill {
-    min-height: 34px;
+    min-height: 40px;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    margin-top: 18px;
-    padding: 0 14px;
+    width: fit-content;
+    max-width: 100%;
+    margin: 18px auto 0;
+    padding: 10px 16px;
     border-radius: 999px;
     border: 1px solid rgba(0, 45, 137, 0.14);
     background: rgba(0, 45, 137, 0.055);
     color: var(--tarifa-azul);
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.06em;
-    line-height: 1;
-    text-transform: uppercase;
-    white-space: nowrap;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: none;
+}
+
+.detalle-tarifas-api-pill span {
+    display: block;
 }
 
 .detalle-tarifas-api-pill i {
+    flex: 0 0 auto;
     font-size: 0.9rem;
     line-height: 1;
 }
 
+.detalle-tarifas-api-pill--ok {
+    border-color: rgba(16, 185, 129, 0.24);
+    background: rgba(16, 185, 129, 0.12);
+    color: #087a55;
+}
+
+.detalle-tarifas-usd-card--pendiente .detalle-tarifas-usd-body {
+    align-items: flex-start;
+    text-align: left;
+}
+
+.detalle-tarifas-usd-card--pendiente .detalle-tarifas-api-pill {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* Card informativa */
 .detalle-tarifas-info-card {
     display: grid;
     grid-template-columns: 64px minmax(0, 1fr);
@@ -1995,68 +2079,42 @@
     line-height: 1.5;
 }
 
-/* Ajuste desktop: alinea la card USD con la card principal PEN */
-@media (min-width: 992px) {
-    .detalle-tarifas-usd-card {
-        align-items: start;
-        padding-top: 34px;
-        padding-bottom: 32px;
-    }
-
-    .detalle-tarifas-usd-icon {
-        margin-top: 0;
-    }
-
-    .detalle-tarifas-usd-body {
-        padding-top: 2px;
-    }
-
-    .detalle-tarifas-usd-body .detalle-tarifas-card-label {
-        margin-bottom: 14px;
-        line-height: 1.28;
-    }
-
-    .detalle-tarifas-usd-body strong {
-        font-size: clamp(1.55rem, 2vw, 2rem);
-        line-height: 1.05;
-        letter-spacing: -0.03em;
-    }
-}
-
+/* Tablet */
 @media (max-width: 991.98px) {
     .detalle-tarifas-card {
         padding: 36px 30px;
     }
 
     .detalle-tarifas-main-grid {
-        gap: 18px;
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
     .detalle-tarifas-pen-card,
     .detalle-tarifas-usd-card {
-        min-height: 250px;
+        min-height: auto;
         padding: 28px;
     }
 
     .detalle-tarifas-card-head,
-    .detalle-tarifas-usd-card {
-        grid-template-columns: 64px minmax(0, 1fr);
+    .detalle-tarifas-usd-topline {
+        grid-template-columns: 68px minmax(0, 1fr);
         gap: 18px;
     }
 
     .detalle-tarifas-pen-icon,
     .detalle-tarifas-usd-icon {
-        width: 64px;
-        height: 64px;
+        width: 68px;
+        height: 68px;
     }
 
     .detalle-tarifas-pen-icon svg {
-        width: 31px;
-        height: 31px;
+        width: 33px;
+        height: 33px;
     }
 
     .detalle-tarifas-usd-icon {
-        font-size: 2.28rem;
+        font-size: 2.38rem;
     }
 
     .detalle-tarifas-price-item strong {
@@ -2065,18 +2123,27 @@
 
     .detalle-tarifas-price-item small {
         padding: 0 12px;
-        font-size: 0.7rem;
+        font-size: 0.72rem;
+    }
+
+    .detalle-tarifas-usd-amount {
+        font-size: clamp(2rem, 5vw, 2.55rem);
     }
 }
 
+/* Móvil */
 @media (max-width: 767.98px) {
     .detalle-tarifas-card {
         padding: 28px 18px;
         border-radius: 22px;
     }
 
+    /* Mantener eyebrow + pill lado a lado como en el mockup */
     .detalle-tarifas-top {
-        display: block;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 12px;
         margin-bottom: 26px;
     }
 
@@ -2095,9 +2162,9 @@
 
     .detalle-tarifas-moneda {
         min-height: 42px;
-        margin-top: 22px;
-        padding: 0 16px;
-        font-size: 0.76rem;
+        margin-top: 0;
+        padding: 0 14px;
+        font-size: 0.72rem;
     }
 
     .detalle-tarifas-main-grid {
@@ -2106,7 +2173,8 @@
     }
 
     .detalle-tarifas-pen-card {
-        min-height: auto;
+        min-width: 0;
+        overflow: hidden;
         padding: 26px 24px;
         border-radius: 22px;
     }
@@ -2137,7 +2205,7 @@
     }
 
     .detalle-tarifas-price-item strong {
-        font-size: clamp(2.38rem, 11vw, 3.2rem);
+        font-size: clamp(2rem, 9.5vw, 2.8rem);
         letter-spacing: -0.06em;
     }
 
@@ -2151,7 +2219,7 @@
     .detalle-tarifas-price-separator {
         width: 28px;
         height: 2px;
-        margin-top: clamp(1.75rem, 8vw, 2.28rem);
+        margin-top: clamp(1.18rem, 5.1vw, 1.45rem);
     }
 
     .detalle-tarifas-pen-card p {
@@ -2161,12 +2229,17 @@
     }
 
     .detalle-tarifas-usd-card {
-        min-height: auto;
-        grid-template-columns: 70px minmax(0, 1fr);
-        align-items: start;
-        gap: 18px;
+        min-width: 0;
+        overflow: hidden;
+        gap: 0;
         padding: 26px 24px;
         border-radius: 22px;
+    }
+
+    .detalle-tarifas-usd-topline {
+        grid-template-columns: 70px minmax(0, 1fr);
+        gap: 18px;
+        margin-bottom: 8px;
     }
 
     .detalle-tarifas-usd-icon {
@@ -2175,28 +2248,50 @@
         font-size: 2.55rem;
     }
 
-    .detalle-tarifas-usd-body .detalle-tarifas-card-label {
-        margin-bottom: 10px;
+    .detalle-tarifas-usd-topline .detalle-tarifas-card-label {
+        font-size: 0.84rem;
+        letter-spacing: 0.01em;
     }
 
-    .detalle-tarifas-usd-body strong {
-        margin-bottom: 14px;
-        font-family: inherit;
-        font-size: 1.72rem;
-        font-weight: 900;
-        letter-spacing: -0.025em;
+    .detalle-tarifas-usd-conversion {
+        width: 100%;
+        margin-bottom: 18px;
+    }
+
+    .detalle-tarifas-usd-amount {
+        gap: 5px;
+        font-size: clamp(1.85rem, 7.4vw, 2.35rem);
+        letter-spacing: -0.06em;
+    }
+
+    .detalle-tarifas-usd-separator {
+        min-width: 22px;
+    }
+
+    .detalle-tarifas-usd-labels {
+        width: min(100%, 100%);
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .detalle-tarifas-usd-labels small {
+        justify-self: center;
+        width: min(132px, 100%);
+        min-height: 29px;
+        padding: 0 13px;
+        font-size: 0.72rem;
     }
 
     .detalle-tarifas-usd-body p {
-        font-size: 0.92rem;
-        line-height: 1.56;
+        font-size: 0.68rem;
+        line-height: 1.38;
     }
 
     .detalle-tarifas-api-pill {
-        min-height: 32px;
-        margin-top: 16px;
-        padding: 0 12px;
-        font-size: 0.66rem;
+        min-height: 36px;
+        padding: 8px 12px;
+        font-size: 0.67rem;
+        line-height: 1.25;
     }
 
     .detalle-tarifas-info-card {
@@ -2225,6 +2320,7 @@
     }
 }
 
+/* Móvil angosto */
 @media (max-width: 420px) {
     .detalle-tarifas-card {
         padding: 24px 14px;
@@ -2240,7 +2336,7 @@
     }
 
     .detalle-tarifas-card-head,
-    .detalle-tarifas-usd-card {
+    .detalle-tarifas-usd-topline {
         grid-template-columns: 60px minmax(0, 1fr);
         gap: 14px;
     }
@@ -2261,7 +2357,7 @@
     }
 
     .detalle-tarifas-price-item strong {
-        font-size: clamp(2rem, 9.8vw, 2.75rem);
+        font-size: clamp(1.85rem, 9vw, 2.55rem);
     }
 
     .detalle-tarifas-price-item small {
@@ -2272,25 +2368,47 @@
 
     .detalle-tarifas-price-separator {
         width: 22px;
-        margin-top: clamp(1.48rem, 7vw, 1.95rem);
+        margin-top: clamp(1.12rem, 4.8vw, 1.35rem);
     }
 
     .detalle-tarifas-pen-card p {
         font-size: 0.88rem;
     }
 
-    .detalle-tarifas-usd-body strong {
-        font-size: 1.46rem;
+    .detalle-tarifas-usd-amount {
+    gap: 4px;
+    font-size: clamp(1.62rem, 6.9vw, 2rem);
+    }
+
+    .detalle-tarifas-usd-separator {
+        min-width: 14px;
     }
 
     .detalle-tarifas-usd-body p {
-        font-size: 0.86rem;
+        font-size: 0.63rem;
+    }
+
+    .detalle-tarifas-usd-labels {
+        gap: 8px;
+    }
+
+    .detalle-tarifas-usd-labels small {
+        justify-self: center;
+        width: min(116px, 100%);
+        min-height: 27px;
+        padding: 0 10px;
+        font-size: 0.66rem;
+    }
+
+    .detalle-tarifas-api-pill {
+        font-size: 0.61rem;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }
 
-/* =========================================================
-   14. Ubicación / mapa - Acciones debajo del mapa y panel desplegable interno
-========================================================= */
+
+/* ==== 14. Cómo llegar - Ubicación y mapa  ==== */
 
 .du-card {
     --du-ink: #002d89;
@@ -2936,9 +3054,8 @@
     }
 }
 
-/* =========================================================
-   15. Panel de contacto — rediseño dinámico dpc-*
-========================================================= */
+
+/* ==== 15. Panel de contacto ==== */
 
 .detalle-panel-contacto {
     position: sticky;
@@ -3125,9 +3242,7 @@
     font-size: 0.82rem;
 }
 
-/* =========================================================
-   16. Valoraciones / comentarios placeholder
-========================================================= */
+/* ==== 16. Valoraciones / comentarios ==== */
 
 .detalle-valoraciones-placeholder {
     position: relative;
@@ -3313,10 +3428,7 @@
     cursor: not-allowed;
 }
 
-/* =========================================================
-   17. Modal galería ampliada
-========================================================= */
-
+/* ==== 17. Modal galería ampliada ==== */
 .detalle-gallery-modal {
     --bs-modal-bg: transparent;
 }
@@ -3487,9 +3599,7 @@ body.detalle-gallery-locked {
     touch-action: none;
 }
 
-/* =========================================================
-   18. Responsive desktop medio
-========================================================= */
+/* ==== 18. Responsive desktop medio ==== */
 
 @media (max-width: 1399.98px) {
     .detalle-hero-container {
@@ -3543,9 +3653,7 @@ body.detalle-gallery-locked {
     }
 }
 
-/* =========================================================
-   19. Responsive tablet
-========================================================= */
+/* ==== 19. Responsive tablet ==== */
 
 @media (max-width: 1199.98px) {
     .detalle-hero-desktop {
@@ -3658,9 +3766,7 @@ body.detalle-gallery-locked {
     }
 }
 
-/* =========================================================
-   20. Responsive móvil
-========================================================= */
+/* ==== 20. Responsive móvil ==== */
 
 @media (max-width: 767.98px) {
     .detalle-mobile-hero {
@@ -3840,10 +3946,6 @@ body.detalle-gallery-locked {
 
     .detalle-panel-contacto h2 {
         font-size: clamp(1.75rem, 8vw, 2.2rem);
-    }
-
-    .dpc-btn {
-        min-height: 52px;
     }
 
     /* Sobre */

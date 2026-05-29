@@ -21,6 +21,15 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
+# API tipo de cambio SUNAT/SBS - Decolecta / apis.net.pe
+DECOLECTA_TIPO_CAMBIO_URL = env(
+    "DECOLECTA_TIPO_CAMBIO_URL",
+    default="https://api.decolecta.com/v1/tipo-cambio/sunat"
+)
+
+# Token opcional. Si Decolecta lo exige en producción, agrégalo en el .env.
+DECOLECTA_API_TOKEN = env("DECOLECTA_API_TOKEN", default="")
+
 # Application definition
 
 INSTALLED_APPS = [
