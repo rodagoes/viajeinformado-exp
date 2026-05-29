@@ -155,7 +155,7 @@
         </div>
     </section>
 
-    <!-- Barra flotante escritorio — fuera del hero para quedar exactamente a caballo -->
+    <!-- Barra flotante escritorio -->
     <div class="detalle-hero-barra-wrap">
         <div class="detalle-hero-barra">
 
@@ -645,22 +645,105 @@
                                 </p>
                             </article>
 
-                            <article class="detalle-tarifas-usd-card detalle-tarifas-usd-card--pendiente">
-                                <div class="detalle-tarifas-usd-icon" aria-hidden="true">$</div>
+                            <article class="detalle-tarifas-usd-card {% if not tarifas_usd_disponibles %}detalle-tarifas-usd-card--pendiente{% endif %}">
+                                <div class="detalle-tarifas-usd-topline">
+                                    <div class="detalle-tarifas-usd-icon" aria-hidden="true">$</div>
+
+                                    <span class="detalle-tarifas-card-label">
+                                        Conversión referencial a USD
+                                    </span>
+                                </div>
 
                                 <div class="detalle-tarifas-usd-body">
-                                    <span class="detalle-tarifas-card-label">Conversión referencial a USD</span>
+                                    {% if tarifas_usd_disponibles %}
+                                    <div class="detalle-tarifas-usd-conversion">
+                                        <div class="detalle-tarifas-usd-amount">
+                                            {% if precio_desde_usd_txt and precio_hasta_usd_txt %}
+                                            <span class="detalle-tarifas-usd-aprox">≈</span>
+                                            <span>US$ {{ precio_desde_usd_txt }}</span>
+                                            <span class="detalle-tarifas-usd-separator">—</span>
+                                            <span>US$ {{ precio_hasta_usd_txt }}</span>
+                                            {% elif precio_desde_usd_txt %}
+                                            <span class="detalle-tarifas-usd-aprox">≈</span>
+                                            <span>US$ {{ precio_desde_usd_txt }}</span>
+                                            {% elif precio_hasta_usd_txt %}
+                                            <span class="detalle-tarifas-usd-aprox">≈</span>
+                                            <span>US$ {{ precio_hasta_usd_txt }}</span>
+                                            {% endif %}
+                                        </div>
 
+                                        {% if precio_desde_usd_txt and precio_hasta_usd_txt %}
+                                        <div class="detalle-tarifas-usd-labels">
+                                            <small>
+                                                {% if es_restaurante %}
+                                                Precio desde
+                                                {% else %}
+                                                Tarifa desde
+                                                {% endif %}
+                                            </small>
+
+                                            <small>
+                                                {% if es_restaurante %}
+                                                Precio hasta
+                                                {% else %}
+                                                Tarifa hasta
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        {% elif precio_desde_usd_txt %}
+                                        <div class="detalle-tarifas-usd-labels detalle-tarifas-usd-labels--single">
+                                            <small>
+                                                {% if es_restaurante %}
+                                                Precio desde
+                                                {% else %}
+                                                Tarifa desde
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        {% elif precio_hasta_usd_txt %}
+                                        <div class="detalle-tarifas-usd-labels detalle-tarifas-usd-labels--single">
+                                            <small>
+                                                {% if es_restaurante %}
+                                                Precio hasta
+                                                {% else %}
+                                                Tarifa hasta
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <p>
+                                        Calculado al tipo de cambio:
+                                        <span class="detalle-tarifas-tc-value">S/. {{ tipo_cambio_venta_txt }}</span>
+                                    </p>
+
+                                    <div class="detalle-tarifas-api-pill detalle-tarifas-api-pill--ok">
+                                        <i class="bi bi-check-circle"></i>
+                                        <span>
+                                            Tipo de cambio actualizado a:
+                                            {% if fecha_tipo_cambio_txt %}
+                                            {{ fecha_tipo_cambio_txt }}
+                                            {% elif tipo_cambio_vigente.fecha %}
+                                            {{ tipo_cambio_vigente.fecha|date:"d-m-Y" }}
+                                            {% else %}
+                                            fecha no disponible
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    {% else %}
                                     <strong>Próximamente</strong>
 
                                     <p>
-                                        Aquí se mostrará la conversión referencial en dólares cuando se conecte la API de tipo de cambio actualizado.
+                                        Aquí se mostrará la conversión referencial en dólares cuando se conecte la API
+                                        de tipo de cambio actualizado.
                                     </p>
 
                                     <div class="detalle-tarifas-api-pill">
                                         <i class="bi bi-clock-history"></i>
                                         <span>Pendiente de API</span>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </article>
                         </div>
@@ -691,6 +774,7 @@
                     </section>
                     {% endif %}
 
+                    <!-- SECCIÓN CÓMO LLEGAR - UBICACION -->
                     {% if sucursal_mapa_principal %}
                     <section class="detalle-bloque du-card" id="detalle-ubicacion" data-detalle-ubicacion
                         data-lat="{{ sucursal_mapa_principal.latitud }}" data-lng="{{ sucursal_mapa_principal.longitud }}"
@@ -761,8 +845,6 @@
                                 referrerpolicy="no-referrer-when-downgrade" data-detalle-ubicacion-map
                                 title="Mapa de {{ establecimiento.nombre }}">
                             </iframe>
-
-                            <!-- Overlay eliminado: el embed de Google Maps ya muestra el pin con el nombre del establecimiento -->
                         </div>
 
                         <!-- Acciones debajo del mapa -->
@@ -786,7 +868,7 @@
                             </a>
                         </div>
 
-                        <!-- Panel desplegable de ruta, dentro del mismo card -->
+                        <!-- Desplegable de "como llegar", dentro del mismo card -->
                         <div class="du-directions" data-du-directions hidden>
                             <div class="du-directions-hd">
                                 <h5>Cómo llegar</h5>
@@ -864,6 +946,7 @@
                     </section>
                     {% endif %}
 
+                    <!-- SECCIÓN VALORACIONES Y COMENTARIOS -->
                     <section class="detalle-bloque detalle-valoraciones-placeholder" id="detalle-valoraciones">
                         <div class="detalle-bloque-encabezado detalle-bloque-encabezado-flex">
                             <div>
@@ -1021,7 +1104,7 @@
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-telephone-fill"></i>
                                 </span>
-                                <span class="dpc-btn-txt">{{ contacto_telefono }}</span>
+                                <span class="dpc-btn-txt">Llamar al celular</span>
                             </a>
                             {% endif %}
 
@@ -1031,7 +1114,7 @@
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-envelope-fill"></i>
                                 </span>
-                                <span class="dpc-btn-txt">{{ contacto_correo }}</span>
+                                <span class="dpc-btn-txt">Correo electrónico</span>
                             </a>
                             {% endif %}
 
