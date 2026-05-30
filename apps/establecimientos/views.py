@@ -1,8 +1,12 @@
 import re
+from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
 from urllib.parse import quote
+
+from apps.monedas.models import TipoCambio
+
 
 from .models import (
     ContactoSucursalEstablecimiento,
@@ -439,6 +443,68 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         elif establecimiento.carta_url:
             carta_publica_url = establecimiento.carta_url
 
+    # Conversión referencial PEN → USD.
+    # Se usa el último tipo de cambio activo guardado en la app monedas.
+    def decimal_or_none(value):
+        if value in (None, ""):
+            return None
+
+        try:
+            return Decimal(value)
+        except (InvalidOperation, TypeError, ValueError):
+            return None
+
+    def convertir_pen_a_usd(monto_pen, tipo_cambio):
+        monto = decimal_or_none(monto_pen)
+
+        if not monto or not tipo_cambio or not tipo_cambio.venta:
+            return None
+
+        venta = Decimal(tipo_cambio.venta)
+
+        if venta <= 0:
+            return None
+
+        return (monto / venta).quantize(
+            Decimal("0.01"),
+            rounding=ROUND_HALF_UP
+        )
+
+    def format_decimal_dot(value, decimals="0.00"):
+        if value is None:
+            return ""
+
+        return format(value, decimals)
+
+    tipo_cambio_vigente = TipoCambio.vigente()
+    precio_desde_usd = convertir_pen_a_usd(
+        establecimiento.precio_desde,
+        tipo_cambio_vigente
+    )
+    precio_hasta_usd = convertir_pen_a_usd(
+        establecimiento.precio_hasta,
+        tipo_cambio_vigente
+    )
+
+    tarifas_usd_disponibles = bool(
+        tipo_cambio_vigente and (
+            precio_desde_usd is not None or precio_hasta_usd is not None
+        )
+    )
+
+    precio_desde_usd_txt = format_decimal_dot(precio_desde_usd, ".2f")
+    precio_hasta_usd_txt = format_decimal_dot(precio_hasta_usd, ".2f")
+    tipo_cambio_venta_txt = (
+        format_decimal_dot(tipo_cambio_vigente.venta, ".2f")
+        if tipo_cambio_vigente
+        else ""
+    )
+    fecha_tipo_cambio_txt = (
+        tipo_cambio_vigente.fecha.strftime("%d-%m-%Y")
+        if tipo_cambio_vigente and tipo_cambio_vigente.fecha
+        else ""
+    )
+
     context = {
         "establecimiento": establecimiento,
         "es_restaurante": tipo_establecimiento == "restaurante",
@@ -460,6 +526,14 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         "direccion_mapa": direccion_mapa,
         "recomendaciones": recomendaciones,
         "carta_publica_url": carta_publica_url,
+
+        # Conversión referencial a USD
+        "tipo_cambio_vigente": tipo_cambio_vigente,
+        "tipo_cambio_venta_txt": tipo_cambio_venta_txt,
+        "fecha_tipo_cambio_txt": fecha_tipo_cambio_txt,
+        "precio_desde_usd_txt": precio_desde_usd_txt,
+        "precio_hasta_usd_txt": precio_hasta_usd_txt,
+        "tarifas_usd_disponibles": tarifas_usd_disponibles,
 
         # URL de retorno
         "volver_url_name": "establecimientos:listado_restaurantes"
