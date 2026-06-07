@@ -1,0 +1,659 @@
+/* =========================================================
+   Listado y detalle público de Lugares Turísticos
+   Viaje Informado — Fase 6C
+   CSS encapsulado: no afecta header/footer global
+========================================================= */
+
+/* =========================================================
+   Variables locales
+========================================================= */
+
+.lugares-pagina {
+    --lug-fondo-suave:     #F8F8FF;
+
+    --lug-azul-claro:      #007FFF;
+    --lug-azul-oscuro:     #002d89;
+    --lug-azul-profundo:   #000080;
+    --lug-acento-gradiente: linear-gradient(135deg, #007FFF 0%, #000080 100%);
+
+    --lug-tarjeta-fondo:   #F8F8FF;
+    --lug-tarjeta-borde:   rgba(0, 45, 137, 0.12);
+
+    --lug-texto-titulo:    #0b0c10;
+    --lug-texto-principal: #002d89;
+    --lug-texto-secundario:#5f6b7a;
+
+    --lug-blanco:          #ffffff;
+
+    --lug-verde:           #1a9c5b;
+    --lug-amarillo:        #d48a00;
+    --lug-rojo:            #c0392b;
+}
+
+/* =========================================================
+   Fondo y encabezado
+========================================================= */
+
+.lugares-pagina .seccion-fondo-principal {
+    background-color: var(--lug-fondo-suave);
+    min-height: 100vh;
+    padding: 0 0 120px;
+}
+
+.lugares-pagina .lugares-encabezado {
+    background-color: var(--lug-fondo-suave);
+    padding: 150px 0 54px;
+    text-align: center;
+}
+
+.lugares-pagina .lugares-encabezado-icono {
+    font-size: 2.6rem;
+    color: var(--lug-azul-oscuro);
+    margin-bottom: 16px;
+    opacity: 0.75;
+}
+
+.lugares-pagina .lugares-encabezado h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    color: var(--lug-texto-titulo);
+    margin-bottom: 12px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.lugares-pagina .lugares-encabezado p {
+    font-size: 1.05rem;
+    color: var(--lug-texto-secundario);
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   Filtros
+========================================================= */
+
+.lugares-pagina .filtros-contenedor {
+    background-color: var(--lug-blanco);
+    padding: 22px 24px;
+    border-radius: 14px;
+    margin-top: -24px;
+    margin-bottom: 46px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 18px 45px rgba(0, 45, 137, 0.08);
+    border: 1px solid rgba(0, 45, 137, 0.06);
+}
+
+.lugares-pagina .filtros-contenedor .form-control,
+.lugares-pagina .filtros-contenedor .form-select {
+    min-height: 45px;
+    background-color: var(--lug-blanco);
+    border: 1px solid rgba(0, 45, 137, 0.16);
+    color: var(--lug-azul-oscuro);
+    border-radius: 7px;
+    box-shadow: none;
+}
+
+.lugares-pagina .filtros-contenedor .form-control::placeholder {
+    color: rgba(0, 45, 137, 0.55);
+}
+
+.lugares-pagina .filtros-contenedor .form-control:focus,
+.lugares-pagina .filtros-contenedor .form-select:focus {
+    border-color: var(--lug-azul-oscuro);
+    box-shadow: 0 0 0 0.22rem rgba(0, 127, 255, 0.16);
+}
+
+.lugares-pagina .filtro-busqueda-grupo .input-group-text {
+    min-height: 45px;
+    background-color: var(--lug-blanco);
+    color: var(--lug-azul-oscuro);
+    border: 1px solid rgba(0, 45, 137, 0.16);
+    border-right: 0;
+    border-radius: 7px 0 0 7px;
+}
+
+.lugares-pagina .filtro-busqueda-grupo .form-control {
+    border-left: 0;
+    border-radius: 0 7px 7px 0;
+}
+
+/* =========================================================
+   Botones de filtros
+========================================================= */
+
+.lugares-pagina .btn-dorado {
+    min-height: 45px;
+    background: var(--lug-acento-gradiente);
+    color: var(--lug-fondo-suave);
+    font-weight: 700;
+    border: 1px solid var(--lug-azul-oscuro);
+    border-radius: 7px;
+    transition: all 0.25s ease;
+}
+
+.lugares-pagina .btn-dorado:hover {
+    background: var(--lug-fondo-suave);
+    border-color: var(--lug-azul-oscuro);
+    color: var(--lug-azul-oscuro);
+    transform: translateY(-1px);
+}
+
+.lugares-pagina .btn-contorno-dorado {
+    background-color: transparent;
+    color: var(--lug-azul-oscuro);
+    border: 1px solid var(--lug-azul-oscuro);
+    border-radius: 7px;
+    transition: all 0.25s ease;
+}
+
+.lugares-pagina .btn-contorno-dorado:hover {
+    background: var(--lug-acento-gradiente);
+    color: var(--lug-fondo-suave);
+    border-color: var(--lug-azul-oscuro);
+}
+
+.lugares-pagina .btn-limpiar-filtro {
+    min-width: 46px;
+    min-height: 45px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   Resumen y ordenamiento
+========================================================= */
+
+.lugares-pagina .filtros-resumen {
+    margin-top: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.lugares-pagina .contador-resultados {
+    color: var(--lug-texto-secundario);
+    font-size: 0.95rem;
+}
+
+.lugares-pagina .orden-caja {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lugares-pagina .orden-caja label {
+    color: var(--lug-texto-titulo);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.lugares-pagina .orden-caja .form-select {
+    min-height: 36px;
+    width: auto;
+    min-width: 142px;
+    font-size: 0.88rem;
+}
+
+/* =========================================================
+   Grilla de tarjetas
+========================================================= */
+
+.lugares-pagina .lugar-grilla {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+}
+
+/* =========================================================
+   Tarjeta de lugar turístico
+========================================================= */
+
+.lugares-pagina .lugar-tarjeta {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    background: var(--lug-blanco);
+    border-radius: 18px;
+    border: 1px solid var(--lug-tarjeta-borde);
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 28px rgba(0, 45, 137, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease;
+}
+
+.lugares-pagina .lugar-tarjeta:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 20px 50px rgba(0, 45, 137, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* =========================================================
+   Imagen de la tarjeta
+========================================================= */
+
+.lugares-pagina .lugar-imagen-contenedor {
+    position: relative;
+    width: 100%;
+    height: 195px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--lug-acento-gradiente);
+}
+
+.lugares-pagina .lugar-imagen-contenedor img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.45s ease;
+}
+
+.lugares-pagina .lugar-tarjeta:hover .lugar-imagen-contenedor img {
+    transform: scale(1.04);
+}
+
+.lugares-pagina .lugar-imagen-vacia {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.6);
+    font-size: 3rem;
+}
+
+/* =========================================================
+   Badges sobre la imagen
+========================================================= */
+
+.lugares-pagina .lugar-badge-dificultad,
+.lugares-pagina .lugar-badge-destacado {
+    position: absolute;
+    bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1;
+    backdrop-filter: blur(6px);
+}
+
+.lugares-pagina .lugar-badge-dificultad {
+    left: 12px;
+}
+
+.lugares-pagina .lugar-badge-destacado {
+    right: 12px;
+    background: rgba(0, 45, 137, 0.82);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+}
+
+.lugares-pagina .lugar-dificultad--facil {
+    background: rgba(26, 156, 91, 0.88);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.lugares-pagina .lugar-dificultad--moderada {
+    background: rgba(212, 138, 0, 0.88);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.lugares-pagina .lugar-dificultad--dificil {
+    background: rgba(192, 57, 43, 0.88);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* =========================================================
+   Cuerpo de la tarjeta
+========================================================= */
+
+.lugares-pagina .lugar-cuerpo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 22px 22px;
+}
+
+.lugares-pagina .lugar-categoria {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--lug-azul-oscuro);
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-bottom: 9px;
+}
+
+.lugares-pagina .lugar-cat-icono {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}
+
+.lugares-pagina .lugar-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.28rem;
+    font-weight: 800;
+    color: var(--lug-texto-titulo);
+    line-height: 1.2;
+    margin: 0;
+}
+
+.lugares-pagina .lugar-divisor {
+    width: 44px;
+    height: 2px;
+    background: var(--lug-acento-gradiente);
+    margin: 11px 0 14px;
+}
+
+/* =========================================================
+   Info de la tarjeta
+========================================================= */
+
+.lugares-pagina .lugar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 14px;
+}
+
+.lugares-pagina .lugar-info-elemento {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    column-gap: 8px;
+    align-items: start;
+    font-size: 0.88rem;
+    color: var(--lug-texto-secundario);
+    line-height: 1.35;
+}
+
+.lugares-pagina .lugar-info-elemento i {
+    color: var(--lug-azul-oscuro);
+    font-size: 0.9rem;
+    margin-top: 1px;
+}
+
+/* =========================================================
+   Servicios mini (chips)
+========================================================= */
+
+.lugares-pagina .lugar-servicios-mini {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.lugares-pagina .lugar-servicio-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    background: rgba(0, 45, 137, 0.06);
+    border: 1px solid rgba(0, 45, 137, 0.10);
+    border-radius: 999px;
+    color: var(--lug-azul-oscuro);
+    font-size: 0.74rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.lugares-pagina .lugar-servicio-chip i {
+    font-size: 0.8rem;
+}
+
+.lugares-pagina .lugar-servicio-img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+
+.lugares-pagina .lugar-servicios-mas {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    background: rgba(0, 45, 137, 0.04);
+    border: 1px dashed rgba(0, 45, 137, 0.18);
+    border-radius: 999px;
+    color: var(--lug-texto-secundario);
+    font-size: 0.74rem;
+    font-style: italic;
+}
+
+/* =========================================================
+   Acción
+========================================================= */
+
+.lugares-pagina .lugar-accion {
+    margin-top: auto;
+    padding-top: 4px;
+}
+
+.lugares-pagina .lugar-accion .btn {
+    width: 100%;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    letter-spacing: 0.14em;
+    font-weight: 900;
+}
+
+/* =========================================================
+   Paginación (igual que establecimientos)
+========================================================= */
+
+.lugares-pagina .lugar-paginacion-contenedor {
+    margin-top: 62px;
+}
+
+.lugares-pagina .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow: visible;
+    margin-bottom: 0;
+}
+
+.lugares-pagina .pagination .page-link {
+    min-width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 45, 137, 0.16);
+    background-color: var(--lug-blanco);
+    color: var(--lug-azul-oscuro);
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: none;
+    transition:
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.lugares-pagina .pagination .page-link:hover {
+    border-color: var(--lug-azul-oscuro);
+    color: var(--lug-azul-oscuro);
+    background-color: var(--lug-fondo-suave);
+    transform: translateY(-1px);
+}
+
+.lugares-pagina .pagination .page-item.disabled .page-link {
+    color: rgba(0, 45, 137, 0.28);
+    background-color: var(--lug-fondo-suave);
+    border-color: rgba(0, 45, 137, 0.10);
+    pointer-events: none;
+}
+
+.lugares-pagina .pagination .page-number .page-link {
+    position: relative;
+    isolation: isolate;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 45, 137, 0.18);
+    background-color: transparent;
+    color: var(--lug-texto-titulo);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    transition:
+        color 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+        border-color 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+        background 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lugares-pagina .pagination .page-number .page-link span {
+    position: relative;
+    z-index: 2;
+}
+
+.lugares-pagina .pagination .page-number .page-link::before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--lug-acento-gradiente);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    z-index: 1;
+    transition:
+        top 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.45s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lugares-pagina .pagination .page-number .page-link::after {
+    content: "";
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lug-acento-gradiente);
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+    z-index: 1;
+    transition:
+        bottom 0.45s 0.18s cubic-bezier(0.23, 1, 0.32, 1),
+        opacity 0.45s 0.18s cubic-bezier(0.23, 1, 0.32, 1),
+        transform 0.45s 0.18s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.lugares-pagina .pagination .page-number .page-link:hover {
+    border-color: var(--lug-azul-oscuro);
+    color: var(--lug-azul-oscuro);
+    background-color: transparent;
+}
+
+.lugares-pagina .pagination .page-number.active .page-link {
+    border-color: transparent;
+    color: var(--lug-fondo-suave);
+    background-color: transparent;
+    transform: scale(1.08);
+}
+
+.lugares-pagina .pagination .page-number.active .page-link::before {
+    top: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.16),
+        0 24px 24px rgba(0, 45, 137, 0.10);
+}
+
+.lugares-pagina .pagination .page-number.active .page-link::after {
+    bottom: -16px;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* =========================================================
+   Responsive — Listado de lugares
+========================================================= */
+
+@media (max-width: 991.98px) {
+    .lugares-pagina .lugares-encabezado {
+        padding: 135px 0 50px;
+    }
+    .lugares-pagina .lugares-encabezado h1 {
+        font-size: clamp(2.2rem, 7vw, 3.5rem);
+    }
+    .lugares-pagina .filtros-contenedor {
+        margin-bottom: 32px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .lugares-pagina .seccion-fondo-principal {
+        padding-bottom: 80px;
+    }
+    .lugares-pagina .lugares-encabezado {
+        padding: 55px 0 44px;
+    }
+    .lugares-pagina .lugar-imagen-contenedor {
+        height: 210px;
+    }
+    .lugares-pagina .filtros-resumen {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .lugares-pagina .filtros-resumen {
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+    .lugares-pagina .orden-caja {
+        justify-content: space-between;
+        width: 100%;
+    }
+    .lugares-pagina .orden-caja .form-select {
+        min-width: 150px;
+    }
+    .lugares-pagina .filtros-contenedor {
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+}
+
+
+/* -- fin de turismo.css (estilos de detalle en detalle-lugar-turistico.css) -- */

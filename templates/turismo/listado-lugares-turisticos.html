@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Viaje Informado • Huánuco{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/listado-lugar-turistico.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="lugares-pagina">
+
+    <!-- Encabezado -->
+    <section class="lugares-encabezado">
+        <div class="container">
+            <div class="lugares-encabezado-icono" aria-hidden="true">
+                <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <h1>{{ titulo }}</h1>
+            <p>{{ subtitulo }}</p>
+        </div>
+    </section>
+
+    <section class="seccion-fondo-principal">
+        <div class="container">
+
+            <!-- Filtros -->
+            <div class="filtros-contenedor">
+                <form method="GET" action="">
+                    <div class="row g-3 align-items-center">
+
+                        <div class="col-lg-4 col-md-12">
+                            <div class="input-group filtro-busqueda-grupo">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" name="q" class="form-control"
+                                    placeholder="Buscar por nombre..." value="{{ q }}">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4">
+                            <select name="categoria" class="form-select">
+                                <option value="">Categoría</option>
+                                {% for categoria in categorias_opciones %}
+                                    <option value="{{ categoria.id }}"
+                                        {% if categoria.selected %}selected{% endif %}>
+                                        {{ categoria.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4">
+                            <select name="dificultad" class="form-select">
+                                {% for opcion in dificultad_opciones %}
+                                    <option value="{{ opcion.value }}"
+                                        {% if opcion.selected %}selected{% endif %}>
+                                        {{ opcion.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4">
+                            <select name="tipo_costo" class="form-select">
+                                {% for opcion in tipo_costo_opciones %}
+                                    <option value="{{ opcion.value }}"
+                                        {% if opcion.selected %}selected{% endif %}>
+                                        {{ opcion.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-12">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-dorado flex-grow-1">
+                                    <i class="bi bi-funnel"></i>
+                                    Buscar
+                                </button>
+                                <a href="{{ request.path }}"
+                                    class="btn btn-contorno-dorado btn-limpiar-filtro"
+                                    title="Limpiar filtros">
+                                    <i class="bi bi-eraser"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="filtros-resumen">
+                        <span class="contador-resultados">
+                            {{ total_resultados }} resultado{% if total_resultados != 1 %}s{% endif %} encontrado{% if total_resultados != 1 %}s{% endif %}
+                        </span>
+                        <div class="orden-caja">
+                            <label for="orden_select">Ordenar:</label>
+                            <select name="orden" id="orden_select" class="form-select form-select-sm"
+                                onchange="this.form.submit()">
+                                {% for opcion in opciones_orden %}
+                                    <option value="{{ opcion.value }}"
+                                        {% if opcion.selected %}selected{% endif %}>
+                                        {{ opcion.label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Grilla de tarjetas -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 lugar-grilla">
+
+                {% for lugar in page_obj %}
+                    <div class="col">
+                        <article class="lugar-tarjeta">
+
+                            <!-- Imagen -->
+                            <div class="lugar-imagen-contenedor">
+                                {% if lugar.imagen_principal %}
+                                    <img src="{{ lugar.imagen_principal.url }}"
+                                        alt="{{ lugar.texto_alt_imagen|default:lugar.nombre }}"
+                                        loading="lazy">
+                                {% else %}
+                                    <div class="lugar-imagen-vacia">
+                                        <i class="bi bi-image-alt"></i>
+                                    </div>
+                                {% endif %}
+
+                                {% if lugar.dificultad != 'no_aplica' %}
+                                    <span class="lugar-badge-dificultad lugar-dificultad--{{ lugar.dificultad }}">
+                                        <i class="bi bi-lightning-charge-fill"></i>
+                                        {{ lugar.get_dificultad_display }}
+                                    </span>
+                                {% endif %}
+
+                                {% if lugar.destacado %}
+                                    <span class="lugar-badge-destacado">
+                                        <i class="bi bi-star-fill"></i>
+                                        Destacado
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Cuerpo de la tarjeta -->
+                            <div class="lugar-cuerpo">
+
+                                <!-- Categoría -->
+                                <div class="lugar-categoria">
+                                    {% with cat=lugar.categoria_principal %}
+                                        {% if cat.tipo_icono == 'bootstrap' and cat.icono_bootstrap %}
+                                            <i class="bi {{ cat.icono_bootstrap }}"></i>
+                                        {% elif cat.tipo_icono == 'imagen' and cat.icono_archivo %}
+                                            <img src="{{ cat.icono_archivo.url }}" alt=""
+                                                class="lugar-cat-icono">
+                                        {% else %}
+                                            <i class="bi bi-geo-fill"></i>
+                                        {% endif %}
+                                        {{ cat.nombre }}
+                                    {% endwith %}
+                                </div>
+
+                                <!-- Nombre -->
+                                <h3 class="lugar-titulo">{{ lugar.nombre }}</h3>
+                                <div class="lugar-divisor"></div>
+
+                                <!-- Info -->
+                                <div class="lugar-info">
+
+                                    <!-- Ubicación -->
+                                    <div class="lugar-info-elemento">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span>
+                                            {{ lugar.distrito }}{% if lugar.localidad %}, {{ lugar.localidad }}{% endif %}
+                                        </span>
+                                    </div>
+
+                                    <!-- Tiempo estimado -->
+                                    {% if lugar.tiempo_visita_estimado %}
+                                        <div class="lugar-info-elemento">
+                                            <i class="bi bi-clock"></i>
+                                            <span>{{ lugar.tiempo_visita_estimado }}</span>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Costo -->
+                                    <div class="lugar-info-elemento">
+                                        <i class="bi bi-ticket-perforated"></i>
+                                        <span>
+                                            {% if lugar.tipo_costo == 'gratis' %}
+                                                Entrada gratuita
+                                            {% elif lugar.tipo_costo == 'pagado' %}
+                                                {% if lugar.precio_desde and lugar.precio_hasta %}
+                                                    S/ {{ lugar.precio_desde|floatformat:0 }} – {{ lugar.precio_hasta|floatformat:0 }}
+                                                {% elif lugar.precio_desde %}
+                                                    Desde S/ {{ lugar.precio_desde|floatformat:0 }}
+                                                {% else %}
+                                                    Pagado
+                                                {% endif %}
+                                            {% else %}
+                                                Consultar precio
+                                            {% endif %}
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <!-- Servicios destacados (hasta 3) -->
+                                {% with servicios=lugar.servicios.all %}
+                                    {% if servicios %}
+                                        <div class="lugar-servicios-mini">
+                                            {% for servicio in servicios|slice:":3" %}
+                                                <span class="lugar-servicio-chip" title="{{ servicio.nombre }}">
+                                                    {% if servicio.tipo_icono == 'bootstrap' and servicio.icono_bootstrap %}
+                                                        <i class="bi {{ servicio.icono_bootstrap }}"></i>
+                                                    {% elif servicio.tipo_icono == 'imagen' and servicio.icono_archivo %}
+                                                        <img src="{{ servicio.icono_archivo.url }}"
+                                                            alt="{{ servicio.nombre }}"
+                                                            class="lugar-servicio-img">
+                                                    {% else %}
+                                                        <i class="bi bi-check-circle-fill"></i>
+                                                    {% endif %}
+                                                    <span class="lugar-servicio-nombre">{{ servicio.nombre }}</span>
+                                                </span>
+                                            {% endfor %}
+                                            {% if servicios|length > 3 %}
+                                                <span class="lugar-servicios-mas">+{{ servicios|length|add:"-3" }} más</span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+
+                                <!-- Acción -->
+                                <div class="lugar-accion">
+                                    <a href="{% url 'turismo:detalle_lugar' lugar.slug %}"
+                                        class="btn btn-contorno-dorado">
+                                        Explorar &rarr;
+                                    </a>
+                                </div>
+
+                            </div>
+                        </article>
+                    </div>
+
+                {% empty %}
+
+                    <div class="col-12 text-center py-5 mt-4">
+                        <i class="bi bi-map display-1 text-muted mb-3 d-block"></i>
+                        <h3 class="text-dark">No se encontraron lugares turísticos</h3>
+                        <p class="text-muted">Intenta cambiar los filtros de búsqueda.</p>
+                        <a href="{{ request.path }}" class="btn btn-contorno-dorado mt-3">
+                            Limpiar filtros
+                        </a>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- Paginación -->
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Navegación de páginas"
+                    class="d-flex justify-content-center lugar-paginacion-contenedor">
+                    <ul class="pagination">
+
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?page=1{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    aria-label="Primera">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    aria-label="Anterior">
+                                    <span aria-hidden="true">&lsaquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">&lsaquo;</span>
+                            </li>
+                        {% endif %}
+
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item page-number active" aria-current="page">
+                                    <span class="page-link">
+                                        <span>{{ i }}</span>
+                                    </span>
+                                </li>
+                            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                                <li class="page-item page-number">
+                                    <a class="page-link"
+                                        href="?page={{ i }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}">
+                                        <span>{{ i }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    aria-label="Siguiente">
+                                    <span aria-hidden="true">&rsaquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    aria-label="Última">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&rsaquo;</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;</span>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            {% endif %}
+
+        </div>
+    </section>
+
+</main>
+
+{% endblock %}
