@@ -42,3 +42,6 @@ data/
 
 # Backups locales
 backups_detalle/
+
+data_backup_sqlite*.json
+db_backup_antes_mysql.sqlite3
