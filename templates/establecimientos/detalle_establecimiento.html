@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ establecimiento.nombre }} | Viaje Informado Huánuco{% endblock %}
+{% block title %}Viaje Informado • Huánuco{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <link rel="stylesheet" href="{% static 'assets/css/establecimientos.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/detalle-establecimiento.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/como-llegar-desplegable.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -776,7 +777,7 @@
 
                     <!-- SECCIÓN CÓMO LLEGAR - UBICACION -->
                     {% if sucursal_mapa_principal %}
-                    <section class="detalle-bloque du-card" id="detalle-ubicacion" data-detalle-ubicacion
+                    <section class="detalle-bloque du-card como-llegar-wrap" id="detalle-ubicacion" data-como-llegar
                         data-lat="{{ sucursal_mapa_principal.latitud }}" data-lng="{{ sucursal_mapa_principal.longitud }}"
                         data-nombre="{{ sucursal_mapa_principal.nombre|default:'Local principal' }}"
                         data-label="{{ sucursal_mapa_principal.label }}" data-direccion="{{ sucursal_mapa_principal.direccion|default:'' }}"
@@ -816,7 +817,7 @@
                         <div class="du-branch-tabs" aria-label="Sucursales disponibles">
                             {% for sucursal in sucursales_mapa %}
                             <button type="button" class="du-branch-tab {% if forloop.first %}is-active{% endif %}"
-                                data-detalle-ubicacion-sucursal data-lat="{{ sucursal.latitud }}" data-lng="{{ sucursal.longitud }}"
+                                data-sucursal data-lat="{{ sucursal.latitud }}" data-lng="{{ sucursal.longitud }}"
                                 data-nombre="{{ sucursal.nombre|default:'Sucursal' }}" data-label="{{ sucursal.label }}"
                                 data-direccion="{{ sucursal.direccion|default:'' }}" data-referencia="{{ sucursal.referencia|default:'' }}"
                                 data-horario="{{ sucursal.horario|default:'' }}" data-open-url="{{ sucursal.open_url }}"
@@ -842,14 +843,14 @@
                         <!-- Mapa -->
                         <div class="du-map-wrap">
                             <iframe src="{{ sucursal_mapa_principal.embed_url }}" loading="lazy" allowfullscreen
-                                referrerpolicy="no-referrer-when-downgrade" data-detalle-ubicacion-map
+                                referrerpolicy="no-referrer-when-downgrade" data-mapa
                                 title="Mapa de {{ establecimiento.nombre }}">
                             </iframe>
                         </div>
 
                         <!-- Acciones debajo del mapa -->
-                        <div class="du-route-actions" data-du-cta-default>
-                            <button type="button" class="du-action primary" data-du-show-dir>
+                        <div class="du-route-actions" data-cta-default>
+                            <button type="button" class="du-action primary" data-show-dir>
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
@@ -858,7 +859,7 @@
                             </button>
 
                             <a href="{{ sucursal_mapa_principal.open_url }}" target="_blank" rel="noopener" class="du-action"
-                                data-detalle-ubicacion-open>
+                                data-open-link>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -869,33 +870,33 @@
                         </div>
 
                         <!-- Desplegable de "como llegar", dentro del mismo card -->
-                        <div class="du-directions" data-du-directions hidden>
+                        <div class="du-directions" data-directions hidden>
                             <div class="du-directions-hd">
                                 <h5>Cómo llegar</h5>
-                                <button type="button" class="du-directions-close" data-du-hide-dir aria-label="Cerrar">×</button>
+                                <button type="button" class="du-directions-close" data-hide-dir aria-label="Cerrar">×</button>
                             </div>
 
                             <div class="du-directions-label">Desde</div>
-                            <input class="du-direction-input" type="text" value="Mi ubicación actual" data-du-origin readonly>
+                            <input class="du-direction-input" type="text" value="Mi ubicación actual" readonly>
 
                             <div class="du-directions-label">Hasta</div>
                             <input class="du-direction-input" type="text" value="{{ sucursal_mapa_principal.direccion|default:'' }}"
-                                data-du-dest readonly>
+                                data-destino readonly>
 
                             <div class="du-direction-modes" aria-label="Modo de traslado">
-                                <button type="button" class="du-mode is-active" data-du-mode="walking">
+                                <button type="button" class="du-mode is-active" data-modo="walking">
                                     <i class="bi bi-person-walking"></i>
                                     <span>A pie</span>
                                 </button>
 
-                                <button type="button" class="du-mode" data-du-mode="driving">
+                                <button type="button" class="du-mode" data-modo="driving">
                                     <i class="bi bi-car-front"></i>
                                     <span>En auto</span>
                                 </button>
                             </div>
 
                             <a href="{{ sucursal_mapa_principal.route_url }}&travelmode=walking" class="du-action primary du-action-full"
-                                target="_blank" rel="noopener" data-du-route-link data-detalle-ubicacion-route>
+                                target="_blank" rel="noopener" data-enlace-ruta>
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
@@ -907,38 +908,38 @@
                         <!-- Datos de la sucursal seleccionada -->
                         <div class="du-branch">
                             <div class="du-branch-hd">
-                                <h3 class="du-branch-name" data-detalle-ubicacion-nombre>
+                                <h3 class="du-branch-name" data-branch-nombre>
                                     {{ sucursal_mapa_principal.nombre|default:"Local principal" }}
                                 </h3>
 
-                                <span class="du-pill-solid" data-du-branch-pill {% if not sucursal_mapa_principal.es_principal %}hidden{% endif %}>
+                                <span class="du-pill-solid" data-branch-pill {% if not sucursal_mapa_principal.es_principal %}hidden{% endif %}>
                                     Sucursal Principal
                                 </span>
                             </div>
 
-                            <div class="du-branch-row" data-detalle-ubicacion-row="direccion">
+                            <div class="du-branch-row" data-branch-fila="direccion">
                                 <span class="du-branch-ico">
                                     <i class="bi bi-geo-alt"></i>
                                 </span>
-                                <strong data-detalle-ubicacion-direccion>
+                                <strong data-branch-direccion>
                                     {{ sucursal_mapa_principal.direccion|default:"Dirección no registrada" }}
                                 </strong>
                             </div>
 
-                            <div class="du-branch-row" data-detalle-ubicacion-row="referencia">
+                            <div class="du-branch-row" data-branch-fila="referencia">
                                 <span class="du-branch-ico">
                                     <i class="bi bi-signpost-2"></i>
                                 </span>
-                                <span data-detalle-ubicacion-referencia>
+                                <span data-branch-referencia>
                                     {{ sucursal_mapa_principal.referencia|default:"" }}
                                 </span>
                             </div>
 
-                            <div class="du-branch-row" data-detalle-ubicacion-row="horario">
+                            <div class="du-branch-row" data-branch-fila="horario">
                                 <span class="du-branch-ico">
                                     <i class="bi bi-clock"></i>
                                 </span>
-                                <span data-detalle-ubicacion-horario>
+                                <span data-branch-horario>
                                     {{ sucursal_mapa_principal.horario|default:"" }}
                                 </span>
                             </div>
@@ -1175,6 +1176,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="{% static 'assets/js/swiper-detalle-est.js' %}"></script>
 <script src="{% static 'assets/js/detalle-galeria-est.js' %}"></script>
-<script src="{% static 'assets/js/detalle-ubicacion-est.js' %}"></script>
+<script src="{% static 'assets/js/desplazable-como-llegar.js' %}"></script>
+<script src="{% static 'assets/js/animacion-botones-contacto.js' %}"></script>
 
 {% endblock %}

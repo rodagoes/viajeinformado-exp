@@ -1,0 +1,60 @@
+/* ============================================================
+   ANIMACIONES DE ENTRADA — Viaje Informado
+   Sistema de efectos al hacer scroll para Detalle Lugar Turístico.
+   Requiere: Animate.css (cargado antes) + animaciones-scroll.js
+   ============================================================ */
+
+/* ── Override del keyframe fadeInUp: movimiento de 40 px ──
+   Animate.css por defecto usa 100% del alto del elemento, lo cual
+   es excesivo para una página web. Se redefine aquí con 40 px para
+   que la animación sea claramente perceptible pero elegante. */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Estado de espera ──
+   El elemento permanece invisible hasta que IntersectionObserver
+   detecte que entró en pantalla. */
+[data-animar] {
+    opacity: 0;
+}
+
+/* ── Estado activo: el observador agrega la clase "visible" ── */
+[data-animar].visible {
+    opacity: 1;
+}
+
+/* ── Duración base: 0.8s para que la animación sea claramente visible ── */
+[data-animar].animate__animated {
+    --animate-duration: 0.80s;
+}
+
+/* ── Retardos en cascada para efectos escalonados (stagger) ──
+   Se aplican cuando varios elementos aparecen juntos en pantalla.
+   Ejemplo de uso: <div data-animar="animate__fadeInUp" class="animar-delay-2"> */
+.animar-delay-1 { animation-delay: 0.10s !important; }
+.animar-delay-2 { animation-delay: 0.20s !important; }
+.animar-delay-3 { animation-delay: 0.30s !important; }
+.animar-delay-4 { animation-delay: 0.40s !important; }
+.animar-delay-5 { animation-delay: 0.50s !important; }
+
+/* ── Accesibilidad: sin animaciones si el usuario lo prefiere ──
+   Respeta la configuración de "movimiento reducido" del sistema
+   operativo o navegador (accesibilidad nivel AA). */
+@media (prefers-reduced-motion: reduce) {
+    [data-animar],
+    [data-animar].visible,
+    [data-animar].animate__animated {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+        transition: none !important;
+    }
+}

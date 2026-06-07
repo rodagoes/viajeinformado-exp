@@ -3098,7 +3098,7 @@
     box-sizing: border-box;
     overflow: hidden;
     position: relative;
-    /* Animación de entrada escalonada vía JS — se activa con .dpc-visible */
+    /* Animación de entrada escalonada vía JS */
     opacity: 0;
     transform: translateX(-14px);
     transition:

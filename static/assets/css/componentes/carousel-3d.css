@@ -1,0 +1,852 @@
+/* =====================================================================
+   CARRUSEL 3D COVERFLOW — componente reutilizable
+   Compatible: img, gif, video mp4, video externo (YouTube/Vimeo)
+   Incluir junto al HTML del carrusel y carousel-3d.js
+   ===================================================================== */
+
+/* Columna contenedora cuando se usa dentro de dl-feature-media--gallery */
+.dl-feature-media--carousel {
+    padding: 0;
+    overflow: visible;
+    background: rgba(0, 45, 137, 0.04);
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+}
+
+/* Wrapper principal */
+.carousel-wrapper {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 44px 0;
+    user-select: none;
+    overflow: visible;
+}
+
+/* Track: perspectiva 3D */
+.carousel-track {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    perspective: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+/* Slide */
+.slide {
+    position: absolute;
+    width: 200px;
+    height: 280px;
+    cursor: pointer;
+    transition:
+        transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        opacity 0.55s ease,
+        filter 0.55s ease,
+        z-index 0s;
+    transform-style: preserve-3d;
+    will-change: transform, opacity, filter;
+}
+
+.slide-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.36);
+    background: #111827;
+}
+
+.slide-inner .media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 14px;
+}
+
+.slide-inner video.media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+/* Botón expandir */
+.fullview-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    color: #222;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease;
+    z-index: 10;
+    padding: 0;
+}
+
+.fullview-btn svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+.fullview-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1) !important;
+}
+
+.slide.active .fullview-btn {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ── Posiciones 3D base (móvil / sin media query) ── */
+.slide.pos-0 {
+    transform: translateX(0) rotateY(0deg) scale(1);
+    opacity: 1;
+    filter: brightness(1);
+    z-index: 10;
+}
+
+.slide.pos-1 {
+    transform: translateX(215px) rotateY(-50deg) scale(0.88);
+    opacity: 0.85;
+    filter: brightness(0.80);
+    z-index: 8;
+}
+
+.slide.pos-n1 {
+    transform: translateX(-215px) rotateY(50deg) scale(0.88);
+    opacity: 0.85;
+    filter: brightness(0.80);
+    z-index: 8;
+}
+
+.slide.pos-2 {
+    transform: translateX(360px) rotateY(-72deg) scale(0.68);
+    opacity: 0.50;
+    filter: brightness(0.40);
+    z-index: 6;
+}
+
+.slide.pos-n2 {
+    transform: translateX(-360px) rotateY(72deg) scale(0.68);
+    opacity: 0.50;
+    filter: brightness(0.40);
+    z-index: 6;
+}
+
+.slide.pos-far-right {
+    transform: translateX(465px) rotateY(-82deg) scale(0.52);
+    opacity: 0.20;
+    filter: brightness(0.20);
+    z-index: 4;
+}
+
+.slide.pos-far-left {
+    transform: translateX(-465px) rotateY(82deg) scale(0.52);
+    opacity: 0.20;
+    filter: brightness(0.20);
+    z-index: 4;
+}
+
+.slide.pos-hidden {
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ── Navegación: flechas ── */
+.carousel-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    z-index: 12;
+}
+
+.nav-arrow {
+    width: 38px;
+    height: 38px;
+    border: 1.5px solid rgba(0, 45, 137, 0.24);
+    border-radius: 50%;
+    background: rgba(0, 45, 137, 0.05);
+    color: #002d89;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    padding: 0;
+}
+
+.nav-arrow svg {
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+}
+
+.nav-arrow:hover {
+    border-color: #007fff;
+    color: #007fff;
+    background: rgba(0, 127, 255, 0.08);
+}
+
+.nav-arrow:active {
+    background: rgba(0, 127, 255, 0.14);
+}
+
+/* ── Dots ── */
+.dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(0, 45, 137, 0.22);
+    cursor: pointer;
+    transition: background 0.25s, width 0.25s;
+    border: none;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.dot.active {
+    background: #002d89;
+    width: 22px;
+    border-radius: 4px;
+}
+
+.dot:hover:not(.active) {
+    background: rgba(0, 45, 137, 0.46);
+}
+
+/* ── Miniatura de video externo (YouTube, Vimeo, etc.) ── */
+.c3d-ext-video {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #0f1929, #162447);
+    border-radius: 14px;
+    color: #ffffff;
+    text-align: center;
+    padding: 16px 12px;
+}
+
+.c3d-ext-video i {
+    font-size: 2.8rem;
+    color: #007fff;
+    text-shadow: 0 8px 22px rgba(0, 127, 255, 0.45);
+}
+
+.c3d-ext-video span {
+    font-size: 0.74rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.78);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* ── Placeholder sin multimedia ── */
+.c3d-empty-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 460px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: rgba(0, 45, 137, 0.20);
+    font-size: 4rem;
+    background: linear-gradient(135deg, rgba(0, 45, 137, 0.06), rgba(0, 127, 255, 0.03));
+}
+
+.c3d-empty-placeholder p {
+    font-size: 0.80rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(0, 45, 137, 0.32);
+    text-transform: uppercase;
+}
+
+/* =====================================================================
+   LIGHTBOX DEL CARRUSEL 3D
+   z-index 1060 — encima de dl-lightbox (1050) y dl-video-modal (1051)
+   ===================================================================== */
+
+/* ── Capa base ── */
+.c3d-lightbox {
+    position: fixed;
+    inset: 0;
+    background: #060c1a;
+    z-index: 1060;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.26s ease;
+    overflow: hidden;
+    touch-action: none; /* bloquea scroll nativo en iOS */
+}
+
+.c3d-lightbox.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ── Header ── */
+.c3d-lb-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 28px 12px;
+}
+
+.c3d-lb-header-text {
+    flex: 1;        /* ocupa todo el ancho disponible */
+    min-width: 0;
+}
+
+.c3d-lb-kicker {
+    display: block;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.62rem;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.42);
+    margin-bottom: 4px;
+}
+
+.c3d-lb-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(1rem, 2.6vw, 1.9rem);
+    font-weight: 550;
+    font-style: italic;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+    line-height: 1.22;
+    word-break: break-word;
+}
+
+/* Botón cerrar */
+.c3d-lb-close {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10);
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s;
+    padding: 0;
+}
+
+.c3d-lb-close:hover {
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.c3d-lb-close svg {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+/* ── Stage: peeks + flechas + imagen ── */
+.c3d-lb-stage {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Imagen / video principal */
+.c3d-lightbox-content {
+    position: relative;
+    z-index: 2;
+    width: calc(100% - 280px); /* deja 140px para cada peek */
+    max-width: 1060px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+}
+
+.c3d-lightbox.open .c3d-lightbox-content {
+    animation: c3d-lb-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes c3d-lb-in {
+    from { transform: scale(0.94); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+/* Imagen: sin blur, sin filtros, pixel-sharp */
+.c3d-lightbox-content img,
+.c3d-lightbox-content video {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+    image-rendering: auto;
+}
+
+/* iFrame YouTube / Vimeo */
+.c3d-lb-iframe {
+    width: min(960px, 100%);
+    aspect-ratio: 16 / 9;
+    max-height: 100%;
+    border: none;
+    border-radius: 10px;
+    display: block;
+}
+
+/* ── Peek laterales (desktop) ── */
+.c3d-lb-peek {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 145px;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.c3d-lb-peek--prev { left: 0; }
+.c3d-lb-peek--next { right: 0; }
+
+.c3d-lb-peek img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.28;
+    filter: brightness(0.42) saturate(0.65);
+}
+
+/* Gradiente que disuelve el peek hacia el interior */
+.c3d-lb-peek::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.c3d-lb-peek--prev::after {
+    background: linear-gradient(90deg, #060c1a 10%, transparent 100%);
+}
+
+.c3d-lb-peek--next::after {
+    background: linear-gradient(-90deg, #060c1a 10%, transparent 100%);
+}
+
+/* ── Flechas del lightbox ── */
+.c3d-lb-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.18s, border-color 0.18s;
+    z-index: 4;
+    padding: 0;
+}
+
+.c3d-lb-arrow:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.52);
+}
+
+.c3d-lb-arrow svg {
+    width: 22px;
+    height: 22px;
+    pointer-events: none;
+}
+
+/* Flechas justo en el límite peek ↔ imagen */
+.c3d-lb-prev { left: 108px; }
+.c3d-lb-next { right: 108px; }
+
+/* ── Dots del lightbox ── */
+.c3d-lb-dots {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 24px 22px;
+}
+
+.c3d-lb-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.22s, width 0.22s;
+    flex-shrink: 0;
+}
+
+.c3d-lb-dot.active {
+    background: #ffffff;
+    width: 24px;
+    border-radius: 4px;
+}
+
+.c3d-lb-dot:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Zoom wrapper ── */
+.c3d-lb-zoom-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    touch-action: none;   /* manejamos todos los gestos en JS */
+    cursor: zoom-in;
+    -webkit-user-select: none;
+    user-select: none;
+    overflow: hidden;
+}
+
+.c3d-lb-zoom-wrapper.is-zoomed {
+    cursor: move;
+}
+
+/* La imagen/video dentro del wrapper recibe el transform de zoom */
+.c3d-lb-zoom-wrapper img,
+.c3d-lb-zoom-wrapper video {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+    will-change: transform;
+    pointer-events: none; /* el wrapper maneja los eventos */
+}
+
+/* ── Responsive ── */
+
+/* Tablet: sin peek, flechas en los bordes */
+@media (max-width: 991.98px) {
+    .c3d-lb-peek {
+        display: none;
+    }
+
+    .c3d-lightbox-content {
+        width: 100%;
+        padding: 0 62px;
+    }
+
+    .c3d-lb-prev { left: 10px; }
+    .c3d-lb-next { right: 10px; }
+}
+
+/* Móvil grande */
+@media (max-width: 767.98px) {
+
+    /* Botón X alineado al TOPE, no centrado con el texto */
+    .c3d-lb-header {
+        align-items: flex-start;
+        padding: 22px 18px 12px;
+        gap: 12px;
+    }
+
+    /* Título grande, bold, hasta 2 líneas */
+    .c3d-lb-title {
+        font-size: clamp(1.3rem, 6.5vw, 1.75rem);
+        font-weight: 700;
+        -webkit-line-clamp: 2;
+    }
+
+    .c3d-lb-close {
+        flex-shrink: 0;
+        width: 46px;
+        height: 46px;
+        margin-top: 2px; /* leve ajuste óptico frente al kicker */
+    }
+
+    .c3d-lb-close svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Sin flechas: swipe y zoom son la navegación */
+    .c3d-lb-arrow {
+        display: none;
+    }
+
+    /* Imagen ocupa todo el ancho menos margen mínimo */
+    .c3d-lightbox-content {
+        width: 100%;
+        padding: 0 12px;
+    }
+
+    /* Bordes más redondeados en móvil */
+    .c3d-lb-zoom-wrapper img,
+    .c3d-lb-zoom-wrapper video {
+        border-radius: 18px;
+    }
+
+    .c3d-lb-dots {
+        padding: 14px 20px 22px;
+    }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+    .c3d-lb-header {
+        padding: 18px 14px 10px;
+    }
+
+    .c3d-lb-title {
+        font-size: clamp(1.1rem, 6vw, 1.45rem);
+    }
+
+    /* Sin padding lateral extra — los 12px del query superior son suficientes */
+    .c3d-lightbox-content {
+        padding: 0 12px;
+    }
+}
+
+/* =====================================================================
+   DESKTOP ≥992px  — 3 slides visibles (portrait | landscape | portrait)
+   ─ pos-n1 izquierda : portrait  168 × 272 px
+   ─ pos-0  centro    : landscape 340 × 280 px  (object-fit: cover)
+   ─ pos-1  derecha   : portrait  168 × 272 px
+   pos-2, pos-n2, pos-far-* → opacity 0, pointer-events none
+   ===================================================================== */
+
+@media (min-width: 992px) {
+
+    .carousel-track {
+        height: 340px;
+        perspective: 1000px;
+    }
+
+    .slide {
+        width: 168px;
+        height: 272px;
+        transition:
+            transform   0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            width       0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            height      0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            opacity     0.55s ease,
+            filter      0.55s ease,
+            z-index     0s;
+    }
+
+    .slide.pos-0 {
+        width: 340px;
+        height: 280px;
+        transform: translateX(0) rotateY(0deg) scale(1);
+        opacity: 1;
+        filter: brightness(1);
+        z-index: 10;
+    }
+
+    .slide.pos-1  { transform: translateX(258px)  rotateY(-28deg) scale(0.87); opacity: 0.86; filter: brightness(0.80); z-index: 8; }
+    .slide.pos-n1 { transform: translateX(-258px) rotateY(28deg)  scale(0.87); opacity: 0.86; filter: brightness(0.80); z-index: 8; }
+
+    .slide.pos-2        { transform: translateX(382px)  rotateY(-42deg) scale(0.58); opacity: 0; pointer-events: none; z-index: 1; }
+    .slide.pos-n2       { transform: translateX(-382px) rotateY(42deg)  scale(0.58); opacity: 0; pointer-events: none; z-index: 1; }
+    .slide.pos-far-right { transform: translateX(450px)  rotateY(-55deg) scale(0.40); opacity: 0; pointer-events: none; z-index: 1; }
+    .slide.pos-far-left  { transform: translateX(-450px) rotateY(55deg)  scale(0.40); opacity: 0; pointer-events: none; z-index: 1; }
+}
+
+/* =====================================================================
+   DESKTOP ≥1280px — versión ampliada
+   ─ pos-n1 izquierda : portrait  205 × 360 px
+   ─ pos-0  centro    : landscape 460 × 370 px
+   ─ pos-1  derecha   : portrait  205 × 360 px
+   ===================================================================== */
+
+@media (min-width: 1280px) {
+
+    .carousel-track {
+        height: 430px;
+        perspective: 1100px;
+    }
+
+    .slide {
+        width: 205px;
+        height: 360px;
+    }
+
+    .slide.pos-0 {
+        width: 460px;
+        height: 370px;
+    }
+
+    .slide.pos-1  { transform: translateX(338px)  rotateY(-28deg) scale(0.87); }
+    .slide.pos-n1 { transform: translateX(-338px) rotateY(28deg)  scale(0.87); }
+
+    .slide.pos-2        { transform: translateX(490px)  rotateY(-42deg) scale(0.58); }
+    .slide.pos-n2       { transform: translateX(-490px) rotateY(42deg)  scale(0.58); }
+    .slide.pos-far-right { transform: translateX(560px)  rotateY(-55deg) scale(0.40); }
+    .slide.pos-far-left  { transform: translateX(-560px) rotateY(55deg)  scale(0.40); }
+}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+
+/* Tablet (≤991.98px) */
+@media (max-width: 991.98px) {
+    .dl-feature-media--carousel {
+        min-height: 380px;
+    }
+
+    .carousel-track {
+        height: 270px;
+        perspective: 750px;
+    }
+
+    .slide {
+        width: 170px;
+        height: 234px;
+    }
+
+    .slide.pos-1  { transform: translateX(180px) rotateY(-50deg) scale(0.86); }
+    .slide.pos-n1 { transform: translateX(-180px) rotateY(50deg) scale(0.86); }
+    .slide.pos-2  { transform: translateX(300px) rotateY(-72deg) scale(0.64); opacity: 0.45; }
+    .slide.pos-n2 { transform: translateX(-300px) rotateY(72deg) scale(0.64); opacity: 0.45; }
+    .slide.pos-far-right { transform: translateX(385px) rotateY(-82deg) scale(0.48); opacity: 0.18; }
+    .slide.pos-far-left  { transform: translateX(-385px) rotateY(82deg) scale(0.48); opacity: 0.18; }
+}
+
+/* Móvil grande (≤767.98px) */
+@media (max-width: 767.98px) {
+    .dl-feature-media--carousel {
+        padding: 0;
+        min-height: 340px;
+    }
+
+    .carousel-wrapper {
+        gap: 22px;
+        padding: 32px 0;
+    }
+
+    .carousel-track {
+        height: 246px;
+        perspective: 680px;
+    }
+
+    .slide {
+        width: 158px;
+        height: 218px;
+    }
+
+    .slide.pos-1  { transform: translateX(168px) rotateY(-50deg) scale(0.84); }
+    .slide.pos-n1 { transform: translateX(-168px) rotateY(50deg) scale(0.84); }
+    .slide.pos-2  { transform: translateX(278px) rotateY(-72deg) scale(0.60); opacity: 0.38; }
+    .slide.pos-n2 { transform: translateX(-278px) rotateY(72deg) scale(0.60); opacity: 0.38; }
+    .slide.pos-far-right { transform: translateX(355px) rotateY(-82deg) scale(0.44); opacity: 0.15; }
+    .slide.pos-far-left  { transform: translateX(-355px) rotateY(82deg) scale(0.44); opacity: 0.15; }
+
+    .c3d-lb-prev { left: 10px; }
+    .c3d-lb-next { right: 10px; }
+}
+
+/* Móvil pequeño (≤480px) */
+@media (max-width: 480px) {
+    .dl-feature-media--carousel {
+        min-height: 300px;
+    }
+
+    .carousel-wrapper {
+        gap: 18px;
+        padding: 26px 0;
+    }
+
+    .carousel-track {
+        height: 218px;
+        perspective: 580px;
+    }
+
+    .slide {
+        width: 140px;
+        height: 192px;
+    }
+
+    .slide.pos-1  { transform: translateX(148px) rotateY(-50deg) scale(0.82); }
+    .slide.pos-n1 { transform: translateX(-148px) rotateY(50deg) scale(0.82); }
+    .slide.pos-2  { transform: translateX(244px) rotateY(-72deg) scale(0.58); opacity: 0.30; }
+    .slide.pos-n2 { transform: translateX(-244px) rotateY(72deg) scale(0.58); opacity: 0.30; }
+    .slide.pos-far-right { transform: translateX(308px) rotateY(-82deg) scale(0.40); opacity: 0.12; }
+    .slide.pos-far-left  { transform: translateX(-308px) rotateY(82deg) scale(0.40); opacity: 0.12; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .slide,
+    .fullview-btn,
+    .dot,
+    .nav-arrow,
+    .c3d-lightbox {
+        transition: none;
+        animation: none;
+    }
+}

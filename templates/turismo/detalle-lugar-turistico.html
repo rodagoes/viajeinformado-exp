@@ -1,41 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ lugar.nombre }} · Lugares Turísticos · Viaje Informado Huánuco{% endblock %}
+{% block title %}Viaje Informado • Huánuco{% endblock %}
 
 {% block extra_css %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Animate.css: biblioteca de animaciones CSS (debe ir antes de animaciones-entrada.css) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="{% static 'assets/css/detalle-lugar-turistico.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/carousel-3d.css' %}">
+<!-- Animaciones de entrada al scroll (overrides sutiles + utilidades de delay) -->
+<link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
+<!-- Desplegable "Cómo llegar" dentro del card de ubicación -->
+<link rel="stylesheet" href="{% static 'assets/css/componentes/como-llegar-desplegable.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="detalle-lugar">
 
   {# ================================================================ #}
-  {# 1. BREADCRUMB                                                    #}
+  {# 1. BREADCRUMB MÓVIL                                             #}
   {# ================================================================ #}
   <div class="dl-crumb-bar">
     <div class="container-xl">
       <nav aria-label="Ruta de navegación">
         <ol class="dl-crumb">
           <li>
-            <a href="/"><i class="bi bi-house-fill" aria-hidden="true"></i> Inicio</a>
-          </li>
-          <li><span class="dl-crumb-sep"><i class="bi bi-chevron-right" aria-hidden="true"></i></span></li>
-          <li>
             <a href="{% url 'turismo:listado_lugares' %}">Lugares turísticos</a>
           </li>
-          {% if lugar.categoria_principal %}
-          <li><span class="dl-crumb-sep"><i class="bi bi-chevron-right" aria-hidden="true"></i></span></li>
-          <li>
-            <a href="{% url 'turismo:listado_lugares' %}?categoria={{ lugar.categoria_principal.id }}">
-              {{ lugar.categoria_principal.nombre }}
-            </a>
-          </li>
-          {% endif %}
-          <li><span class="dl-crumb-sep"><i class="bi bi-chevron-right" aria-hidden="true"></i></span></li>
+          <li><span class="dl-crumb-sep">›</span></li>
           <li><span class="dl-crumb-cur">{{ lugar.nombre }}</span></li>
         </ol>
       </nav>
@@ -43,7 +38,7 @@
   </div>
 
   {# ================================================================ #}
-  {# 2. BANNER HERO — Spectral-style full image with title overlay    #}
+  {# 2. HERO                                                         #}
   {# ================================================================ #}
   <section class="dl-banner" id="dl-top" aria-label="{{ lugar.nombre }}">
 
@@ -61,13 +56,13 @@
 
     <div class="dl-banner-inner">
 
-      {# Category / featured pills #}
       <div class="dl-banner-pills">
         {% if lugar.destacado %}
         <span class="dl-banner-pill dl-banner-pill-gold">
           <i class="bi bi-star-fill" aria-hidden="true"></i> Destacado
         </span>
         {% endif %}
+
         {% if lugar.categoria_principal %}
         <span class="dl-banner-pill">
           <i class="bi bi-tag-fill" aria-hidden="true"></i> {{ lugar.categoria_principal.nombre }}
@@ -75,30 +70,16 @@
         {% endif %}
       </div>
 
-      {# Place name — Spectral bars above/below #}
       <h1 class="dl-banner-title">{{ lugar.nombre }}</h1>
 
-      {# Meta subtitle #}
-      <p class="dl-banner-sub">
-        {% if lugar.distrito %}
-        <span>
-          <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
-          {{ lugar.distrito.nombre }}{% if lugar.localidad %}, {{ lugar.localidad.nombre }}{% endif %}
-        </span>
-        {% endif %}
-        {% if lugar.dificultad and lugar.dificultad != 'no_aplica' %}
-        <span>{{ lugar.get_dificultad_display }}</span>
-        {% endif %}
-        {% if lugar.tiempo_visita_estimado %}
-        <span>
-          <i class="bi bi-clock" aria-hidden="true"></i> {{ lugar.tiempo_visita_estimado }}
-        </span>
-        {% endif %}
+      {% if lugar.descripcion_corta %}
+      <p class="dl-banner-sub dl-banner-sub-desc">
+        {{ lugar.descripcion_corta }}
       </p>
+      {% endif %}
 
     </div>
 
-    {# Scroll indicator (Spectral "conocer más") #}
     <a href="#dl-sobre" class="dl-banner-scroll" aria-label="Ver más información">
       <span>Conocer más</span>
       <i class="bi bi-chevron-down" aria-hidden="true"></i>
@@ -107,18 +88,16 @@
   </section>
 
   {# ================================================================ #}
-  {# 3. SOBRE EL LUGAR — white section (Spectral "Section One")      #}
-  {#    Description + 3 large icon circles: favorites, map, share    #}
+  {# 3. SOBRE EL LUGAR — mantener estructura visual actual            #}
   {# ================================================================ #}
   <section class="dl-section-sobre" id="dl-sobre" aria-labelledby="dl-sobre-title">
     <div class="container-xl">
       <div class="dl-sobre-inner">
 
-        <h2 class="dl-section-title" id="dl-sobre-title">Sobre el lugar</h2>
+        <h2 class="dl-section-title" id="dl-sobre-title" data-animar="animate__fadeInUp">Sobre el lugar</h2>
 
-        {# Description text #}
         {% if lugar.descripcion or lugar.descripcion_corta %}
-        <div class="dl-prose">
+        <div class="dl-prose animar-delay-1" data-animar="animate__fadeInUp">
           {% if lugar.descripcion %}
             {{ lugar.descripcion|linebreaks }}
           {% else %}
@@ -127,8 +106,7 @@
         </div>
         {% endif %}
 
-        {# Spectral icon circles: Favorito · Ubicación · Compartir #}
-        <div class="dl-sobre-icons" role="group" aria-label="Acciones del lugar">
+        <div class="dl-sobre-icons animar-delay-2" role="group" aria-label="Acciones del lugar" data-animar="animate__fadeInUp">
 
           <div class="dl-icon-wrap">
             <button
@@ -174,142 +152,150 @@
   </section>
 
   {# ================================================================ #}
-  {# 4 & 5. SPOTLIGHTS — Historia + Recomendaciones                  #}
-  {#         (Spectral dark "Section Two" with alternating layout)    #}
+  {# 4. BLOQUE OSCURO PREMIUM — historia / ubicación / recomendaciones #}
   {# ================================================================ #}
-  {% if lugar.historia or lugar.recomendaciones %}
-  <section class="dl-section-spots">
+  <section class="dl-section-experiencia" aria-label="Información detallada de {{ lugar.nombre }}">
 
-    {# ── Spotlight: Historia ── #}
     {% if lugar.historia %}
-    <div class="dl-spotlight" id="dl-historia" aria-labelledby="dl-historia-title">
-
-      <div class="dl-spot-img">
-        {% if media_items %}
-        <img
-          src="{{ media_items.0.url }}"
-          alt="{{ media_items.0.alt|default:lugar.nombre }}"
-          loading="lazy"
-        >
-        {% elif lugar.imagen_principal %}
-        <img
-          src="{{ lugar.imagen_principal.url }}"
-          alt="{{ lugar.texto_alt_imagen|default:lugar.nombre }}"
-          loading="lazy"
-        >
+    <article class="dl-feature-row dl-feature-row--historia" id="dl-historia" aria-labelledby="dl-historia-title">
+      <div class="dl-feature-media dl-feature-media--history">
+        {% if historia_imagen %}
+        <img src="{{ historia_imagen.url }}" alt="{{ historia_imagen.alt|default:lugar.nombre }}" loading="lazy">
         {% else %}
-        <div class="dl-spot-img-placeholder" aria-hidden="true">
-          <i class="bi bi-book-half"></i>
+        <div class="dl-feature-placeholder" aria-hidden="true">
+          <i class="bi bi-bank2"></i>
         </div>
         {% endif %}
       </div>
 
-      <div class="dl-spot-content">
-        <h2 id="dl-historia-title">Historia y contexto cultural</h2>
-        <div class="dl-spot-prose">
+      <div class="dl-feature-content" data-animar="animate__fadeInUp">
+        <span class="dl-feature-kicker">Memoria del lugar</span>
+        <h2 id="dl-historia-title">Historia</h2>
+        <div class="dl-feature-prose">
           {{ lugar.historia|linebreaks }}
         </div>
       </div>
-
-    </div>
+    </article>
     {% endif %}
 
-    {# ── Spotlight: Recomendaciones ── #}
-    {% if lugar.recomendaciones %}
-    <div class="dl-spotlight" id="dl-recomendaciones" aria-labelledby="dl-reco-title">
+    <article class="dl-feature-row dl-feature-row--ubicacion" id="dl-ubicacion" aria-labelledby="dl-ubic-title">
+      <div class="dl-feature-content" data-animar="animate__fadeInUp">
+        <span class="dl-feature-kicker">Cómo llegar</span>
+        <h2 id="dl-ubic-title">Ubicación</h2>
 
-      <div class="dl-spot-img">
-        {% if media_items.1 %}
-        <img
-          src="{{ media_items.1.url }}"
-          alt="{{ media_items.1.alt|default:lugar.nombre }}"
-          loading="lazy"
-        >
-        {% elif media_items %}
-        <img
-          src="{{ media_items.0.url }}"
-          alt="{{ media_items.0.alt|default:lugar.nombre }}"
-          loading="lazy"
-        >
-        {% elif lugar.imagen_principal %}
-        <img
-          src="{{ lugar.imagen_principal.url }}"
-          alt="{{ lugar.texto_alt_imagen|default:lugar.nombre }}"
-          loading="lazy"
-        >
-        {% else %}
-        <div class="dl-spot-img-placeholder" aria-hidden="true">
-          <i class="bi bi-lightbulb-fill"></i>
-        </div>
-        {% endif %}
-      </div>
-
-      <div class="dl-spot-content">
-        <h2 id="dl-reco-title">Recomendaciones para el visitante</h2>
-        <div class="dl-spot-prose">
-          {{ lugar.recomendaciones|linebreaks }}
-        </div>
-      </div>
-
-    </div>
-    {% endif %}
-
-  </section>
-  {% endif %}
-
-  {# ================================================================ #}
-  {# 5b. GALERÍA DE IMÁGENES (interactive lightbox)                  #}
-  {# ================================================================ #}
-  {% if media_items %}
-  <section class="dl-section-gallery" id="dl-galeria" aria-labelledby="dl-galeria-title">
-    <div class="dl-section-inner">
-
-      <div class="dl-section-hd">
-        <h2 id="dl-galeria-title">Galería de fotos</h2>
-        <p>{{ media_count }} foto{% if media_count != 1 %}s{% endif %} · {{ lugar.nombre }}</p>
-      </div>
-
-      <div class="dl-gallery" role="list" aria-label="Galería de imágenes de {{ lugar.nombre }}">
-        {% for item in media_items|slice:":8" %}
-        <button
-          class="dl-gallery-item"
-          type="button"
-          data-lb-open="{{ forloop.counter0 }}"
-          aria-label="Ver foto {{ forloop.counter }}: {{ item.titulo|default:lugar.nombre }}"
-          role="listitem"
-        >
-          <img
-            src="{{ item.url }}"
-            alt="{{ item.alt|default:lugar.nombre }}"
-            loading="{% if forloop.counter <= 4 %}lazy{% else %}lazy{% endif %}"
-          >
-          <div class="dl-gallery-overlay" aria-hidden="true">
-            {% if forloop.counter == 8 and media_count > 8 %}
-            <div class="dl-gallery-more-badge">
-              +{{ media_count|add:"-8" }}
-              <small>más fotos</small>
+        <div class="dl-location-panel">
+          {% if direccion_texto %}
+          <div class="dl-location-row">
+            <span class="dl-location-ico" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></span>
+            <div>
+              <small>Dirección</small>
+              <strong>{{ direccion_texto }}</strong>
             </div>
-            {% else %}
-            <i class="bi bi-zoom-in dl-gallery-zoom"></i>
-            {% endif %}
           </div>
-        </button>
-        {% endfor %}
+          {% endif %}
+
+          {% if lugar.referencia %}
+          <div class="dl-location-row">
+            <span class="dl-location-ico" aria-hidden="true"><i class="bi bi-signpost-2-fill"></i></span>
+            <div>
+              <small>Referencia</small>
+              <strong>{{ lugar.referencia }}</strong>
+            </div>
+          </div>
+          {% endif %}
+
+          {% if lugar.horario_visita %}
+          <div class="dl-location-row">
+            <span class="dl-location-ico" aria-hidden="true"><i class="bi bi-clock-fill"></i></span>
+            <div>
+              <small>Horario</small>
+              <strong>{{ lugar.horario_visita }}</strong>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        {# Wrapper compartido del componente "Cómo llegar" (turismo y establecimientos) #}
+        <div class="como-llegar-wrap"
+          data-como-llegar
+          {% if route_url %}data-route-url="{{ route_url }}"{% endif %}
+          {% if direccion_texto %}data-direccion="{{ direccion_texto }}"{% endif %}
+        >
+
+          {# Botones por defecto: Cómo llegar + Abrir mapa #}
+          <div class="du-route-actions" data-cta-default>
+
+            {% if route_url %}
+            <button type="button" class="du-action primary" data-show-dir
+              aria-label="Cómo llegar a {{ lugar.nombre }} en Google Maps">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+              </svg>
+              <span>Cómo llegar</span>
+            </button>
+            {% endif %}
+
+            {% if open_url %}
+            <a href="{{ open_url }}" target="_blank" rel="noopener noreferrer"
+              class="du-action"
+              aria-label="Abrir {{ lugar.nombre }} en Google Maps">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+              <span>Abrir mapa</span>
+            </a>
+            {% endif %}
+
+          </div>{# /du-route-actions #}
+
+          {# Panel desplegable: se muestra al hacer click en "Cómo llegar" #}
+          <div class="du-directions" data-directions hidden>
+
+            <div class="du-directions-hd">
+              <h5>Cómo llegar</h5>
+              <button type="button" class="du-directions-close" data-hide-dir aria-label="Cerrar">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+              </button>
+            </div>
+
+            <p class="du-directions-label">Desde</p>
+            <input class="du-direction-input" type="text" value="Mi ubicación actual" readonly>
+
+            <p class="du-directions-label">Hasta</p>
+            <input class="du-direction-input" type="text" value="{{ direccion_texto|default:'' }}" data-destino readonly>
+
+            <div class="du-direction-modes" aria-label="Modo de traslado">
+              <button type="button" class="du-mode is-active" data-modo="walking">
+                <i class="bi bi-person-walking" aria-hidden="true"></i>
+                <span>A pie</span>
+              </button>
+              <button type="button" class="du-mode" data-modo="driving">
+                <i class="bi bi-car-front" aria-hidden="true"></i>
+                <span>En auto</span>
+              </button>
+            </div>
+
+            {% if route_url %}
+            <a href="{{ route_url }}&travelmode=walking"
+              class="du-action primary du-action-full"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-enlace-ruta
+              aria-label="Iniciar ruta a {{ lugar.nombre }} en Google Maps">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+              </svg>
+              <span>Iniciar ruta en Google Maps</span>
+            </a>
+            {% endif %}
+
+          </div>{# /du-directions #}
+
+        </div>{# /como-llegar-wrap #}
       </div>
 
-    </div>
-  </section>
-  {% endif %}
-
-  
-  {# ================================================================ #}
-  {# 7. UBICACIÓN + MAPA — spotlight (Spectral dark section)         #}
-  {# ================================================================ #}
-  <section class="dl-section-spots" id="dl-ubicacion" aria-labelledby="dl-ubic-title">
-    <div class="dl-spotlight">
-
-      {# Map as the "image" column #}
-      <div class="dl-spot-map">
+      <div class="dl-feature-media dl-feature-media--map">
         {% if embed_url %}
         <iframe
           src="{{ embed_url }}"
@@ -319,85 +305,140 @@
           title="Mapa de {{ lugar.nombre }}"
         ></iframe>
         {% else %}
-        <div class="dl-spot-map-nomap">
-          <i class="bi bi-map" aria-hidden="true"></i>
-          <span>Mapa no disponible</span>
+        <div class="dl-feature-placeholder" aria-hidden="true">
+          <i class="bi bi-map"></i>
         </div>
         {% endif %}
       </div>
+    </article>
 
-      {# Content column #}
-      <div class="dl-spot-content">
-        <h2 id="dl-ubic-title">Ubicación</h2>
+    {% if recomendaciones_items or lugar.recomendaciones or media_items %}
+    <article class="dl-feature-row dl-feature-row--recomendaciones" id="dl-recomendaciones" aria-labelledby="dl-reco-title">
 
-        {# Address and info #}
-        <div class="dl-spot-meta">
-          {% if direccion_texto %}
-          <div class="dl-spot-meta-row">
-            <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
-            <span>{{ direccion_texto }}</span>
+      {# ── COLUMNA IZQUIERDA: Carrusel 3D de multimedia ── #}
+      <div class="dl-feature-media dl-feature-media--gallery dl-feature-media--carousel">
+        {% if media_items %}
+        <div class="carousel-wrapper" aria-label="Galería multimedia de {{ lugar.nombre }}">
+
+          <div class="carousel-track" id="c3dTrack">
+            {% for item in media_items %}
+            <div class="slide" data-index="{{ forloop.counter0 }}">
+              <div class="slide-inner">
+
+                {% if item.kind == 'imagen' %}
+                  <img
+                    src="{{ item.url }}"
+                    alt="{{ item.alt|default:lugar.nombre }}"
+                    class="media"
+                    loading="lazy"
+                  >
+
+                {% elif item.kind == 'video_archivo' %}
+                  <video
+                    src="{{ item.url }}"
+                    class="media"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    aria-label="{{ item.titulo|default:lugar.nombre }}"
+                  ></video>
+
+                {% elif item.kind == 'video' %}
+                  <div
+                    class="media c3d-ext-video"
+                    data-video-url="{{ item.url }}"
+                    role="img"
+                    aria-label="Video externo: {{ item.titulo|default:lugar.nombre }}"
+                  >
+                    <i class="bi bi-play-circle-fill" aria-hidden="true"></i>
+                    {% if item.titulo %}<span>{{ item.titulo }}</span>{% endif %}
+                  </div>
+                {% endif %}
+
+                <button class="fullview-btn" type="button" title="Ver completo" aria-label="Ver completo">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                </button>
+
+              </div>
+            </div>
+            {% endfor %}
+          </div>{# /carousel-track #}
+
+          <div class="carousel-nav">
+            <button class="nav-arrow" id="c3dPrev" type="button" aria-label="Multimedia anterior">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <div class="dots" id="c3dDots" role="tablist" aria-label="Navegar multimedia"></div>
+            <button class="nav-arrow" id="c3dNext" type="button" aria-label="Multimedia siguiente">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
           </div>
-          {% endif %}
-          {% if lugar.distrito %}
-          <div class="dl-spot-meta-row">
-            <i class="bi bi-signpost-2-fill" aria-hidden="true"></i>
-            <span>
-              {{ lugar.distrito.nombre }}{% if lugar.localidad %}, {{ lugar.localidad.nombre }}{% endif %}
-              {% if lugar.direccion %} — {{ lugar.direccion }}{% endif %}
+
+        </div>{# /carousel-wrapper #}
+        {% else %}
+        <div class="c3d-empty-placeholder" aria-hidden="true">
+          <i class="bi bi-images"></i>
+          <p>Sin multimedia</p>
+        </div>
+        {% endif %}
+      </div>{# /dl-feature-media--carousel #}
+
+      <div class="dl-feature-content" data-animar="animate__fadeInUp">
+        <span class="dl-feature-kicker">Consejos útiles</span>
+        <h2 id="dl-reco-title">Recomendaciones para el visitante</h2>
+        {% if recomendaciones_items %}
+        <div class="dl-reco-list" aria-label="Recomendaciones para visitar {{ lugar.nombre }}">
+          {% for recomendacion in recomendaciones_items %}
+          <article class="dl-reco-item">
+            <span class="dl-reco-icon" aria-hidden="true">
+              {% if recomendacion.icono_bootstrap %}
+              <i class="{{ recomendacion.icono_bootstrap }}"></i>
+              {% else %}
+              <i class="bi bi-check-circle"></i>
+              {% endif %}
             </span>
-          </div>
-          {% endif %}
-          {% if lugar.horario_visita %}
-          <div class="dl-spot-meta-row">
-            <i class="bi bi-clock-fill" aria-hidden="true"></i>
-            <span>{{ lugar.horario_visita }}</span>
-          </div>
-          {% endif %}
+            <div>
+              <h3>{{ recomendacion.titulo }}</h3>
+              <p>{{ recomendacion.descripcion }}</p>
+            </div>
+          </article>
+          {% endfor %}
         </div>
-
-        {# Action buttons #}
-        <div class="dl-spot-btns">
-          {% if route_url %}
-          <a
-            href="{{ route_url }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="dl-spot-btn dl-spot-btn-primary"
-            aria-label="Cómo llegar a {{ lugar.nombre }} en Google Maps"
-          >
-            <i class="bi bi-signpost-split-fill" aria-hidden="true"></i>
-            Cómo llegar
-          </a>
-          {% endif %}
-          {% if open_url %}
-          <a
-            href="{{ open_url }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="dl-spot-btn dl-spot-btn-ghost"
-            aria-label="Abrir {{ lugar.nombre }} en Google Maps"
-          >
-            <i class="bi bi-map" aria-hidden="true"></i>
-            Abrir en Maps
-          </a>
-          {% endif %}
+        {% elif lugar.recomendaciones %}
+        <div class="dl-feature-prose dl-feature-prose--bullets">
+          {{ lugar.recomendaciones|linebreaks }}
         </div>
-
+        {% else %}
+        <div class="dl-feature-prose">
+          <p>Próximamente se agregarán recomendaciones específicas para visitar este lugar.</p>
+        </div>
+        {% endif %}
       </div>
-    </div>
+    </article>
+    {% endif %}
   </section>
 
   {# ================================================================ #}
-  {# 6. DATOS DEL LUGAR — white section with icon cards              #}
+  {# 5. DATOS DEL LUGAR                                              #}
   {# ================================================================ #}
   <section class="dl-section-datos" id="dl-datos" aria-labelledby="dl-datos-title">
     <div class="container-xl">
 
-      <h2 class="dl-section-title" id="dl-datos-title">Datos del lugar</h2>
+      <h2 class="dl-section-title" id="dl-datos-title" data-animar="animate__fadeInUp">Datos del lugar</h2>
 
-      <div class="dl-datos-grid" aria-label="Ficha técnica de {{ lugar.nombre }}">
+      <div class="dl-datos-grid animar-delay-1" aria-label="Ficha técnica de {{ lugar.nombre }}" data-animar="animate__fadeInUp">
 
-        {# Categoría #}
         {% if lugar.categoria_principal %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-tag-fill"></i></div>
@@ -406,35 +447,29 @@
         </div>
         {% endif %}
 
-        {# Distrito #}
-        {% if lugar.distrito %}
+        {% if ubicacion_resumen %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></div>
-          <p class="dl-dato-label">Distrito</p>
-          <p class="dl-dato-val">
-            {{ lugar.distrito.nombre }}{% if lugar.localidad %}<br>{{ lugar.localidad.nombre }}{% endif %}
-          </p>
+          <p class="dl-dato-label">Ubicación</p>
+          <p class="dl-dato-val">{{ ubicacion_resumen }}</p>
         </div>
         {% endif %}
 
-        {# Dificultad #}
         {% if lugar.dificultad and lugar.dificultad != 'no_aplica' %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-bar-chart-fill"></i></div>
           <p class="dl-dato-label">Dificultad</p>
           <p class="dl-dato-val">
             <span class="dl-dif-badge dl-dif-{{ lugar.dificultad }}">
-              {% if lugar.dificultad == 'facil' %}<i class="bi bi-check-circle-fill" aria-hidden="true"></i>
-              {% elif lugar.dificultad == 'moderada' %}<i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
-              {% elif lugar.dificultad == 'dificil' %}<i class="bi bi-x-circle-fill" aria-hidden="true"></i>
-              {% endif %}
+              {% if lugar.dificultad == 'facil' %}<i class="bi bi-check-circle-fill" aria-hidden="true"></i>{% endif %}
+              {% if lugar.dificultad == 'moderada' %}<i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>{% endif %}
+              {% if lugar.dificultad == 'dificil' %}<i class="bi bi-x-circle-fill" aria-hidden="true"></i>{% endif %}
               {{ lugar.get_dificultad_display }}
             </span>
           </p>
         </div>
         {% endif %}
 
-        {# Duración estimada #}
         {% if lugar.tiempo_visita_estimado %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-clock-fill"></i></div>
@@ -443,7 +478,6 @@
         </div>
         {% endif %}
 
-        {# Horario #}
         {% if lugar.horario_visita %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-calendar3"></i></div>
@@ -452,32 +486,44 @@
         </div>
         {% endif %}
 
-        {# Entrada / Costo #}
-        <div class="dl-dato-card">
+        <div class="dl-dato-card dl-dato-card--entrada">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-ticket-perforated-fill"></i></div>
           <p class="dl-dato-label">Entrada</p>
-          <p class="dl-dato-val
-            {% if lugar.tipo_costo == 'libre' %} free{% endif %}
-          ">
-            {% if lugar.tipo_costo == 'libre' %}
-              <i class="bi bi-check-circle-fill" aria-hidden="true"></i> Acceso libre
-            {% elif lugar.tipo_costo == 'pago' %}
-              {% if lugar.precio_desde %}
-                Desde S/. {{ lugar.precio_desde }}{% if lugar.precio_hasta %} — S/. {{ lugar.precio_hasta }}{% endif %}
+          <div class="dl-dato-val dl-dato-val-entrada{% if lugar.tipo_costo == 'gratis' %} free{% endif %}">
+            {% if lugar.tipo_costo == 'gratis' %}
+              <strong>Gratis</strong>
+            {% elif lugar.tipo_costo == 'pagado' %}
+              {% if lugar.precio_desde and lugar.precio_hasta %}
+                <strong>S/. {{ lugar.precio_desde|floatformat:0 }} — S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
+              {% elif lugar.precio_desde %}
+                <strong>Desde S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
+              {% elif lugar.precio_hasta %}
+                <strong>Hasta S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
               {% else %}
-                Con costo
+                <strong>Con costo</strong>
               {% endif %}
-            {% elif lugar.tipo_costo == 'mixto' %}
-              Parcialmente libre
+
+              {% if entrada_usd_disponible %}
+              <small>
+                ≈
+                {% if precio_desde_usd_txt and precio_hasta_usd_txt %}
+                  US$ {{ precio_desde_usd_txt }} — US$ {{ precio_hasta_usd_txt }}
+                {% elif precio_desde_usd_txt %}
+                  US$ {{ precio_desde_usd_txt }}
+                {% elif precio_hasta_usd_txt %}
+                  US$ {{ precio_hasta_usd_txt }}
+                {% endif %}
+              </small>
+              <em>TC S/. {{ tipo_cambio_venta_txt }} · {{ fecha_tipo_cambio_txt }}</em>
+              {% endif %}
             {% else %}
-              <span class="muted">Consultar</span>
+              <strong>Consultar</strong>
             {% endif %}
-          </p>
+          </div>
         </div>
 
-      </div>{# /.dl-datos-grid #}
+      </div>
 
-      {# Secondary categories #}
       {% if lugar.categorias_secundarias.all %}
       <div class="dl-sec-cats" aria-label="Categorías adicionales">
         <p class="dl-sec-cats-label">También en</p>
@@ -493,54 +539,85 @@
   </section>
 
   {# ================================================================ #}
-  {# 8. VALORACIONES — dark centered placeholder                     #}
+  {# 6. VALORACIONES PLACEHOLDER                                     #}
   {# ================================================================ #}
   <section class="dl-section-val" id="dl-valoraciones" aria-labelledby="dl-val-title">
-    <div class="dl-val-inner">
+    <div class="container-xl">
+      <div class="dl-val-card" data-animar="animate__fadeInUp">
+        <div class="dl-val-header">
+          <div>
+            <span>Vista previa</span>
+            <h2 id="dl-val-title">Valoraciones y reseñas</h2>
+          </div>
 
-      <div class="dl-val-icon" aria-hidden="true">
-        <i class="bi bi-star-half"></i>
+          <div class="dl-val-badge">Próximamente</div>
+        </div>
+
+        <div class="dl-val-grid">
+          <article class="dl-rating-preview-card">
+            <div class="dl-rating-icon" aria-hidden="true">
+              <i class="bi bi-star"></i>
+            </div>
+
+            <div>
+              <small>Estado actual</small>
+              <h3>Sin valoraciones activas</h3>
+              <p>
+                Esta sección está preparada visualmente para mostrar opiniones de turistas cuando la funcionalidad sea activada en una próxima fase.
+              </p>
+            </div>
+          </article>
+
+          <article class="dl-rating-bars" aria-label="Distribución visual pendiente de valoraciones">
+            <div class="dl-rating-bar-row">
+              <span>5 estrellas</span>
+              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
+              <small>Pendiente</small>
+            </div>
+            <div class="dl-rating-bar-row">
+              <span>4 estrellas</span>
+              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
+              <small>Pendiente</small>
+            </div>
+            <div class="dl-rating-bar-row">
+              <span>3 estrellas</span>
+              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
+              <small>Pendiente</small>
+            </div>
+            <div class="dl-rating-bar-row">
+              <span>2 estrellas</span>
+              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
+              <small>Pendiente</small>
+            </div>
+            <div class="dl-rating-bar-row">
+              <span>1 estrella</span>
+              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
+              <small>Pendiente</small>
+            </div>
+          </article>
+        </div>
+
+        <div class="dl-comments-preview">
+          <div class="dl-comments-empty">
+            <i class="bi bi-chat-square-text" aria-hidden="true"></i>
+            <div>
+              <h3>Los comentarios estarán disponibles próximamente</h3>
+              <p>
+                Más adelante, los visitantes podrán consultar experiencias, dejar valoraciones y compartir recomendaciones sobre este lugar turístico.
+              </p>
+            </div>
+          </div>
+
+          <button type="button" class="dl-comments-disabled" disabled>
+            <i class="bi bi-lock" aria-hidden="true"></i>
+            Función no disponible todavía
+          </button>
+        </div>
       </div>
-
-      <h2 class="dl-val-title" id="dl-val-title">Valoraciones y reseñas</h2>
-
-      <p class="dl-val-text">
-        Pronto podrás dejar tu reseña y calificación.
-        Tu opinión ayuda a otros viajeros a planificar mejor su visita a {{ lugar.nombre }}.
-      </p>
-
-      <div class="dl-stars-row" aria-label="Calificación de ejemplo" role="img">
-        <i class="bi bi-star-fill" aria-hidden="true"></i>
-        <i class="bi bi-star-fill" aria-hidden="true"></i>
-        <i class="bi bi-star-fill" aria-hidden="true"></i>
-        <i class="bi bi-star-fill" aria-hidden="true"></i>
-        <i class="bi bi-star-half" aria-hidden="true"></i>
-      </div>
-
     </div>
   </section>
 
-  {# ── Mobile sticky CTA ── #}
-  <div class="dl-m-sticky d-lg-none" aria-label="Acciones rápidas">
-    {% if route_url %}
-    <a
-      href="{{ route_url }}"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="dl-m-btn dl-m-btn-primary"
-    >
-      <i class="bi bi-signpost-split-fill" aria-hidden="true"></i> Cómo llegar
-    </a>
-    {% endif %}
-    <button class="dl-m-btn dl-m-btn-ghost" type="button" data-action="share" aria-label="Compartir">
-      <i class="bi bi-share-fill" aria-hidden="true"></i>
-    </button>
-    <button class="dl-m-btn dl-m-btn-ghost" type="button" data-action="favorite" aria-label="Favorito">
-      <i class="bi bi-heart" aria-hidden="true"></i>
-    </button>
-  </div>
-
-</div>{# /.detalle-lugar #}
+</div>
 
 {# ================================================================ #}
 {# LIGHTBOX                                                         #}
@@ -568,37 +645,110 @@
   </div>
 </div>
 
-{# Photos data for JS lightbox #}
+{# ================================================================ #}
+{# VIDEO MODAL MP4                                                  #}
+{# ================================================================ #}
+<div
+  class="dl-video-modal"
+  id="dl-video-modal"
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-label="Reproductor de video — {{ lugar.nombre }}"
+>
+  <button class="dl-video-close" id="dl-video-close" type="button" aria-label="Cerrar video">
+    <i class="bi bi-x-lg" aria-hidden="true"></i>
+  </button>
+  <div class="dl-video-inner">
+    <video id="dl-video-player" controls playsinline preload="metadata"></video>
+    <p class="dl-video-cap" id="dl-video-cap" aria-live="polite"></p>
+  </div>
+</div>
+
 <script id="dl-photos-data" type="application/json">
-[{% for item in media_items %}{"src":"{{ item.url }}","alt":"{{ item.alt|default:lugar.nombre|escapejs }}","caption":"{{ item.titulo|default:lugar.nombre|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]
+[{% for item in media_lightbox_items %}{"src":"{{ item.url }}","alt":"{{ item.alt|default:lugar.nombre|escapejs }}","caption":"{{ item.titulo|default:lugar.nombre|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]
 </script>
+
+{# ================================================================ #}
+{# LIGHTBOX DEL CARRUSEL 3D                                         #}
+{# ================================================================ #}
+<div
+  class="c3d-lightbox"
+  id="c3dLightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Galería de imágenes — {{ lugar.nombre }}"
+>
+
+  {# ── Header ── #}
+  <div class="c3d-lb-header">
+    <div class="c3d-lb-header-text">
+      <span class="c3d-lb-kicker">Galería de imágenes</span>
+      <strong class="c3d-lb-title">{{ lugar.nombre }}</strong>
+    </div>
+    <button class="c3d-lb-close" id="c3dLbClose" type="button" aria-label="Cerrar visor">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  {# ── Stage: peeks (desktop) + flechas + imagen ── #}
+  <div class="c3d-lb-stage">
+
+    <div class="c3d-lb-peek c3d-lb-peek--prev" id="c3dLbPeekPrev" aria-hidden="true"></div>
+
+    <button class="c3d-lb-arrow c3d-lb-prev" id="c3dLbPrev" type="button" aria-label="Imagen anterior">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <div class="c3d-lightbox-content" id="c3dLbContent"></div>
+
+    <button class="c3d-lb-arrow c3d-lb-next" id="c3dLbNext" type="button" aria-label="Imagen siguiente">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+
+    <div class="c3d-lb-peek c3d-lb-peek--next" id="c3dLbPeekNext" aria-hidden="true"></div>
+
+  </div>
+
+  {# ── Dots ── #}
+  <div class="c3d-lb-dots" id="c3dLbDots" role="tablist" aria-label="Navegar imágenes"></div>
+
+</div>
 
 {% endblock %}
 
-{# ================================================================ #}
-{# JAVASCRIPT                                                       #}
-{# ================================================================ #}
 {% block extra_js %}
 <script>
 (function () {
   'use strict';
 
-  /* ── Lightbox ── */
   var photos = [];
   try {
     var node = document.getElementById('dl-photos-data');
     if (node) photos = JSON.parse(node.textContent);
   } catch (e) { console.warn('Gallery data error', e); }
 
-  var lb      = document.getElementById('dl-lightbox');
-  var lbImg   = document.getElementById('dl-lb-img');
-  var lbCap   = document.getElementById('dl-lb-cap');
+  var lb = document.getElementById('dl-lightbox');
+  var lbImg = document.getElementById('dl-lb-img');
+  var lbCap = document.getElementById('dl-lb-cap');
   var lbClose = document.getElementById('dl-lb-close');
-  var lbPrev  = document.getElementById('dl-lb-prev');
-  var lbNext  = document.getElementById('dl-lb-next');
+  var lbPrev = document.getElementById('dl-lb-prev');
+  var lbNext = document.getElementById('dl-lb-next');
+  var videoModal = document.getElementById('dl-video-modal');
+  var videoPlayer = document.getElementById('dl-video-player');
+  var videoCap = document.getElementById('dl-video-cap');
+  var videoClose = document.getElementById('dl-video-close');
   var current = 0;
 
   function renderPhoto(i) {
+    if (!photos.length || !lbImg || !lbCap) return;
     current = (i + photos.length) % photos.length;
     var p = photos[current];
     lbImg.src = p.src;
@@ -607,7 +757,7 @@
   }
 
   function openLB(i) {
-    if (!photos.length) return;
+    if (!photos.length || !lb) return;
     renderPhoto(i);
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
@@ -615,8 +765,40 @@
   }
 
   function closeLB() {
+    if (!lb) return;
     lb.hidden = true;
     document.body.style.overflow = '';
+  }
+
+  function openVideoModal(url, title) {
+    if (!videoModal || !videoPlayer) return;
+    videoPlayer.src = url;
+    if (videoCap) videoCap.textContent = title || '{{ lugar.nombre|escapejs }}';
+    videoModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    videoPlayer.focus();
+  }
+
+  function closeVideoModal() {
+    if (!videoModal || !videoPlayer) return;
+    videoPlayer.pause();
+    videoPlayer.removeAttribute('src');
+    videoPlayer.load();
+    videoModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-video-open]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      openVideoModal(btn.dataset.videoOpen, btn.dataset.videoTitle);
+    });
+  });
+
+  if (videoModal && videoClose) {
+    videoClose.addEventListener('click', closeVideoModal);
+    videoModal.addEventListener('click', function (e) {
+      if (e.target === videoModal) closeVideoModal();
+    });
   }
 
   document.querySelectorAll('[data-lb-open]').forEach(function (btn) {
@@ -625,7 +807,7 @@
     });
   });
 
-  if (lb) {
+  if (lb && lbClose && lbPrev && lbNext) {
     lbClose.addEventListener('click', closeLB);
     lbPrev.addEventListener('click', function (e) { e.stopPropagation(); renderPhoto(current - 1); });
     lbNext.addEventListener('click', function (e) { e.stopPropagation(); renderPhoto(current + 1); });
@@ -633,35 +815,63 @@
 
     document.addEventListener('keydown', function (e) {
       if (lb.hidden) return;
-      if (e.key === 'Escape')     closeLB();
-      if (e.key === 'ArrowLeft')  renderPhoto(current - 1);
+      if (e.key === 'Escape') closeLB();
+      if (e.key === 'ArrowLeft') renderPhoto(current - 1);
       if (e.key === 'ArrowRight') renderPhoto(current + 1);
     });
 
-    /* Touch swipe in lightbox */
     var swipeX = null;
     lb.addEventListener('touchstart', function (e) { swipeX = e.touches[0].clientX; }, { passive: true });
     lb.addEventListener('touchend', function (e) {
       if (swipeX === null) return;
       var dx = e.changedTouches[0].clientX - swipeX;
-      if (dx >  50) renderPhoto(current - 1);
+      if (dx > 50) renderPhoto(current - 1);
       if (dx < -50) renderPhoto(current + 1);
       swipeX = null;
     });
   }
 
-  /* ── Smooth scroll for anchor links ── */
+  document.addEventListener('keydown', function (e) {
+    if (videoModal && !videoModal.hidden && e.key === 'Escape') {
+      closeVideoModal();
+    }
+  });
+
+  /* ── Scroll suave con easing personalizado (800 ms) ──
+     Velocidad intermedia: no demasiado rápida ni demasiado lenta.
+     Usa easeInOutCubic para una sensación natural y fluida. */
+  function desplazarConEasing(destino, duracion) {
+    var navEl = document.querySelector('header') || document.querySelector('.navbar');
+    var altoNavbar = navEl ? navEl.offsetHeight : 0;
+    var inicio = window.pageYOffset;
+    var objetivo = destino.getBoundingClientRect().top + window.pageYOffset - altoNavbar;
+    var diferencia = objetivo - inicio;
+    var tiempoInicio = null;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function paso(timestamp) {
+      if (!tiempoInicio) tiempoInicio = timestamp;
+      var transcurrido = timestamp - tiempoInicio;
+      var progreso = Math.min(transcurrido / duracion, 1);
+      window.scrollTo(0, inicio + diferencia * easeInOutCubic(progreso));
+      if (progreso < 1) requestAnimationFrame(paso);
+    }
+
+    requestAnimationFrame(paso);
+  }
+
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      if (!target) return;
+      e.preventDefault();
+      desplazarConEasing(target, 800);
     });
   });
 
-  /* ── Favorito toggle ── */
   document.querySelectorAll('[data-action="favorite"]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var active = btn.classList.toggle('is-active');
@@ -672,26 +882,6 @@
     });
   });
 
-  /* ── Share ── */
-  function doShare() {
-    if (navigator.share) {
-      navigator.share({
-        title: '{{ lugar.nombre|escapejs }}',
-        text: '{{ lugar.nombre|escapejs }} — Viaje Informado Huánuco',
-        url: window.location.href
-      }).catch(function () {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href).then(function () {
-        showToast('Enlace copiado al portapapeles');
-      });
-    }
-  }
-
-  document.querySelectorAll('[data-action="share"]').forEach(function (btn) {
-    btn.addEventListener('click', doShare);
-  });
-
-  /* ── Toast ── */
   function showToast(msg) {
     var t = document.createElement('div');
     t.setAttribute('role', 'status');
@@ -713,6 +903,28 @@
     }, 2600);
   }
 
+  function doShare() {
+    if (navigator.share) {
+      navigator.share({
+        title: '{{ lugar.nombre|escapejs }}',
+        text: '{{ lugar.nombre|escapejs }} — Viaje Informado Huánuco',
+        url: window.location.href
+      }).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(function () {
+        showToast('Enlace copiado al portapapeles');
+      });
+    }
+  }
+
+  document.querySelectorAll('[data-action="share"]').forEach(function (btn) {
+    btn.addEventListener('click', doShare);
+  });
 })();
 </script>
+<script src="{% static 'assets/js/carousel-3d.js' %}"></script>
+<!-- Animaciones de entrada al hacer scroll (IntersectionObserver + Animate.css) -->
+<script src="{% static 'assets/js/animaciones-scroll.js' %}"></script>
+<!-- Desplegable "Cómo llegar" dentro del card de ubicación -->
+<script src="{% static 'assets/js/desplazable-como-llegar.js' %}"></script>
 {% endblock %}

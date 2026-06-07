@@ -1,0 +1,248 @@
+/* ============================================================
+   COMPONENTE: CÓMO LLEGAR DESPLEGABLE — Viaje Informado
+   Compartido entre Detalle Lugar Turístico y Detalle Establecimiento.
+   Las variables de diseño se definen en el wrapper .como-llegar-wrap
+   para quedar aisladas del resto de la página.
+   ============================================================ */
+
+.como-llegar-wrap {
+    /* Paleta de colores y tipografía del componente */
+    --du-ink:        #002d89;
+    --du-ink-soft:   #314e93;
+    --du-ink-mute:   #6b7ba8;
+    --du-line:       #e3e8f5;
+    --du-line-soft:  #eef1fa;
+    --du-white:      #ffffff;
+    --du-bg:         #f8f8ff;
+    --du-pill-bg:    #e9eefb;
+    --du-grad:       linear-gradient(135deg, #007fff 0%, #000080 100%);
+    --du-shadow-md:  0 4px 16px rgba(0, 45, 137, 0.08), 0  0 0 1px rgba(0, 45, 137, 0.05);
+    --du-shadow-lg:  0 16px 40px rgba(0, 45, 137, 0.12), 0 0 0 1px rgba(0, 45, 137, 0.05);
+    --du-serif:      'Playfair Display', Georgia, serif;
+    --du-sans:       'DM Sans', system-ui, -apple-system, sans-serif;
+
+    width: 100%;
+    margin-top: 26px;
+}
+
+/* ── Fila de botones por defecto (Cómo llegar / Abrir mapa) ── */
+.como-llegar-wrap .du-route-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.como-llegar-wrap .du-route-actions[hidden] {
+    display: none !important;
+}
+
+/* ── Botón genérico de acción ── */
+.como-llegar-wrap .du-action {
+    min-width: 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--du-line);
+    border-radius: 999px;
+    background: var(--du-white);
+    color: var(--du-ink);
+    font-family: var(--du-sans);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.como-llegar-wrap .du-action:hover {
+    background: var(--du-pill-bg);
+    border-color: var(--du-ink-soft);
+    color: var(--du-ink);
+    text-decoration: none;
+}
+
+/* ── Variante primaria (gradiente azul) ── */
+.como-llegar-wrap .du-action.primary {
+    border: 0;
+    background: var(--du-grad);
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 45, 137, 0.22);
+}
+
+.como-llegar-wrap .du-action.primary:hover {
+    transform: translateY(-1px);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* ── Botón de ancho completo (Iniciar ruta) ── */
+.como-llegar-wrap .du-action-full {
+    width: 100%;
+    margin-top: 4px;
+}
+
+/* ── Panel desplegable con las opciones de ruta ── */
+.como-llegar-wrap .du-directions {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-top: 14px;
+    padding: 18px;
+    border: 1px solid var(--du-line-soft);
+    border-radius: 18px;
+    background: var(--du-white);
+    box-shadow: var(--du-shadow-lg);
+    text-align: left;
+}
+
+.como-llegar-wrap .du-directions[hidden] {
+    display: none !important;
+}
+
+/* ── Encabezado del desplegable (título + botón cerrar) ── */
+.como-llegar-wrap .du-directions-hd {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.como-llegar-wrap .du-directions-hd h5 {
+    margin: 0;
+    color: var(--du-ink);
+    font-family: var(--du-serif);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+/* ── Botón X para cerrar el desplegable ── */
+.como-llegar-wrap .du-directions-close {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: var(--du-pill-bg);
+    color: var(--du-ink-mute);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+.como-llegar-wrap .du-directions-close:hover {
+    background: var(--du-line);
+    color: var(--du-ink);
+}
+
+/* ── Etiqueta de campo (DESDE / HASTA) ── */
+.como-llegar-wrap .du-directions-label {
+    margin: 12px 0 6px;
+    color: var(--du-ink-mute);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    line-height: 1;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+/* ── Input de texto (solo lectura) ── */
+.como-llegar-wrap .du-direction-input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    display: block;
+    margin-bottom: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--du-line);
+    border-radius: 12px;
+    background: var(--du-pill-bg);
+    color: var(--du-ink);
+    font-family: var(--du-sans);
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+}
+
+/* ── Selector de modo de transporte (A pie / En auto) ── */
+.como-llegar-wrap .du-direction-modes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.como-llegar-wrap .du-mode {
+    min-width: 0;
+    min-height: 58px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px 8px;
+    border: 1px solid var(--du-line);
+    border-radius: 12px;
+    background: var(--du-white);
+    color: var(--du-ink);
+    font-family: var(--du-sans);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.como-llegar-wrap .du-mode:hover {
+    background: var(--du-pill-bg);
+}
+
+/* ── Modo seleccionado: fondo gradiente azul ── */
+.como-llegar-wrap .du-mode.is-active {
+    border-color: transparent;
+    background: var(--du-grad);
+    color: #ffffff;
+}
+
+/* ── Responsive: móvil ── */
+@media (max-width: 767.98px) {
+    .como-llegar-wrap .du-directions {
+        padding: 16px;
+        border-radius: 18px;
+        box-shadow: var(--du-shadow-md);
+    }
+
+    .como-llegar-wrap .du-directions-hd h5 {
+        font-size: 19px;
+    }
+
+    .como-llegar-wrap .du-mode {
+        min-height: 60px;
+    }
+}
+
+/* ── Responsive: móvil angosto ── */
+@media (max-width: 420px) {
+    .como-llegar-wrap .du-route-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .como-llegar-wrap .du-action {
+        width: 100%;
+    }
+
+    .como-llegar-wrap .du-mode {
+        font-size: 11px;
+    }
+}
