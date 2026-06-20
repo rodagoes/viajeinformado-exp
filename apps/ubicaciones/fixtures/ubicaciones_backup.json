@@ -107,7 +107,7 @@
   "pk": 8,
   "fields": {
     "departamento": 1,
-    "nombre_oficial": "MARAÑON",
+    "nombre_oficial": "MARAÃ‘ON",
     "slug": "maranon",
     "codigo_inei": "1007",
     "activo": true,
@@ -594,7 +594,7 @@
   "pk": 30,
   "fields": {
     "provincia": 4,
-    "nombre_oficial": "PUÑOS",
+    "nombre_oficial": "PUÃ‘OS",
     "slug": "punos",
     "codigo_inei": "100509",
     "codigo_api": "090409",
@@ -834,7 +834,7 @@
   "pk": 46,
   "fields": {
     "provincia": 6,
-    "nombre_oficial": "BAÑOS",
+    "nombre_oficial": "BAÃ‘OS",
     "slug": "banos",
     "codigo_inei": "101002",
     "codigo_api": "091002",
@@ -1419,10 +1419,10 @@
   "pk": 1,
   "fields": {
     "distrito": 61,
-    "nombre": "Tingo María",
+    "nombre": "Tingo MarÃ­a",
     "slug": "tingo-maria",
     "tipo": "Capital distrital",
-    "descripcion": "Tingo María es la capital del distrito de Rupa-Rupa, ubicada en la provincia de Leoncio Prado, departamento de Huánuco. Es una de las zonas más conocidas de la selva huanuqueña y un punto importante para el turismo local.",
+    "descripcion": "Tingo MarÃ­a es la capital del distrito de Rupa-Rupa, ubicada en la provincia de Leoncio Prado, departamento de HuÃ¡nuco. Es una de las zonas mÃ¡s conocidas de la selva huanuqueÃ±a y un punto importante para el turismo local.",
     "referencia": "Capital del distrito de Rupa-Rupa.",
     "latitud": "-9.2983523",
     "longitud": "-76.0003143",
