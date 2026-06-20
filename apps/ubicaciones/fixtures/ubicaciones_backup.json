@@ -1,0 +1,1434 @@
+[
+{
+  "model": "ubicaciones.departamento",
+  "pk": 1,
+  "fields": {
+    "nombre_oficial": "HUANUCO",
+    "slug": "huanuco",
+    "codigo_inei": "10",
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.748Z",
+    "actualizado": "2026-05-03T17:23:29.748Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 1,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "AMBO",
+    "slug": "ambo",
+    "codigo_inei": "1002",
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.757Z",
+    "actualizado": "2026-05-03T17:23:29.757Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 2,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "DOS DE MAYO",
+    "slug": "dos-de-mayo",
+    "codigo_inei": "1003",
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.813Z",
+    "actualizado": "2026-05-03T17:23:29.813Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 3,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "HUACAYBAMBA",
+    "slug": "huacaybamba",
+    "codigo_inei": "1004",
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.897Z",
+    "actualizado": "2026-05-03T17:23:29.897Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 4,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "HUAMALIES",
+    "slug": "huamalies",
+    "codigo_inei": "1005",
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.938Z",
+    "actualizado": "2026-05-03T17:23:29.938Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 5,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "HUANUCO",
+    "slug": "huanuco",
+    "codigo_inei": "1001",
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.007Z",
+    "actualizado": "2026-05-03T17:23:30.007Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 6,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "LAURICOCHA",
+    "slug": "lauricocha",
+    "codigo_inei": "1010",
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.119Z",
+    "actualizado": "2026-05-03T17:23:30.119Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 7,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "LEONCIO PRADO",
+    "slug": "leoncio-prado",
+    "codigo_inei": "1006",
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.188Z",
+    "actualizado": "2026-05-03T17:23:30.188Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 8,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "MARAÑON",
+    "slug": "maranon",
+    "codigo_inei": "1007",
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.279Z",
+    "actualizado": "2026-05-03T17:23:30.279Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 9,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "PACHITEA",
+    "slug": "pachitea",
+    "codigo_inei": "1008",
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.354Z",
+    "actualizado": "2026-05-03T17:23:30.354Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 10,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "PUERTO INCA",
+    "slug": "puerto-inca",
+    "codigo_inei": "1009",
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.400Z",
+    "actualizado": "2026-05-03T17:23:30.400Z"
+  }
+},
+{
+  "model": "ubicaciones.provincia",
+  "pk": 11,
+  "fields": {
+    "departamento": 1,
+    "nombre_oficial": "YAROWILCA",
+    "slug": "yarowilca",
+    "codigo_inei": "1011",
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.443Z",
+    "actualizado": "2026-05-03T17:23:30.443Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 1,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "AMBO",
+    "slug": "ambo",
+    "codigo_inei": "100201",
+    "codigo_api": "090201",
+    "api_id": 922,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.763Z",
+    "actualizado": "2026-05-03T17:23:29.763Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 2,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "CAYNA",
+    "slug": "cayna",
+    "codigo_inei": "100202",
+    "codigo_api": "090202",
+    "api_id": 923,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.769Z",
+    "actualizado": "2026-05-03T17:23:29.769Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 3,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "COLPAS",
+    "slug": "colpas",
+    "codigo_inei": "100203",
+    "codigo_api": "090203",
+    "api_id": 924,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.775Z",
+    "actualizado": "2026-05-03T17:23:29.775Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 4,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "CONCHAMARCA",
+    "slug": "conchamarca",
+    "codigo_inei": "100204",
+    "codigo_api": "090204",
+    "api_id": 925,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.781Z",
+    "actualizado": "2026-05-03T17:23:29.781Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 5,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "HUACAR",
+    "slug": "huacar",
+    "codigo_inei": "100205",
+    "codigo_api": "090205",
+    "api_id": 926,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.788Z",
+    "actualizado": "2026-05-03T17:23:29.788Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 6,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "SAN FRANCISCO",
+    "slug": "san-francisco",
+    "codigo_inei": "100206",
+    "codigo_api": "090206",
+    "api_id": 927,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.794Z",
+    "actualizado": "2026-05-03T17:23:29.794Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 7,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "SAN RAFAEL",
+    "slug": "san-rafael",
+    "codigo_inei": "100207",
+    "codigo_api": "090207",
+    "api_id": 928,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.800Z",
+    "actualizado": "2026-05-03T17:23:29.800Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 8,
+  "fields": {
+    "provincia": 1,
+    "nombre_oficial": "TOMAY KICHWA",
+    "slug": "tomay-kichwa",
+    "codigo_inei": "100208",
+    "codigo_api": "090208",
+    "api_id": 929,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.806Z",
+    "actualizado": "2026-05-03T17:23:29.806Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 9,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "CHUQUIS",
+    "slug": "chuquis",
+    "codigo_inei": "100307",
+    "codigo_api": "090307",
+    "api_id": 931,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.822Z",
+    "actualizado": "2026-05-03T17:23:29.822Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 10,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "LA UNION",
+    "slug": "la-union",
+    "codigo_inei": "100301",
+    "codigo_api": "090301",
+    "api_id": 930,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.828Z",
+    "actualizado": "2026-05-03T17:23:29.828Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 11,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "MARIAS",
+    "slug": "marias",
+    "codigo_inei": "100311",
+    "codigo_api": "090312",
+    "api_id": 932,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.837Z",
+    "actualizado": "2026-05-03T17:23:29.837Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 12,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "PACHAS",
+    "slug": "pachas",
+    "codigo_inei": "100313",
+    "codigo_api": "090314",
+    "api_id": 933,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.845Z",
+    "actualizado": "2026-05-03T17:23:29.845Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 13,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "QUIVILLA",
+    "slug": "quivilla",
+    "codigo_inei": "100316",
+    "codigo_api": "090316",
+    "api_id": 934,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.854Z",
+    "actualizado": "2026-05-03T17:23:29.854Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 14,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "RIPAN",
+    "slug": "ripan",
+    "codigo_inei": "100317",
+    "codigo_api": "090317",
+    "api_id": 935,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.863Z",
+    "actualizado": "2026-05-03T17:23:29.863Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 15,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "SHUNQUI",
+    "slug": "shunqui",
+    "codigo_inei": "100321",
+    "codigo_api": "090321",
+    "api_id": 936,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.871Z",
+    "actualizado": "2026-05-03T17:23:29.871Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 16,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "SILLAPATA",
+    "slug": "sillapata",
+    "codigo_inei": "100322",
+    "codigo_api": "090322",
+    "api_id": 937,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.880Z",
+    "actualizado": "2026-05-03T17:23:29.880Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 17,
+  "fields": {
+    "provincia": 2,
+    "nombre_oficial": "YANAS",
+    "slug": "yanas",
+    "codigo_inei": "100323",
+    "codigo_api": "090323",
+    "api_id": 938,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.888Z",
+    "actualizado": "2026-05-03T17:23:29.888Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 18,
+  "fields": {
+    "provincia": 3,
+    "nombre_oficial": "CANCHABAMBA",
+    "slug": "canchabamba",
+    "codigo_inei": "100402",
+    "codigo_api": "090903",
+    "api_id": 940,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.905Z",
+    "actualizado": "2026-05-03T17:23:29.905Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 19,
+  "fields": {
+    "provincia": 3,
+    "nombre_oficial": "COCHABAMBA",
+    "slug": "cochabamba",
+    "codigo_inei": "100403",
+    "codigo_api": "090904",
+    "api_id": 941,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.913Z",
+    "actualizado": "2026-05-03T17:23:29.913Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 20,
+  "fields": {
+    "provincia": 3,
+    "nombre_oficial": "HUACAYBAMBA",
+    "slug": "huacaybamba",
+    "codigo_inei": "100401",
+    "codigo_api": "090901",
+    "api_id": 939,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.922Z",
+    "actualizado": "2026-05-03T17:23:29.923Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 21,
+  "fields": {
+    "provincia": 3,
+    "nombre_oficial": "PINRA",
+    "slug": "pinra",
+    "codigo_inei": "100404",
+    "codigo_api": "090902",
+    "api_id": 942,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.931Z",
+    "actualizado": "2026-05-03T17:23:29.931Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 22,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "ARANCAY",
+    "slug": "arancay",
+    "codigo_inei": "100502",
+    "codigo_api": "090402",
+    "api_id": 944,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.944Z",
+    "actualizado": "2026-05-03T17:23:29.944Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 23,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "CHAVIN DE PARIARCA",
+    "slug": "chavin-de-pariarca",
+    "codigo_inei": "100503",
+    "codigo_api": "090403",
+    "api_id": 945,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.950Z",
+    "actualizado": "2026-05-03T17:23:29.950Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 24,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "JACAS GRANDE",
+    "slug": "jacas-grande",
+    "codigo_inei": "100504",
+    "codigo_api": "090404",
+    "api_id": 946,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.956Z",
+    "actualizado": "2026-05-03T17:23:29.956Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 25,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "JIRCAN",
+    "slug": "jircan",
+    "codigo_inei": "100505",
+    "codigo_api": "090405",
+    "api_id": 947,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.962Z",
+    "actualizado": "2026-05-03T17:23:29.962Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 26,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "LLATA",
+    "slug": "llata",
+    "codigo_inei": "100501",
+    "codigo_api": "090401",
+    "api_id": 943,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.968Z",
+    "actualizado": "2026-05-03T17:23:29.968Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 27,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "MIRAFLORES",
+    "slug": "miraflores",
+    "codigo_inei": "100506",
+    "codigo_api": "090406",
+    "api_id": 948,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.973Z",
+    "actualizado": "2026-05-03T17:23:29.973Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 28,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "MONZON",
+    "slug": "monzon",
+    "codigo_inei": "100507",
+    "codigo_api": "090407",
+    "api_id": 949,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.979Z",
+    "actualizado": "2026-05-03T17:23:29.979Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 29,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "PUNCHAO",
+    "slug": "punchao",
+    "codigo_inei": "100508",
+    "codigo_api": "090408",
+    "api_id": 950,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.985Z",
+    "actualizado": "2026-05-03T17:23:29.985Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 30,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "PUÑOS",
+    "slug": "punos",
+    "codigo_inei": "100509",
+    "codigo_api": "090409",
+    "api_id": 951,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.990Z",
+    "actualizado": "2026-05-03T17:23:29.990Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 31,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "SINGA",
+    "slug": "singa",
+    "codigo_inei": "100510",
+    "codigo_api": "090410",
+    "api_id": 952,
+    "activo": true,
+    "creado": "2026-05-03T17:23:29.996Z",
+    "actualizado": "2026-05-03T17:23:29.996Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 32,
+  "fields": {
+    "provincia": 4,
+    "nombre_oficial": "TANTAMAYO",
+    "slug": "tantamayo",
+    "codigo_inei": "100511",
+    "codigo_api": "090411",
+    "api_id": 953,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.001Z",
+    "actualizado": "2026-05-03T17:23:30.001Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 33,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "AMARILIS",
+    "slug": "amarilis",
+    "codigo_inei": "100102",
+    "codigo_api": "090110",
+    "api_id": 910,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.013Z",
+    "actualizado": "2026-05-03T17:23:30.013Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 34,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "CHINCHAO",
+    "slug": "chinchao",
+    "codigo_inei": "100103",
+    "codigo_api": "090102",
+    "api_id": 911,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.020Z",
+    "actualizado": "2026-05-03T17:23:30.020Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 35,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "CHURUBAMBA",
+    "slug": "churubamba",
+    "codigo_inei": "100104",
+    "codigo_api": "090103",
+    "api_id": 912,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.027Z",
+    "actualizado": "2026-05-03T17:23:30.027Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 36,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "HUANUCO",
+    "slug": "huanuco",
+    "codigo_inei": "100101",
+    "codigo_api": "090101",
+    "api_id": 909,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.035Z",
+    "actualizado": "2026-05-03T17:23:30.035Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 37,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "MARGOS",
+    "slug": "margos",
+    "codigo_inei": "100105",
+    "codigo_api": "090104",
+    "api_id": 913,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.042Z",
+    "actualizado": "2026-05-03T17:23:30.043Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 38,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "PILLCO MARCA",
+    "slug": "pillco-marca",
+    "codigo_inei": "100111",
+    "codigo_api": "090111",
+    "api_id": 919,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.051Z",
+    "actualizado": "2026-05-03T17:23:30.051Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 39,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "QUISQUI",
+    "slug": "quisqui",
+    "codigo_inei": "100106",
+    "codigo_api": "090105",
+    "api_id": 914,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.059Z",
+    "actualizado": "2026-05-03T17:23:30.059Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 40,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "SAN FRANCISCO DE CAYRAN",
+    "slug": "san-francisco-de-cayran",
+    "codigo_inei": "100107",
+    "codigo_api": "090106",
+    "api_id": 915,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.067Z",
+    "actualizado": "2026-05-03T17:23:30.067Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 41,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "SAN PABLO DE PILLAO",
+    "slug": "san-pablo-de-pillao",
+    "codigo_inei": "100113",
+    "codigo_api": "090113",
+    "api_id": 921,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.075Z",
+    "actualizado": "2026-05-03T17:23:30.075Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 42,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "SAN PEDRO DE CHAULAN",
+    "slug": "san-pedro-de-chaulan",
+    "codigo_inei": "100108",
+    "codigo_api": "090107",
+    "api_id": 916,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.083Z",
+    "actualizado": "2026-05-03T17:23:30.083Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 43,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "SANTA MARIA DEL VALLE",
+    "slug": "santa-maria-del-valle",
+    "codigo_inei": "100109",
+    "codigo_api": "090108",
+    "api_id": 917,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.092Z",
+    "actualizado": "2026-05-03T17:23:30.092Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 44,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "YACUS",
+    "slug": "yacus",
+    "codigo_inei": "100112",
+    "codigo_api": "090112",
+    "api_id": 920,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.101Z",
+    "actualizado": "2026-05-03T17:23:30.101Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 45,
+  "fields": {
+    "provincia": 5,
+    "nombre_oficial": "YARUMAYO",
+    "slug": "yarumayo",
+    "codigo_inei": "100110",
+    "codigo_api": "090109",
+    "api_id": 918,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.110Z",
+    "actualizado": "2026-05-03T17:23:30.110Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 46,
+  "fields": {
+    "provincia": 6,
+    "nombre_oficial": "BAÑOS",
+    "slug": "banos",
+    "codigo_inei": "101002",
+    "codigo_api": "091002",
+    "api_id": 979,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.128Z",
+    "actualizado": "2026-05-03T17:23:30.128Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 47,
+  "fields": {
+    "provincia": 6,
+    "nombre_oficial": "JESUS",
+    "slug": "jesus",
+    "codigo_inei": "101001",
+    "codigo_api": "091001",
+    "api_id": 978,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.137Z",
+    "actualizado": "2026-05-03T17:23:30.137Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 48,
+  "fields": {
+    "provincia": 6,
+    "nombre_oficial": "JIVIA",
+    "slug": "jivia",
+    "codigo_inei": "101003",
+    "codigo_api": "091007",
+    "api_id": 980,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.145Z",
+    "actualizado": "2026-05-03T17:23:30.145Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 49,
+  "fields": {
+    "provincia": 6,
+    "nombre_oficial": "QUEROPALCA",
+    "slug": "queropalca",
+    "codigo_inei": "101004",
+    "codigo_api": "091004",
+    "api_id": 981,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.154Z",
+    "actualizado": "2026-05-03T17:23:30.154Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 50,
+  "fields": {
+    "provincia": 6,
+    "nombre_oficial": "RONDOS",
+    "slug": "rondos",
+    "codigo_inei": "101005",
+    "codigo_api": "091006",
+    "api_id": 982,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.162Z",
+    "actualizado": "2026-05-03T17:23:30.162Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 51,
+  "fields": {
+    "provincia": 6,
+    "nombre_oficial": "SAN FRANCISCO DE ASIS",
+    "slug": "san-francisco-de-asis",
+    "codigo_inei": "101006",
+    "codigo_api": "091003",
+    "api_id": 983,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.171Z",
+    "actualizado": "2026-05-03T17:23:30.171Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 52,
+  "fields": {
+    "provincia": 6,
+    "nombre_oficial": "SAN MIGUEL DE CAURI",
+    "slug": "san-miguel-de-cauri",
+    "codigo_inei": "101007",
+    "codigo_api": "091005",
+    "api_id": 984,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.179Z",
+    "actualizado": "2026-05-03T17:23:30.179Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 53,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "CASTILLO GRANDE",
+    "slug": "castillo-grande",
+    "codigo_inei": "100608",
+    "codigo_api": "090608",
+    "api_id": 961,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.196Z",
+    "actualizado": "2026-05-03T17:23:30.196Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 54,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "DANIEL ALOMIAS ROBLES",
+    "slug": "daniel-alomias-robles",
+    "codigo_inei": "100602",
+    "codigo_api": "090602",
+    "api_id": 955,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.204Z",
+    "actualizado": "2026-05-03T17:23:30.204Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 55,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "HERMILIO VALDIZAN",
+    "slug": "hermilio-valdizan",
+    "codigo_inei": "100603",
+    "codigo_api": "090603",
+    "api_id": 956,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.212Z",
+    "actualizado": "2026-05-03T17:23:30.212Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 56,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "JOSE CRESPO Y CASTILLO",
+    "slug": "jose-crespo-y-castillo",
+    "codigo_inei": "100604",
+    "codigo_api": "090606",
+    "api_id": 957,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.220Z",
+    "actualizado": "2026-05-03T17:23:30.220Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 57,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "LUYANDO",
+    "slug": "luyando",
+    "codigo_inei": "100605",
+    "codigo_api": "090604",
+    "api_id": 958,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.228Z",
+    "actualizado": "2026-05-03T17:23:30.228Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 58,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "MARIANO DAMASO BERAUN",
+    "slug": "mariano-damaso-beraun",
+    "codigo_inei": "100606",
+    "codigo_api": "090605",
+    "api_id": 959,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.236Z",
+    "actualizado": "2026-05-03T17:23:30.236Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 59,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "PUCAYACU",
+    "slug": "pucayacu",
+    "codigo_inei": "100607",
+    "codigo_api": "090607",
+    "api_id": 960,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.245Z",
+    "actualizado": "2026-05-03T17:23:30.245Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 60,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "PUEBLO NUEVO",
+    "slug": "pueblo-nuevo",
+    "codigo_inei": "100609",
+    "codigo_api": "090609",
+    "api_id": 962,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.254Z",
+    "actualizado": "2026-05-03T17:23:30.254Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 61,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "RUPA-RUPA",
+    "slug": "rupa-rupa",
+    "codigo_inei": "100601",
+    "codigo_api": "090601",
+    "api_id": 954,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.262Z",
+    "actualizado": "2026-05-03T17:23:30.262Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 62,
+  "fields": {
+    "provincia": 7,
+    "nombre_oficial": "SANTO DOMINGO DE ANDA",
+    "slug": "santo-domingo-de-anda",
+    "codigo_inei": "100610",
+    "codigo_api": "090610",
+    "api_id": 963,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.270Z",
+    "actualizado": "2026-05-03T17:23:30.270Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 63,
+  "fields": {
+    "provincia": 8,
+    "nombre_oficial": "CHOLON",
+    "slug": "cholon",
+    "codigo_inei": "100702",
+    "codigo_api": "090502",
+    "api_id": 965,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.287Z",
+    "actualizado": "2026-05-03T17:23:30.287Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 64,
+  "fields": {
+    "provincia": 8,
+    "nombre_oficial": "HUACRACHUCO",
+    "slug": "huacrachuco",
+    "codigo_inei": "100701",
+    "codigo_api": "090501",
+    "api_id": 964,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.297Z",
+    "actualizado": "2026-05-03T17:23:30.297Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 65,
+  "fields": {
+    "provincia": 8,
+    "nombre_oficial": "LA MORADA",
+    "slug": "la-morada",
+    "codigo_inei": "100704",
+    "codigo_api": "090506",
+    "api_id": 967,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.311Z",
+    "actualizado": "2026-05-03T17:23:30.311Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 66,
+  "fields": {
+    "provincia": 8,
+    "nombre_oficial": "SAN BUENAVENTURA",
+    "slug": "san-buenaventura",
+    "codigo_inei": "100703",
+    "codigo_api": "090505",
+    "api_id": 966,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.324Z",
+    "actualizado": "2026-05-03T17:23:30.324Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 67,
+  "fields": {
+    "provincia": 8,
+    "nombre_oficial": "SANTA ROSA DE ALTO YANAJANCA",
+    "slug": "santa-rosa-de-alto-yanajanca",
+    "codigo_inei": "100705",
+    "codigo_api": "090507",
+    "api_id": 968,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.340Z",
+    "actualizado": "2026-05-03T17:23:30.340Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 68,
+  "fields": {
+    "provincia": 9,
+    "nombre_oficial": "CHAGLLA",
+    "slug": "chaglla",
+    "codigo_inei": "100802",
+    "codigo_api": "090702",
+    "api_id": 970,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.365Z",
+    "actualizado": "2026-05-03T17:23:30.365Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 69,
+  "fields": {
+    "provincia": 9,
+    "nombre_oficial": "MOLINO",
+    "slug": "molino",
+    "codigo_inei": "100803",
+    "codigo_api": "090704",
+    "api_id": 971,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.375Z",
+    "actualizado": "2026-05-03T17:23:30.375Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 70,
+  "fields": {
+    "provincia": 9,
+    "nombre_oficial": "PANAO",
+    "slug": "panao",
+    "codigo_inei": "100801",
+    "codigo_api": "090701",
+    "api_id": 969,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.384Z",
+    "actualizado": "2026-05-03T17:23:30.384Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 71,
+  "fields": {
+    "provincia": 9,
+    "nombre_oficial": "UMARI",
+    "slug": "umari",
+    "codigo_inei": "100804",
+    "codigo_api": "090706",
+    "api_id": 972,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.392Z",
+    "actualizado": "2026-05-03T17:23:30.392Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 72,
+  "fields": {
+    "provincia": 10,
+    "nombre_oficial": "CODO DEL POZUZO",
+    "slug": "codo-del-pozuzo",
+    "codigo_inei": "100902",
+    "codigo_api": "090803",
+    "api_id": 974,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.407Z",
+    "actualizado": "2026-05-03T17:23:30.407Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 73,
+  "fields": {
+    "provincia": 10,
+    "nombre_oficial": "HONORIA",
+    "slug": "honoria",
+    "codigo_inei": "100903",
+    "codigo_api": "090801",
+    "api_id": 975,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.413Z",
+    "actualizado": "2026-05-03T17:23:30.413Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 74,
+  "fields": {
+    "provincia": 10,
+    "nombre_oficial": "PUERTO INCA",
+    "slug": "puerto-inca",
+    "codigo_inei": "100901",
+    "codigo_api": "090802",
+    "api_id": 973,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.419Z",
+    "actualizado": "2026-05-03T17:23:30.419Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 75,
+  "fields": {
+    "provincia": 10,
+    "nombre_oficial": "TOURNAVISTA",
+    "slug": "tournavista",
+    "codigo_inei": "100904",
+    "codigo_api": "090804",
+    "api_id": 976,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.425Z",
+    "actualizado": "2026-05-03T17:23:30.425Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 76,
+  "fields": {
+    "provincia": 10,
+    "nombre_oficial": "YUYAPICHIS",
+    "slug": "yuyapichis",
+    "codigo_inei": "100905",
+    "codigo_api": "090805",
+    "api_id": 977,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.433Z",
+    "actualizado": "2026-05-03T17:23:30.433Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 77,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "APARICIO POMARES",
+    "slug": "aparicio-pomares",
+    "codigo_inei": "101104",
+    "codigo_api": "091102",
+    "api_id": 988,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.456Z",
+    "actualizado": "2026-05-03T17:23:30.456Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 78,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "CAHUAC",
+    "slug": "cahuac",
+    "codigo_inei": "101102",
+    "codigo_api": "091103",
+    "api_id": 986,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.465Z",
+    "actualizado": "2026-05-03T17:23:30.465Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 79,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "CHACABAMBA",
+    "slug": "chacabamba",
+    "codigo_inei": "101103",
+    "codigo_api": "091104",
+    "api_id": 987,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.473Z",
+    "actualizado": "2026-05-03T17:23:30.473Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 80,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "CHAVINILLO",
+    "slug": "chavinillo",
+    "codigo_inei": "101101",
+    "codigo_api": "091101",
+    "api_id": 985,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.483Z",
+    "actualizado": "2026-05-03T17:23:30.483Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 81,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "CHORAS",
+    "slug": "choras",
+    "codigo_inei": "101108",
+    "codigo_api": "091108",
+    "api_id": 992,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.494Z",
+    "actualizado": "2026-05-03T17:23:30.494Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 82,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "JACAS CHICO",
+    "slug": "jacas-chico",
+    "codigo_inei": "101105",
+    "codigo_api": "091105",
+    "api_id": 989,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.503Z",
+    "actualizado": "2026-05-03T17:23:30.503Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 83,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "OBAS",
+    "slug": "obas",
+    "codigo_inei": "101106",
+    "codigo_api": "091106",
+    "api_id": 990,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.512Z",
+    "actualizado": "2026-05-03T17:23:30.512Z"
+  }
+},
+{
+  "model": "ubicaciones.distrito",
+  "pk": 84,
+  "fields": {
+    "provincia": 11,
+    "nombre_oficial": "PAMPAMARCA",
+    "slug": "pampamarca",
+    "codigo_inei": "101107",
+    "codigo_api": "091107",
+    "api_id": 991,
+    "activo": true,
+    "creado": "2026-05-03T17:23:30.520Z",
+    "actualizado": "2026-05-03T17:23:30.520Z"
+  }
+},
+{
+  "model": "ubicaciones.localidad",
+  "pk": 1,
+  "fields": {
+    "distrito": 61,
+    "nombre": "Tingo María",
+    "slug": "tingo-maria",
+    "tipo": "Capital distrital",
+    "descripcion": "Tingo María es la capital del distrito de Rupa-Rupa, ubicada en la provincia de Leoncio Prado, departamento de Huánuco. Es una de las zonas más conocidas de la selva huanuqueña y un punto importante para el turismo local.",
+    "referencia": "Capital del distrito de Rupa-Rupa.",
+    "latitud": "-9.2983523",
+    "longitud": "-76.0003143",
+    "activo": true,
+    "creado": "2026-05-03T17:45:26.443Z",
+    "actualizado": "2026-05-03T17:45:26.444Z"
+  }
+}
+]
