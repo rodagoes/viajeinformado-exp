@@ -185,7 +185,6 @@ def detalle_lugar(request, slug):
 
     # Multimedia para galería y visor.
     media_items = []
-    media_lightbox_items = []
     urls_vistas = set()
 
     for item in lugar.imagenes.all():
@@ -221,21 +220,24 @@ def detalle_lugar(request, slug):
                 "alt": item.texto_alt or item.titulo or lugar.nombre,
                 "titulo": item.titulo,
                 "descripcion": item.descripcion,
-                "lb_index": len(media_lightbox_items),
             }
             media_items.append(image_data)
-            media_lightbox_items.append(image_data)
             urls_vistas.add(item.imagen.url)
 
     # Imagen histórica: prioridad campo dedicado; fallback a primera imagen de galería o imagen principal.
+    primera_imagen_galeria = next(
+        (item for item in media_items if item.get("kind") == "imagen"),
+        None
+    )
+
     historia_imagen = None
     if lugar.imagen_historia:
         historia_imagen = {
             "url": lugar.imagen_historia.url,
             "alt": lugar.texto_alt_imagen_historia or f"Imagen histórica de {lugar.nombre}",
         }
-    elif media_lightbox_items:
-        historia_imagen = media_lightbox_items[0]
+    elif primera_imagen_galeria:
+        historia_imagen = primera_imagen_galeria
     elif lugar.imagen_principal:
         historia_imagen = {
             "url": lugar.imagen_principal.url,
@@ -348,7 +350,6 @@ def detalle_lugar(request, slug):
     context = {
         "lugar": lugar,
         "media_items": media_items,
-        "media_lightbox_items": media_lightbox_items,
         "media_count": len(media_items),
         "historia_imagen": historia_imagen,
         "embed_url": embed_url,
