@@ -10,8 +10,6 @@ env = environ.Env()
 # Read .env file
 environ.Env.read_env(BASE_DIR / '.env')
 
-print("------>><", BASE_DIR)
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 

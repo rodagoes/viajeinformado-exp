@@ -620,56 +620,6 @@
 </div>
 
 {# ================================================================ #}
-{# LIGHTBOX                                                         #}
-{# ================================================================ #}
-<div
-  class="dl-lightbox"
-  id="dl-lightbox"
-  hidden
-  role="dialog"
-  aria-modal="true"
-  aria-label="Visor de fotos — {{ lugar.nombre }}"
->
-  <button class="dl-lb-close" id="dl-lb-close" type="button" aria-label="Cerrar">
-    <i class="bi bi-x-lg" aria-hidden="true"></i>
-  </button>
-  <button class="dl-lb-nav dl-lb-prev" id="dl-lb-prev" type="button" aria-label="Foto anterior">
-    <i class="bi bi-chevron-left" aria-hidden="true"></i>
-  </button>
-  <button class="dl-lb-nav dl-lb-next" id="dl-lb-next" type="button" aria-label="Foto siguiente">
-    <i class="bi bi-chevron-right" aria-hidden="true"></i>
-  </button>
-  <div class="dl-lb-inner">
-    <img src="" alt="" class="dl-lb-img" id="dl-lb-img">
-    <p class="dl-lb-cap" id="dl-lb-cap" aria-live="polite"></p>
-  </div>
-</div>
-
-{# ================================================================ #}
-{# VIDEO MODAL MP4                                                  #}
-{# ================================================================ #}
-<div
-  class="dl-video-modal"
-  id="dl-video-modal"
-  hidden
-  role="dialog"
-  aria-modal="true"
-  aria-label="Reproductor de video — {{ lugar.nombre }}"
->
-  <button class="dl-video-close" id="dl-video-close" type="button" aria-label="Cerrar video">
-    <i class="bi bi-x-lg" aria-hidden="true"></i>
-  </button>
-  <div class="dl-video-inner">
-    <video id="dl-video-player" controls playsinline preload="metadata"></video>
-    <p class="dl-video-cap" id="dl-video-cap" aria-live="polite"></p>
-  </div>
-</div>
-
-<script id="dl-photos-data" type="application/json">
-[{% for item in media_lightbox_items %}{"src":"{{ item.url }}","alt":"{{ item.alt|default:lugar.nombre|escapejs }}","caption":"{{ item.titulo|default:lugar.nombre|escapejs }}"}{% if not forloop.last %},{% endif %}{% endfor %}]
-</script>
-
-{# ================================================================ #}
 {# LIGHTBOX DEL CARRUSEL 3D                                         #}
 {# ================================================================ #}
 <div
@@ -729,114 +679,6 @@
 (function () {
   'use strict';
 
-  var photos = [];
-  try {
-    var node = document.getElementById('dl-photos-data');
-    if (node) photos = JSON.parse(node.textContent);
-  } catch (e) { console.warn('Gallery data error', e); }
-
-  var lb = document.getElementById('dl-lightbox');
-  var lbImg = document.getElementById('dl-lb-img');
-  var lbCap = document.getElementById('dl-lb-cap');
-  var lbClose = document.getElementById('dl-lb-close');
-  var lbPrev = document.getElementById('dl-lb-prev');
-  var lbNext = document.getElementById('dl-lb-next');
-  var videoModal = document.getElementById('dl-video-modal');
-  var videoPlayer = document.getElementById('dl-video-player');
-  var videoCap = document.getElementById('dl-video-cap');
-  var videoClose = document.getElementById('dl-video-close');
-  var current = 0;
-
-  function renderPhoto(i) {
-    if (!photos.length || !lbImg || !lbCap) return;
-    current = (i + photos.length) % photos.length;
-    var p = photos[current];
-    lbImg.src = p.src;
-    lbImg.alt = p.alt || '';
-    lbCap.textContent = (p.caption || p.alt || '') + ' · ' + (current + 1) + ' / ' + photos.length;
-  }
-
-  function openLB(i) {
-    if (!photos.length || !lb) return;
-    renderPhoto(i);
-    lb.hidden = false;
-    document.body.style.overflow = 'hidden';
-    if (lbClose) lbClose.focus();
-  }
-
-  function closeLB() {
-    if (!lb) return;
-    lb.hidden = true;
-    document.body.style.overflow = '';
-  }
-
-  function openVideoModal(url, title) {
-    if (!videoModal || !videoPlayer) return;
-    videoPlayer.src = url;
-    if (videoCap) videoCap.textContent = title || '{{ lugar.nombre|escapejs }}';
-    videoModal.hidden = false;
-    document.body.style.overflow = 'hidden';
-    videoPlayer.focus();
-  }
-
-  function closeVideoModal() {
-    if (!videoModal || !videoPlayer) return;
-    videoPlayer.pause();
-    videoPlayer.removeAttribute('src');
-    videoPlayer.load();
-    videoModal.hidden = true;
-    document.body.style.overflow = '';
-  }
-
-  document.querySelectorAll('[data-video-open]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      openVideoModal(btn.dataset.videoOpen, btn.dataset.videoTitle);
-    });
-  });
-
-  if (videoModal && videoClose) {
-    videoClose.addEventListener('click', closeVideoModal);
-    videoModal.addEventListener('click', function (e) {
-      if (e.target === videoModal) closeVideoModal();
-    });
-  }
-
-  document.querySelectorAll('[data-lb-open]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      openLB(parseInt(btn.dataset.lbOpen, 10) || 0);
-    });
-  });
-
-  if (lb && lbClose && lbPrev && lbNext) {
-    lbClose.addEventListener('click', closeLB);
-    lbPrev.addEventListener('click', function (e) { e.stopPropagation(); renderPhoto(current - 1); });
-    lbNext.addEventListener('click', function (e) { e.stopPropagation(); renderPhoto(current + 1); });
-    lb.addEventListener('click', function (e) { if (e.target === lb) closeLB(); });
-
-    document.addEventListener('keydown', function (e) {
-      if (lb.hidden) return;
-      if (e.key === 'Escape') closeLB();
-      if (e.key === 'ArrowLeft') renderPhoto(current - 1);
-      if (e.key === 'ArrowRight') renderPhoto(current + 1);
-    });
-
-    var swipeX = null;
-    lb.addEventListener('touchstart', function (e) { swipeX = e.touches[0].clientX; }, { passive: true });
-    lb.addEventListener('touchend', function (e) {
-      if (swipeX === null) return;
-      var dx = e.changedTouches[0].clientX - swipeX;
-      if (dx > 50) renderPhoto(current - 1);
-      if (dx < -50) renderPhoto(current + 1);
-      swipeX = null;
-    });
-  }
-
-  document.addEventListener('keydown', function (e) {
-    if (videoModal && !videoModal.hidden && e.key === 'Escape') {
-      closeVideoModal();
-    }
-  });
-
   /* ── Scroll suave con easing personalizado (800 ms) ──
      Velocidad intermedia: no demasiado rápida ni demasiado lenta.
      Usa easeInOutCubic para una sensación natural y fluida. */
@@ -863,9 +705,16 @@
     requestAnimationFrame(paso);
   }
 
-  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+  document.querySelectorAll('.detalle-lugar a[href^="#"]').forEach(function (a) {
+    var href = a.getAttribute('href');
+    if (!href || href === '#') return;
     a.addEventListener('click', function (e) {
-      var target = document.querySelector(a.getAttribute('href'));
+      var target;
+      try {
+        target = document.querySelector(href);
+      } catch (err) {
+        return;
+      }
       if (!target) return;
       e.preventDefault();
       desplazarConEasing(target, 800);
