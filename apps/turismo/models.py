@@ -11,6 +11,7 @@ TIPO_ICONO_CHOICES = (
 )
 
 TIPO_COSTO_CHOICES = (
+    ("no_requiere", "No requiere entrada"),
     ("gratis", "Gratis"),
     ("pagado", "Pagado"),
     ("consultar", "Consultar"),

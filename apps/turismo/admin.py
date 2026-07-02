@@ -140,6 +140,8 @@ class LugarTuristicoAdmin(admin.ModelAdmin):
 
     def rango_precios_soles(self, obj):
         if obj.precio_desde and obj.precio_hasta:
+            if obj.precio_desde == obj.precio_hasta:
+                return f"S/ {obj.precio_desde}"
             return f"S/ {obj.precio_desde} - S/ {obj.precio_hasta}"
         if obj.precio_desde:
             return f"Desde S/ {obj.precio_desde}"

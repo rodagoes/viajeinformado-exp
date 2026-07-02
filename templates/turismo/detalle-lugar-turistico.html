@@ -493,24 +493,32 @@
         <div class="dl-dato-card dl-dato-card--entrada">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-ticket-perforated-fill"></i></div>
           <p class="dl-dato-label">Entrada</p>
-          <div class="dl-dato-val dl-dato-val-entrada{% if lugar.tipo_costo == 'gratis' %} free{% endif %}">
-            {% if lugar.tipo_costo == 'gratis' %}
-              <strong>Gratis</strong>
+          <div class="dl-dato-val dl-dato-val-entrada{% if lugar.tipo_costo == 'no_requiere' or lugar.tipo_costo == 'gratis' %} free{% endif %}">
+            {% if lugar.tipo_costo == 'no_requiere' %}
+              <strong>Acceso libre</strong>
+            {% elif lugar.tipo_costo == 'gratis' %}
+              <strong>Ingreso gratuito</strong>
             {% elif lugar.tipo_costo == 'pagado' %}
               {% if lugar.precio_desde and lugar.precio_hasta %}
-                <strong>S/. {{ lugar.precio_desde|floatformat:0 }} — S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
+                {% if lugar.precio_desde == lugar.precio_hasta %}
+                  <strong>S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
+                {% else %}
+                  <strong>S/. {{ lugar.precio_desde|floatformat:0 }} — S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
+                {% endif %}
               {% elif lugar.precio_desde %}
                 <strong>Desde S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
               {% elif lugar.precio_hasta %}
                 <strong>Hasta S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
               {% else %}
-                <strong>Con costo</strong>
+                <strong>Consultar</strong>
               {% endif %}
 
               {% if entrada_usd_disponible %}
               <small>
                 ≈
-                {% if precio_desde_usd_txt and precio_hasta_usd_txt %}
+                {% if lugar.precio_desde and lugar.precio_hasta and lugar.precio_desde == lugar.precio_hasta and precio_desde_usd_txt %}
+                  US$ {{ precio_desde_usd_txt }}
+                {% elif precio_desde_usd_txt and precio_hasta_usd_txt %}
                   US$ {{ precio_desde_usd_txt }} — US$ {{ precio_hasta_usd_txt }}
                 {% elif precio_desde_usd_txt %}
                   US$ {{ precio_desde_usd_txt }}
