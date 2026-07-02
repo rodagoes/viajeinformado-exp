@@ -1,6 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Alkatra:wght@400&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
-
-/* ==== BASE ==== */
+﻿/* ==== BASE ==== */
 
 .detalle-lugar {
     --dl-dark: #111827;
@@ -64,14 +62,6 @@
     letter-spacing: 0.01em;
 }
 
-.dl-crumb a {
-    color: rgba(0, 45, 137, 0.78);
-}
-
-.dl-crumb-sep {
-    color: rgba(0, 45, 137, 0.45);
-}
-
 .dl-crumb-cur {
     min-width: 0;
     color: var(--dl-navy);
@@ -81,6 +71,7 @@
     font-weight: 600;
     letter-spacing: 0.02em;
 }
+
 .dl-crumb a {
     color: rgba(0, 45, 137, 0.72);
     font-weight: 500;
