@@ -246,14 +246,20 @@
 
                 {% empty %}
 
-                    <div class="col-12 text-center py-5 mt-4">
-                        <i class="bi bi-map display-1 text-muted mb-3 d-block"></i>
-                        <h3 class="text-dark">No se encontraron lugares turísticos</h3>
-                        <p class="text-muted">Intenta cambiar los filtros de búsqueda.</p>
-                        <a href="{{ request.path }}" class="btn btn-contorno-dorado mt-3">
-                            Limpiar filtros
-                        </a>
+                    <div class="col-12 lugar-vacio-col">
+                        <div class="lugar-estado-vacio">
+                            <i class="bi bi-search"></i>
+                    
+                            <h3>No se encontraron resultados</h3>
+                    
+                            <p>Intenta cambiar los filtros de búsqueda.</p>
+                    
+                            <a href="{{ request.path }}" class="btn btn-contorno-dorado">
+                                Limpiar filtros
+                            </a>
+                        </div>
                     </div>
+
 
                 {% endfor %}
 

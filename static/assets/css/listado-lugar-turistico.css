@@ -209,6 +209,58 @@
 }
 
 /* =========================================================
+   Estado vacío - Sin resultados
+========================================================= */
+
+.lugares-pagina .lugar-vacio-col {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+
+    display: flex;
+    justify-content: center;
+}
+
+.lugares-pagina .lugar-estado-vacio {
+    width: min(100%, 520px);
+    margin: 28px auto 0;
+    padding: 38px 20px;
+
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.lugares-pagina .lugar-estado-vacio i {
+    font-size: 4.2rem;
+    color: var(--lug-texto-secundario);
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.lugares-pagina .lugar-estado-vacio h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.7rem, 3vw, 2.25rem);
+    font-weight: 500;
+    color: var(--lug-texto-titulo);
+    line-height: 1.12;
+    margin: 0 0 10px;
+}
+
+.lugares-pagina .lugar-estado-vacio p {
+    color: var(--lug-texto-secundario);
+    font-size: 1rem;
+    margin: 0 0 24px;
+}
+
+.lugares-pagina .lugar-estado-vacio .btn {
+    border-radius: 7px;
+}
+
+
+/* =========================================================
    Tarjeta de lugar turístico
 ========================================================= */
 

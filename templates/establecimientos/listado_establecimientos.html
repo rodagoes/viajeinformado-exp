@@ -38,29 +38,16 @@
 
                         <a href="/restaurantes/" data-tipo="izquierda"
                             class="tipo-opcion {% if es_restaurante %}active{% endif %}">
-                            <span class="tipo-icono" aria-hidden="true">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M7 3v18"></path>
-                                    <path d="M5 3v6"></path>
-                                    <path d="M9 3v6"></path>
-                                    <path d="M5 9h4"></path>
-                                    <path d="M16 3v18"></path>
-                                    <path d="M16 3c2.1 1.7 3.2 4.2 3.2 7.2v1.1H16"></path>
-                                </svg>
+                            <span class="tipo-icono tipo-icono--archivo"
+                                style="--tipo-icono-url: url('{% static 'assets/img/icons/restaurante-iconvi.svg' %}');" aria-hidden="true">
                             </span>
                             <span>Restaurantes</span>
                         </a>
 
                         <a href="/alojamientos/" data-tipo="derecha"
                             class="tipo-opcion {% if es_alojamiento %}active{% endif %}">
-                            <span class="tipo-icono" aria-hidden="true">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M3.5 12.5h17"></path>
-                                    <path d="M5 12.5V7.8c0-1 .8-1.8 1.8-1.8h4.4c1 0 1.8.8 1.8 1.8v4.7"></path>
-                                    <path d="M13 12.5V9h4.5c1.7 0 3 1.3 3 3v.5"></path>
-                                    <path d="M4.5 12.5v6"></path>
-                                    <path d="M19.5 12.5v6"></path>
-                                </svg>
+                            <span class="tipo-icono tipo-icono--archivo"
+                                style="--tipo-icono-url: url('{% static 'assets/img/icons/alojamientos-iconvi.svg' %}');" aria-hidden="true">
                             </span>
                             <span>Alojamientos</span>
                         </a>
