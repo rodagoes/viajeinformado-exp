@@ -18,7 +18,11 @@
 {% endblock %}
 
 {% block content %}
-<div class="detalle-lugar">
+<div
+  class="detalle-lugar"
+  data-lugar-nombre="{{ lugar.nombre|escapejs }}"
+  data-share-text="{{ lugar.nombre|escapejs }} — Viaje Informado Huánuco"
+>
 
   {# ================================================================ #}
   {# 1. BREADCRUMB MÓVIL                                             #}
@@ -675,102 +679,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-(function () {
-  'use strict';
-
-  /* ── Scroll suave con easing personalizado (800 ms) ──
-     Velocidad intermedia: no demasiado rápida ni demasiado lenta.
-     Usa easeInOutCubic para una sensación natural y fluida. */
-  function desplazarConEasing(destino, duracion) {
-    var navEl = document.querySelector('header') || document.querySelector('.navbar');
-    var altoNavbar = navEl ? navEl.offsetHeight : 0;
-    var inicio = window.pageYOffset;
-    var objetivo = destino.getBoundingClientRect().top + window.pageYOffset - altoNavbar;
-    var diferencia = objetivo - inicio;
-    var tiempoInicio = null;
-
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function paso(timestamp) {
-      if (!tiempoInicio) tiempoInicio = timestamp;
-      var transcurrido = timestamp - tiempoInicio;
-      var progreso = Math.min(transcurrido / duracion, 1);
-      window.scrollTo(0, inicio + diferencia * easeInOutCubic(progreso));
-      if (progreso < 1) requestAnimationFrame(paso);
-    }
-
-    requestAnimationFrame(paso);
-  }
-
-  document.querySelectorAll('.detalle-lugar a[href^="#"]').forEach(function (a) {
-    var href = a.getAttribute('href');
-    if (!href || href === '#') return;
-    a.addEventListener('click', function (e) {
-      var target;
-      try {
-        target = document.querySelector(href);
-      } catch (err) {
-        return;
-      }
-      if (!target) return;
-      e.preventDefault();
-      desplazarConEasing(target, 800);
-    });
-  });
-
-  document.querySelectorAll('[data-action="favorite"]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var active = btn.classList.toggle('is-active');
-      btn.querySelectorAll('i').forEach(function (ic) {
-        ic.className = active ? 'bi bi-heart-fill' : 'bi bi-heart';
-      });
-      btn.setAttribute('aria-label', active ? 'Quitar de favoritos' : 'Añadir a favoritos');
-    });
-  });
-
-  function showToast(msg) {
-    var t = document.createElement('div');
-    t.setAttribute('role', 'status');
-    t.setAttribute('aria-live', 'polite');
-    t.textContent = msg;
-    t.style.cssText = [
-      'position:fixed', 'bottom:90px', 'left:50%',
-      'transform:translateX(-50%)', 'background:#002d89',
-      'color:#fff', 'padding:10px 24px', 'border-radius:999px',
-      'font-size:13px', 'font-weight:600', 'z-index:9999',
-      'box-shadow:0 4px 18px rgba(0,45,137,0.35)',
-      'transition:opacity .3s', 'font-family:inherit',
-      'white-space:nowrap'
-    ].join(';');
-    document.body.appendChild(t);
-    setTimeout(function () {
-      t.style.opacity = '0';
-      setTimeout(function () { t.remove(); }, 330);
-    }, 2600);
-  }
-
-  function doShare() {
-    if (navigator.share) {
-      navigator.share({
-        title: '{{ lugar.nombre|escapejs }}',
-        text: '{{ lugar.nombre|escapejs }} — Viaje Informado Huánuco',
-        url: window.location.href
-      }).catch(function () {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href).then(function () {
-        showToast('Enlace copiado al portapapeles');
-      });
-    }
-  }
-
-  document.querySelectorAll('[data-action="share"]').forEach(function (btn) {
-    btn.addEventListener('click', doShare);
-  });
-})();
-</script>
+<script src="{% static 'assets/js/detalle-lugar-turistico.js' %}"></script>
 <script src="{% static 'assets/js/carousel-3d.js' %}"></script>
 <!-- Animaciones de entrada al hacer scroll (IntersectionObserver + Animate.css) -->
 <script src="{% static 'assets/js/animaciones-scroll.js' %}"></script>

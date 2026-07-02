@@ -336,8 +336,15 @@
 }
 
 .dl-icon-circle.s1 {
-    color: #0cccb2;
-    border-color: rgba(12, 204, 178, 0.42);
+    color: #e11d48;
+    border-color: rgba(225, 29, 72, 0.42);
+}
+
+.dl-icon-circle.s1:hover,
+.dl-icon-circle.s1.is-active {
+    border-color: rgba(225, 29, 72, 0.68);
+    background: rgba(225, 29, 72, 0.08);
+    color: #e11d48;
 }
 
 .dl-icon-circle.s3 {
