@@ -1,21 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section Dinámico -->
 <section class="inicio-hero-shell">
     <div class="inicio-hero-frame">
         {% if hero_slides %}
         <div id="carouselInicioPremium" class="carousel slide carousel-fade inicio-hero-carousel"
-            data-bs-ride="carousel">
-            <!-- Indicadores -->
-            <div class="carousel-indicators inicio-hero-indicators">
-                {% for slide in hero_slides %}
-                <button type="button" data-bs-target="#carouselInicioPremium" data-bs-slide-to="{{ forloop.counter0 }}"
-                    class="{% if forloop.first %}active{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
-                {% endfor %}
-            </div>
-
+            data-bs-ride="carousel" data-bs-pause="false">
             <!-- Slides -->
             <div class="carousel-inner inicio-hero-inner">
                 {% for slide in hero_slides %}
@@ -56,22 +53,44 @@
                 {% endfor %}
             </div>
 
-            <!-- Flechas -->
+            <!-- Flechas (solo desktop) -->
             <button class="carousel-control-prev inicio-hero-control" type="button"
-                data-bs-target="#carouselInicioPremium" data-bs-slide="prev">
+                data-bs-target="#carouselInicioPremium" data-bs-slide="prev" aria-label="Anterior">
                 <i class="bi bi-chevron-left text-white fs-4"></i>
                 <span class="visually-hidden">Anterior</span>
             </button>
 
             <button class="carousel-control-next inicio-hero-control" type="button"
-                data-bs-target="#carouselInicioPremium" data-bs-slide="next">
+                data-bs-target="#carouselInicioPremium" data-bs-slide="next" aria-label="Siguiente">
                 <i class="bi bi-chevron-right text-white fs-4"></i>
                 <span class="visually-hidden">Siguiente</span>
             </button>
+
+            <!-- Controles: play/pause + bullets con progreso -->
+            <div class="inicio-hero-controls" role="group" aria-label="Controles de presentación">
+                <button type="button" class="inicio-hero-playpause" aria-label="Pausar presentación">
+                    <i class="bi bi-pause-fill" aria-hidden="true"></i>
+                </button>
+                <div class="inicio-hero-bullets" role="tablist" aria-label="Diapositivas">
+                    {% for slide in hero_slides %}
+                    <button type="button" class="inicio-hero-bullet {% if forloop.first %}active{% endif %}"
+                        data-bs-target="#carouselInicioPremium" data-bs-slide-to="{{ forloop.counter0 }}"
+                        aria-label="Slide {{ forloop.counter }}"
+                        aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
+                        <svg class="inicio-hero-bullet__ring" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+                            <circle class="inicio-hero-bullet__track" cx="16" cy="16" r="13"></circle>
+                            <circle class="inicio-hero-bullet__progress" cx="16" cy="16" r="13"
+                                style="--vi-duration: {{ slide.intervalo_ms|default:6000 }}ms"></circle>
+                        </svg>
+                        <span class="inicio-hero-bullet__dot" aria-hidden="true"></span>
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
         {% else %}
         <!-- Fallback Estático -->
-        <div class="inicio-hero-slide position-relative" style="height: clamp(550px, 100dvh, 760px);">
+        <div class="inicio-hero-slide position-relative">
             <img src="https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=2000&auto=format&fit=crop"
                 alt="Huánuco" class="inicio-hero-img">
 
@@ -104,7 +123,7 @@
 <!-- SECCIÓN 1: ¿De qué manera te ayudamos? -->
 <section class="py-5 bg-white">
     <div class="container py-5">
-        <div class="text-center">
+        <div class="text-center" data-animar="animate__fadeInUp">
             <h2 class="vi-section-title">¿De qué manera te ayudamos?</h2>
             <p class="vi-section-subtitle">
                 Explora Huánuco según lo que necesitas: comida, hospedaje, atractivos,
@@ -114,7 +133,7 @@
 
         <div class="row g-4 justify-content-center vi-help-grid-home">
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="vi-help-card">
+                <a href="/restaurantes/" class="vi-help-card" data-animar="animate__fadeInUp">
                     <i class="bi bi-cup-hot-fill vi-help-icon"></i>
                     <h3 class="vi-help-title">Restaurantes</h3>
                     <p class="vi-help-text">
@@ -124,17 +143,17 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="vi-help-card">
+                <a href="/alojamientos/" class="vi-help-card animar-delay-1" data-animar="animate__fadeInUp">
                     <i class="bi bi-house-door-fill vi-help-icon"></i>
-                    <h3 class="vi-help-title">Hospedajes</h3>
+                    <h3 class="vi-help-title">Alojamientos</h3>
                     <p class="vi-help-text">
-                        Encuentra hoteles, hostales y alojamientos según tu presupuesto y ubicación.
+                        Encuentra hoteles y hostales según tu presupuesto y ubicación.
                     </p>
                 </a>
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="vi-help-card">
+                <a href="/lugares-turisticos/" class="vi-help-card animar-delay-2" data-animar="animate__fadeInUp">
                     <i class="bi bi-camera-fill vi-help-icon"></i>
                     <h3 class="vi-help-title">Sitios turísticos</h3>
                     <p class="vi-help-text">
@@ -144,8 +163,8 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="vi-help-card">
-                    <i class="bi bi-calendar-star-fill vi-help-icon"></i>
+                <a href="#" class="vi-help-card" data-animar="animate__fadeInUp">
+                    <i class="bi bi-calendar-event-fill vi-help-icon"></i>
                     <h3 class="vi-help-title">Eventos</h3>
                     <p class="vi-help-text">
                         Consulta actividades culturales, festividades, ferias y eventos turísticos.
@@ -154,7 +173,7 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="vi-help-card">
+                <a href="#" class="vi-help-card animar-delay-1" data-animar="animate__fadeInUp">
                     <i class="bi bi-car-front-fill vi-help-icon"></i>
                     <h3 class="vi-help-title">Movilidad</h3>
                     <p class="vi-help-text">
@@ -164,7 +183,7 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <a href="#" class="vi-help-card">
+                <a href="#" class="vi-help-card animar-delay-2" data-animar="animate__fadeInUp">
                     <i class="bi bi-info-circle-fill vi-help-icon"></i>
                     <h3 class="vi-help-title">Servicios útiles</h3>
                     <p class="vi-help-text">
@@ -179,7 +198,7 @@
 <!-- SECCIÓN 2: ¿Qué puedes encontrar aquí? -->
 <section class="py-5 vi-home-info-section">
     <div class="container py-5">
-        <div class="text-center">
+        <div class="text-center" data-animar="animate__fadeInUp">
             <h2 class="vi-section-title">¿Qué puedes encontrar aquí?</h2>
             <p class="vi-section-subtitle">
                 Información pensada para que el turista tome mejores decisiones antes y durante su visita.
@@ -188,7 +207,7 @@
 
         <div class="row g-4 justify-content-center vi-info-grid-home">
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="vi-info-card">
+                <div class="vi-info-card" data-animar="animate__fadeInUp">
                     <div class="vi-info-icon">
                         <i class="bi bi-geo-alt-fill"></i>
                     </div>
@@ -200,7 +219,7 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="vi-info-card">
+                <div class="vi-info-card animar-delay-1" data-animar="animate__fadeInUp">
                     <div class="vi-info-icon">
                         <i class="bi bi-tags-fill"></i>
                     </div>
@@ -212,7 +231,7 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="vi-info-card">
+                <div class="vi-info-card animar-delay-2" data-animar="animate__fadeInUp">
                     <div class="vi-info-icon">
                         <i class="bi bi-telephone-fill"></i>
                     </div>
@@ -224,7 +243,7 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="vi-info-card">
+                <div class="vi-info-card" data-animar="animate__fadeInUp">
                     <div class="vi-info-icon">
                         <i class="bi bi-star-fill"></i>
                     </div>
@@ -236,7 +255,7 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="vi-info-card">
+                <div class="vi-info-card animar-delay-1" data-animar="animate__fadeInUp">
                     <div class="vi-info-icon">
                         <i class="bi bi-currency-exchange"></i>
                     </div>
@@ -248,7 +267,7 @@
             </div>
 
             <div class="col-12 col-md-6 col-lg-4">
-                <div class="vi-info-card">
+                <div class="vi-info-card animar-delay-2" data-animar="animate__fadeInUp">
                     <div class="vi-info-icon">
                         <i class="bi bi-lightbulb-fill"></i>
                     </div>
@@ -266,7 +285,7 @@
 <section class="py-5 text-white vi-chatbot-section">
     <div class="container py-5">
         <div class="row align-items-center g-5">
-            <div class="col-lg-6">
+            <div class="col-lg-6" data-animar="animate__fadeInUp">
                 <div class="d-flex align-items-center mb-3">
                     <div class="vi-chatbot-icon vi-chatbot-icon--section me-3">
                         <img src="{% static 'assets/img/icons/pillcobot.png' %}" alt="Pillco Bot"
@@ -286,7 +305,7 @@
                 </p>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-6 animar-delay-2" data-animar="animate__fadeInUp">
                 <!-- Mockup de Chat -->
                 <div class="vi-chatbot-mockup ms-lg-auto">
                     <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
@@ -329,7 +348,7 @@
 <section class="py-5 bg-white vi-business-section">
     <div class="container py-5 text-center">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-8" data-animar="animate__fadeInUp">
                 <div class="mb-4">
                     <lottie-player src="{% static 'assets/img/icons/icono_promocionar_home.json' %}"
                         background="transparent" speed="1" style="width: 100px; height: 100px;" loop autoplay>
@@ -345,10 +364,15 @@
 
                 <a href="mailto:viajeinformadohuanuco@gmail.com"
                     class="btn btn-vi-outline btn-lg fw-bold d-inline-flex align-items-center gap-2 vi-business-email">
-                    <i class="bi bi-envelope-fill text-teal"></i> viajeinformadohuanuco@gmail.com
+                    <i class="bi bi-envelope-fill vi-business-email__icon"></i> viajeinformadohuanuco@gmail.com
                 </a>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/animaciones-scroll.js' %}"></script>
+<script src="{% static 'assets/js/home.js' %}"></script>
 {% endblock %}

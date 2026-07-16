@@ -3,6 +3,8 @@
 
 {% block title %}Iniciar Sesión - Viaje Informado{% endblock %}
 
+{% block site_header %}{% endblock site_header %}
+
 {% block content %}
 <div class="vi-auth-wrapper">
     <div class="vi-auth-form-side">
@@ -72,9 +74,8 @@
     </div>
 </div>
 
-<!-- Quick fix to remove global header/footer just for this page so it looks like the reference -->
 <style>
-    .vi-header-wrapper, footer { display: none !important; }
+    footer { display: none !important; }
     body { background-color: #fff; }
 </style>
 {% endblock %}

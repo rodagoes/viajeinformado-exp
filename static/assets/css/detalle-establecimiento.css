@@ -3680,7 +3680,7 @@ body.detalle-gallery-locked {
 
     .detalle-mobile-wrap {
         width: min(1000px, calc(100% - 64px));
-        padding-top: 24px;
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 16px);
         padding-bottom: 0;
     }
 
@@ -3703,7 +3703,7 @@ body.detalle-gallery-locked {
 
 @media (max-width: 1199.98px) and (max-height: 720px) {
     .detalle-mobile-wrap {
-        padding-top: 18px;
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 8px);
     }
 
     .detalle-mobile-media {
@@ -3775,7 +3775,7 @@ body.detalle-gallery-locked {
 
     .detalle-mobile-wrap {
         width: 100%;
-        padding-top: 0;
+        padding-top: var(--vi-header-height-mobile, 68px);
     }
 
     .detalle-mobile-breadcrumb {

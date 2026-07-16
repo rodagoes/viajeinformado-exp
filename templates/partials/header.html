@@ -1,10 +1,65 @@
 {% load static %}
 
 <header class="vi-header">
-    <div class="vi-header__glass">
+    <div class="vi-header__bar">
+
+        <!-- MARCA (izquierda) -->
+        <a href="{% url 'base:home' %}" class="vi-brand" aria-label="Ir al inicio de Viaje Informado">
+            <img class="vi-brand__img"
+                src="{% static 'assets/img/logo/viaje-informado-logo-horizontal.png' %}"
+                alt="Viaje Informado" width="453" height="151">
+        </a>
+
+        <!-- NAVEGACIÓN DESKTOP -->
+        <nav class="vi-nav d-none d-xl-flex" aria-label="Navegación principal">
+            {% for item in header_nav_items %}
+                {% if item.children %}
+                <div class="vi-dropdown">
+                    <button type="button"
+                        class="vi-nav__link vi-nav__link--trigger {% if active_nav == item.key %}active{% endif %}"
+                        aria-haspopup="true" aria-expanded="false">
+                        {{ item.label }}
+                        <i class="bi bi-chevron-down vi-dropdown__caret" aria-hidden="true"></i>
+                    </button>
+                    <div class="vi-dropdown__panel">
+                        {% if item.dropdown_title %}
+                        <p class="vi-dropdown__title">{{ item.dropdown_title }}</p>
+                        {% endif %}
+                        <div class="vi-dropdown__list">
+                            {% for child in item.children %}
+                            <a href="{{ child.href }}" class="vi-dropdown__item">
+                                <span class="vi-dropdown__icon"><i class="bi bi-{{ child.icon }}"
+                                        aria-hidden="true"></i></span>
+                                <span class="vi-dropdown__text">
+                                    <span class="vi-dropdown__label">{{ child.label }}</span>
+                                    {% if child.description %}
+                                    <span class="vi-dropdown__desc">{{ child.description }}</span>
+                                    {% endif %}
+                                </span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ item.href }}"
+                    class="vi-nav__link {% if active_nav == item.key %}active{% endif %}">{{ item.label }}</a>
+                {% endif %}
+            {% endfor %}
+        </nav>
+
+        <!-- ACCIONES -->
+        <div class="vi-actions">
+            <a href="{% url 'base:login_visual' %}" class="vi-login-btn" aria-label="Iniciar sesión">
+                <span class="vi-login-btn__icon">
+                    <i class="bi bi-person" aria-hidden="true"></i>
+                </span>
+                <span class="vi-login-btn__text">Iniciar sesión</span>
+            </a>
+        </div>
 
         <!-- BOTÓN HAMBURGUESA (SOLO MÓVIL) -->
-        <button class="vi-mobile-toggle d-lg-none" type="button" data-bs-toggle="collapse"
+        <button class="vi-mobile-toggle d-xl-none" type="button" data-bs-toggle="collapse"
             data-bs-target="#viMobileMenu" aria-controls="viMobileMenu" aria-expanded="false"
             aria-label="Abrir menú">
             <span class="vi-mobile-toggle__bars" aria-hidden="true">
@@ -14,59 +69,35 @@
             </span>
         </button>
 
-        <!-- MARCA (izquierda en desktop / centro en móvil) -->
-        <a href="{% url 'base:home' %}" class="vi-brand" aria-label="Ir al inicio de Viaje Informado">
-            <div class="vi-brand__logo">
-                <img src="{% static 'assets/img/logo/viaje-informado-logo.png' %}" alt="Logo Viaje Informado"
-                    width="58" height="58">
-            </div>
-            <div class="vi-brand__text">
-                <span class="vi-brand__title">Viaje</span>
-                <span class="vi-brand__subtitle">Informado</span>
-            </div>
-        </a>
-
-        <!-- NAVEGACIÓN DESKTOP (centro absoluto) -->
-        <nav class="vi-nav d-none d-lg-flex" aria-label="Navegación principal">
-            <a href="{% url 'base:home' %}"
-                class="vi-nav__link {% if active_nav == 'inicio' %}active{% endif %}">INICIO</a>
-            <a href="#" class="vi-nav__link {% if active_nav == 'explorar' %}active{% endif %}">EXPLORAR</a>
-            <a href="#" class="vi-nav__link {% if active_nav == 'gastronomia' %}active{% endif %}">GASTRONOMÍA Y
-                ALOJAMIENTO</a>
-            <a href="#" class="vi-nav__link {% if active_nav == 'eventos' %}active{% endif %}">EVENTOS</a>
-            <a href="#" class="vi-nav__link {% if active_nav == 'planifica' %}active{% endif %}">PLANIFICA</a>
-        </nav>
-
-        <!-- ACCIONES (derecha) -->
-        <div class="vi-actions">
-            <a href="{% url 'base:login_visual' %}" class="vi-login-btn" aria-label="Iniciar sesión">
-                <span class="vi-login-btn__icon">
-                    <i class="bi bi-person" aria-hidden="true"></i>
-                </span>
-                <span class="vi-login-text d-none d-md-inline">INICIAR SESIÓN</span>
-            </a>
-        </div>
-
-    </div><!-- /.vi-header__glass -->
+    </div><!-- /.vi-header__bar -->
 
     <!-- MENÚ DESPLEGABLE MÓVIL -->
-    <div class="collapse vi-mobile-menu d-lg-none" id="viMobileMenu">
-        <a href="{% url 'base:home' %}"
-            class="vi-mobile-menu__item {% if active_nav == 'inicio' %}active{% endif %}">
-            <i class="bi bi-house" aria-hidden="true"></i> INICIO
-        </a>
-        <a href="#" class="vi-mobile-menu__item {% if active_nav == 'explorar' %}active{% endif %}">
-            <i class="bi bi-map" aria-hidden="true"></i> EXPLORAR
-        </a>
-        <a href="#" class="vi-mobile-menu__item {% if active_nav == 'gastronomia' %}active{% endif %}">
-            <i class="bi bi-shop" aria-hidden="true"></i> GASTRONOMÍA Y ALOJAMIENTO
-        </a>
-        <a href="#" class="vi-mobile-menu__item {% if active_nav == 'eventos' %}active{% endif %}">
-            <i class="bi bi-calendar-event" aria-hidden="true"></i> EVENTOS
-        </a>
-        <a href="#" class="vi-mobile-menu__item {% if active_nav == 'planifica' %}active{% endif %}">
-            <i class="bi bi-journal-text" aria-hidden="true"></i> PLANIFICA
-        </a>
+    <div class="collapse vi-mobile-menu d-xl-none" id="viMobileMenu">
+        <div class="vi-mobile-menu__inner">
+            {% for item in header_nav_items %}
+                {% if item.children %}
+                <details class="vi-mobile-group">
+                    <summary class="vi-mobile-group__summary">
+                        <i class="bi bi-{{ item.icon }}" aria-hidden="true"></i>
+                        <span>{{ item.label }}</span>
+                        <i class="bi bi-chevron-down vi-mobile-group__caret" aria-hidden="true"></i>
+                    </summary>
+                    <div class="vi-mobile-group__items">
+                        {% for child in item.children %}
+                        <a href="{{ child.href }}" class="vi-mobile-menu__item">
+                            <i class="bi bi-{{ child.icon }}" aria-hidden="true"></i> {{ child.label }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </details>
+                {% else %}
+                <a href="{{ item.href }}"
+                    class="vi-mobile-menu__item vi-mobile-menu__item--top {% if active_nav == item.key %}active{% endif %}">
+                    <i class="bi bi-{{ item.icon }}" aria-hidden="true"></i> {{ item.label }}
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 
 </header>

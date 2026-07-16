@@ -33,7 +33,9 @@
 
 <body>
 
+    {% block site_header %}
     {% include 'partials/header.html' %}
+    {% endblock site_header %}
     {% include 'partials/messages.html' %}
 
     <main>

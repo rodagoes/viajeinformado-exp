@@ -7,11 +7,17 @@
 /* ── Override del keyframe fadeInUp: movimiento de 40 px ──
    Animate.css por defecto usa 100% del alto del elemento, lo cual
    es excesivo para una página web. Se redefine aquí con 40 px para
-   que la animación sea claramente perceptible pero elegante. */
+   que la animación sea claramente perceptible pero elegante.
+   La distancia usa una variable para poder reducirla en móvil
+   (ver media query abajo) y evitar temblores con translateY grande. */
+:root {
+    --vi-fade-distance: 40px;
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(40px);
+        transform: translateY(var(--vi-fade-distance));
     }
     to {
         opacity: 1;
@@ -44,6 +50,18 @@
 .animar-delay-3 { animation-delay: 0.30s !important; }
 .animar-delay-4 { animation-delay: 0.40s !important; }
 .animar-delay-5 { animation-delay: 0.50s !important; }
+
+/* ── Móvil: distancia y duración reducidas ──
+   Un translateY de 40px y 0.8s es demasiado en pantallas chicas;
+   se reduce a un desplazamiento sutil para evitar sensación de temblor. */
+@media (max-width: 768px) {
+    :root {
+        --vi-fade-distance: 10px;
+    }
+    [data-animar].animate__animated {
+        --animate-duration: 0.50s;
+    }
+}
 
 /* ── Accesibilidad: sin animaciones si el usuario lo prefiere ──
    Respeta la configuración de "movimiento reducido" del sistema

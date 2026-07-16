@@ -56,13 +56,13 @@
    ========================= */
 @media (max-width: 992px) {
     .vi-page {
-        padding-top: 24px;
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 16px);
     }
 
     .vi-page--compact {
-        padding-top: 16px;
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 8px);
     }
-    
+
     .vi-page-card {
         padding: 2rem 1.5rem;
     }

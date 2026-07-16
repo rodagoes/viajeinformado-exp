@@ -8,8 +8,8 @@
  * Comportamiento:
  * - Scroll ↓ + elemento entra en pantalla → animación fadeInUp
  * - Scroll ↑ + elemento entra en pantalla → aparece directo, sin animación
- * - Elemento sale de pantalla (en cualquier dirección) → se resetea
- *   para poder animarse de nuevo la próxima vez que se scrollee hacia abajo
+ * - Cada elemento se anima una sola vez y luego se deja de observar
+ *   (unobserve), para evitar retriggers/temblor en scroll con inercia.
  *
  * Compatible con desktop y móvil. Funciona con y sin recarga de página.
  *
@@ -52,15 +52,6 @@
         elemento.classList.add('visible');
     }
 
-    /* ── Resetear el elemento para que pueda animarse de nuevo ──
-       Se llama cuando el elemento sale del viewport, en cualquier
-       dirección, de modo que la próxima vez que entre desde abajo
-       se anime correctamente. */
-    function resetearAnimacion(elemento) {
-        var claseAnimacion = elemento.dataset.animar || 'animate__fadeInUp';
-        elemento.classList.remove('visible', 'animate__animated', claseAnimacion);
-    }
-
     /**
      * Inicializa el IntersectionObserver sobre todos los elementos
      * con el atributo [data-animar].
@@ -79,15 +70,15 @@
             entradas.forEach(function (entrada) {
 
                 if (entrada.isIntersecting) {
-                    /* El elemento entró en pantalla */
+                    /* El elemento entró en pantalla: se anima una sola vez
+                       y se deja de observar, sin resetear en scrolls futuros
+                       (evita retriggers que causan temblor en móvil). */
                     if (scrollHaciaAbajo) {
                         activarAnimacion(entrada.target);   /* ↓ con animación */
                     } else {
                         mostrarSinAnimacion(entrada.target); /* ↑ sin animación */
                     }
-                } else {
-                    /* El elemento salió del viewport → resetear para la próxima bajada */
-                    resetearAnimacion(entrada.target);
+                    observador.unobserve(entrada.target);
                 }
 
             });

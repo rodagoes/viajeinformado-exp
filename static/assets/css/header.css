@@ -1,452 +1,372 @@
-/* =========================
+/* =========================================================
    HEADER — VIAJE INFORMADO
-   Layout: [Marca] [Nav centrada] [Login]
-   Fijo en desktop | sticky en móvil
-   ========================= */
+   Barra superior blanca sólida, premium, con dropdowns.
+   Paleta: #ffffff / #002d89 / #007fff
+   ========================================================= */
 
-/* ─── Variables ─── */
-.vi-header {
-    --vi-h-bg:        #F8F8FF;
-    --vi-h-blue:      #007FFF;
-    --vi-h-blue-dark: #002d89;
-    --vi-h-blue-deep: #000080;
-    --vi-h-grad:      linear-gradient(135deg, #007FFF 0%, #000080 100%);
-    --vi-h-ink:       #0b0c10;
-    --vi-h-ease:      0.28s ease;
+:root {
+    --vi-header-height-desktop: 78px;
+    --vi-header-height-mobile: 68px;
 }
 
-/* =========================
-   DESKTOP BASE
-   ========================= */
+/* Utilidad global: aplicar al primer bloque visible de cualquier
+   página/sección interna nueva (que no sea un hero a pantalla completa
+   como el del Home) para que el header fijo nunca la tape. */
+.vi-header-clear {
+    padding-top: var(--vi-header-height-desktop);
+}
+
+@media (max-width: 1199px) {
+    .vi-header-clear {
+        padding-top: var(--vi-header-height-mobile);
+    }
+}
 
 .vi-header {
+    --vi-h-blue:      #007fff;
+    --vi-h-blue-dark: #002d89;
+    --vi-h-white:     #ffffff;
+    --vi-h-ink:       #0b1220;
+    --vi-h-muted:     #5b6b86;
+    --vi-h-grad:      linear-gradient(135deg, #007fff 0%, #002d89 100%);
+    --vi-h-ease:      0.22s ease;
+
     position: fixed;
-    top: 12px;
+    top: 0;
     left: 0;
     right: 0;
     width: 100%;
     z-index: 1050;
-    padding: 0 24px;
 }
 
-/* ─── Contenedor glass pill ─── */
-.vi-header__glass {
-    position: relative;        /* ancla para .vi-nav absoluto */
-    height: 82px;
-    min-height: 82px;
-    max-width: 1400px;
-    margin: 0 auto;
+/* =========================================================
+   BARRA
+   ========================================================= */
 
-    display: flex;
+.vi-header__bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-areas: "brand nav actions toggle";
     align-items: center;
-
+    column-gap: 20px;
+    width: 100%;
+    height: var(--vi-header-height-desktop);
     padding: 0 32px;
-    border-radius: 38px;
 
-    background: linear-gradient(
-        135deg,
-        rgba(248, 248, 255, .95),
-        rgba(255, 255, 255, .88)
-    );
-    border: 1px solid rgba(15, 23, 42, .08);
-    box-shadow:
-        0 18px 42px rgba(15, 23, 42, .10),
-        inset 0 1px 0 rgba(255, 255, 255, .82),
-        inset 0 -1px 0 rgba(15, 23, 42, .04);
+    background: var(--vi-h-white);
+    border-bottom: 1px solid rgba(0, 45, 137, .08);
+    box-shadow: 0 1px 2px rgba(0, 45, 137, .05);
 
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-
-    transition:
-        box-shadow var(--vi-h-ease),
-        background var(--vi-h-ease),
-        border-color var(--vi-h-ease);
+    transition: box-shadow var(--vi-h-ease), border-color var(--vi-h-ease);
 }
 
-/* Sombra más pronunciada al hacer scroll */
-.vi-header--scrolled .vi-header__glass {
-    box-shadow:
-        0 24px 52px rgba(15, 23, 42, .16),
-        inset 0 1px 0 rgba(255, 255, 255, .92),
-        inset 0 -1px 0 rgba(15, 23, 42, .05);
-    background: linear-gradient(
-        135deg,
-        rgba(248, 248, 255, .99),
-        rgba(255, 255, 255, .97)
-    );
-    border-color: rgba(15, 23, 42, .11);
+.vi-header--scrolled .vi-header__bar {
+    box-shadow: 0 10px 26px rgba(0, 45, 137, .10);
+    border-bottom-color: rgba(0, 45, 137, .14);
 }
 
-/* =========================
-   MARCA (izquierda)
-   ========================= */
+/* =========================================================
+   MARCA
+   ========================================================= */
 
 .vi-brand {
+    grid-area: brand;
     display: flex;
     align-items: center;
-    gap: 14px;
     flex-shrink: 0;
     text-decoration: none;
-    position: relative;
-    z-index: 2;
 }
 
 .vi-brand:hover,
 .vi-brand:focus { text-decoration: none; }
 
-.vi-brand__logo {
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    transition: transform .35s cubic-bezier(.34, 1.56, .64, 1);
-}
-
-.vi-brand:hover .vi-brand__logo {
-    transform: scale(1.08) rotate(-5deg);
-}
-
-.vi-brand__logo img {
-    width: 100%;
-    height: 100%;
+.vi-brand__img {
+    height: 54px;
+    width: auto;
+    max-width: 190px;
     object-fit: contain;
     display: block;
 }
 
-.vi-brand__text {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 5px;
-}
-
-.vi-brand__title {
-    font-family: "Playfair Display", serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--vi-h-blue-dark);
-    letter-spacing: .02em;
-    white-space: nowrap;
-    transition: color var(--vi-h-ease);
-}
-
-.vi-brand__subtitle {
-    font-family: "Playfair Display", serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--vi-h-blue);
-    letter-spacing: .02em;
-    white-space: nowrap;
-    transition: color var(--vi-h-ease);
-}
-
-.vi-brand:hover .vi-brand__title   { color: var(--vi-h-blue-deep); }
-.vi-brand:hover .vi-brand__subtitle { color: var(--vi-h-blue-dark); }
-
-/* =========================
-   NAV DESKTOP (centro absoluto)
-   ========================= */
+/* =========================================================
+   NAV DESKTOP
+   ========================================================= */
 
 .vi-nav {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
+    grid-area: nav;
     align-items: center;
+    justify-content: center;
     gap: 2px;
-    z-index: 1;
 }
 
 .vi-nav__link {
     position: relative;
     display: inline-flex;
     align-items: center;
+    gap: 6px;
     height: 44px;
-    padding: 0 12px;
-    border-radius: 10px;
-    overflow: hidden;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
 
     text-decoration: none;
     color: var(--vi-h-ink);
-    font-family: "Playfair Display", serif;
-    font-size: .80rem;
-    font-weight: 700;
-    letter-spacing: .025em;
+    font-family: "Inter", sans-serif;
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: .03em;
     white-space: nowrap;
 
-    transition:
-        color .22s ease,
-        transform .22s ease;
+    transition: color .2s ease, background-color .2s ease;
 }
 
-/* Fondo pill animado al hacer hover */
-.vi-nav__link::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 45, 137, .06);
-    border-radius: 10px;
-    opacity: 0;
-    transform: scaleX(.8) scaleY(.85);
-    transition:
-        opacity .22s ease,
-        transform .22s ease;
-    pointer-events: none;
-}
-
-/* Subrayado que crece desde el centro */
 .vi-nav__link::after {
     content: "";
     position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
+    bottom: 2px;
+    left: 14px;
+    right: 14px;
     height: 2px;
     background: var(--vi-h-grad);
     border-radius: 999px;
-    box-shadow: 0 0 7px rgba(0, 127, 255, .35);
-    transition: width .3s cubic-bezier(.25, .46, .45, .94);
-    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform .25s ease;
 }
 
-.vi-nav__link:hover {
+.vi-nav__link:hover,
+.vi-nav__link:focus-visible {
     color: var(--vi-h-blue-dark);
-    transform: translateY(-1px);
+    background: rgba(0, 127, 255, .06);
 }
 
-.vi-nav__link:hover::before {
-    opacity: 1;
-    transform: scaleX(1) scaleY(1);
-}
-
-.vi-nav__link:hover::after {
-    width: calc(100% - 24px);
-}
-
-.vi-nav__link.active {
-    color: var(--vi-h-blue-dark);
-}
-
-.vi-nav__link.active::before {
-    opacity: 1;
-    transform: scaleX(1) scaleY(1);
-    background: rgba(0, 45, 137, .07);
-}
-
+.vi-nav__link:hover::after,
+.vi-nav__link:focus-visible::after,
 .vi-nav__link.active::after {
-    width: calc(100% - 24px);
-    box-shadow: 0 0 9px rgba(0, 45, 137, .30);
+    transform: scaleX(1);
 }
 
-/* =========================
-   ACCIONES / LOGIN (derecha)
-   ========================= */
+.vi-nav__link.active { color: var(--vi-h-blue-dark); }
+
+.vi-dropdown__caret {
+    font-size: .65rem;
+    transition: transform .22s ease;
+}
+
+/* =========================================================
+   DROPDOWN DESKTOP
+   ========================================================= */
+
+.vi-dropdown {
+    position: relative;
+}
+
+.vi-dropdown__panel {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 6px);
+    min-width: 300px;
+    max-width: 360px;
+
+    background: var(--vi-h-white);
+    border: 1px solid rgba(0, 45, 137, .10);
+    border-radius: 14px;
+    box-shadow: 0 20px 44px rgba(0, 45, 137, .16);
+    padding: 24px 14px 14px;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+    z-index: 20;
+}
+
+.vi-dropdown:hover .vi-dropdown__panel,
+.vi-dropdown:focus-within .vi-dropdown__panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+}
+
+.vi-dropdown:hover .vi-dropdown__caret,
+.vi-dropdown:focus-within .vi-dropdown__caret {
+    transform: rotate(180deg);
+}
+
+.vi-dropdown__title {
+    margin: 2px 10px 8px;
+    font-family: "Inter", sans-serif;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--vi-h-blue);
+}
+
+.vi-dropdown__list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.vi-dropdown__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background-color .18s ease;
+}
+
+.vi-dropdown__item:hover,
+.vi-dropdown__item:focus-visible {
+    background: rgba(0, 127, 255, .07);
+}
+
+.vi-dropdown__icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: rgba(0, 45, 137, .07);
+    color: var(--vi-h-blue-dark);
+    font-size: .9rem;
+}
+
+.vi-dropdown__item:hover .vi-dropdown__icon {
+    background: var(--vi-h-grad);
+    color: var(--vi-h-white);
+}
+
+.vi-dropdown__text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.vi-dropdown__label {
+    font-family: "Inter", sans-serif;
+    font-size: .87rem;
+    font-weight: 600;
+    color: var(--vi-h-ink);
+}
+
+.vi-dropdown__desc {
+    font-family: "Inter", sans-serif;
+    font-size: .74rem;
+    color: var(--vi-h-muted);
+    line-height: 1.35;
+}
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
 .vi-actions {
-    margin-left: auto;
+    grid-area: actions;
     flex-shrink: 0;
-    position: relative;
-    z-index: 2;
 }
 
 .vi-login-btn {
-    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    overflow: hidden;
-
-    padding: 10px 22px 10px 10px;
+    gap: 10px;
+    padding: 9px 20px 9px 9px;
     border-radius: 999px;
     text-decoration: none;
 
-    color: var(--vi-h-bg);
-    font-family: "Playfair Display", serif;
-    font-size: .92rem;
-    font-weight: 800;
-    letter-spacing: .04em;
+    color: var(--vi-h-white);
+    font-family: "Inter", sans-serif;
+    font-size: .84rem;
+    font-weight: 700;
+    letter-spacing: .01em;
     white-space: nowrap;
 
     background: var(--vi-h-grad);
-    border: 1px solid rgba(248, 248, 255, .65);
-    box-shadow:
-        0 12px 24px rgba(0, 45, 137, .22),
-        inset 0 1px 0 rgba(255, 255, 255, .20);
-
-    transition:
-        transform var(--vi-h-ease),
-        box-shadow var(--vi-h-ease);
+    box-shadow: 0 10px 22px rgba(0, 45, 137, .22);
+    transition: transform var(--vi-h-ease), box-shadow var(--vi-h-ease);
 }
 
-/* Destello shine que cruza el botón */
-.vi-login-btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -120%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(
-        105deg,
-        transparent 35%,
-        rgba(255, 255, 255, .32) 50%,
-        transparent 65%
-    );
-    transition: left .55s ease;
-    pointer-events: none;
+.vi-login-btn:hover,
+.vi-login-btn:focus-visible {
+    color: var(--vi-h-white);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(0, 45, 137, .30);
 }
-
-.vi-login-btn:hover {
-    transform: translateY(-2px);
-    color: var(--vi-h-bg);
-    box-shadow:
-        0 20px 38px rgba(0, 45, 137, .32),
-        inset 0 1px 0 rgba(255, 255, 255, .26);
-}
-
-.vi-login-btn:hover::before { left: 130%; }
 
 .vi-login-btn:active {
     transform: translateY(0) scale(.97);
-    box-shadow:
-        0 8px 18px rgba(0, 45, 137, .20),
-        inset 0 1px 0 rgba(255, 255, 255, .15);
-    transition: transform .1s ease, box-shadow .1s ease;
 }
 
 .vi-login-btn__icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: grid;
     place-items: center;
     flex-shrink: 0;
     border-radius: 50%;
-    border: 1px solid rgba(248, 248, 255, .55);
-    background: rgba(248, 248, 255, .12);
-    color: var(--vi-h-bg);
-    font-size: 1.05rem;
-    transition:
-        background .25s ease,
-        border-color .25s ease;
+    background: rgba(255, 255, 255, .18);
+    font-size: .95rem;
 }
 
-.vi-login-btn:hover .vi-login-btn__icon {
-    background: rgba(248, 248, 255, .22);
-    border-color: rgba(248, 248, 255, .75);
+/* =========================================================
+   HAMBURGUESA — oculta en desktop
+   ========================================================= */
+
+.vi-mobile-toggle {
+    grid-area: toggle;
+    display: none;
 }
 
-/* =========================
-   OCULTOS EN DESKTOP
-   ========================= */
+.vi-mobile-menu {
+    display: none;
+}
 
-.vi-mobile-toggle,
-.vi-mobile-menu { display: none; }
+/* =========================================================
+   TABLET Y MÓVIL  ≤ 1199px
+   ========================================================= */
 
-/* =========================
-   DESKTOP REDUCIDO  1181 – 1450px
-   ========================= */
+@media (max-width: 1199px) {
 
-@media (min-width: 1181px) and (max-width: 1450px) {
-    .vi-header { padding: 0 18px; }
-
-    .vi-header__glass {
-        height: 76px;
-        min-height: 76px;
-        padding: 0 24px;
-        border-radius: 32px;
-        max-width: 1200px;
-    }
-
-    .vi-brand__logo { width: 50px; height: 50px; }
-
-    .vi-brand__title,
-    .vi-brand__subtitle { font-size: 1.28rem; }
-
-    .vi-nav__link {
-        font-size: .74rem;
-        padding: 0 9px;
-        height: 40px;
-    }
-
-    .vi-login-btn {
-        padding: 9px 18px 9px 9px;
-        font-size: .84rem;
+    .vi-header__bar {
+        height: var(--vi-header-height-mobile);
+        padding: 0 16px;
         gap: 10px;
     }
 
+    .vi-nav { display: none !important; }
+
+    .vi-brand__img { height: 42px; max-width: 155px; }
+
+
+    .vi-login-btn {
+        padding: 8px 16px 8px 8px;
+        font-size: .78rem;
+        gap: 8px;
+    }
+
     .vi-login-btn__icon {
-        width: 28px;
-        height: 28px;
-        font-size: .95rem;
-    }
-}
-
-/* =========================
-   TABLET Y MÓVIL  ≤ 1180px
-   ========================= */
-
-@media (max-width: 1180px) {
-
-    .vi-header {
-        position: sticky;
-        top: 0;
-        padding: 0;
-        overflow: visible;
+        width: 24px;
+        height: 24px;
+        font-size: .82rem;
     }
 
-    .vi-header__glass {
-        display: grid;
-        grid-template-columns: 48px minmax(0, 1fr) 48px;
-        align-items: center;
-        width: 100%;
-        max-width: 100%;
-        height: 78px;
-        min-height: 78px;
-        max-height: 78px;
-        padding-top: 7px;
-        padding-bottom: 7px;
-        padding-left: max(18px, env(safe-area-inset-left));
-        padding-right: max(18px, env(safe-area-inset-right));
-        margin: 0;
-        border-radius: 0;
-        background: linear-gradient(
-            135deg,
-            rgba(248, 248, 255, .98),
-            rgba(255, 255, 255, .94)
-        );
-        border: none;
-        border-bottom: 1px solid rgba(15, 23, 42, .08);
-        box-shadow:
-            0 4px 15px rgba(15, 23, 42, .06),
-            inset 0 -1px 0 rgba(15, 23, 42, .03);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-    }
-
-    /* Reset nav absoluto */
-    .vi-nav {
-        position: static !important;
-        transform: none !important;
-        display: none !important;
-    }
+    .vi-login-btn__text { white-space: nowrap; }
 
     /* ── Hamburguesa ── */
     .vi-mobile-toggle {
-        grid-column: 1;
-        grid-row: 1;
-        display: flex !important;
+        display: flex;
         align-items: center;
         justify-content: center;
-        justify-self: start;
-        align-self: center;
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
         border: none;
         background: transparent;
         padding: 0;
@@ -455,8 +375,8 @@
 
     .vi-mobile-toggle__bars {
         position: relative;
-        width: 30px;
-        height: 22px;
+        width: 26px;
+        height: 19px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -471,167 +391,155 @@
     }
 
     .vi-mobile-toggle[aria-expanded="true"] .vi-mobile-toggle__bar--1 {
-        transform: translateY(9.5px) rotate(45deg);
+        transform: translateY(8px) rotate(45deg);
     }
     .vi-mobile-toggle[aria-expanded="true"] .vi-mobile-toggle__bar--2 { opacity: 0; }
     .vi-mobile-toggle[aria-expanded="true"] .vi-mobile-toggle__bar--3 {
-        transform: translateY(-9.5px) rotate(-45deg);
-    }
-
-    /* ── Marca (columna central) ── */
-    .vi-brand {
-        grid-column: 2;
-        grid-row: 1;
-        justify-self: center;
-        align-self: center;
-        gap: 10px;
-        z-index: 1;
-    }
-
-    .vi-brand__logo {
-        width: 50px;
-        height: 50px;
-        flex: 0 0 50px;
-    }
-
-    .vi-brand:hover .vi-brand__logo { transform: none; }
-
-    .vi-brand__text { gap: 4px; }
-
-    .vi-brand__title,
-    .vi-brand__subtitle { font-size: 1.1rem; }
-
-    /* ── Acciones (columna derecha) ── */
-    .vi-actions {
-        grid-column: 3;
-        grid-row: 1;
-        justify-self: end;
-        align-self: center;
-        margin-left: 0;
-    }
-
-    .vi-login-btn {
-        width: 44px;
-        height: 44px;
-        padding: 0;
-        border-radius: 50%;
-        justify-content: center;
-        gap: 0;
-        box-shadow:
-            0 10px 22px rgba(0, 45, 137, .22),
-            inset 0 1px 0 rgba(255, 255, 255, .18);
-    }
-
-    .vi-login-btn::before { display: none; }
-
-    .vi-login-btn__icon {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: transparent;
-        color: var(--vi-h-bg);
-        font-size: 1.4rem;
+        transform: translateY(-8px) rotate(-45deg);
     }
 
     /* ── Menú desplegable móvil ── */
     .vi-mobile-menu {
         position: fixed;
-        top: calc(78px + env(safe-area-inset-top, 0px));
-        left: 12px;
-        right: 12px;
-        width: auto;
-        max-width: calc(100% - 24px);
-        display: none;
-        padding: 8px 0;
-        background: linear-gradient(
-            135deg,
-            rgba(0, 127, 255, .96) 0%,
-            rgba(0, 0, 128, .96) 100%
-        );
-        border: 1px solid rgba(248, 248, 255, .22);
-        border-radius: 14px;
-        box-shadow:
-            0 18px 38px rgba(0, 45, 137, .24),
-            inset 0 1px 0 rgba(255, 255, 255, .10);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        z-index: 9999;
-        overflow: hidden;
+        top: var(--vi-header-height-mobile);
+        left: 10px;
+        right: 10px;
+        max-height: calc(100dvh - 84px);
+        overflow-y: auto;
+
+        background: var(--vi-h-white);
+        border: 1px solid rgba(0, 45, 137, .10);
+        border-radius: 16px;
+        box-shadow: 0 24px 48px rgba(0, 45, 137, .20);
+        z-index: 1040;
     }
 
-    .vi-mobile-menu.show {
-        display: flex !important;
+    .vi-mobile-menu.show { display: block; }
+
+    .vi-mobile-menu.collapsing {
+        transition-duration: .15s;
+    }
+
+    .vi-mobile-menu__inner {
+        padding: 10px;
+        display: flex;
         flex-direction: column;
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
+        gap: 4px;
     }
 
     .vi-mobile-menu__item {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 14px 24px;
-        color: var(--vi-h-bg);
+        min-height: 46px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        color: var(--vi-h-ink);
         text-decoration: none;
         font-family: "Inter", sans-serif;
-        font-size: 1.05rem;
+        font-size: .92rem;
         font-weight: 600;
-        border-left: 4px solid transparent;
-        transition:
-            background .22s ease,
-            border-color .22s ease,
-            transform .22s ease;
+        transition: background-color .18s ease;
+    }
+
+    .vi-mobile-menu__item i {
+        color: var(--vi-h-blue);
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
     }
 
     .vi-mobile-menu__item:hover,
     .vi-mobile-menu__item.active {
-        background: rgba(248, 248, 255, .12);
-        border-left-color: var(--vi-h-bg);
-        transform: translateX(2px);
+        background: rgba(0, 127, 255, .08);
+    }
+
+    .vi-mobile-menu__item.active { color: var(--vi-h-blue-dark); }
+
+    /* ── Grupos tipo acordeón (sin JS, <details> nativo) ── */
+    .vi-mobile-group {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .vi-mobile-group__summary {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 46px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        list-style: none;
+        color: var(--vi-h-ink);
+        font-family: "Inter", sans-serif;
+        font-size: .92rem;
+        font-weight: 700;
+        transition: background-color .18s ease;
+    }
+
+    .vi-mobile-group__summary::-webkit-details-marker { display: none; }
+
+    .vi-mobile-group__summary i:first-child {
+        color: var(--vi-h-blue);
+        font-size: 1rem;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .vi-mobile-group__summary span { flex: 1; }
+
+    .vi-mobile-group__caret {
+        font-size: .72rem;
+        color: var(--vi-h-muted);
+        transition: transform .2s ease;
+    }
+
+    .vi-mobile-group[open] .vi-mobile-group__summary {
+        background: rgba(0, 127, 255, .06);
+    }
+
+    .vi-mobile-group[open] .vi-mobile-group__caret {
+        transform: rotate(180deg);
+    }
+
+    .vi-mobile-group__items {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 2px 0 6px 14px;
+    }
+
+    .vi-mobile-group__items .vi-mobile-menu__item {
+        font-size: .85rem;
+        font-weight: 500;
+        min-height: 42px;
     }
 }
-
-/* =========================
-   MÓVIL PEQUEÑO  ≤ 480px
-   ========================= */
-
-@media (max-width: 480px) {
-    .vi-header__glass {
-        grid-template-columns: 42px minmax(0, 1fr) 42px;
-        height: 74px;
-        min-height: 74px;
-        max-height: 74px;
-        padding-left: max(14px, env(safe-area-inset-left));
-        padding-right: max(14px, env(safe-area-inset-right));
-    }
-
-    .vi-mobile-toggle { width: 38px; height: 38px; }
-    .vi-mobile-toggle__bars { width: 28px; height: 21px; }
-
-    .vi-brand__logo { width: 46px; height: 46px; flex-basis: 46px; }
-    .vi-brand__title,
-    .vi-brand__subtitle { font-size: 1rem; }
-
-    .vi-login-btn { width: 42px; height: 42px; }
-    .vi-login-btn__icon { font-size: 1.32rem; }
-
-    .vi-mobile-menu {
-        top: calc(74px + env(safe-area-inset-top, 0px));
-        left: 10px;
-        right: 10px;
-        max-width: calc(100% - 20px);
-    }
-}
-
-/* =========================
-   MÓVIL MUY ANGOSTO  ≤ 380px
-   ========================= */
 
 @media (max-width: 380px) {
-    .vi-brand__logo { width: 42px; height: 42px; flex-basis: 42px; }
-    .vi-brand__title,
-    .vi-brand__subtitle { font-size: .9rem; }
-    .vi-mobile-toggle__bars { width: 26px; }
-    .vi-login-btn { width: 40px; height: 40px; }
+    .vi-header__bar { padding: 0 12px; }
+    .vi-brand__img { height: 36px; max-width: 130px; }
+    .vi-login-btn { padding: 7px 12px 7px 7px; font-size: .72rem; }
+}
+
+/* =========================================================
+   ACCESIBILIDAD
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .vi-header__bar,
+    .vi-nav__link,
+    .vi-nav__link::after,
+    .vi-dropdown__panel,
+    .vi-dropdown__caret,
+    .vi-dropdown__item,
+    .vi-dropdown__icon,
+    .vi-login-btn,
+    .vi-mobile-toggle__bar,
+    .vi-mobile-group__caret {
+        transition: none !important;
+    }
 }

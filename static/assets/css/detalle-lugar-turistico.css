@@ -1116,6 +1116,7 @@
 @media (max-width: 767.98px) {
     .dl-crumb-bar {
         display: block;
+        padding-top: var(--vi-header-height-mobile, 68px);
     }
 
     .dl-banner {

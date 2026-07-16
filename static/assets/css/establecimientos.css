@@ -796,7 +796,7 @@
     }
 
     .establecimientos-pagina .establecimientos-encabezado {
-        padding: 55px 0 44px;
+        padding: calc(var(--vi-header-height-mobile, 68px) + 20px) 0 44px;
     }
 
     .establecimientos-pagina .establecimientos-encabezado h1 {
@@ -944,7 +944,7 @@
 
 @media (max-width: 575.98px) {
     .establecimientos-pagina .establecimientos-encabezado {
-        padding-top: 42px;
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 16px);
     }
 
     .establecimientos-pagina .filtros-contenedor {
