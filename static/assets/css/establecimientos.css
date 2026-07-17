@@ -119,14 +119,19 @@
     font-weight: 700;
     border: 1px solid var(--est-azul-oscuro);
     border-radius: 7px;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
 }
 
 .establecimientos-pagina .btn-dorado:hover {
     background: var(--est-fondo-suave);
     border-color: var(--est-azul-oscuro);
     color: var(--est-azul-oscuro);
-    transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .establecimientos-pagina .btn-dorado:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .establecimientos-pagina .btn-contorno-dorado {
@@ -134,7 +139,7 @@
     color: var(--est-azul-oscuro);
     border: 1px solid var(--est-azul-oscuro);
     border-radius: 7px;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .establecimientos-pagina .btn-contorno-dorado:hover {
@@ -280,7 +285,12 @@
 
 .establecimientos-pagina .tipo-opcion:hover {
     color: var(--est-azul-profundo);
-    transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .establecimientos-pagina .tipo-opcion:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .establecimientos-pagina .tipo-opcion.active {
@@ -1018,6 +1028,15 @@
     .establecimientos-pagina .pagination .page-number .page-link::before {
         width: 44px;
         height: 44px;
+    }
+}
+
+/* Movimiento decorativo (hover lift) fuera si el usuario prefiere menos animación */
+@media (prefers-reduced-motion: reduce) {
+    .establecimientos-pagina .btn-dorado,
+    .establecimientos-pagina .btn-contorno-dorado,
+    .establecimientos-pagina .tipo-opcion {
+        transition: none;
     }
 }
 

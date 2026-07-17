@@ -212,7 +212,7 @@
     visibility: hidden;
     font-size: 13px;
     white-space: nowrap;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease, top 0.3s ease;
     z-index: 10;
     background: rgba(0, 45, 137, 0.92);
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
@@ -257,7 +257,12 @@
     box-shadow:
         0 16px 34px rgba(0, 0, 0, 0.26),
         0 0 0 4px rgba(248, 248, 255, 0.10);
-    transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .vi-social-icons__item a:hover {
+        transform: translateY(-2px);
+    }
 }
 
 .vi-social-icons__item a i {
@@ -273,7 +278,7 @@
     width: 100%;
     height: 0;
     background: linear-gradient(135deg, #007FFF 0%, #000080 100%);
-    transition: all 0.3s ease-in-out;
+    transition: height 0.3s ease-in-out;
     z-index: 1;
 }
 
@@ -407,5 +412,14 @@
         max-width: 100%;
         text-align: center;
         white-space: normal;
+    }
+}
+
+/* Movimiento decorativo (hover lift/fill) fuera si el usuario prefiere menos animación */
+@media (prefers-reduced-motion: reduce) {
+    .vi-social-icons__item .tooltip,
+    .vi-social-icons__item a,
+    .vi-social-icons__item a .filled {
+        transition: none;
     }
 }

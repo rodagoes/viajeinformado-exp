@@ -327,12 +327,23 @@
     transform: rotate(-45deg);
 }
 
-.dl-icon-circle:hover,
+.dl-icon-circle:hover {
+    border-color: var(--dl-blue);
+    background: rgba(0, 127, 255, 0.08);
+    color: var(--dl-blue);
+}
+
 .dl-icon-circle.is-active {
     border-color: var(--dl-blue);
     background: rgba(0, 127, 255, 0.08);
     color: var(--dl-blue);
     transform: rotate(45deg) scale(1.05);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .dl-icon-circle:hover {
+        transform: rotate(45deg) scale(1.05);
+    }
 }
 
 .dl-icon-circle.s1 {
@@ -639,9 +650,14 @@
 }
 
 .dl-dato-card:hover {
-    transform: translateY(-2px);
     border-color: rgba(0, 45, 137, 0.18);
     box-shadow: 0 18px 38px rgba(0, 45, 137, 0.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .dl-dato-card:hover {
+        transform: translateY(-2px);
+    }
 }
 
 .dl-dato-icon {

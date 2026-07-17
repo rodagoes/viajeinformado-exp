@@ -129,14 +129,19 @@
     font-weight: 700;
     border: 1px solid var(--lug-azul-oscuro);
     border-radius: 7px;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
 }
 
 .lugares-pagina .btn-dorado:hover {
     background: var(--lug-fondo-suave);
     border-color: var(--lug-azul-oscuro);
     color: var(--lug-azul-oscuro);
-    transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .lugares-pagina .btn-dorado:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .lugares-pagina .btn-contorno-dorado {
@@ -144,7 +149,7 @@
     color: var(--lug-azul-oscuro);
     border: 1px solid var(--lug-azul-oscuro);
     border-radius: 7px;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .lugares-pagina .btn-contorno-dorado:hover {
@@ -285,10 +290,15 @@
 }
 
 .lugares-pagina .lugar-tarjeta:hover {
-    transform: translateY(-5px);
     box-shadow:
         0 20px 50px rgba(0, 45, 137, 0.18),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .lugares-pagina .lugar-tarjeta:hover {
+        transform: translateY(-5px);
+    }
 }
 
 /* =========================================================
@@ -313,8 +323,10 @@
     transition: transform 0.45s ease;
 }
 
-.lugares-pagina .lugar-tarjeta:hover .lugar-imagen-contenedor img {
-    transform: scale(1.04);
+@media (hover: hover) and (pointer: fine) {
+    .lugares-pagina .lugar-tarjeta:hover .lugar-imagen-contenedor img {
+        transform: scale(1.04);
+    }
 }
 
 .lugares-pagina .lugar-imagen-vacia {
@@ -707,5 +719,15 @@
     }
 }
 
+
+/* Movimiento decorativo (hover lift/scale) fuera si el usuario prefiere menos animación */
+@media (prefers-reduced-motion: reduce) {
+    .lugares-pagina .btn-dorado,
+    .lugares-pagina .btn-contorno-dorado,
+    .lugares-pagina .lugar-tarjeta,
+    .lugares-pagina .lugar-imagen-contenedor img {
+        transition: none;
+    }
+}
 
 /* -- fin de turismo.css (estilos de detalle en detalle-lugar-turistico.css) -- */
