@@ -70,16 +70,27 @@
     t.setAttribute('role', 'status');
     t.setAttribute('aria-live', 'polite');
     t.textContent = msg;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var startY = reduceMotion ? '0px' : '8px';
     t.style.cssText = [
       'position:fixed', 'bottom:90px', 'left:50%',
-      'transform:translateX(-50%)', 'background:#002d89',
+      'transform:translate(-50%, ' + startY + ')', 'background:#002d89',
       'color:#fff', 'padding:10px 24px', 'border-radius:999px',
       'font-size:13px', 'font-weight:600', 'z-index:9999',
       'box-shadow:0 4px 18px rgba(0,45,137,0.35)',
-      'transition:opacity .3s', 'font-family:inherit',
+      'opacity:0',
+      'transition:opacity .3s, transform .3s', 'font-family:inherit',
       'white-space:nowrap'
     ].join(';');
     document.body.appendChild(t);
+    /* Doble rAF: garantiza que el navegador pinte el estado inicial
+       antes de animar hacia el estado visible. */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        t.style.opacity = '1';
+        t.style.transform = 'translate(-50%, 0)';
+      });
+    });
     setTimeout(function () {
       t.style.opacity = '0';
       setTimeout(function () { t.remove(); }, 330);

@@ -97,7 +97,7 @@
 
                     <div class="filtros-resumen">
                         <span class="contador-resultados">
-                            Mostrando {{ total_resultados }} resultados
+                            {{ total_resultados }} coincidencia{% if total_resultados != 1 %}s{% endif %} encontrada{% if total_resultados != 1 %}s{% endif %}
                         </span>
 
                         <div class="orden-caja">
@@ -150,29 +150,36 @@
                                 <div class="est-divisor"></div>
                             </div>
 
-                            <div class="est-info-grupo">
+                            <div class="est-info-panel">
 
-                                {% if est.rango_precio != 'consultar' or est.precio_desde or est.precio_hasta %}
-                                    <div class="est-info-elemento est-precio-fila">
-                                        <i class="bi bi-tag"></i>
-                                        <span class="est-precio">
-                                            {% if est.precio_desde and est.precio_hasta %}
-                                                S/ {{ est.precio_desde|floatformat:0 }} - {{ est.precio_hasta|floatformat:0 }}
-                                            {% elif est.precio_desde %}
-                                                Desde S/ {{ est.precio_desde|floatformat:0 }}
-                                            {% elif est.rango_precio %}
-                                                {{ est.get_rango_precio_display }}
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                {% endif %}
+                                <div class="est-info-item est-info-item--precio">
+                                    <span class="est-info-icono"><i class="bi bi-tag"></i></span>
+                                    <span class="est-info-textos">
+                                        {% if est.precio_desde and est.precio_hasta %}
+                                            <span class="est-info-label">Rango de precios:</span>
+                                            <span class="est-info-valor">S/ {{ est.precio_desde|floatformat:0 }} - S/ {{ est.precio_hasta|floatformat:0 }}</span>
+                                        {% elif est.precio_desde %}
+                                            <span class="est-info-label">Rango de precios:</span>
+                                            <span class="est-info-valor">Desde S/ {{ est.precio_desde|floatformat:0 }}</span>
+                                        {% elif est.rango_precio != 'consultar' %}
+                                            <span class="est-info-label">Rango de precios:</span>
+                                            <span class="est-info-valor">{{ est.get_rango_precio_display }}</span>
+                                        {% else %}
+                                            <span class="est-info-label">Precio</span>
+                                            <span class="est-info-valor">Consultar</span>
+                                        {% endif %}
+                                    </span>
+                                </div>
 
                                 {% with sucursal=est.sucursales.all.0 %}
                                     {% if sucursal and sucursal.direccion %}
-                                        <div class="est-info-elemento est-direccion-fila">
-                                            <i class="bi bi-geo-alt"></i>
-                                            <span class="est-direccion">
-                                                {{ sucursal.direccion }}
+                                        <div class="est-info-item est-info-item--direccion">
+                                            <span class="est-info-icono"><i class="bi bi-geo-alt"></i></span>
+                                            <span class="est-info-textos">
+                                                <span class="est-info-label">Ubicados en:</span>
+                                                <span class="est-info-valor est-info-valor--direccion">
+                                                    {{ sucursal.direccion }}
+                                                </span>
                                             </span>
                                         </div>
                                     {% endif %}

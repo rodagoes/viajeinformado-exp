@@ -19,6 +19,10 @@
     --est-tarjeta-fondo: #F8F8FF;
     --est-tarjeta-borde: rgba(0, 45, 137, 0.12);
 
+    --est-panel-fondo: #F7F9FD;
+    --est-panel-borde: #DFE7F3;
+    --est-panel-label: #61708C;
+
     --est-texto-titulo: #0b0c10;
     --est-texto-principal: #002d89;
     --est-texto-secundario: #5f6b7a;
@@ -119,14 +123,19 @@
     font-weight: 700;
     border: 1px solid var(--est-azul-oscuro);
     border-radius: 7px;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
 }
 
 .establecimientos-pagina .btn-dorado:hover {
     background: var(--est-fondo-suave);
     border-color: var(--est-azul-oscuro);
     color: var(--est-azul-oscuro);
-    transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .establecimientos-pagina .btn-dorado:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .establecimientos-pagina .btn-contorno-dorado {
@@ -134,7 +143,7 @@
     color: var(--est-azul-oscuro);
     border: 1px solid var(--est-azul-oscuro);
     border-radius: 7px;
-    transition: all 0.25s ease;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .establecimientos-pagina .btn-contorno-dorado:hover {
@@ -280,7 +289,12 @@
 
 .establecimientos-pagina .tipo-opcion:hover {
     color: var(--est-azul-profundo);
-    transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .establecimientos-pagina .tipo-opcion:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .establecimientos-pagina .tipo-opcion.active {
@@ -425,8 +439,10 @@
 ========================================================= */
 
 .establecimientos-pagina .est-contenido-grupo {
-    min-height: 116px;
     flex: 0 0 auto;
+    /* Espacio moderado y constante entre la línea azul y el panel de
+       precio/ubicación (no se toca para "alinear", es la separación fija) */
+    margin-bottom: 16px;
 }
 
 .establecimientos-pagina .est-categoria {
@@ -447,62 +463,120 @@
     color: var(--est-texto-titulo);
     margin: 0;
     max-width: 100%;
+
+    /* Tope de 2 líneas para nombres largos, sin reservar altura falsa
+       cuando el nombre entra en 1 sola línea */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .establecimientos-pagina .est-divisor {
     width: 52px;
     height: 2px;
     background: var(--est-acento-gradiente);
-    margin-top: 12px;
+    /* Separación corta y constante respecto al nombre: la línea
+       pertenece visualmente al título, no al panel */
+    margin-top: 8px;
     opacity: 0.95;
 }
 
 /* =========================================================
-   Precio y dirección
+   Precio y dirección — panel informativo
 ========================================================= */
 
-.establecimientos-pagina .est-info-grupo {
-    min-height: 82px;
+.establecimientos-pagina .est-info-panel {
     flex: 0 0 auto;
 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+
+    background: var(--est-panel-fondo);
+    border: 1px solid var(--est-panel-borde);
+    border-radius: 14px;
+    padding: 4px 14px;
 
     margin-bottom: 16px;
+
+    transition: border-color 0.28s ease, background 0.28s ease;
 }
 
-.establecimientos-pagina .est-info-elemento {
-    display: grid;
-    grid-template-columns: 22px 1fr;
-    column-gap: 12px;
-    align-items: start;
+.establecimientos-pagina .est-tarjeta:hover .est-info-panel {
+    border-color: rgba(0, 127, 255, 0.35);
+}
 
+.establecimientos-pagina .est-info-item {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    column-gap: 12px;
+    align-items: center;
+
+    padding: 10px 0;
+}
+
+.establecimientos-pagina .est-info-item + .est-info-item {
+    border-top: 1px solid var(--est-panel-borde);
+}
+
+.establecimientos-pagina .est-info-icono {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: linear-gradient(150deg, rgba(0, 127, 255, 0.16), rgba(0, 45, 137, 0.08));
+    border: 1px solid rgba(0, 127, 255, 0.18);
+    box-shadow: 0 2px 6px rgba(0, 45, 137, 0.08);
     color: var(--est-azul-oscuro);
     font-size: 0.94rem;
-    line-height: 1.32;
-    margin-bottom: 10px;
+
+    transition: border-color 0.25s ease, transform 0.25s ease;
 }
 
-.establecimientos-pagina .est-info-elemento:last-child {
-    margin-bottom: 0;
+@media (hover: hover) and (pointer: fine) {
+    .establecimientos-pagina .est-tarjeta:hover .est-info-icono {
+        border-color: rgba(0, 127, 255, 0.4);
+        transform: scale(1.05);
+    }
 }
 
-.establecimientos-pagina .est-info-elemento i {
+.establecimientos-pagina .est-info-textos {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.establecimientos-pagina .est-info-label {
+    color: var(--est-panel-label);
+    font-size: 0.66rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+}
+
+.establecimientos-pagina .est-info-valor {
     color: var(--est-azul-oscuro);
-    font-size: 1.04rem;
-    line-height: 1.32;
-    margin-top: 1px;
-}
-
-.establecimientos-pagina .est-precio {
-    color: var(--est-azul-oscuro);
-    font-weight: 900;
+    font-size: 0.96rem;
+    line-height: 1.3;
+    font-weight: 800;
     letter-spacing: 0.01em;
 }
 
-.establecimientos-pagina .est-direccion {
-    color: var(--est-azul-oscuro);
+.establecimientos-pagina .est-info-valor--direccion {
+    font-size: 0.86rem;
+    font-weight: 600;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* =========================================================
@@ -511,7 +585,9 @@
 
 .establecimientos-pagina .est-accion {
     flex: 0 0 auto;
-    margin-top: 0;
+    /* Empuja el botón al fondo de la card para que quede alineado
+       aunque el contenido de arriba varíe ligeramente entre cards */
+    margin-top: auto;
 }
 
 .establecimientos-pagina .est-accion .btn {
@@ -528,6 +604,32 @@
     letter-spacing: 0.15em;
     font-weight: 900;
     padding: 10px 16px;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Estados del botón "Ver más": el texto/flecha siempre deben
+   mantener contraste frente al fondo, sea claro u azul. */
+@media (hover: hover) and (pointer: fine) {
+    .establecimientos-pagina .est-accion .btn-contorno-dorado:hover {
+        background: var(--est-acento-gradiente);
+        color: #FFFFFF;
+        border-color: var(--est-azul-oscuro);
+    }
+}
+
+.establecimientos-pagina .est-accion .btn-contorno-dorado:focus-visible {
+    background: var(--est-acento-gradiente);
+    color: #FFFFFF;
+    border-color: var(--est-azul-oscuro);
+    outline: 2px solid var(--est-azul-claro);
+    outline-offset: 2px;
+}
+
+.establecimientos-pagina .est-accion .btn-contorno-dorado:active {
+    background: var(--est-acento-gradiente);
+    color: #FFFFFF;
+    border-color: var(--est-azul-oscuro);
 }
 
 /* =========================================================
@@ -893,8 +995,7 @@
     }
 
     .establecimientos-pagina .est-contenido-grupo {
-        min-height: auto;
-        margin-bottom: 24px;
+        margin-bottom: 16px;
     }
 
     .establecimientos-pagina .est-categoria {
@@ -910,25 +1011,36 @@
 
     .establecimientos-pagina .est-divisor {
         width: 62px;
-        margin-top: 18px;
+        margin-top: 10px;
     }
 
-    .establecimientos-pagina .est-info-grupo {
-        min-height: auto;
-        margin-bottom: 22px;
-    }
-
-    .establecimientos-pagina .est-info-elemento {
-        grid-template-columns: 28px 1fr;
-        column-gap: 16px;
-        font-size: 1.14rem;
-        line-height: 1.38;
+    .establecimientos-pagina .est-info-panel {
         margin-bottom: 18px;
+        padding: 4px 16px;
     }
 
-    .establecimientos-pagina .est-info-elemento i {
-        font-size: 1.3rem;
-        margin-top: 1px;
+    .establecimientos-pagina .est-info-item {
+        grid-template-columns: 34px 1fr;
+        column-gap: 14px;
+        padding: 14px 0;
+    }
+
+    .establecimientos-pagina .est-info-icono {
+        width: 34px;
+        height: 34px;
+        font-size: 1.02rem;
+    }
+
+    .establecimientos-pagina .est-info-label {
+        font-size: 0.74rem;
+    }
+
+    .establecimientos-pagina .est-info-valor {
+        font-size: 1.08rem;
+    }
+
+    .establecimientos-pagina .est-info-valor--direccion {
+        font-size: 0.96rem;
     }
 
     .establecimientos-pagina .est-accion .btn {
@@ -1018,6 +1130,15 @@
     .establecimientos-pagina .pagination .page-number .page-link::before {
         width: 44px;
         height: 44px;
+    }
+}
+
+/* Movimiento decorativo (hover lift) fuera si el usuario prefiere menos animación */
+@media (prefers-reduced-motion: reduce) {
+    .establecimientos-pagina .btn-dorado,
+    .establecimientos-pagina .btn-contorno-dorado,
+    .establecimientos-pagina .tipo-opcion {
+        transition: none;
     }
 }
 

@@ -179,7 +179,7 @@
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity .18s ease, transform .18s ease, visibility .18s;
+    transition: opacity .18s cubic-bezier(0.23, 1, 0.32, 1), transform .18s cubic-bezier(0.23, 1, 0.32, 1), visibility .18s;
     z-index: 20;
 }
 
@@ -296,8 +296,17 @@
 .vi-login-btn:hover,
 .vi-login-btn:focus-visible {
     color: var(--vi-h-white);
-    transform: translateY(-1px);
     box-shadow: 0 14px 28px rgba(0, 45, 137, .30);
+}
+
+.vi-login-btn:focus-visible {
+    transform: translateY(-1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .vi-login-btn:hover {
+        transform: translateY(-1px);
+    }
 }
 
 .vi-login-btn:active {
@@ -387,7 +396,7 @@
         height: 3px;
         border-radius: 999px;
         background: var(--vi-h-blue-dark);
-        transition: all .3s ease;
+        transition: transform .3s ease, opacity .3s ease;
     }
 
     .vi-mobile-toggle[aria-expanded="true"] .vi-mobile-toggle__bar--1 {
