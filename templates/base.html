@@ -36,7 +36,9 @@
     {% block site_header %}
     {% include 'partials/header.html' %}
     {% endblock site_header %}
+    {% block site_messages %}
     {% include 'partials/messages.html' %}
+    {% endblock site_messages %}
 
     <main>
         {% block content %}

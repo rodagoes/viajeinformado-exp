@@ -1,0 +1,434 @@
+/* =========================================================
+   AUTH — VIAJE INFORMADO
+   Login, registro y verificación OTP.
+   Paleta: #ffffff / #002d89 / #007fff / #f7f9fd
+   ========================================================= */
+
+.vi-auth-page {
+  --vi-a-blue:      #007fff;
+  --vi-a-blue-dark: #002d89;
+  --vi-a-bg:        #f7f9fd;
+  --vi-a-card-soft: #eef3fb;
+  --vi-a-ink:       #182033;
+  --vi-a-muted:     #61708c;
+  --vi-a-border:    #dfe7f3;
+  --vi-a-error:     #c62838;
+
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #007fff 0%, #000080 100%);
+}
+
+.vi-auth-card {
+  width: 100%;
+  max-width: 460px;
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 30, 0.35);
+}
+
+.vi-auth-logo-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin: 0 auto 0.3rem;
+  text-align: center;
+}
+
+.vi-auth-logo {
+  display: block;
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mensajes de Django dentro de la card auth (no arriba de toda la página) */
+.vi-auth-messages {
+  margin-bottom: 1.1rem;
+}
+
+.vi-auth-alert {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  margin-bottom: 0.5rem;
+}
+
+.vi-auth-alert:last-child {
+  margin-bottom: 0;
+}
+
+.vi-auth-alert-success {
+  background: #e6f4ea;
+  color: #157347;
+  border-color: #bfe3cb;
+}
+
+.vi-auth-alert-error {
+  background: #fdeceb;
+  color: var(--vi-a-error);
+  border-color: #f6c8c4;
+}
+
+.vi-auth-alert-warning {
+  background: #fff8e1;
+  color: #8a6d1d;
+  border-color: #f2e2a8;
+}
+
+.vi-auth-alert-info,
+.vi-auth-alert-debug {
+  background: var(--vi-a-card-soft);
+  color: var(--vi-a-ink);
+  border-color: var(--vi-a-border);
+}
+
+/* Panel de éxito tras verificar OTP */
+.vi-auth-success {
+  text-align: center;
+}
+
+.vi-auth-success-icon {
+  font-size: 3rem;
+  line-height: 1;
+  color: #157347;
+  margin-bottom: 0.75rem;
+}
+
+.vi-auth-success .vi-auth-subtitle {
+  margin-bottom: 1.5rem;
+}
+
+.vi-auth-success .vi-auth-btn-primary {
+  text-decoration: none;
+}
+
+.vi-auth-title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--vi-a-blue-dark);
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+
+.vi-auth-subtitle {
+  font-size: 0.9rem;
+  color: var(--vi-a-muted);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Campos */
+.vi-auth-field {
+  margin-bottom: 1rem;
+}
+
+.vi-auth-field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--vi-a-ink);
+  margin-bottom: 0.35rem;
+}
+
+.vi-auth-req {
+  color: var(--vi-a-error);
+}
+
+.vi-auth-field input {
+  width: 100%;
+  font-size: 1rem; /* >=16px: evita zoom automático en Safari iOS */
+  color: var(--vi-a-ink);
+  background: var(--vi-a-card-soft);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.vi-auth-field input::placeholder {
+  color: #9aa8c2;
+}
+
+.vi-auth-field input:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--vi-a-blue);
+  box-shadow: 0 0 0 3px rgba(0, 127, 255, 0.18);
+}
+
+.vi-auth-error {
+  font-size: 0.8rem;
+  color: var(--vi-a-error);
+  margin-top: 0.35rem;
+}
+
+/* Contraseña con toggle */
+.vi-auth-password-wrap {
+  position: relative;
+}
+
+.vi-auth-password-wrap input {
+  padding-right: 2.8rem;
+}
+
+.vi-auth-toggle-pass {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  min-width: 44px;
+  border: none;
+  background: transparent;
+  color: var(--vi-a-muted);
+  cursor: pointer;
+  border-radius: 0 10px 10px 0;
+}
+
+.vi-auth-toggle-pass:hover,
+.vi-auth-toggle-pass:focus-visible {
+  color: var(--vi-a-blue-dark);
+}
+
+/* Checklist de contraseña */
+.vi-auth-checklist {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0.75rem 0.9rem;
+  background: var(--vi-a-bg);
+  border: 1px solid var(--vi-a-border);
+  border-radius: 10px;
+  font-size: 0.78rem;
+  color: var(--vi-a-muted);
+}
+
+.vi-auth-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.12rem 0;
+}
+
+.vi-auth-checklist li.ok {
+  color: #157347;
+}
+
+.vi-auth-checklist li.ok i::before {
+  content: "\f26a"; /* bi-check-circle-fill */
+}
+
+/* Botón principal */
+.vi-auth-btn-primary {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, var(--vi-a-blue) 0%, var(--vi-a-blue-dark) 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: filter 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+}
+
+.vi-auth-btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 8px 20px rgba(0, 127, 255, 0.28);
+}
+
+.vi-auth-btn-primary:active {
+  transform: scale(0.985);
+}
+
+.vi-auth-btn-primary:focus-visible {
+  outline: 3px solid rgba(0, 127, 255, 0.45);
+  outline-offset: 2px;
+}
+
+/* Separador */
+.vi-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.4rem 0 1.1rem;
+  color: var(--vi-a-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vi-auth-divider::before,
+.vi-auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--vi-a-border);
+}
+
+/* Botones sociales */
+.vi-auth-social {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.vi-auth-btn-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 44px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--vi-a-ink);
+  background: #fff;
+  border: 1px solid var(--vi-a-border);
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  text-decoration: none;
+  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.vi-auth-btn-social:hover,
+.vi-auth-btn-social:focus-visible {
+  color: var(--vi-a-blue-dark);
+  background: var(--vi-a-bg);
+  border-color: var(--vi-a-blue);
+  box-shadow: 0 4px 14px rgba(0, 45, 137, 0.1);
+}
+
+/* OTP */
+.vi-auth-otp-input {
+  text-align: center;
+  font-size: 1.9rem !important;
+  font-weight: 700;
+  letter-spacing: 0.9rem;
+  padding-left: 1.4rem !important;
+}
+
+.vi-auth-resend {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.vi-auth-btn-link {
+  background: none;
+  border: none;
+  color: var(--vi-a-blue);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.vi-auth-btn-link:hover:not(:disabled) {
+  text-decoration: underline;
+  color: var(--vi-a-blue-dark);
+}
+
+.vi-auth-btn-link:disabled {
+  color: var(--vi-a-muted);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* Enlaces inferiores */
+.vi-auth-footer-link {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--vi-a-muted);
+  margin: 1.4rem 0 0;
+}
+
+/* Enlace inferior: registro o inicio de sesión */
+.vi-auth-footer-link a {
+  color: var(--vi-a-blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.vi-auth-footer-link a:hover {
+  color: var(--vi-a-blue-dark);
+  text-decoration: underline;
+}
+
+/* Botón para volver al inicio */
+.vi-auth-back {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+}
+
+.vi-auth-back a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  min-height: 36px;
+  padding: 0.45rem 0.85rem;
+
+  color: var(--vi-a-blue-dark);
+  background-color: var(--vi-a-card-soft);
+  border: 1px solid rgba(0, 127, 255, 0.3);
+  border-radius: 999px;
+
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+
+  box-shadow: 0 4px 12px rgba(0, 45, 137, 0.1);
+
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.vi-auth-back a:hover {
+  color: #fff;
+  background-color: var(--vi-a-blue);
+  border-color: var(--vi-a-blue);
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(0, 127, 255, 0.22);
+}
+
+.vi-auth-back a:focus-visible {
+  outline: 3px solid rgba(0, 127, 255, 0.3);
+  outline-offset: 2px;
+}
+/* Mensajes de Django dentro de páginas auth: sin margen extra del header fijo */
+@media (max-width: 575px) {
+  .vi-auth-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 14px;
+  }
+
+  .vi-auth-logo {
+    width: 150px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vi-auth-page * {
+    transition: none !important;
+  }
+}

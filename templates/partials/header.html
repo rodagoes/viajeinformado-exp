@@ -50,12 +50,48 @@
 
         <!-- ACCIONES -->
         <div class="vi-actions">
-            <a href="{% url 'base:login_visual' %}" class="vi-login-btn" aria-label="Iniciar sesión">
+            {% if user.is_authenticated %}
+            <div class="vi-dropdown">
+                <button type="button" class="vi-user-btn" aria-haspopup="true" aria-expanded="false">
+                    <span class="vi-login-btn__icon">
+                        <i class="bi bi-person-fill" aria-hidden="true"></i>
+                    </span>
+                    <span class="vi-login-btn__text">Hola, {{ user.first_name}}</span>
+                    <i class="bi bi-chevron-down vi-dropdown__caret" aria-hidden="true"></i>
+                </button>
+                <div class="vi-dropdown__panel vi-dropdown__panel--right">
+                    <div class="vi-dropdown__list">
+                        <a href="#" class="vi-dropdown__item vi-dropdown__item--disabled" tabindex="-1" aria-disabled="true">
+                            <span class="vi-dropdown__icon"><i class="bi bi-heart" aria-hidden="true"></i></span>
+                            <span class="vi-dropdown__text">
+                                <span class="vi-dropdown__label">Favoritos</span>
+                                <span class="vi-dropdown__desc">Próximamente</span>
+                            </span>
+                        </a>
+                        <a href="#" class="vi-dropdown__item vi-dropdown__item--disabled" tabindex="-1" aria-disabled="true">
+                            <span class="vi-dropdown__icon"><i class="bi bi-gear" aria-hidden="true"></i></span>
+                            <span class="vi-dropdown__text">
+                                <span class="vi-dropdown__label">Configuración de cuenta</span>
+                                <span class="vi-dropdown__desc">Próximamente</span>
+                            </span>
+                        </a>
+                        <a href="{% url 'accounts:logout' %}" class="vi-dropdown__item">
+                            <span class="vi-dropdown__icon"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></span>
+                            <span class="vi-dropdown__text">
+                                <span class="vi-dropdown__label">Cerrar sesión</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <a href="{% url 'accounts:login' %}" class="vi-login-btn" aria-label="Iniciar sesión">
                 <span class="vi-login-btn__icon">
                     <i class="bi bi-person" aria-hidden="true"></i>
                 </span>
                 <span class="vi-login-btn__text">Iniciar sesión</span>
             </a>
+            {% endif %}
         </div>
 
         <!-- BOTÓN HAMBURGUESA (SOLO MÓVIL) -->

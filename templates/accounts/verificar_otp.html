@@ -1,0 +1,49 @@
+{% extends 'accounts/base_auth.html' %}
+
+{% block title %}Verifica tu cuenta - Viaje Informado{% endblock %}
+
+{% block auth_content %}
+{% if verificacion_exitosa %}
+<div class="vi-auth-success" id="otp-success"
+     data-redirect-url="{{ redirect_url }}" data-redirect-seconds="{{ redirect_seconds }}">
+    <div class="vi-auth-success-icon"><i class="bi bi-check-circle-fill"></i></div>
+    <h1 class="vi-auth-title">¡Cuenta verificada!</h1>
+    <p class="vi-auth-subtitle">
+        Se ha creado tu cuenta correctamente. Se te está redirigiendo para que inicies sesión
+        en <strong><span id="otp-success-countdown">{{ redirect_seconds }}</span> segundos</strong>.
+    </p>
+    <a href="{{ redirect_url }}" class="vi-auth-btn-primary">
+        <i class="bi bi-box-arrow-in-right"></i> Ir a iniciar sesión ahora
+    </a>
+</div>
+{% else %}
+<h1 class="vi-auth-title">Verifica tu cuenta</h1>
+<p class="vi-auth-subtitle">
+    Ingresa el código de 4 dígitos que enviamos a <strong>{{ email_destino }}</strong>.
+</p>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    <div class="vi-auth-field">
+        <label for="{{ form.codigo.id_for_label }}" class="visually-hidden">Código de verificación</label>
+        <input type="text" name="codigo" id="{{ form.codigo.id_for_label }}"
+               class="vi-auth-otp-input" inputmode="numeric" pattern="[0-9]*"
+               maxlength="4" autocomplete="one-time-code" placeholder="••••" autofocus>
+        {% for error in form.codigo.errors %}
+        <div class="vi-auth-error text-center">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <button type="submit" class="vi-auth-btn-primary">
+        <i class="bi bi-shield-check"></i> Verificar código
+    </button>
+</form>
+
+<form method="post" action="{% url 'accounts:reenviar_codigo' %}" class="vi-auth-resend">
+    {% csrf_token %}
+    <button type="submit" class="vi-auth-btn-link" id="btn-reenviar"
+            data-cooldown="{{ cooldown }}" {% if cooldown > 0 %}disabled{% endif %}>
+        Reenviar código<span id="cooldown-label"></span>
+    </button>
+</form>
+{% endif %}
+{% endblock %}

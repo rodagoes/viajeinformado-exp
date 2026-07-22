@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block site_header %}{% endblock site_header %}
+{% block site_messages %}{% endblock site_messages %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="vi-auth-page">
+    <div class="vi-auth-card">
+        <p class="vi-auth-back">
+            <a href="{% url 'base:home' %}"><i class="bi bi-arrow-left"></i> Volver al inicio</a>
+        </p>
+        <a href="{% url 'base:home' %}" class="vi-auth-logo-link" aria-label="Ir al inicio de Viaje Informado">
+            <img src="{% static 'assets/img/logo/viaje-informado-logo.png' %}"
+                 alt="Viaje Informado" class="vi-auth-logo">
+        </a>
+        {% if messages %}
+        <div class="vi-auth-messages">
+            {% for message in messages %}
+            <div class="vi-auth-alert vi-auth-alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% block auth_content %}{% endblock %}
+    </div>
+
+</div>
+<style>footer { display: none !important; }</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/auth.js' %}"></script>
+{% endblock %}

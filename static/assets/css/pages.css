@@ -67,3 +67,123 @@
         padding: 2rem 1.5rem;
     }
 }
+
+/* =========================
+   TOAST GLOBAL (mensajes del sitio público)
+   ========================= */
+.vi-toast-stack {
+    position: fixed;
+    top: calc(var(--vi-header-height-desktop, 78px) + 16px);
+    right: 24px;
+    z-index: 1080;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: min(360px, calc(100vw - 32px));
+    pointer-events: none;
+}
+
+.vi-toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(223, 231, 243, 0.95);
+    color: #002D89;
+    border: 1px solid rgba(0, 127, 255, 0.25);
+    box-shadow: 0 8px 24px rgba(0, 45, 137, 0.15);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    pointer-events: auto;
+    backdrop-filter: blur(6px);
+    animation: vi-toast-in 0.25s ease-out;
+}
+
+.vi-toast.is-hiding {
+    animation: vi-toast-out 0.2s ease-in forwards;
+}
+
+.vi-toast__icon {
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    color: #007FFF;
+}
+
+.vi-toast__message {
+    flex: 1;
+    word-break: break-word;
+}
+
+.vi-toast__close {
+    flex-shrink: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.6;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.vi-toast__close:hover,
+.vi-toast__close:focus-visible {
+    opacity: 1;
+}
+
+.vi-toast--warning {
+    background: rgba(255, 243, 205, 0.95);
+    color: #7a5b00;
+    border-color: rgba(255, 193, 7, 0.35);
+}
+
+.vi-toast--warning .vi-toast__icon {
+    color: #c98a00;
+}
+
+.vi-toast--error {
+    background: rgba(255, 224, 224, 0.95);
+    color: #8a1f1f;
+    border-color: rgba(220, 53, 69, 0.35);
+}
+
+.vi-toast--error .vi-toast__icon {
+    color: #dc3545;
+}
+
+@keyframes vi-toast-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes vi-toast-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vi-toast {
+        animation: none;
+    }
+
+    .vi-toast.is-hiding {
+        animation: none;
+        opacity: 0;
+    }
+}
+
+@media (max-width: 1199px) {
+    .vi-toast-stack {
+        top: calc(var(--vi-header-height-mobile, 68px) + 10px);
+        right: 12px;
+        left: 12px;
+        max-width: none;
+        align-items: flex-end;
+    }
+
+    .vi-toast {
+        width: 100%;
+        max-width: 380px;
+    }
+}

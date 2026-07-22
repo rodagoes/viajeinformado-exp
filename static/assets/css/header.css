@@ -324,6 +324,62 @@
     font-size: .95rem;
 }
 
+/* Usuario autenticado: mismo look del botón de login + dropdown reutilizado */
+.vi-user-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px 9px 9px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+
+    color: var(--vi-h-white);
+    font-family: "Inter", sans-serif;
+    font-size: .84rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+    white-space: nowrap;
+
+    background: var(--vi-h-grad);
+    box-shadow: 0 10px 22px rgba(0, 45, 137, .22);
+    transition: transform var(--vi-h-ease), box-shadow var(--vi-h-ease);
+}
+
+.vi-user-btn:hover,
+.vi-user-btn:focus-visible {
+    box-shadow: 0 14px 28px rgba(0, 45, 137, .30);
+}
+
+.vi-dropdown__panel--right {
+    left: auto;
+    right: 0;
+    transform: translate(0, 6px);
+}
+
+.vi-dropdown:hover .vi-dropdown__panel--right,
+.vi-dropdown:focus-within .vi-dropdown__panel--right {
+    transform: translate(0, 0);
+}
+
+.vi-dropdown__item--disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+@media (max-width: 1199px) {
+    .vi-user-btn {
+        padding: 8px 12px 8px 8px;
+        font-size: .78rem;
+        gap: 8px;
+    }
+
+    .vi-user-btn .vi-dropdown__caret {
+        display: none;
+    }
+}
+
 /* =========================================================
    HAMBURGUESA — oculta en desktop
    ========================================================= */

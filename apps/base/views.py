@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 from .models import HomeHeroSlide
 
 class HomeView(TemplateView):
@@ -19,5 +19,6 @@ class TerminosView(TemplateView):
 class ContactoView(TemplateView):
     template_name = 'base/contacto.html'
 
-class LoginVisualView(TemplateView):
-    template_name = 'base/login_visual.html'
+class LoginVisualView(RedirectView):
+    # El antiguo preview visual ahora redirige al login funcional de apps.accounts
+    pattern_name = 'accounts:login'

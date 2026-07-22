@@ -1,9 +1,12 @@
 {% if messages %}
-<div class="container mt-3">
+<div class="vi-toast-stack" aria-live="polite" aria-atomic="true">
     {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="vi-toast vi-toast--{{ message.tags }}" data-vi-toast data-auto-dismiss="3000" role="status">
+        <i class="vi-toast__icon bi {% if message.tags == 'warning' %}bi-exclamation-circle-fill{% elif message.tags == 'error' %}bi-x-circle-fill{% else %}bi-check-circle-fill{% endif %}" aria-hidden="true"></i>
+        <span class="vi-toast__message">{{ message }}</span>
+        <button type="button" class="vi-toast__close" data-vi-toast-close aria-label="Cerrar mensaje">
+            <i class="bi bi-x" aria-hidden="true"></i>
+        </button>
     </div>
     {% endfor %}
 </div>

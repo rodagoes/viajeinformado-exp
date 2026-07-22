@@ -37,11 +37,6 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--vi-navy-deep);
 }
 
-.text-teal { color: var(--vi-teal) !important; }
-.text-gold { color: var(--vi-gold) !important; }
-.bg-teal { background-color: var(--vi-teal) !important; }
-.bg-navy-deep { background-color: var(--vi-navy-deep) !important; }
-
 main {
   flex: 1;
 }
@@ -63,29 +58,6 @@ main {
   justify-content: center;
 }
 
-.btn-vi-primary:hover {
-  background-color: var(--vi-teal-dark);
-  color: #fff;
-  box-shadow: 0 6px 15px rgba(0, 128, 128, 0.25);
-}
-
-.btn-vi-card {
-  background-color: var(--vi-blue-btn);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  width: 100%;
-}
-
-.btn-vi-card:hover {
-  background-color: var(--vi-dark);
-  color: #fff;
-}
-
 .btn-vi-outline {
   background-color: transparent;
   color: var(--vi-text);
@@ -99,147 +71,6 @@ main {
 .btn-vi-outline:hover {
   border-color: var(--vi-teal);
   color: var(--vi-teal);
-}
-
-/* Reusable Cards */
-.vi-card {
-  background: #fff;
-  border-radius: 16px;
-  border: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.vi-card:hover {
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .vi-card:hover {
-    transform: translateY(-5px);
-  }
-}
-
-.vi-card-img-top {
-  height: 200px;
-  object-fit: cover;
-  width: 100%;
-}
-
-.vi-card-body {
-  padding: 1.5rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.vi-card-title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.vi-card-text {
-  color: var(--vi-muted);
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-  flex: 1;
-}
-
-.vi-card-meta {
-  font-size: 0.85rem;
-  color: var(--vi-muted);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Category Pills */
-.vi-pill-nav {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  scrollbar-width: none; /* Firefox */
-}
-.vi-pill-nav::-webkit-scrollbar {
-  display: none; /* Chrome */
-}
-.vi-pill {
-  white-space: nowrap;
-  padding: 8px 20px;
-  border-radius: 50px;
-  background: #fff;
-  color: var(--vi-text);
-  font-weight: 500;
-  font-size: 0.9rem;
-  border: 1px solid var(--vi-border);
-  text-decoration: none;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-}
-.vi-pill:hover, .vi-pill.active {
-  background: var(--vi-blue-btn);
-  color: #fff;
-  border-color: var(--vi-blue-btn);
-}
-
-/* Auth Layout Base */
-.vi-auth-wrapper {
-  display: flex;
-  min-height: 100vh;
-}
-.vi-auth-form-side {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 3rem;
-  background: #fff;
-}
-.vi-auth-image-side {
-  flex: 1;
-  background: linear-gradient(135deg, var(--vi-navy-deep), var(--vi-teal));
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  padding: 3rem;
-}
-@media (min-width: 992px) {
-  .vi-auth-image-side {
-    display: flex;
-  }
-}
-.vi-auth-logo {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 2rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-.vi-input {
-  background-color: var(--vi-input);
-  border: 1px solid transparent;
-  border-radius: 8px;
-  padding: 12px 16px;
-  transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
-}
-.vi-input:focus {
-  background-color: #fff;
-  border-color: var(--vi-teal);
-  box-shadow: 0 0 0 4px rgba(0, 128, 128, 0.1);
 }
 
 /* Home Sections */
@@ -356,30 +187,6 @@ main {
   }
 }
 
-.btn-vi-gold {
-  background-color: var(--vi-gold);
-  color: var(--vi-dark);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.btn-vi-gold:hover {
-  background-color: var(--vi-gold-dark);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(239, 191, 4, 0.2);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .btn-vi-gold:hover {
-    transform: translateY(-2px);
-  }
-}
-
 .vi-text-muted {
   color: var(--vi-muted);
 }
@@ -422,14 +229,9 @@ main {
 /* Movimiento decorativo (hover lift/scale) fuera si el usuario prefiere menos animación */
 @media (prefers-reduced-motion: reduce) {
   .btn-vi-primary,
-  .btn-vi-card,
   .btn-vi-outline,
-  .vi-card,
-  .vi-pill,
-  .vi-input,
   .vi-help-card,
-  .vi-help-card .vi-help-icon,
-  .btn-vi-gold {
+  .vi-help-card .vi-help-icon {
     transition: none;
   }
 }
