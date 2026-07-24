@@ -271,6 +271,7 @@
 .vi-actions {
     grid-area: actions;
     flex-shrink: 0;
+    min-width: 0;
 }
 
 .vi-login-btn {
@@ -344,11 +345,21 @@
     background: var(--vi-h-grad);
     box-shadow: 0 10px 22px rgba(0, 45, 137, .22);
     transition: transform var(--vi-h-ease), box-shadow var(--vi-h-ease);
+
+    max-width: 220px;
+    min-width: 0;
 }
 
 .vi-user-btn:hover,
 .vi-user-btn:focus-visible {
     box-shadow: 0 14px 28px rgba(0, 45, 137, .30);
+}
+
+.vi-user-btn .vi-login-btn__text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .vi-dropdown__panel--right {
@@ -373,6 +384,7 @@
         padding: 8px 12px 8px 8px;
         font-size: .78rem;
         gap: 8px;
+        max-width: 140px;
     }
 
     .vi-user-btn .vi-dropdown__caret {
