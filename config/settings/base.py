@@ -213,3 +213,13 @@ OTP_MAX_ATTEMPTS = env.int('OTP_MAX_ATTEMPTS', default=3)
 # ==========================================================
 
 USERNAME_CHANGE_COOLDOWN_DAYS = 20
+
+# ==========================================================
+# Sesiones: expiración por inactividad
+# ==========================================================
+# La sesión dura 4 horas, pero SESSION_SAVE_EVERY_REQUEST renueva ese
+# plazo en cada request, así que en la práctica expira por inactividad
+# (4 horas sin navegar), no 4 horas fijas desde el login.
+SESSION_COOKIE_AGE = 60 * 60 * 4  # 4 horas
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
