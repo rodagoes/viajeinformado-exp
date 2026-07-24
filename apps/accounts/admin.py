@@ -8,7 +8,7 @@ class PerfilUsuarioAdmin(admin.ModelAdmin):
     list_display = ('user', 'nombres_apellidos', 'rol', 'verificado', 'creado_en')
     list_filter = ('rol', 'verificado')
     search_fields = ('user__username', 'user__email', 'nombres_apellidos')
-    readonly_fields = ('creado_en', 'actualizado_en')
+    readonly_fields = ('creado_en', 'actualizado_en', 'username_actualizado_en')
 
 
 @admin.register(CodigoOTP)

@@ -1,27 +1,35 @@
 {% extends 'accounts/base_auth.html' %}
-{% load socialaccount %}
 
 {% block title %}Crear cuenta - Viaje Informado{% endblock %}
 
+{% block auth_page_class %} vi-auth-page--compact{% endblock %}
+
 {% block auth_content %}
 <h1 class="vi-auth-title">Crea tu cuenta</h1>
-<p class="vi-auth-subtitle">Regístrate como turista y descubre lo mejor de Huánuco.</p>
+<p class="vi-auth-subtitle">Regístrese para poner conocer lo mejor de Huánuco.</p>
 
 <form method="post" novalidate>
     {% csrf_token %}
 
     {% for field in form %}
-    <div class="vi-auth-field">
-        <label for="{{ field.id_for_label }}">{{ field.label }} <span class="vi-auth-req" aria-hidden="true">*</span></label>
+    <div class="vi-auth-field vi-auth-floating">
         {% if field.name == 'password1' or field.name == 'password2' %}
         <div class="vi-auth-password-wrap">
             {{ field }}
+            <label for="{{ field.id_for_label }}">
+                {% if field.name == 'password1' %}<i class="bi bi-lock-fill" aria-hidden="true"></i>Ingrese su contraseña{% else %}<i class="bi bi-shield-lock-fill" aria-hidden="true"></i>Confirme su contraseña{% endif %}
+                <span class="vi-auth-req" aria-hidden="true">*</span>
+            </label>
             <button type="button" class="vi-auth-toggle-pass" aria-label="Mostrar u ocultar contraseña">
                 <i class="bi bi-eye"></i>
             </button>
         </div>
         {% else %}
         {{ field }}
+        <label for="{{ field.id_for_label }}">
+            {% if field.name == 'nombres' %}<i class="bi bi-person-lines-fill" aria-hidden="true"></i>Ingrese sus nombres{% elif field.name == 'apellidos' %}<i class="bi bi-person-lines-fill" aria-hidden="true"></i>Ingrese sus apellidos{% elif field.name == 'username' %}<i class="bi bi-threads" aria-hidden="true"></i>Ingrese su nombre de usuario{% elif field.name == 'email' %}<i class="bi bi-envelope-fill" aria-hidden="true"></i>Ingrese su correo electrónico{% else %}{{ field.label }}{% endif %}
+            <span class="vi-auth-req" aria-hidden="true">*</span>
+        </label>
         {% endif %}
         {% for error in field.errors %}
         <div class="vi-auth-error">{{ error }}</div>
@@ -43,19 +51,6 @@
         <i class="bi bi-person-plus"></i> Crear cuenta
     </button>
 </form>
-
-<div class="vi-auth-divider"><span>O regístrate con</span></div>
-
-<div class="vi-auth-social">
-    <a href="{% provider_login_url 'google' %}" class="vi-auth-btn-social">
-        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C41 35.4 44 30.2 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-        Continuar con Google
-    </a>
-    <a href="{% provider_login_url 'facebook' %}" class="vi-auth-btn-social">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12c0 6 4.4 11 10.1 11.9v-8.4H7.1V12h3v-2.6c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4C19.6 23 24 18 24 12z"/></svg>
-        Continuar con Facebook
-    </a>
-</div>
 
 <p class="vi-auth-footer-link">
     ¿Ya tienes cuenta? <a href="{% url 'accounts:login' %}">Inicia sesión</a>

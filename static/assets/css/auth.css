@@ -369,8 +369,9 @@
 }
 
 /* Botón para volver al inicio */
+/* Botón para volver al inicio */
 .vi-auth-back {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.85rem;
   font-size: 0.85rem;
 }
 
@@ -378,21 +379,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
 
-  min-height: 36px;
-  padding: 0.45rem 0.85rem;
+  min-height: 40px;
+  padding: 0.35rem 0.85rem 0.35rem 0.45rem;
 
   color: var(--vi-a-blue-dark);
-  background-color: var(--vi-a-card-soft);
-  border: 1px solid rgba(0, 127, 255, 0.3);
+  background: #fff;
+  border: 1px solid rgba(0, 127, 255, 0.28);
   border-radius: 999px;
 
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   text-decoration: none;
 
-  box-shadow: 0 4px 12px rgba(0, 45, 137, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 45, 137, 0.12);
 
   transition:
     color 0.18s ease,
@@ -402,18 +403,74 @@
     transform 0.18s ease;
 }
 
+.vi-auth-back__icon {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  color: var(--vi-a-blue);
+  background: var(--vi-a-card-soft);
+  border-radius: 50%;
+
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.vi-auth-back__icon svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.vi-auth-back__text {
+  display: inline-block;
+  letter-spacing: -0.01em;
+}
+
 .vi-auth-back a:hover {
   color: #fff;
-  background-color: var(--vi-a-blue);
-  border-color: var(--vi-a-blue);
+  background: linear-gradient(135deg, var(--vi-a-blue) 0%, var(--vi-a-blue-dark) 100%);
+  border-color: rgba(0, 127, 255, 0.45);
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 7px 16px rgba(0, 127, 255, 0.22);
+  box-shadow: 0 10px 22px rgba(0, 45, 137, 0.22);
+}
+
+.vi-auth-back a:hover .vi-auth-back__icon {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(-1px);
 }
 
 .vi-auth-back a:focus-visible {
   outline: 3px solid rgba(0, 127, 255, 0.3);
   outline-offset: 2px;
+}
+
+@media (max-width: 575px) {
+  .vi-auth-back {
+    margin-bottom: 1rem;
+  }
+
+  .vi-auth-back a {
+    min-height: 38px;
+    padding: 0.32rem 0.78rem 0.32rem 0.42rem;
+    font-size: 0.86rem;
+  }
+
+  .vi-auth-back__icon {
+    width: 27px;
+    height: 27px;
+  }
+
+  .vi-auth-back__icon svg {
+    width: 13px;
+    height: 13px;
+  }
 }
 /* Mensajes de Django dentro de páginas auth: sin margen extra del header fijo */
 @media (max-width: 575px) {
@@ -431,4 +488,188 @@
   .vi-auth-page * {
     transition: none !important;
   }
+}
+
+/* =========================================================
+   Modo compacto (registro): reduce alturas para evitar scroll
+   innecesario en desktop. Aplicado solo vía .vi-auth-page--compact,
+   no afecta login ni verificación OTP.
+   ========================================================= */
+.vi-auth-page--compact {
+  --vi-auth-field-gap: 1.15rem;
+  padding: 1.25rem 1rem;
+}
+
+.vi-auth-page--compact .vi-auth-card {
+  padding: 1.25rem 1.75rem;
+}
+
+.vi-auth-page--compact .vi-auth-back {
+  margin-bottom: 0.4rem;
+}
+
+.vi-auth-page--compact .vi-auth-logo {
+  width: 90px;
+}
+
+.vi-auth-page--compact .vi-auth-logo-link {
+  margin-bottom: 0.2rem;
+}
+
+.vi-auth-page--compact .vi-auth-title {
+  margin-bottom: 0.2rem;
+}
+
+.vi-auth-page--compact .vi-auth-subtitle {
+  margin-bottom: 1.15rem;
+}
+
+.vi-auth-page--compact .vi-auth-field {
+  margin-bottom: var(--vi-auth-field-gap);
+}
+
+.vi-auth-page--compact .vi-auth-field label {
+  margin-bottom: 0.2rem;
+}
+
+.vi-auth-page--compact .vi-auth-checklist {
+  margin-top: 0.65rem;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.74rem;
+}
+
+.vi-auth-page--compact .vi-auth-checklist li {
+  padding: 0.03rem 0;
+}
+
+.vi-auth-page--compact .vi-auth-btn-primary {
+  margin-top: 0.35rem;
+}
+
+.vi-auth-page--compact .vi-auth-footer-link {
+  margin-top: 0.75rem;
+}
+
+/* Desktop: logo un poco más grande sin afectar móvil */
+@media (min-width: 768px) {
+  .vi-auth-page--compact {
+    --vi-auth-field-gap: 1.15rem;
+  }
+
+  .vi-auth-page--compact .vi-auth-logo {
+    width: 112px;
+  }
+
+  .vi-auth-page--compact .vi-auth-logo-link {
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Móvil: más aire entre campos porque los labels flotantes ocupan más presencia visual */
+@media (max-width: 575px) {
+  .vi-auth-page--compact {
+    --vi-auth-field-gap: 1.35rem;
+    padding: 0.9rem 0.9rem;
+  }
+
+  .vi-auth-page--compact .vi-auth-card {
+    padding: 1.35rem 1.15rem;
+  }
+
+  .vi-auth-page--compact .vi-auth-subtitle {
+    margin-bottom: 1.35rem;
+  }
+
+  .vi-auth-page--compact .vi-auth-checklist {
+    margin-top: 0.8rem;
+  }
+
+  .vi-auth-page--compact .vi-auth-btn-primary {
+    margin-top: 0.45rem;
+  }
+
+  .vi-auth-page--compact .vi-auth-footer-link {
+    margin-top: 0.85rem;
+  }
+}
+
+/* Checklist en 2 columnas a partir de un ancho cómodo para no romper el móvil pequeño */
+@media (min-width: 480px) {
+  .vi-auth-page--compact .vi-auth-checklist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.75rem;
+    row-gap: 0.1rem;
+  }
+
+  .vi-auth-page--compact .vi-auth-checklist li[data-check="symbol"] {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================================================
+   Floating labels (registro + login): el label vive dentro del
+   input en reposo y sube al borde superior con foco/contenido.
+   Requiere <input> antes de <label> en el HTML (hermano adyacente).
+   ========================================================= */
+.vi-auth-floating {
+  position: relative;
+}
+
+.vi-auth-floating .vi-auth-password-wrap {
+  position: relative;
+}
+
+.vi-auth-floating input {
+  padding-top: 1.2rem;
+  padding-bottom: 0.45rem;
+}
+
+.vi-auth-floating input::placeholder {
+  color: transparent;
+}
+
+.vi-auth-floating label {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center; /* evita que labels largos (más ancho) se vean más desplazados a la derecha al escalar */
+  display: block;
+  margin: 0;
+  padding: 0 0.3rem;
+  max-width: calc(100% - 1.8rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--vi-a-muted);
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  pointer-events: none;
+  transition: top 0.16s ease, transform 0.16s ease,
+    color 0.16s ease, background-color 0.16s ease, font-weight 0.16s ease;
+}
+
+.vi-auth-floating label i {
+  margin-right: 0.4rem;
+  font-size: 0.9em;
+  color: inherit;
+}
+
+.vi-auth-floating input:focus + label,
+.vi-auth-floating input:not(:placeholder-shown) + label {
+  top: 0;
+  transform: translateY(-50%) scale(0.82);
+  font-weight: 600;
+  color: var(--vi-a-blue-dark);
+  background: #fff; /* máscara mínima: solo corta la línea del borde en foco, no un fondo permanente */
+}
+
+/* El wrap de contraseña ya reserva espacio a la derecha para el ícono del ojo */
+.vi-auth-floating .vi-auth-password-wrap label {
+  max-width: calc(100% - 4.4rem);
 }

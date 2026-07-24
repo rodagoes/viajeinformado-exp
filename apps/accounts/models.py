@@ -21,6 +21,9 @@ class PerfilUsuario(models.Model):
     rol = models.CharField(max_length=20, choices=ROLES, default=ROL_TURISTA)
     verificado = models.BooleanField(default=False)
     foto_perfil = models.ImageField(upload_to='usuarios/perfiles/', blank=True, null=True)
+    # Fecha del último cambio manual de username desde "Configuración de cuenta".
+    # Queda vacío para registro normal y para login social (esos no cuentan como cambio).
+    username_actualizado_en = models.DateTimeField(blank=True, null=True)
     creado_en = models.DateTimeField(auto_now_add=True)
     actualizado_en = models.DateTimeField(auto_now=True)
 
@@ -30,6 +33,31 @@ class PerfilUsuario(models.Model):
 
     def __str__(self):
         return f'{self.user.username} ({self.get_rol_display()})'
+
+    @classmethod
+    def sincronizar_desde_social(cls, user):
+        """Crea o actualiza el perfil de un usuario autenticado vía Google/Facebook.
+
+        No pide OTP: el proveedor ya garantizó la propiedad del correo.
+        No sobrescribe nombres_apellidos si el usuario ya tenía uno guardado.
+        """
+        nombre_completo = (user.get_full_name() or user.username).strip()[:150]
+        perfil, creado = cls.objects.get_or_create(
+            user=user,
+            defaults={'nombres_apellidos': nombre_completo, 'verificado': True},
+        )
+        if creado:
+            return perfil
+        actualizar = []
+        if not perfil.verificado:
+            perfil.verificado = True
+            actualizar.append('verificado')
+        if not perfil.nombres_apellidos and nombre_completo:
+            perfil.nombres_apellidos = nombre_completo
+            actualizar.append('nombres_apellidos')
+        if actualizar:
+            perfil.save(update_fields=actualizar)
+        return perfil
 
 
 class CodigoOTP(models.Model):

@@ -4,24 +4,28 @@
 {% block title %}Iniciar sesión - Viaje Informado{% endblock %}
 
 {% block auth_content %}
-<h1 class="vi-auth-title">Bienvenido de nuevo</h1>
+<h1 class="vi-auth-title">Bienvenido</h1>
 <p class="vi-auth-subtitle">Inicia sesión para continuar explorando Huánuco.</p>
 
 <form method="post" novalidate>
     {% csrf_token %}
 
-    <div class="vi-auth-field">
-        <label for="{{ form.identificador.id_for_label }}">{{ form.identificador.label }}</label>
+    <div class="vi-auth-field vi-auth-floating">
         {{ form.identificador }}
+        <label for="{{ form.identificador.id_for_label }}">
+            <i class="bi bi-person-circle" aria-hidden="true"></i>Ingrese su usuario o correo            
+        </label>
         {% for error in form.identificador.errors %}
         <div class="vi-auth-error">{{ error }}</div>
         {% endfor %}
     </div>
 
-    <div class="vi-auth-field">
-        <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+    <div class="vi-auth-field vi-auth-floating">
         <div class="vi-auth-password-wrap">
             {{ form.password }}
+            <label for="{{ form.password.id_for_label }}">
+                <i class="bi bi-lock-fill" aria-hidden="true"></i>Ingrese su contraseña                
+            </label>
             <button type="button" class="vi-auth-toggle-pass" aria-label="Mostrar u ocultar contraseña">
                 <i class="bi bi-eye"></i>
             </button>

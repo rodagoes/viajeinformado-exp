@@ -167,6 +167,8 @@ LOGOUT_REDIRECT_URL = '/'
 # El registro/login normal usa las vistas propias de apps.accounts.
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_ADAPTER = 'apps.accounts.adapters.ViajeInformadoSocialAccountAdapter'
+SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
@@ -205,3 +207,9 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='Viaje Informado <no-resp
 OTP_EXPIRATION_MINUTES = env.int('OTP_EXPIRATION_MINUTES', default=10)
 OTP_RESEND_COOLDOWN_SECONDS = env.int('OTP_RESEND_COOLDOWN_SECONDS', default=120)
 OTP_MAX_ATTEMPTS = env.int('OTP_MAX_ATTEMPTS', default=3)
+
+# ==========================================================
+# Cambio de username (preparado para "Configuración de cuenta", aún no implementado)
+# ==========================================================
+
+USERNAME_CHANGE_COOLDOWN_DAYS = 20
