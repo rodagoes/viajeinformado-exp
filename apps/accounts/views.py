@@ -43,7 +43,7 @@ def registro(request):
         user = form.save()
         _enviar_otp(user)
         request.session[SESSION_OTP_USER] = user.pk
-        messages.success(request, 'Te enviamos un código de verificación a tu correo.')
+        messages.success(request, 'Te enviamos un código de verificación a tu correo. Revisa también tu bandeja de spam o correo no deseado.')
         return redirect('accounts:verificar_codigo')
     return render(request, 'accounts/registro.html', {'form': form})
 
@@ -61,7 +61,7 @@ def iniciar_sesion(request):
             username = user_por_email.username if user_por_email else identificador
         user = authenticate(request, username=username, password=password)
         if user is None:
-            messages.error(request, 'Usuario o contraseña incorrectos.')
+            messages.error(request, 'Usuario o contraseña incorrectos.', extra_tags='login_error')
         else:
             perfil = PerfilUsuario.objects.filter(user=user).first()
             if perfil and not perfil.verificado and not user.is_staff:

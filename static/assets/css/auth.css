@@ -172,6 +172,18 @@
   margin-top: 0.35rem;
 }
 
+/* Error de credenciales del login normal (entre contraseña y botón Ingresar) */
+.vi-auth-login-error {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  background: #fdeceb;
+  color: var(--vi-a-error);
+  border: 1px solid #f6c8c4;
+  margin-bottom: 1rem;
+}
+
 /* Contraseña con toggle */
 .vi-auth-password-wrap {
   position: relative;
