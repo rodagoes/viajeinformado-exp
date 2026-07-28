@@ -1,10 +1,13 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import (
-    CategoriaMovilidad, 
-    ServicioMovilidad, 
-    OperadorMovilidad, 
-    RutaMovilidad, 
-    ImagenRutaMovilidad
+    CategoriaMovilidad,
+    ServicioMovilidad,
+    OperadorMovilidad,
+    RutaMovilidad,
+    ImagenRutaMovilidad,
+    TransportePublico,
+    ConsejoMovilidad,
 )
 
 @admin.register(CategoriaMovilidad)
@@ -186,3 +189,64 @@ class ImagenRutaMovilidadAdmin(admin.ModelAdmin):
     autocomplete_fields = ["ruta"]
     ordering = ["ruta__nombre", "orden", "id"]
     list_per_page = 25
+
+
+@admin.register(TransportePublico)
+class TransportePublicoAdmin(admin.ModelAdmin):
+    list_display = [
+        "miniatura",
+        "nombre",
+        "nombre_alternativo",
+        "tarifa_minima",
+        "orden",
+        "activo",
+    ]
+    list_editable = ["tarifa_minima", "orden", "activo"]
+    search_fields = ["nombre", "nombre_alternativo", "descripcion"]
+    list_filter = ["activo"]
+    prepopulated_fields = {"slug": ("nombre",)}
+    readonly_fields = ["creado", "actualizado", "vista_previa_imagen"]
+    ordering = ["orden", "nombre"]
+
+    fieldsets = (
+        ("Información principal", {
+            "fields": ("nombre", "slug", "nombre_alternativo", "descripcion")
+        }),
+        ("Fotografía", {
+            "fields": ("imagen", "vista_previa_imagen", "texto_alt_imagen")
+        }),
+        ("Tarifa referencial", {
+            "fields": ("tarifa_minima",)
+        }),
+        ("Configuración", {
+            "fields": ("orden", "activo", "creado", "actualizado")
+        }),
+    )
+
+    def miniatura(self, obj):
+        if not obj.imagen:
+            return "—"
+        return format_html(
+            '<img src="{}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">',
+            obj.imagen.url,
+        )
+    miniatura.short_description = ""
+
+    def vista_previa_imagen(self, obj):
+        if not obj.imagen:
+            return "Sin fotografía cargada."
+        return format_html(
+            '<img src="{}" style="max-width:220px;border-radius:10px;">',
+            obj.imagen.url,
+        )
+    vista_previa_imagen.short_description = "Vista previa"
+
+
+@admin.register(ConsejoMovilidad)
+class ConsejoMovilidadAdmin(admin.ModelAdmin):
+    list_display = ["texto", "orden", "activo"]
+    list_editable = ["orden", "activo"]
+    search_fields = ["texto"]
+    list_filter = ["activo"]
+    readonly_fields = ["creado", "actualizado"]
+    ordering = ["orden", "id"]

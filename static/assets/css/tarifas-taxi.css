@@ -1,0 +1,1039 @@
+/* ==== TARIFAS DE TAXI - reglas quedan encapsuladas bajo .taxi-tarifas ==== */
+
+.taxi-tarifas {
+    --tx-blanco: #FFFFFF;
+    --tx-azul-oscuro: #002D89;
+    --tx-azul: #007FFF;
+    --tx-fondo: #F7F9FD;
+    --tx-fondo-card: #EEF3FB;
+    --tx-texto: #182033;
+    --tx-texto-sec: #61708C;
+    --tx-borde: #DFE7F3;
+
+    --tx-grad-hero:
+        linear-gradient(
+            115deg,
+            #087FFF 0%,
+            #075DCC 38%,
+            #003EAA 68%,
+            #002D89 100%
+        );
+
+    --tx-sombra: 0 10px 30px rgba(0, 45, 137, 0.08);
+    --tx-sombra-hover: 0 22px 44px rgba(0, 45, 137, 0.16);
+    --tx-ease: 0.25s ease;
+
+    background: var(--tx-fondo);
+    color: var(--tx-texto);
+}
+
+/* ==== HERO ==== */
+
+.taxi-tarifas__hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    min-height: 330px;
+    display: grid;
+    place-items: center;
+
+    padding:
+        calc(var(--vi-header-height-desktop, 78px) + 38px)
+        0
+        52px;
+
+    text-align: center;
+    color: var(--tx-blanco);
+    background: var(--tx-grad-hero);
+}
+
+.taxi-tarifas__hero-pattern {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    display: block;
+
+    background-image:
+        url("../img/tarifataxi/streetmap-hco.svg");
+    background-repeat: no-repeat;
+    background-position: center 48%;
+    background-size: 100% auto;
+
+    opacity: 0.28;
+    mix-blend-mode: screen;
+
+    pointer-events: none;
+    user-select: none;
+}
+
+.taxi-tarifas__hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(0, 22, 76, 0.38) 0%,
+            rgba(0, 31, 102, 0.24) 36%,
+            rgba(0, 45, 137, 0.08) 66%,
+            transparent 84%
+        );
+
+    pointer-events: none;
+}
+
+.taxi-tarifas__hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 18, 62, 0.02) 0%,
+            rgba(0, 18, 62, 0.08) 58%,
+            rgba(0, 18, 62, 0.16) 100%
+        );
+
+    pointer-events: none;
+}
+
+.taxi-tarifas__hero-content {
+    position: relative;
+    z-index: 2;
+
+    width: min(760px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.taxi-tarifas__hero-icon {
+    width: 60px;
+    height: 60px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    color: var(--tx-blanco);
+    font-size: 1.65rem;
+    line-height: 1;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.24),
+            rgba(255, 255, 255, 0.08)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: 18px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 24, 82, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.30);
+
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+.taxi-tarifas__hero-title {
+    margin: 0;
+
+    color: var(--tx-blanco);
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.35rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+
+    text-shadow:
+        0 3px 16px rgba(0, 20, 70, 0.28);
+}
+
+.taxi-tarifas__hero-desc {
+    max-width: 680px;
+    margin: 14px auto 0;
+
+    color: rgba(255, 255, 255, 0.94);
+    font-size: 1.02rem;
+    font-weight: 400;
+    line-height: 1.6;
+
+    text-shadow:
+        0 2px 10px rgba(0, 18, 62, 0.26);
+}
+
+@supports not ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+    .taxi-tarifas__hero-icon {
+        background: rgba(39, 120, 220, 0.88);
+    }
+}
+
+/* ==== SECCIÓN ==== */
+
+.taxi-tarifas__section {
+    padding: 58px 0 10px;
+}
+
+.taxi-tarifas__section > .container {
+    max-width: 1240px;
+}
+
+/* ==== ENCABEZADO DE LA SECCIÓN ==== */
+
+.taxi-tarifas__section-header {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(290px, 340px);
+    align-items: end;
+    gap: 40px;
+
+    margin-bottom: 38px;
+}
+
+.taxi-tarifas__section-copy {
+    max-width: 650px;
+}
+
+.taxi-tarifas__section-title {
+    position: relative;
+
+    margin: 0;
+    padding-bottom: 16px;
+
+    color: var(--tx-azul-oscuro);
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.8rem, 3vw, 2.15rem);
+    font-weight: 700;
+    line-height: 1.15;
+
+    text-wrap: balance;
+}
+
+.taxi-tarifas__section-title::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    width: 66px;
+    height: 3px;
+
+    background: linear-gradient(90deg, var(--tx-azul), var(--tx-azul-oscuro));
+    border-radius: 999px;
+}
+
+.taxi-tarifas__section-intro {
+    max-width: 62ch;
+    margin: 18px 0 0;
+
+    color: var(--tx-texto-sec);
+    font-size: 0.98rem;
+    line-height: 1.65;
+    text-align: left;
+    text-wrap: pretty;
+}
+
+.taxi-tarifas__reference-card {
+    min-height: 88px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    align-items: center;
+    gap: 14px;
+
+    padding: 16px 18px;
+
+    background: var(--tx-blanco);
+    border: 1px solid var(--tx-borde);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 45, 137, 0.06);
+}
+
+.taxi-tarifas__reference-icon {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--tx-blanco);
+    font-size: 1.35rem;
+
+    background: linear-gradient(90deg, var(--tx-azul), var(--tx-azul-oscuro));
+    border-radius: 50%;
+}
+
+.taxi-tarifas__reference-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.taxi-tarifas__reference-copy strong {
+    color: var(--tx-azul-oscuro);
+    font-size: 0.94rem;
+    font-weight: 700;
+}
+
+.taxi-tarifas__reference-copy small {
+    color: var(--tx-texto-sec);
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+
+
+/* ==== TARJETAS ==== */
+
+.taxi-tarifas__grid {
+    width: 100%;
+    max-width: 1120px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 24px;
+
+    margin: 0 auto 22px;
+}
+
+.taxi-transporte-card {
+    min-width: 0;
+    min-height: 420px;
+    display: grid;
+    grid-template-areas:
+        "media"
+        "contenido"
+        "tarifa";
+    grid-template-rows: 190px minmax(104px, 1fr) auto;
+    align-items: stretch;
+    gap: 16px;
+
+    padding: 24px;
+
+    text-align: center;
+
+    background: var(--tx-blanco);
+    border: 1px solid var(--tx-borde);
+    border-radius: 18px;
+    box-shadow: var(--tx-sombra);
+
+    transition:
+        transform var(--tx-ease),
+        box-shadow var(--tx-ease),
+        border-color var(--tx-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .taxi-transporte-card:hover {
+        transform: translateY(-5px);
+
+        border-color: rgba(0, 127, 255, 0.32);
+        box-shadow: var(--tx-sombra-hover);
+    }
+
+    .taxi-transporte-card:hover .taxi-transporte-card__imagen {
+        transform: scale(1.04);
+    }
+}
+
+.taxi-transporte-card__media {
+    position: relative;
+    grid-area: media;
+
+    width: 100%;
+    height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 42px 14px 8px;
+    overflow: hidden;
+
+    background: transparent;
+}
+
+.taxi-transporte-card__tag {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    max-width: calc(100% - 16px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 13px;
+
+    color: var(--tx-blanco);
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+
+    background: linear-gradient(90deg, var(--tx-azul), var(--tx-azul-oscuro));
+    border-radius: 999px;
+}
+
+.taxi-transporte-card__imagen {
+    width: auto;
+    height: auto;
+    max-width: 86%;
+    max-height: 132px;
+
+    object-fit: contain;
+
+    transition: transform 0.35s ease;
+}
+
+.taxi-transporte-card__contenido {
+    grid-area: contenido;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.taxi-transporte-card__titulo {
+    margin: 0 0 8px;
+
+    color: var(--tx-azul-oscuro);
+    font-family: "Playfair Display", serif;
+    font-size: 1.42rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.taxi-transporte-card__alt {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--tx-texto-sec);
+    font-family: "Inter", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.taxi-transporte-card__desc {
+    max-width: 32ch;
+    min-height: 52px;
+    margin: 0 auto;
+
+    color: var(--tx-texto-sec);
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.taxi-transporte-card__tarifa {
+    grid-area: tarifa;
+
+    width: 100%;
+    min-height: 92px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    padding: 15px 8px 4px;
+
+    background: transparent;
+    border: 0;
+    border-top: 1px solid var(--tx-borde);
+    border-radius: 0;
+}
+
+.taxi-transporte-card__tarifa-label {
+    color: var(--tx-texto-sec);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.taxi-transporte-card__precio-pen {
+    color: var(--tx-azul);
+    font-family: "Roboto", sans-serif;
+    font-size: 1.42rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.taxi-transporte-card__precio-usd {
+    color: #85BB65;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.taxi-transporte-card__precio-usd--sin-datos {
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* ==== NOTA ==== */
+
+.taxi-tarifas__nota {
+    width: 100%;
+    max-width: 1120px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    margin: 0 auto 18px;
+    padding: 13px 18px;
+
+    color: #385682;
+    font-size: 0.88rem;
+    line-height: 1.5;
+
+    background: #EDF5FF;
+    border: 1px solid #CFE1FA;
+    border-radius: 10px;
+}
+
+.taxi-tarifas__nota-icono {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--tx-azul);
+    font-size: 0.95rem;
+
+    background: transparent;
+    border-radius: 50%;
+}
+
+/* ==== CONSEJOS ==== */
+
+.taxi-consejos {
+    width: 100%;
+    max-width: 1120px;
+
+    margin: 0 auto 60px;
+    overflow: hidden;
+
+    background: var(--tx-blanco);
+    border: 1px solid var(--tx-borde);
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0, 45, 137, 0.06);
+}
+
+.taxi-consejos__summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 16px 20px;
+
+    cursor: pointer;
+    list-style: none;
+}
+
+.taxi-consejos__summary::-webkit-details-marker {
+    display: none;
+}
+
+.taxi-consejos__summary:focus-visible {
+    outline: 2px solid var(--tx-azul);
+    outline-offset: -2px;
+}
+
+.taxi-consejos__icon-wrap {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--tx-blanco);
+    font-size: 1.15rem;
+
+    background: linear-gradient(90deg, var(--tx-azul), var(--tx-azul-oscuro));
+    border-radius: 50%;
+}
+
+.taxi-consejos__heading {
+    min-width: 0;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.taxi-consejos__title {
+    margin: 0;
+
+    color: var(--tx-azul-oscuro);
+    font-family: "Playfair Display", serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.taxi-consejos__subtitle {
+    color: var(--tx-texto-sec);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.taxi-consejos__caret {
+    color: #8BA0C2;
+    font-size: 1rem;
+
+    transition: transform var(--tx-ease);
+}
+
+.taxi-consejos[open] .taxi-consejos__caret {
+    transform: rotate(180deg);
+}
+
+.taxi-consejos__body {
+    padding: 0 20px 20px;
+}
+
+.taxi-consejos__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.taxi-consejos__item {
+    min-height: 62px;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+
+    padding: 9px 13px;
+
+    color: var(--tx-texto-sec);
+    font-size: 0.84rem;
+    line-height: 1.45;
+
+    background: var(--tx-blanco);
+    border: 1px solid var(--tx-borde);
+    border-radius: 10px;
+}
+
+
+
+.taxi-consejos__item--ancho {
+    grid-column: 1 / -1;
+}
+
+.taxi-consejos__item-icono {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--tx-azul);
+    font-size: 1.1rem;
+
+    background: transparent;
+    border-radius: 50%;
+}
+
+.taxi-consejos__item-text {
+    min-width: 0;
+}
+
+/* ==== TABLET ==== */
+
+@media (max-width: 991.98px) {
+    .taxi-tarifas__hero {
+        min-height: 310px;
+        padding:
+            calc(var(--vi-header-height-desktop, 78px) + 32px)
+            0
+            46px;
+    }
+
+    .taxi-tarifas__hero-pattern {
+        background-position: center 48%;
+        background-size: 100% auto;
+        opacity: 0.24;
+    }
+
+    .taxi-tarifas__section-header {
+        grid-template-columns: 1fr;
+        align-items: start;
+        gap: 22px;
+    }
+
+    .taxi-tarifas__reference-card {
+        width: min(100%, 420px);
+    }
+
+    .taxi-tarifas__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .taxi-transporte-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        width: min(100%, 480px);
+        justify-self: center;
+    }
+}
+
+/* ==== MÓVIL ==== */
+
+@media (max-width: 767.98px) {
+    .taxi-tarifas__hero {
+        min-height: 300px;
+        padding:
+            calc(var(--vi-header-height-mobile, 68px) + 26px)
+            0
+            40px;
+    }
+
+    .taxi-tarifas__hero-pattern {
+        background-position: 50% 48%;
+        background-size: cover;
+        opacity: 0.20;
+    }
+
+    .taxi-tarifas__hero-content {
+        width: min(100% - 28px, 620px);
+        padding: 0;
+    }
+
+    .taxi-tarifas__hero-icon {
+        width: 52px;
+        height: 52px;
+
+        margin-bottom: 15px;
+
+        border-radius: 15px;
+        font-size: 1.4rem;
+    }
+
+    .taxi-tarifas__hero-title {
+        font-size: clamp(2rem, 9vw, 2.45rem);
+        line-height: 1.08;
+    }
+
+    .taxi-tarifas__hero-desc {
+        max-width: 510px;
+        margin-top: 12px;
+
+        font-size: 0.94rem;
+        line-height: 1.55;
+    }
+
+    .taxi-tarifas__section {
+        padding: 42px 0 6px;
+    }
+
+    .taxi-tarifas__section > .container {
+        padding-right: 18px;
+        padding-left: 18px;
+    }
+
+    .taxi-tarifas__section-header {
+        grid-template-columns: 1fr;
+        gap: 22px;
+
+        margin-bottom: 20px;
+    }
+
+    .taxi-tarifas__section-copy {
+        max-width: none;
+    }
+
+    .taxi-tarifas__section-title {
+        padding-bottom: 13px;
+
+        font-size: clamp(1.75rem, 8vw, 2.05rem);
+    }
+
+    .taxi-tarifas__section-title::after {
+        width: 54px;
+    }
+
+    .taxi-tarifas__section-intro {
+        max-width: none;
+        margin-top: 14px;
+
+        font-size: 0.94rem;
+        line-height: 1.58;
+    }
+
+    .taxi-tarifas__reference-card {
+        width: 100%;
+        min-height: 68px;
+        grid-template-columns: 40px 1fr auto;
+        gap: 12px;
+
+        padding: 12px 14px;
+    }
+
+    .taxi-tarifas__reference-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 1.1rem;
+    }
+
+    .taxi-tarifas__reference-copy strong {
+        font-size: 0.88rem;
+    }
+
+    .taxi-tarifas__reference-copy small {
+        font-size: 0.76rem;
+    }
+
+    .taxi-tarifas__grid {
+        max-width: none;
+        grid-template-columns: 1fr;
+        gap: 16px;
+
+        margin-bottom: 18px;
+    }
+
+    .taxi-transporte-card,
+    .taxi-transporte-card:last-child:nth-child(odd) {
+        width: auto;
+        grid-column: auto;
+        grid-template-areas:
+            "media contenido"
+            "media tarifa";
+        grid-template-columns: 96px minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        align-items: stretch;
+        justify-items: stretch;
+        gap: 8px 14px;
+
+        min-height: 190px;
+        padding: 14px;
+
+        text-align: left;
+        border-radius: 16px;
+    }
+
+    .taxi-transporte-card__media {
+        width: 100%;
+        height: 100%;
+        min-height: 160px;
+
+        padding: 38px 8px 10px;
+
+        background: transparent;
+        border-radius: 0;
+    }
+
+    .taxi-transporte-card__tag {
+        top: 10px;
+
+        max-width: calc(100% - 12px);
+        padding: 5px 8px;
+
+        font-size: 0.60rem;
+    }
+
+    .taxi-transporte-card__imagen {
+        max-width: 100%;
+        max-height: 94px;
+    }
+
+    .taxi-transporte-card__contenido {
+        align-self: start;
+    }
+
+    .taxi-transporte-card__titulo {
+        margin-bottom: 6px;
+
+        font-size: 1.2rem;
+        line-height: 1.2;
+    }
+
+    .taxi-transporte-card__desc {
+        min-height: 0;
+
+        font-size: 0.82rem;
+        line-height: 1.5;
+    }
+
+    .taxi-transporte-card__tarifa {
+        min-height: 0;
+        align-self: end;
+        align-items: flex-start;
+        gap: 5px;
+
+        padding: 12px 0 0;
+
+        text-align: left;
+
+        background: transparent;
+        border: 0;
+        border-top: 1px solid var(--tx-borde);
+        border-radius: 0;
+    }
+
+    .taxi-transporte-card__tarifa-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .taxi-transporte-card__precio-pen {
+        font-family: "Inter", sans-serif;
+        font-size: 1.05rem;
+    }
+
+    .taxi-transporte-card__precio-usd {
+        font-size: 0.8rem;
+    }
+
+    .taxi-tarifas__nota {
+        align-items: flex-start;
+        gap: 12px;
+
+        margin-bottom: 10px;
+        padding: 12px 14px;
+
+        font-size: 0.82rem;
+    }
+
+    .taxi-tarifas__nota-icono {
+        width: 28px;
+        height: 28px;
+
+        font-size: 0.85rem;
+    }
+
+    .taxi-consejos {
+        margin-bottom: 42px;
+
+        border-radius: 14px;
+    }
+
+    .taxi-consejos__summary {
+        gap: 12px;
+
+        padding: 14px;
+    }
+
+    .taxi-consejos__icon-wrap {
+        width: 38px;
+        height: 38px;
+
+        font-size: 1rem;
+    }
+
+    .taxi-consejos__title {
+        font-size: 1.12rem;
+    }
+
+    .taxi-consejos__subtitle {
+        font-size: 0.74rem;
+    }
+
+    .taxi-consejos__body {
+        padding: 0 12px 14px;
+    }
+
+    .taxi-consejos__list {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .taxi-consejos__item,
+    .taxi-consejos__item--ancho {
+        grid-column: auto;
+
+        min-height: 54px;
+        grid-template-columns: 36px minmax(0, 1fr);
+        gap: 10px;
+
+        padding: 7px 10px;
+
+        font-size: 0.78rem;
+    }
+
+    .taxi-consejos__item-icono {
+        width: 34px;
+        height: 34px;
+
+        font-size: 0.95rem;
+    }
+}
+
+/* ==== MÓVIL PEQUEÑO ==== */
+
+@media (max-width: 390px) {
+    .taxi-tarifas__hero {
+        min-height: 285px;
+        padding:
+            calc(var(--vi-header-height-mobile, 68px) + 22px)
+            0
+            36px;
+    }
+
+    .taxi-tarifas__hero-pattern {
+        background-position: 50% 48%;
+        opacity: 0.18;
+    }
+
+    .taxi-tarifas__hero-title {
+        font-size: 2rem;
+    }
+
+    .taxi-tarifas__hero-desc {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 340px) {
+    .taxi-transporte-card,
+    .taxi-transporte-card:last-child:nth-child(odd) {
+        grid-template-columns: 82px minmax(0, 1fr);
+        gap: 8px 11px;
+
+        padding: 12px;
+    }
+
+    .taxi-transporte-card__media {
+        min-height: 150px;
+    }
+
+    .taxi-transporte-card__titulo {
+        font-size: 1.08rem;
+    }
+
+    .taxi-transporte-card__precio-pen {
+        font-size: 0.98rem;
+    }
+}
+
+/* ==== ACCESIBILIDAD ==== */
+
+@media (prefers-reduced-motion: reduce) {
+    .taxi-tarifas__hero-pattern,
+    .taxi-transporte-card,
+    .taxi-transporte-card__imagen,
+    .taxi-consejos__caret {
+        transition: none;
+    }
+}

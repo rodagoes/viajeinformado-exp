@@ -1,5 +1,6 @@
-from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
+from django.db import models
 
 TIPO_ICONO_CHOICES = [
     ("bootstrap", "Bootstrap Icon"),
@@ -202,3 +203,59 @@ class ImagenRutaMovilidad(models.Model):
         if self.titulo:
             return self.titulo
         return f"Imagen de {self.ruta.nombre}"
+
+
+class TransportePublico(models.Model):
+    """
+    Medio de transporte urbano mostrado en la pantalla Tarifas de Taxi
+    (Planifica). Deliberadamente independiente de RutaMovilidad /
+    OperadorMovilidad: hoy solo necesita una tarifa mínima referencial,
+    no zonas, horarios ni operadores.
+    """
+
+    nombre = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=120, unique=True)
+    nombre_alternativo = models.CharField(max_length=100, blank=True)
+    descripcion = models.CharField(max_length=255)
+
+    imagen = models.ImageField(upload_to="movilidad/transportes/", blank=True)
+    texto_alt_imagen = models.CharField(max_length=180, blank=True)
+
+    tarifa_minima = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        verbose_name="Tarifa mínima referencial",
+        help_text="Precio mínimo referencial expresado en soles.",
+    )
+
+    orden = models.PositiveSmallIntegerField(default=0)
+    activo = models.BooleanField(default=True)
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Transporte público"
+        verbose_name_plural = "Transportes públicos"
+        ordering = ["orden", "nombre"]
+
+    def __str__(self):
+        return self.nombre
+
+
+class ConsejoMovilidad(models.Model):
+    """Consejo mostrado en el bloque "Consejos para el viajero" de Tarifas de Taxi."""
+
+    texto = models.CharField(max_length=255)
+    orden = models.PositiveSmallIntegerField(default=0)
+    activo = models.BooleanField(default=True)
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Consejo de movilidad"
+        verbose_name_plural = "Consejos de movilidad"
+        ordering = ["orden", "id"]
+
+    def __str__(self):
+        return self.texto

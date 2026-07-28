@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Viaje Informado • Huánuco{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/tarifas-taxi.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="taxi-tarifas">
+
+    <!-- HERO -->
+    <section class="taxi-tarifas__hero">
+        <span class="taxi-tarifas__hero-pattern" aria-hidden="true"></span>
+
+        <div class="taxi-tarifas__hero-content">
+            <span class="taxi-tarifas__hero-icon" aria-hidden="true">
+                <i class="bi bi-car-front-fill"></i>
+            </span>
+
+            <h1 class="taxi-tarifas__hero-title">Transporte y tarifas</h1>
+
+            <p class="taxi-tarifas__hero-desc">
+                Conozca los medios de transporte más utilizados en Huánuco y sus tarifas
+                para que planifique su viaje con confianza.
+            </p>
+        </div>
+    </section>
+
+    <!-- MEDIOS DE TRANSPORTE -->
+    <section class="taxi-tarifas__section">
+        <div class="container">
+
+            <!-- ENCABEZADO -->
+            <header
+                class="taxi-tarifas__section-header"
+                data-animar="animate__fadeInUp">
+
+                <div class="taxi-tarifas__section-copy">
+                    <h2 class="taxi-tarifas__section-title">
+                        Medios de transporte
+                    </h2>
+
+                    <p class="taxi-tarifas__section-intro">
+                        Si usted va a movilizarse por la ciudad de Huánuco, aquí le mostramos
+                        alternativas y tarifas para que pueda orientarse mejor durante
+                        su estadía.
+                    </p>
+                </div>
+
+                <aside
+                    class="taxi-tarifas__reference-card"
+                    aria-label="Información sobre las tarifas">
+
+                    <span
+                        class="taxi-tarifas__reference-icon"
+                        aria-hidden="true">
+                        <i class="bi bi-award"></i>
+                    </span>
+
+                    <span class="taxi-tarifas__reference-copy">
+                        <strong>Elija según su recorrido</strong>
+                        <small>Tarifas actualizadas para el visitante</small>
+                    </span>
+                </aside>
+            </header>
+
+            <!-- TARJETAS -->
+            <div class="taxi-tarifas__grid">
+                {% for t in transportes %}
+                <article
+                    class="taxi-transporte-card animar-delay-{{ forloop.counter }}"
+                    data-animar="animate__fadeInUp">
+
+                    <div class="taxi-transporte-card__media">
+                        <span class="taxi-transporte-card__tag">
+                            {% if forloop.counter == 1 %}
+                                Trayectos cortos
+                            {% elif forloop.counter == 2 %}
+                                Rutas urbanas
+                            {% else %}
+                                Mayor cobertura
+                            {% endif %}
+                        </span>
+
+                        {% if t.imagen_url %}
+                        <img
+                            src="{{ t.imagen_url }}"
+                            alt="{{ t.imagen_alt }}"
+                            class="taxi-transporte-card__imagen"
+                            loading="lazy"
+                            decoding="async">
+                        {% endif %}
+                    </div>
+
+                    <div class="taxi-transporte-card__contenido">
+                        <h3 class="taxi-transporte-card__titulo">
+                            {{ t.nombre }}
+
+                            {% if t.nombre_alternativo %}
+                            <span class="taxi-transporte-card__alt">
+                                ({{ t.nombre_alternativo }})
+                            </span>
+                            {% endif %}
+                        </h3>
+
+                        <p class="taxi-transporte-card__desc">
+                            {{ t.descripcion }}
+                        </p>
+                    </div>
+
+                    <div class="taxi-transporte-card__tarifa">
+                        <span class="taxi-transporte-card__tarifa-label">
+                            Tarifa referencial
+                        </span>
+
+                        <strong class="taxi-transporte-card__precio-pen">
+                            Desde S/. {{ t.precio_desde_txt }}
+                        </strong>
+
+                        {% if t.precio_usd_txt %}
+                        <span class="taxi-transporte-card__precio-usd">
+                            ≈ US$ {{ t.precio_usd_txt }}
+                        </span>
+                        {% else %}
+                        <span
+                            class="taxi-transporte-card__precio-usd
+                                   taxi-transporte-card__precio-usd--sin-datos">
+                            Conversión temporalmente no disponible
+                        </span>
+                        {% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+
+            <!-- NOTA -->
+            <p
+                class="taxi-tarifas__nota"
+                data-animar="animate__fadeInUp">
+
+                <span
+                    class="taxi-tarifas__nota-icono"
+                    aria-hidden="true">
+                    <i class="bi bi-info-lg"></i>
+                </span>
+
+                <span>
+                    Las tarifas son referenciales y pueden variar según la
+                    distancia y el horario.
+                </span>
+            </p>
+
+            <!-- CONSEJOS -->
+            <details
+                class="taxi-consejos"
+                open
+                data-animar="animate__fadeInUp">
+
+                <summary class="taxi-consejos__summary">
+                    <span
+                        class="taxi-consejos__icon-wrap"
+                        aria-hidden="true">
+                        <i class="bi bi-shield-check"></i>
+                    </span>
+
+                    <span class="taxi-consejos__heading">
+                        <h3 class="taxi-consejos__title">
+                            Recomendaciones útiles
+                        </h3>
+                    </span>
+
+                    <i
+                        class="bi bi-chevron-down taxi-consejos__caret"
+                        aria-hidden="true">
+                    </i>
+                </summary>
+
+                <div class="taxi-consejos__body">
+                    <ul class="taxi-consejos__list">
+                        {% for consejo in consejos %}
+                        <li class="taxi-consejos__item{% if forloop.last %} taxi-consejos__item--ancho{% endif %}">
+                            <span
+                                class="taxi-consejos__item-icono"
+                                aria-hidden="true">
+
+                                {% if forloop.counter == 1 %}
+                                    <i class="bi bi-cash-coin"></i>
+                                {% elif forloop.counter == 2 %}
+                                    <i class="bi bi-chat-fill"></i>
+                                {% elif forloop.counter == 3 %}
+                                    <i class="bi bi-backpack-fill"></i>
+                                {% elif forloop.counter == 4 %}
+                                    <i class="bi bi-moon-stars-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-person-raised-hand"></i>
+                                {% endif %}
+                            </span>
+
+                            <span class="taxi-consejos__item-text">
+                                {{ consejo }}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </details>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/animaciones-scroll.js' %}"></script>
+{% endblock %}

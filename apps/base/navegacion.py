@@ -75,30 +75,29 @@ HEADER_NAV_ITEMS = [
         ],
     },
     {
-        "key": "eventos",
-        "label": "EVENTOS",
-        "icon": "calendar-event",
-        "dropdown_title": "Eventos",
-        "children": [
-            {"key": "eventos-turisticos", "label": "Eventos turísticos", "icon": "calendar-range", "href": "#"},
-            {"key": "festividades", "label": "Festividades", "icon": "stars", "href": "#"},
-            {"key": "ferias", "label": "Ferias", "icon": "shop-window", "href": "#"},
-            {"key": "actividades-culturales", "label": "Actividades culturales", "icon": "people", "href": "#"},
-            {"key": "calendario-del-dia", "label": "Calendario del día", "icon": "calendar-check", "href": "#"},
-        ],
-    },
-    {
         "key": "planifica",
         "label": "PLANIFICA",
         "icon": "journal-text",
         "dropdown_title": "Planifica tu viaje",
         "children": [
-            {"key": "tarifas-taxi", "label": "Tarifas de taxi", "icon": "car-front", "href": "#"},
+            {
+                "key": "transporte-tarifas",
+                "label": "Transporte y tarifas",
+                "icon": "car-front",
+                "url_name": "movilidad:tarifas_taxi",
+                "description": "Medios de transporte y tarifas referenciales en Huánuco.",
+            },
             {"key": "como-llegar", "label": "Cómo llegar", "icon": "signpost-split", "href": "#"},
             {"key": "clima-temporadas", "label": "Clima y temporadas", "icon": "cloud-sun", "href": "#"},
             {"key": "tipo-cambio", "label": "Tipo de cambio", "icon": "currency-exchange", "href": "#"},
             {"key": "servicios-utiles", "label": "Servicios útiles", "icon": "info-circle", "href": "#"},
             {"key": "emergencias", "label": "Emergencias", "icon": "telephone", "href": "#"},
         ],
+    },
+    {
+        "key": "eventos",
+        "label": "EVENTOS",
+        "icon": "calendar-event",
+        "url_name": "eventos:listado_eventos",
     },
 ]
