@@ -81,9 +81,9 @@ def obtener_transportes_con_tarifas():
 
 
 def obtener_consejos_movilidad():
-    """Textos de los consejos activos, en orden."""
+    """Textos de los consejos activos de Transporte y tarifas, en orden."""
     return list(
-        ConsejoMovilidad.objects.filter(activo=True)
+        ConsejoMovilidad.objects.filter(activo=True, seccion="tarifas_taxi")
         .order_by("orden", "id")
         .values_list("texto", flat=True)
     )

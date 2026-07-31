@@ -123,6 +123,13 @@ class RutaMovilidad(models.Model):
         ("dificil", "Difícil"),
     ]
 
+    SECCION_CHOICES = [
+        ("general", "General"),
+        ("como_llegar", "Cómo llegar"),
+    ]
+
+    seccion = models.CharField(max_length=30, choices=SECCION_CHOICES, default="general", db_index=True)
+
     categoria_principal = models.ForeignKey(CategoriaMovilidad, related_name="rutas_principales", on_delete=models.PROTECT, verbose_name="Categoría principal")
     categorias_secundarias = models.ManyToManyField(CategoriaMovilidad, related_name="rutas_secundarias", blank=True, verbose_name="Categorías secundarias")
     servicios = models.ManyToManyField(ServicioMovilidad, related_name="rutas", blank=True, verbose_name="Servicios / facilidades")
@@ -145,6 +152,8 @@ class RutaMovilidad(models.Model):
     punto_llegada = models.CharField(max_length=255, blank=True, help_text="Referencia del punto de llegada.")
     indicaciones = models.TextField(blank=True, help_text="Explicación práctica de cómo llegar.")
     duracion_estimada = models.CharField(max_length=120, blank=True, help_text="Ejemplo: 10 minutos, 30 minutos, 2 horas.")
+    duracion_bus = models.CharField(max_length=80, blank=True, help_text="Ejemplo: 10 horas.")
+    duracion_automovil = models.CharField(max_length=80, blank=True, help_text="Ejemplo: 8 horas y 30 minutos.")
     distancia_km = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, help_text="Distancia aproximada en kilómetros.")
     frecuencia = models.CharField(max_length=160, blank=True, help_text="Ejemplo: cada 10 minutos, según disponibilidad, previa reserva.")
     horario_referencial = models.CharField(max_length=180, blank=True, help_text="Ejemplo: Lunes a domingo, 6:00 a. m. - 8:00 p. m.")
@@ -160,6 +169,7 @@ class RutaMovilidad(models.Model):
     imagen_principal = models.ImageField(upload_to="movilidad/rutas/principales/", blank=True)
     texto_alt_imagen = models.CharField(max_length=180, blank=True)
 
+    orden = models.PositiveSmallIntegerField(default=0)
     destacado = models.BooleanField(default=False)
     activo = models.BooleanField(default=True)
     creado = models.DateTimeField(auto_now_add=True)
@@ -244,9 +254,17 @@ class TransportePublico(models.Model):
 
 
 class ConsejoMovilidad(models.Model):
-    """Consejo mostrado en el bloque "Consejos para el viajero" de Tarifas de Taxi."""
+    """Consejo mostrado en el bloque "Consejos para el viajero" de Tarifas de Taxi
+    y en los bloques de consejos de "¿Cómo llegar?"."""
+
+    SECCION_CHOICES = [
+        ("tarifas_taxi", "Transporte y tarifas"),
+        ("como_llegar_terrestre", "Cómo llegar — Vía terrestre"),
+        ("como_llegar_aerea", "Cómo llegar — Vía aérea"),
+    ]
 
     texto = models.CharField(max_length=255)
+    seccion = models.CharField(max_length=40, choices=SECCION_CHOICES, default="tarifas_taxi", db_index=True)
     orden = models.PositiveSmallIntegerField(default=0)
     activo = models.BooleanField(default=True)
     creado = models.DateTimeField(auto_now_add=True)

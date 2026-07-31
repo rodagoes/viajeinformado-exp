@@ -108,27 +108,29 @@ class ImagenRutaMovilidadInline(admin.TabularInline):
 @admin.register(RutaMovilidad)
 class RutaMovilidadAdmin(admin.ModelAdmin):
     list_display = [
-        "nombre", "categoria_principal", "origen_texto", "destino_texto", 
-        "duracion_estimada", "tipo_costo", "rango_precios_soles", "destacado", "activo"
+        "nombre", "seccion", "categoria_principal", "origen_texto", "destino_texto",
+        "duracion_estimada", "duracion_bus", "duracion_automovil", "tipo_costo",
+        "rango_precios_soles", "orden", "destacado", "activo"
     ]
+    list_editable = ["orden", "activo"]
     search_fields = [
-        "nombre", "descripcion_corta", "descripcion", "origen_texto", 
-        "destino_texto", "punto_partida", "punto_llegada", "indicaciones", 
-        "origen_distrito__nombre_oficial", "origen_localidad__nombre", 
-        "destino_distrito__nombre_oficial", "destino_localidad__nombre", 
-        "categoria_principal__nombre", "categorias_secundarias__nombre", 
+        "nombre", "descripcion_corta", "descripcion", "origen_texto",
+        "destino_texto", "punto_partida", "punto_llegada", "indicaciones",
+        "origen_distrito__nombre_oficial", "origen_localidad__nombre",
+        "destino_distrito__nombre_oficial", "destino_localidad__nombre",
+        "categoria_principal__nombre", "categorias_secundarias__nombre",
         "servicios__nombre", "operador__nombre"
     ]
     list_filter = [
-        "activo", "destacado", "categoria_principal", "categorias_secundarias", 
-        "servicios", "tipo_costo", "dificultad", "operador", 
-        "origen_distrito__provincia__departamento", "origen_distrito__provincia", 
-        "origen_distrito", "destino_distrito__provincia__departamento", 
+        "activo", "seccion", "destacado", "categoria_principal", "categorias_secundarias",
+        "servicios", "tipo_costo", "dificultad", "operador",
+        "origen_distrito__provincia__departamento", "origen_distrito__provincia",
+        "origen_distrito", "destino_distrito__provincia__departamento",
         "destino_distrito__provincia", "destino_distrito"
     ]
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = [
-        "categoria_principal", "operador", "origen_distrito", 
+        "categoria_principal", "operador", "origen_distrito",
         "origen_localidad", "destino_distrito", "destino_localidad"
     ]
     filter_horizontal = ["categorias_secundarias", "servicios"]
@@ -139,7 +141,7 @@ class RutaMovilidadAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Información principal", {
             "fields": (
-                "categoria_principal", "categorias_secundarias", "servicios", 
+                "seccion", "categoria_principal", "categorias_secundarias", "servicios",
                 "operador", "nombre", "slug", "descripcion_corta", "descripcion"
             )
         }),
@@ -151,8 +153,9 @@ class RutaMovilidadAdmin(admin.ModelAdmin):
         }),
         ("Información de ruta", {
             "fields": (
-                "punto_partida", "punto_llegada", "indicaciones", 
-                "duracion_estimada", "distancia_km", "frecuencia", "horario_referencial"
+                "punto_partida", "punto_llegada", "indicaciones",
+                "duracion_estimada", "duracion_bus", "duracion_automovil",
+                "distancia_km", "frecuencia", "horario_referencial", "orden"
             )
         }),
         ("Costos", {
@@ -244,9 +247,9 @@ class TransportePublicoAdmin(admin.ModelAdmin):
 
 @admin.register(ConsejoMovilidad)
 class ConsejoMovilidadAdmin(admin.ModelAdmin):
-    list_display = ["texto", "orden", "activo"]
+    list_display = ["texto", "seccion", "orden", "activo"]
     list_editable = ["orden", "activo"]
     search_fields = ["texto"]
-    list_filter = ["activo"]
+    list_filter = ["seccion", "activo"]
     readonly_fields = ["creado", "actualizado"]
     ordering = ["orden", "id"]

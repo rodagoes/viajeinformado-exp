@@ -406,7 +406,7 @@
     margin: 0 0 8px;
 
     color: var(--tx-azul-oscuro);
-    font-family: "Playfair Display", serif;
+    font-family: "Inter", sans-serif;
     font-size: 1.42rem;
     font-weight: 700;
     line-height: 1.2;
@@ -511,7 +511,7 @@
     color: var(--tx-azul);
     font-size: 0.95rem;
 
-    background: transparent;
+    background: var(--tx-blanco);
     border-radius: 50%;
 }
 
@@ -577,7 +577,7 @@
     margin: 0;
 
     color: var(--tx-azul-oscuro);
-    font-family: "Playfair Display", serif;
+    font-family: "Inter", sans-serif;
     font-size: 1.3rem;
     font-weight: 700;
     line-height: 1.2;

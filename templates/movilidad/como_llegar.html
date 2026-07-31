@@ -1,0 +1,522 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}¿Cómo llegar a Huánuco? • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'assets/css/como-llegar.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="como-llegar">
+
+    <!-- HERO -->
+    <section class="como-llegar__hero">
+        <i
+            class="bi bi-airplane-fill como-llegar__hero-plane"
+            aria-hidden="true">
+        </i>
+
+        <div class="como-llegar__hero-content">
+            <h1 class="como-llegar__hero-title">
+                ¿Cómo llegar a Huánuco?
+            </h1>
+
+            <p class="como-llegar__hero-desc">
+                Conozca las rutas, tiempos y medios de transporte
+                para planificar tu llegada.
+            </p>
+        </div>
+    </section>
+
+    <div class="container cl-body">
+
+        <!-- SELECTOR -->
+        <div
+            class="cl-selector"
+            data-como-llegar-selector
+            role="tablist"
+            aria-label="Seleccionar vía de acceso a Huánuco">
+
+            <button
+                type="button"
+                id="cl-tab-terrestre"
+                class="cl-tab is-active"
+                role="tab"
+                aria-selected="true"
+                aria-controls="cl-panel-terrestre"
+                data-via="terrestre">
+
+                <i
+                    class="bi bi-bus-front-fill"
+                    aria-hidden="true">
+                </i>
+
+                <span>Vía terrestre</span>
+            </button>
+
+            <button
+                type="button"
+                id="cl-tab-aerea"
+                class="cl-tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="cl-panel-aerea"
+                tabindex="-1"
+                data-via="aerea">
+
+                <i
+                    class="bi bi-airplane-fill"
+                    aria-hidden="true">
+                </i>
+
+                <span>Vía aérea</span>
+            </button>
+        </div>
+
+        <!-- PANEL: VÍA TERRESTRE -->
+        <section
+            id="cl-panel-terrestre"
+            class="cl-panel"
+            role="tabpanel"
+            aria-labelledby="cl-tab-terrestre"
+            tabindex="0">
+
+            <div class="cl-terrestre">
+
+                <!-- RUTAS -->
+                <div class="cl-rutas-bloque">
+                    <div
+                        id="cl-rutas-list"
+                        class="cl-rutas"
+                        data-rutas-list
+                        aria-label="Rutas terrestres hacia Huánuco">
+
+                    {% for ruta in rutas_terrestres %}
+                    <article class="cl-ruta{% if forloop.counter > 3 %} cl-ruta--extra{% endif %}">
+
+                        <span
+                            class="cl-ruta__orden"
+                            aria-label="Ruta número {{ ruta.orden }}">
+                            {{ ruta.orden }}
+                        </span>
+
+                        <div class="cl-ruta__info">
+                            <strong class="cl-ruta__nombre">
+                                {{ ruta.nombre }}
+                            </strong>
+
+                            {% if ruta.distancia_km %}
+                            <span class="cl-ruta__distancia">
+                                <i
+                                    class="bi bi-signpost-2-fill"
+                                    aria-hidden="true">
+                                </i>
+
+                                <span>
+                                    {{ ruta.distancia_km|floatformat:0 }} km
+                                </span>
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <div
+                            class="cl-ruta__tiempos"
+                            aria-label="Tiempos referenciales de la ruta">
+
+                            {% if ruta.duracion_bus %}
+                            <div
+                                class="cl-ruta__tiempo cl-ruta__tiempo--bus">
+
+                                <i
+                                    class="bi bi-bus-front-fill"
+                                    aria-hidden="true">
+                                </i>
+
+                                <span class="cl-ruta__tiempo-texto">
+                                    <span class="cl-ruta__tiempo-label">
+                                        Bus
+                                    </span>
+
+                                    <span class="cl-ruta__tiempo-valor">
+                                        {{ ruta.duracion_bus }}
+                                    </span>
+                                </span>
+                            </div>
+                            {% endif %}
+
+                            {% if ruta.duracion_automovil %}
+                            <div class="cl-ruta__tiempo cl-ruta__tiempo--auto{% if ruta.duracion_automovil|length > 4 %} cl-ruta__tiempo--largo{% endif %}">
+
+                                <i
+                                    class="bi bi-car-front-fill"
+                                    aria-hidden="true">
+                                </i>
+
+                                <span class="cl-ruta__tiempo-texto">
+                                    <span class="cl-ruta__tiempo-label">
+                                        Carro
+                                    </span>
+
+                                    <span class="cl-ruta__tiempo-valor">
+                                        {{ ruta.duracion_automovil }}
+                                    </span>
+                                </span>
+                            </div>
+                            {% endif %}
+
+                            {% if not ruta.duracion_bus and not ruta.duracion_automovil %}
+                            <span class="cl-ruta__tiempo-pendiente">
+                                Tiempos por confirmar
+                            </span>
+                            {% endif %}
+                        </div>
+                    </article>
+
+                    {% empty %}
+                    <p class="cl-vacio">
+                        Pronto publicaremos las rutas terrestres hacia Huánuco.
+                    </p>
+                    {% endfor %}
+                    </div>
+
+                    {% if rutas_terrestres|length > 3 %}
+                    <button
+                        type="button"
+                        class="cl-rutas-toggle"
+                        aria-expanded="false"
+                        aria-controls="cl-rutas-list"
+                        data-rutas-toggle
+                        hidden>
+
+                        <span data-rutas-toggle-label>
+                            Ver todas las rutas
+                        </span>
+
+                        <i
+                            class="bi bi-chevron-down"
+                            aria-hidden="true"
+                            data-rutas-toggle-icon>
+                        </i>
+                    </button>
+                    {% endif %}
+
+                </div>
+
+                <!-- MAPA -->
+                <aside
+                    class="cl-mapa-wrap"
+                    aria-label="Mapa general de accesos a Huánuco">
+
+                    <div class="cl-mapa">
+                        <img
+                            src="{% static 'assets/img/como-llegar/mapa-accesos-hco.png' %}"
+                            alt="Mapa general de las principales rutas terrestres de acceso a Huánuco"
+                            class="cl-mapa__img"
+                            loading="lazy"
+                            decoding="async"
+                            data-mapa-accesos>
+
+                        <div
+                            class="cl-mapa__fallback"
+                            data-mapa-fallback
+                            hidden>
+
+                            <i
+                                class="bi bi-map"
+                                aria-hidden="true">
+                            </i>
+
+                            <span>
+                                Mapa de accesos en preparación
+                            </span>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- NOTA REFERENCIAL -->
+                <p class="cl-nota">
+                    <span class="cl-nota__icon" aria-hidden="true">
+                        <i class="bi bi-info-lg"></i>
+                    </span>
+
+                    <span class="cl-nota__texto">
+                        Los tiempos son referenciales y pueden variar según
+                        el clima, el tráfico o el estado de la carretera.
+                    </span>
+                </p>
+
+                <!-- CONSEJOS TERRESTRES -->
+                {% if consejos_terrestres %}
+                <section
+                    class="cl-consejos cl-consejos--terrestre"
+                    aria-labelledby="cl-consejos-terrestres-title">
+
+                    <div class="cl-consejos__intro">
+                        <div class="cl-consejos__lottie-wrap" aria-hidden="true">
+                            <div
+                                class="cl-consejos__lottie"
+                                data-consejo-lottie
+                                data-lottie-src="{% static 'assets/img/icons/consejo-ideas-vi.json' %}">
+                            </div>
+
+                            <i
+                                class="bi bi-lightbulb-fill cl-consejos__lottie-fallback"
+                                aria-hidden="true">
+                            </i>
+                        </div>
+
+                        <h2
+                            id="cl-consejos-terrestres-title"
+                            class="cl-consejos__title">
+                            Consejos para su viaje
+                        </h2>
+                    </div>
+
+                    <span
+                        class="cl-consejos__separador"
+                        aria-hidden="true">
+                    </span>
+
+                    <ul class="cl-consejos__list">
+                        {% for consejo in consejos_terrestres %}
+                        <li class="cl-consejo">
+                            <span class="cl-consejo__icon" aria-hidden="true">
+                                {% if forloop.counter == 1 %}
+                                <i class="bi bi-cone-striped"></i>
+                                {% elif forloop.counter == 2 %}
+                                <i class="bi bi-calendar2-check-fill"></i>
+                                {% elif forloop.counter == 3 %}
+                                <i class="bi bi-thermometer-snow"></i>
+                                {% elif forloop.counter == 4 %}
+                                <i class="bi bi-capsule-pill"></i>
+                                {% elif forloop.counter == 5 %}
+                                <i class="bi bi-sunrise-fill"></i>
+                                {% else %}
+                                <i class="bi bi-check2-circle"></i>
+                                {% endif %}
+                            </span>
+
+                            <span class="cl-consejo__texto">
+                                {{ consejo }}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+                {% endif %}
+
+            </div>
+        </section>
+
+        <!-- PANEL: VÍA AÉREA -->
+        <section
+            id="cl-panel-aerea"
+            class="cl-panel"
+            role="tabpanel"
+            aria-labelledby="cl-tab-aerea"
+            tabindex="0"
+            hidden>
+
+            {% for ruta in rutas_aereas %}
+            <article class="cl-vuelo">
+
+                <!-- RUTA VISUAL -->
+                <div class="cl-vuelo__ruta">
+
+                    <!-- ORIGEN: LIMA -->
+                    <div class="cl-vuelo__destino">
+                        <img
+                            src="{% static 'assets/img/como-llegar/silueta-lima-vi.png' %}"
+                            alt=""
+                            width="96"
+                            height="96"
+                            class="cl-vuelo__departamento"
+                            aria-hidden="true">
+
+                        <span class="cl-vuelo__ciudad">
+                            {{ ruta.origen_texto|default:"Lima" }}
+                        </span>
+                    </div>
+
+                    <!-- TRAYECTO CENTRAL, SIN CRUZAR LAS SILUETAS -->
+                    <div
+                        class="cl-vuelo__trayecto"
+                        aria-hidden="true">
+
+                        <span class="cl-vuelo__tramo"></span>
+
+                        <span class="cl-vuelo__avion">
+                            <i class="bi bi-airplane-fill"></i>
+                        </span>
+
+                        <span class="cl-vuelo__tramo"></span>
+                    </div>
+
+                    <!-- DESTINO: HUÁNUCO -->
+                    <div class="cl-vuelo__destino">
+                        <img
+                            src="{% static 'assets/img/como-llegar/silueta-hco-vi.png' %}"
+                            alt=""
+                            width="96"
+                            height="96"
+                            class="cl-vuelo__departamento"
+                            aria-hidden="true">
+
+                        <span class="cl-vuelo__ciudad">
+                            {{ ruta.destino_texto|default:"Huánuco" }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- DATOS DEL VUELO -->
+                <dl class="cl-vuelo__datos">
+
+                    {% if ruta.punto_partida %}
+                    <div class="cl-vuelo__dato cl-vuelo__dato--salida">
+                        <dt>
+                            <span
+                                class="cl-vuelo__dato-icon"
+                                aria-hidden="true">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </span>
+
+                            <span>Salida</span>
+                        </dt>
+
+                        <dd>{{ ruta.punto_partida }}</dd>
+                    </div>
+                    {% endif %}
+
+                    {% if ruta.duracion_estimada %}
+                    <div class="cl-vuelo__dato cl-vuelo__dato--tiempo">
+                        <dt>
+                            <span
+                                class="cl-vuelo__dato-icon"
+                                aria-hidden="true">
+                                <i class="bi bi-clock-fill"></i>
+                            </span>
+
+                            <span>Tiempo estimado</span>
+                        </dt>
+
+                        <dd>{{ ruta.duracion_estimada }}</dd>
+                    </div>
+                    {% endif %}
+
+                    {% if ruta.punto_llegada %}
+                    <div class="cl-vuelo__dato cl-vuelo__dato--llegada">
+                        <dt>
+                            <span
+                                class="cl-vuelo__dato-icon"
+                                aria-hidden="true">
+                                <i class="bi bi-geo-fill"></i>
+                            </span>
+
+                            <span>Llegada</span>
+                        </dt>
+
+                        <dd>{{ ruta.punto_llegada }}</dd>
+                    </div>
+                    {% endif %}
+                </dl>
+
+                {% if ruta.recomendaciones %}
+                <p class="cl-vuelo__recomendaciones">
+                    <i
+                        class="bi bi-lightbulb"
+                        aria-hidden="true">
+                    </i>
+
+                    <span>{{ ruta.recomendaciones }}</span>
+                </p>
+                {% endif %}
+
+            </article>
+
+            {% empty %}
+            <p class="cl-vacio">
+                Pronto publicaremos información sobre la vía aérea hacia Huánuco.
+            </p>
+            {% endfor %}
+
+            <!-- NOTA AÉREA -->
+            <p class="cl-nota">
+                <span class="cl-nota__icon" aria-hidden="true">
+                    <i class="bi bi-info-lg"></i>
+                </span>
+
+                <span class="cl-nota__texto">
+                    El tiempo estimado de vuelo es referencial y puede variar según la aerolínea.
+                </span>
+            </p>
+
+            <!-- CONSEJOS AÉREOS -->
+            {% if consejos_aereos %}
+            <section
+                class="cl-consejos cl-consejos--aerea"
+                aria-labelledby="cl-consejos-aereos-title">
+
+                <div class="cl-consejos__intro">
+                    <div class="cl-consejos__lottie-wrap" aria-hidden="true">
+                        <div
+                                class="cl-consejos__lottie"
+                                data-consejo-lottie
+                                data-lottie-src="{% static 'assets/img/icons/consejo-ideas-vi.json' %}">
+                            </div>
+
+                        <i
+                            class="bi bi-lightbulb-fill cl-consejos__lottie-fallback"
+                            aria-hidden="true">
+                        </i>
+                    </div>
+
+                    <h2
+                        id="cl-consejos-aereos-title"
+                        class="cl-consejos__title">
+                        Consejos para su viaje
+                    </h2>
+                </div>
+
+                <span
+                    class="cl-consejos__separador"
+                    aria-hidden="true">
+                </span>
+
+                <ul class="cl-consejos__list">
+                    {% for consejo in consejos_aereos %}
+                    <li class="cl-consejo">
+                        <span class="cl-consejo__icon" aria-hidden="true">
+                            {% if forloop.counter == 1 %}
+                            <i class="bi bi-calendar-check-fill"></i>
+                            {% elif forloop.counter == 2 %}
+                            <i class="bi bi-clock-fill"></i>
+                            {% elif forloop.counter == 3 %}
+                            <i class="bi bi-airplane-fill"></i>
+                            {% elif forloop.counter == 4 %}
+                            <i class="bi bi-car-front-fill"></i>
+                            {% else %}
+                            <i class="bi bi-check2-circle"></i>
+                            {% endif %}
+                        </span>
+
+                        <span class="cl-consejo__texto">
+                            {{ consejo }}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
+<script src="{% static 'assets/js/como-llegar.js' %}"></script>
+{% endblock %}

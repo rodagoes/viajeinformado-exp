@@ -1,0 +1,1632 @@
+/* ==== ¿CÓMO LLEGAR A HUÁNUCO? reglas quedan encapsuladas bajo .taxi-tarifas ==== */
+
+.como-llegar {
+    --cl-blanco: #FFFFFF;
+    --cl-azul-oscuro: #002D89;
+    --cl-azul: #007FFF;
+    --cl-fondo: #F7F9FD;
+    --cl-fondo-card: #EEF3FB;
+    --cl-texto: #182033;
+    --cl-texto-sec: #61708C;
+    --cl-borde: #DFE7F3;
+
+    --cl-bus-bg: #EAF3FF;
+    --cl-bus-border: #CFE3FF;
+    --cl-bus-accent: #0874DC;
+
+    --cl-auto-bg: #EEF8F1;
+    --cl-auto-border: #D3EADB;
+    --cl-auto-accent: #2F8A58;
+
+    --cl-grad: linear-gradient(135deg, var(--cl-azul), var(--cl-azul-oscuro));
+
+    --cl-sombra: 0 10px 30px rgba(0, 45, 137, 0.08);
+
+    --cl-sombra-hover: 0 18px 38px rgba(0, 45, 137, 0.14);
+
+    --cl-ease: 0.2s ease;
+
+    color: var(--cl-texto);
+    background: var(--cl-fondo);
+
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+.como-llegar button,
+.como-llegar [type="button"] {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.como-llegar button,
+.como-llegar a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ==== HERO ==== */
+
+.como-llegar__hero {
+    position: relative;
+    isolation: isolate;
+
+    min-height: clamp(360px, 21.875vw, 420px);
+
+    display: grid;
+    place-items: center;
+
+    overflow: hidden;
+
+    padding:
+        calc(var(--vi-header-height-desktop, 78px) + 38px)
+        24px
+        48px;
+
+    text-align: center;
+
+    background-image:
+        url("../img/como-llegar/como-llegar-hero-bg.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.como-llegar__hero::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 32, 96, 0.22) 0%,
+            rgba(0, 32, 96, 0.46) 34%,
+            rgba(0, 32, 96, 0.50) 66%,
+            rgba(0, 32, 96, 0.22) 100%
+        );
+
+    pointer-events: none;
+}
+
+.como-llegar__hero-plane {
+    display: none;
+}
+
+.como-llegar__hero-content {
+    position: relative;
+    z-index: 1;
+
+    width: min(720px, calc(100% - 32px));
+    margin: 0 auto;
+}
+
+.como-llegar__hero-title {
+    margin: 0;
+
+    color: var(--cl-blanco);
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.2rem, 4vw, 2.9rem);
+    font-weight: 700;
+    line-height: 1.15;
+
+    text-shadow:
+        0 3px 16px rgba(0, 20, 70, 0.45);
+}
+
+.como-llegar__hero-desc {
+    max-width: 640px;
+    margin: 14px auto 0;
+
+    color: rgba(255, 255, 255, 0.96);
+    font-size: 1rem;
+    line-height: 1.6;
+
+    text-shadow:
+        0 2px 10px rgba(0, 18, 62, 0.40);
+}
+
+/* ==== CONTENEDOR GENERAL ==== */
+
+.cl-body {
+    width: 100%;
+    max-width: 1180px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.cl-panel {
+    width: 100%;
+}
+
+.cl-panel[hidden] {
+    display: none;
+}
+
+/* ==== SELECTOR TIPO PILL ==== */
+
+.cl-selector {
+    max-width: 100%;
+
+    display: inline-flex;
+    gap: 6px;
+
+    margin: 0 auto 32px;
+    padding: 6px;
+
+    overflow-x: auto;
+
+    background: var(--cl-fondo-card);
+    border: 1px solid var(--cl-borde);
+    border-radius: 999px;
+}
+
+.cl-tab {
+    min-width: 168px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 11px 22px;
+
+    color: var(--cl-texto-sec);
+    font-family: "Inter", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    white-space: nowrap;
+
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    transition:
+        background var(--cl-ease),
+        color var(--cl-ease),
+        box-shadow var(--cl-ease);
+}
+
+.cl-tab i {
+    flex-shrink: 0;
+    font-size: 1rem;
+}
+
+.cl-tab:hover {
+    color: var(--cl-azul-oscuro);
+}
+
+.cl-tab.is-active {
+    color: var(--cl-blanco);
+    background: var(--cl-grad);
+
+    box-shadow:
+        0 8px 20px rgba(0, 45, 137, 0.22);
+}
+
+.cl-tab:focus-visible,
+.cl-rutas-toggle:focus-visible {
+    outline: 2px solid var(--cl-azul);
+    outline-offset: 2px;
+}
+
+/* ==== VÍA TERRESTRE: LAYOUT DE ESCRITORIO ==== */
+
+.cl-terrestre {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.08fr)
+        minmax(420px, 0.92fr);
+
+    grid-template-areas:
+        "rutas      mapa"
+        "nota       mapa"
+        "consejos consejos";
+
+    column-gap: 28px;
+    row-gap: 18px;
+
+    align-items: start;
+    align-content: start;
+}
+
+.cl-rutas-bloque {
+    grid-area: rutas;
+    min-width: 0;
+}
+
+.cl-rutas-titulo,
+.cl-rutas-toggle {
+    display: none;
+}
+
+.cl-rutas {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.cl-terrestre > .cl-nota {
+    grid-area: nota;
+    margin: 0;
+}
+
+.cl-terrestre > .cl-consejos {
+    grid-area: consejos;
+    margin: 0;
+}
+
+/* ==== TARJETAS DE RUTAS: ESCRITORIO ==== */
+
+.cl-ruta {
+    min-height: 92px;
+
+    display: grid;
+
+    grid-template-columns:
+        40px
+        minmax(0, 1fr)
+        minmax(220px, 232px);
+
+    align-items: center;
+    column-gap: 18px;
+
+    padding: 16px 18px;
+
+    background: var(--cl-blanco);
+    border: 1px solid var(--cl-borde);
+    border-radius: 16px;
+
+    box-shadow: var(--cl-sombra);
+
+    cursor: default;
+
+    transition:
+        box-shadow var(--cl-ease),
+        border-color var(--cl-ease);
+}
+
+@media (hover: hover) {
+    .cl-ruta:hover {
+        border-color: rgba(0, 127, 255, 0.30);
+        box-shadow: var(--cl-sombra-hover);
+    }
+}
+
+.cl-ruta__orden {
+    width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--cl-blanco);
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    background: var(--cl-grad);
+    border-radius: 50%;
+}
+
+.cl-ruta__info {
+    min-width: 0;
+
+    display: grid;
+    align-content: center;
+    gap: 7px;
+}
+
+.cl-ruta__nombre {
+    min-width: 0;
+
+    color: #000000;
+    font-family: "Oswald", sans-serif;
+    font-size: 1.06rem;
+    font-weight: 700;
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+}
+
+.cl-ruta__distancia {
+    width: fit-content;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    color: var(--cl-texto-sec);
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+.cl-ruta__distancia i {
+    color: var(--cl-azul);
+    font-size: 0.9rem;
+}
+
+/* ==== TIEMPOS: BUS Y CARRO ==== */
+
+.cl-ruta__tiempos {
+    width: min(100%, 232px);
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    padding-left: 18px;
+
+    border-left: 1px solid var(--cl-borde);
+}
+
+.cl-ruta__tiempo {
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+
+    display: grid;
+    grid-template-columns:
+        auto
+        minmax(0, 1fr);
+
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px;
+
+    border: 1px solid transparent;
+    border-radius: 11px;
+
+    white-space: normal;
+}
+
+.cl-ruta__tiempo i {
+    flex-shrink: 0;
+
+    font-size: 0.95rem;
+}
+
+.cl-ruta__tiempo-texto {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    line-height: 1.08;
+}
+
+.cl-ruta__tiempo-label {
+    max-width: 100%;
+
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.025em;
+    line-height: 1.1;
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+.cl-ruta__tiempo-valor {
+    max-width: 100%;
+
+    color: var(--cl-texto);
+    font-size: clamp(0.7rem, 1.2vw, 0.84rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+
+    white-space: nowrap;
+}
+
+.cl-ruta__tiempo--bus {
+    background: var(--cl-bus-bg);
+    border-color: var(--cl-bus-border);
+}
+
+.cl-ruta__tiempo--bus i,
+.cl-ruta__tiempo--bus .cl-ruta__tiempo-label {
+    color: var(--cl-bus-accent);
+}
+
+.cl-ruta__tiempo--auto {
+    background: var(--cl-auto-bg);
+    border-color: var(--cl-auto-border);
+}
+
+.cl-ruta__tiempo--auto i,
+.cl-ruta__tiempo--auto .cl-ruta__tiempo-label {
+    color: var(--cl-auto-accent);
+}
+
+/* Un único medio llena el área disponible de tiempos. */
+
+.cl-ruta__tiempo:only-child {
+    grid-column: 1 / -1;
+    grid-template-columns:
+        auto
+        auto;
+
+    justify-content: center;
+}
+
+.cl-ruta__tiempo-pendiente {
+    grid-column: 1 / -1;
+
+    padding: 8px 10px;
+
+    color: var(--cl-texto-sec);
+    font-size: 0.82rem;
+    font-style: italic;
+    text-align: center;
+
+    background: var(--cl-fondo-card);
+    border-radius: 10px;
+}
+
+/* ==== MAPA ==== */
+
+.cl-mapa-wrap {
+    grid-area: mapa;
+
+    position: sticky;
+    top: calc(var(--vi-header-height-desktop, 78px) + 16px);
+
+    align-self: start;
+}
+
+.cl-mapa {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    background: transparent;
+    border: 1px solid var(--cl-borde);
+    border-radius: 18px;
+
+    box-shadow: var(--cl-sombra);
+}
+
+.cl-mapa__img {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+
+    object-fit: contain;
+    object-position: center;
+}
+
+.cl-mapa__fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    padding: 48px 20px;
+
+    color: var(--cl-texto-sec);
+    font-size: 0.88rem;
+    text-align: center;
+}
+
+.cl-mapa__fallback i {
+    color: var(--cl-azul);
+    font-size: 1.8rem;
+}
+
+/* ==== VÍA AÉREA ==== */
+
+.cl-vuelo {
+    --cl-vuelo-columnas:
+        minmax(130px, 180px)
+        minmax(180px, 1fr)
+        minmax(130px, 180px);
+
+    padding: 28px;
+
+    background: var(--cl-blanco);
+    border: 1px solid var(--cl-borde);
+    border-radius: 18px;
+
+    box-shadow: var(--cl-sombra);
+}
+
+.cl-vuelo + .cl-vuelo {
+    margin-top: 16px;
+}
+
+.cl-vuelo__ruta,
+.cl-vuelo__datos {
+    display: grid;
+    grid-template-columns:
+        var(--cl-vuelo-columnas);
+    column-gap: 24px;
+}
+
+.cl-vuelo__ruta {
+    align-items: center;
+
+    padding: 6px 18px 28px;
+}
+
+.cl-vuelo__destino {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+
+.cl-vuelo__departamento {
+    display: block;
+
+    width: 96px;
+    height: 96px;
+
+    object-fit: contain;
+
+    filter:
+        drop-shadow(
+            0 7px 12px rgba(0, 45, 137, 0.12)
+        );
+}
+
+.cl-vuelo__ciudad {
+    max-width: 100%;
+
+    color: #000000;
+    font-family: "Playfair Display", serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+
+    overflow-wrap: anywhere;
+}
+
+.cl-vuelo__trayecto {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cl-vuelo__tramo {
+    min-width: 24px;
+    flex: 1 1 auto;
+
+    border-top:
+        2px dashed rgba(0, 127, 255, 0.38);
+}
+
+.cl-vuelo__avion {
+    width: 48px;
+    height: 48px;
+
+    flex: 0 0 48px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-inline: 10px;
+
+    color: var(--cl-blanco);
+    font-size: 1.15rem;
+
+    background: var(--cl-grad);
+    border-radius: 50%;
+
+    box-shadow:
+        0 8px 18px rgba(0, 45, 137, 0.20);
+}
+
+.cl-vuelo__datos {
+    margin: 6px 18px 0;
+    padding: 22px 0 0;
+
+    border-top: 1px solid var(--cl-borde);
+}
+
+.cl-vuelo__dato {
+    min-width: 0;
+}
+
+.cl-vuelo__dato dt {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    margin-bottom: 8px;
+
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.045em;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.cl-vuelo__dato-icon {
+    width: 28px;
+    height: 28px;
+
+    flex: 0 0 28px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 0.78rem;
+
+    border-radius: 8px;
+}
+
+.cl-vuelo__dato--salida {
+    text-align: left;
+}
+
+.cl-vuelo__dato--salida dt {
+    color: #0874DC;
+}
+
+.cl-vuelo__dato--salida
+    .cl-vuelo__dato-icon {
+    color: #0874DC;
+    background: #EAF3FF;
+}
+
+.cl-vuelo__dato--tiempo {
+    text-align: center;
+}
+
+.cl-vuelo__dato--tiempo dt {
+    justify-content: center;
+
+    color: #7357D8;
+}
+
+.cl-vuelo__dato--tiempo
+    .cl-vuelo__dato-icon {
+    color: #7357D8;
+    background: #F0ECFF;
+}
+
+.cl-vuelo__dato--llegada {
+    text-align: right;
+}
+
+.cl-vuelo__dato--llegada dt {
+    justify-content: flex-end;
+
+    color: #14856A;
+}
+
+.cl-vuelo__dato--llegada
+    .cl-vuelo__dato-icon {
+    color: #14856A;
+    background: #EAF7F2;
+}
+
+.cl-vuelo__dato dd {
+    margin: 0;
+
+    color: var(--cl-texto);
+    font-size: 0.9rem;
+    font-weight: 650;
+    line-height: 1.45;
+
+    overflow-wrap: break-word;
+}
+
+.cl-vuelo__recomendaciones {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+
+    margin: 20px 0 0;
+
+    color: var(--cl-texto-sec);
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.cl-vuelo__recomendaciones i {
+    flex-shrink: 0;
+
+    margin-top: 2px;
+
+    color: var(--cl-azul);
+}
+
+/* ==== CONSEJOS, NOTAS Y ESTADOS VACÍOS ==== */
+
+.cl-consejos {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns:
+        minmax(190px, 235px)
+        1px
+        minmax(0, 1fr);
+    align-items: stretch;
+    gap: 26px;
+
+    margin-top: 28px;
+    padding: 24px 28px;
+
+    background: var(--cl-blanco);
+    border: 1px solid var(--cl-borde);
+    border-radius: 18px;
+
+    box-shadow: var(--cl-sombra);
+}
+
+.cl-terrestre > .cl-consejos {
+    grid-area: consejos;
+    margin: 0;
+}
+
+.cl-consejos__intro {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    text-align: center;
+}
+
+.cl-consejos__lottie-wrap {
+    position: relative;
+
+    width: 92px;
+    height: 92px;
+    flex: 0 0 92px;
+
+    display: grid;
+    place-items: center;
+
+    overflow: hidden;
+}
+
+.cl-consejos__lottie {
+    display: none;
+
+    width: 92px;
+    height: 92px;
+
+    overflow: hidden;
+}
+
+.cl-consejos__lottie.is-ready {
+    display: block;
+}
+
+.cl-consejos__lottie svg {
+    display: block;
+
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.cl-consejos__lottie-fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 68px;
+    height: 68px;
+
+    color: var(--cl-azul);
+    font-size: 2rem;
+
+    background: #EDF5FF;
+    border-radius: 50%;
+}
+
+.cl-consejos__lottie.is-ready + .cl-consejos__lottie-fallback {
+    display: none;
+}
+
+.cl-consejos__title {
+    margin: 0;
+
+    color: var(--cl-azul-oscuro);
+    font-family: "Inter", sans-serif;
+    font-size: 1.28rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.cl-consejos__separador {
+    width: 3px;
+    min-height: 100%;
+
+    background:var(--cl-grad);
+}
+
+.cl-consejos__list {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    align-content: center;
+    gap: 10px 12px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.cl-consejos__list > .cl-consejo::before,
+.cl-consejos__list > .cl-consejo::marker {
+    content: none;
+    display: none;
+}
+
+.cl-consejo {
+    min-width: 0;
+    min-height: 62px;
+
+    display: grid;
+    grid-template-columns:
+        38px
+        minmax(0, 1fr);
+
+    align-items: center;
+    gap: 12px;
+
+    padding: 11px 14px;
+
+    background: var(--cl-blanco);
+    border: 1px solid #D6E3F5;
+    border-radius: 11px;
+
+    transition:
+        border-color var(--cl-ease),
+        box-shadow var(--cl-ease);
+}
+
+.cl-consejo:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+.cl-consejo__icon {
+    width: 36px;
+    height: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--cl-blanco);
+    font-size: 1rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cl-azul) 0%,
+            var(--cl-azul-oscuro) 100%
+        );
+
+    border: 1px solid #D8E8FC;
+    border-radius: 10px;
+}
+
+.cl-consejo__texto {
+    min-width: 0;
+
+    color: #000000;
+    font-size: 0.9rem;
+    line-height: 1.5;
+
+    overflow-wrap: break-word;
+}
+
+@media (hover: hover) {
+    .cl-consejo:hover {
+        border-color: #B8D5F8;
+
+        box-shadow:
+            0 7px 18px rgba(0, 45, 137, 0.07);
+    }
+}
+
+.cl-nota {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+
+    margin: 18px 0 0;
+    padding: 12px 16px;
+
+    color: #385682;
+    font-size: 0.86rem;
+    line-height: 1.5;
+
+    background: #EDF5FF;
+    border: 1px solid #CFE1FA;
+    border-radius: 12px;
+}
+
+.cl-nota__icon {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--cl-azul);
+
+    background: var(--cl-blanco);
+    border: 1px solid #CFE1FA;
+    border-radius: 10px;
+}
+
+.cl-nota__texto {
+    min-width: 0;
+}
+
+.cl-vacio {
+    padding: 22px;
+
+    color: var(--cl-texto-sec);
+    font-size: 0.92rem;
+    font-style: italic;
+    text-align: center;
+
+    background: var(--cl-blanco);
+    border: 1px dashed var(--cl-borde);
+    border-radius: 14px;
+}
+
+/* ==== TABLET ==== */
+
+@media (max-width: 991.98px) {
+    .cl-terrestre {
+        grid-template-columns: 1fr;
+
+        grid-template-areas:
+            "rutas"
+            "mapa"
+            "nota"
+            "consejos";
+    }
+
+    .cl-mapa-wrap {
+        position: static;
+    }
+
+}
+
+/* ==== MÓVIL ==== */
+
+@media (max-width: 767.98px) {
+
+    /* Hero */
+
+    .como-llegar__hero {
+        min-height: 390px;
+
+        padding-inline: 24px;
+
+        background-size: auto 100%;
+        background-position: 23% center;
+        background-repeat: no-repeat;
+    }
+
+    .como-llegar__hero::before {
+        background:
+            linear-gradient(
+                180deg,
+                rgba(0, 32, 96, 0.26) 0%,
+                rgba(0, 32, 96, 0.52) 52%,
+                rgba(0, 32, 96, 0.30) 100%
+            );
+    }
+
+    .como-llegar__hero-plane {
+        display: block;
+
+        position: absolute;
+        z-index: 1;
+
+        top: 16%;
+        right: 9%;
+
+        color: rgba(255, 255, 255, 0.90);
+        font-size: 1.5rem;
+
+        transform: rotate(35deg);
+
+        text-shadow:
+            0 2px 8px rgba(0, 20, 70, 0.40);
+    }
+
+    .como-llegar__hero-plane::after {
+        content: "";
+
+        position: absolute;
+
+        top: 55%;
+        right: 100%;
+
+        width: 44px;
+
+        border-top:
+            2px dashed rgba(255, 255, 255, 0.60);
+
+        transform:
+            translateY(-50%)
+            rotate(10deg);
+    }
+
+    .como-llegar__hero-content {
+        max-width: 300px;
+    }
+
+    .como-llegar__hero-title {
+        font-size:
+            clamp(1.85rem, 8vw, 2.3rem);
+    }
+
+    .como-llegar__hero-desc {
+        font-size: 0.92rem;
+    }
+
+    /* Contenedor y selector */
+
+    .cl-body {
+        --bs-gutter-x: 24px;
+
+        padding-top: 26px;
+        padding-bottom: 44px;
+    }
+
+    .cl-selector {
+        width: 100%;
+
+        justify-content: center;
+
+        margin-bottom: 22px;
+    }
+
+    .cl-tab {
+        min-width: 0;
+        flex: 1 1 0;
+
+        justify-content: center;
+
+        padding: 10px;
+
+        font-size: 0.84rem;
+    }
+
+    /* Tarjetas compactas en una sola columna */
+
+    .cl-rutas {
+        gap: 9px;
+    }
+
+    .cl-ruta {
+        width: 100%;
+        min-height: 94px;
+
+        grid-template-columns:
+            34px
+            minmax(0, 1fr)
+            minmax(158px, 46%);
+
+        align-items: center;
+        column-gap: 8px;
+
+        padding: 11px 10px;
+
+        border-radius: 13px;
+    }
+
+    .cl-ruta__orden {
+        width: 34px;
+        height: 34px;
+
+        font-size: 0.82rem;
+    }
+
+    .cl-ruta__info {
+        gap: 4px;
+    }
+
+    .cl-ruta__nombre {
+        font-size: 0.9rem;
+        line-height: 1.24;
+
+        overflow-wrap: normal;
+        word-break: normal;
+        hyphens: none;
+    }
+
+    .cl-ruta__distancia {
+        gap: 5px;
+
+        font-size: 0.76rem;
+    }
+
+    .cl-ruta__distancia i {
+        font-size: 0.82rem;
+    }
+
+    /* Zona de Bus y Carro */
+
+    .cl-ruta__tiempos {
+        width: 100%;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 5px;
+
+        padding-left: 8px;
+
+        border-left: 1px solid var(--cl-borde);
+    }
+
+    .cl-ruta__tiempo {
+        width: 100%;
+        min-width: 0;
+        min-height: 58px;
+
+        display: grid;
+        grid-template-columns:
+            auto
+            minmax(0, 1fr);
+
+        align-items: center;
+        gap: 4px;
+
+        padding: 7px 5px;
+
+        border-radius: 9px;
+
+        white-space: normal;
+    }
+
+    .cl-ruta__tiempo i {
+        flex-shrink: 0;
+
+        font-size: 1rem;
+    }
+
+    .cl-ruta__tiempo-texto {
+        min-width: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        line-height: 1.08;
+    }
+
+    .cl-ruta__tiempo-label {
+        max-width: 100%;
+
+        font-size: 0.66rem;
+        font-weight: 800;
+        letter-spacing: 0.015em;
+        line-height: 1.05;
+        text-transform: uppercase;
+
+        white-space: nowrap;
+    }
+
+    .cl-ruta__tiempo-valor {
+        max-width: 100%;
+
+        color: var(--cl-texto);
+        font-size: 0.9rem;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.02em;
+        line-height: 1.08;
+
+        white-space: nowrap;
+    }
+
+    .cl-ruta__tiempo--largo {
+        grid-template-columns:
+            16px
+            minmax(0, 1fr);
+
+        gap: 3px;
+
+        padding-inline: 5px;
+    }
+
+    .cl-ruta__tiempo--largo i {
+        width: 16px;
+
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .cl-ruta__tiempo--largo
+        .cl-ruta__tiempo-texto {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .cl-ruta__tiempo--largo
+        .cl-ruta__tiempo-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.01em;
+    }
+
+    .cl-ruta__tiempo--largo
+        .cl-ruta__tiempo-valor {
+        max-width: 100%;
+
+        font-size: 0.82rem;
+        letter-spacing: -0.035em;
+        line-height: 1.05;
+
+        white-space: nowrap;
+    }
+
+    /* Cuando existe únicamente Bus o Carro */
+
+    .cl-ruta__tiempo:only-child {
+        grid-column: 1 / -1;
+
+        grid-template-columns:
+            auto
+            max-content;
+
+        justify-content: center;
+    }
+
+    .cl-ruta__tiempo-pendiente {
+        font-size: 0.78rem;
+    }
+
+    /* Mostrar solo tres rutas cuando JS habilite el colapsado */
+
+    .cl-rutas.is-collapsible:not(.is-expanded) .cl-ruta--extra {
+        display: none;
+    }
+
+    .cl-rutas-toggle:not([hidden]) {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+
+        margin: 11px auto 0;
+        padding: 7px 12px;
+
+        color: var(--cl-azul-oscuro);
+        font-family: "Inter", sans-serif;
+        font-size: 0.74rem;
+        font-weight: 800;
+
+        background: transparent;
+        border: 0;
+        border-radius: 999px;
+
+        cursor: pointer;
+    }
+
+    .cl-rutas-toggle i {
+        font-size: 0.72rem;
+
+        transition: transform var(--cl-ease);
+    }
+
+    .cl-rutas-toggle[aria-expanded="true"] i {
+        transform: rotate(180deg);
+    }
+
+    /* Vía aérea */
+
+    .cl-vuelo {
+        padding: 20px;
+    }
+
+    .cl-vuelo__ruta {
+        grid-template-columns:
+            minmax(72px, 1fr)
+            minmax(96px, 1.35fr)
+            minmax(72px, 1fr);
+
+        align-items: center;
+        gap: 8px;
+
+        padding:
+            2px
+            0
+            24px;
+    }
+
+    .cl-vuelo__departamento {
+        width: 66px;
+        height: 66px;
+    }
+
+    .cl-vuelo__ciudad {
+        font-size: 1.02rem;
+    }
+
+    .cl-vuelo__tramo {
+        min-width: 10px;
+    }
+
+    .cl-vuelo__avion {
+        width: 44px;
+        height: 44px;
+
+        flex-basis: 44px;
+
+        margin-inline: 6px;
+    }
+
+    .cl-vuelo__datos {
+        grid-template-columns: 1fr;
+        gap: 16px;
+
+        margin-inline: 0;
+        padding-top: 20px;
+    }
+
+    .cl-vuelo__dato--salida,
+    .cl-vuelo__dato--tiempo,
+    .cl-vuelo__dato--llegada {
+        text-align: left;
+    }
+
+    .cl-vuelo__dato--salida dt,
+    .cl-vuelo__dato--tiempo dt,
+    .cl-vuelo__dato--llegada dt {
+        justify-content: flex-start;
+    }
+
+    .cl-vuelo__dato-icon {
+        width: 30px;
+        height: 30px;
+
+        flex-basis: 30px;
+    }
+
+    /* Consejos y nota */
+
+    .cl-consejos {
+        grid-template-columns: 1fr;
+        gap: 18px;
+
+        padding: 20px;
+    }
+
+    .cl-consejos__intro {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 14px;
+
+        text-align: left;
+    }
+
+    .cl-consejos__lottie-wrap,
+    .cl-consejos__lottie {
+        width: 62px;
+        height: 62px;
+        flex-basis: 62px;
+    }
+
+    .cl-consejos__lottie-fallback {
+        width: 52px;
+        height: 52px;
+
+        font-size: 1.5rem;
+    }
+
+    .cl-consejos__title {
+        font-size: 1.16rem;
+        line-height: 1.35;
+    }
+
+    .cl-consejos__separador {
+        width: 100%;
+        min-height: 2px;
+        height: 1px;
+
+        background:var(--cl-grad);
+    }
+
+    .cl-consejos__list {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .cl-consejo,
+    .cl-consejo:last-child:nth-child(odd) {
+        grid-column: auto;
+    }
+
+    .cl-consejo {
+        min-height: 58px;
+
+        grid-template-columns:
+            36px
+            minmax(0, 1fr);
+
+        gap: 10px;
+
+        padding: 10px 12px;
+    }
+
+    .cl-consejo__icon {
+        width: 34px;
+        height: 34px;
+    }
+
+    .cl-consejo__texto {
+        font-size: 0.88rem;
+    }
+
+    .cl-nota {
+        grid-template-columns: 34px minmax(0, 1fr);
+        align-items: start;
+
+        padding: 14px;
+    }
+}
+
+/* ==== MÓVILES PEQUEÑOS ==== */
+
+@media (max-width: 380px) {
+    .cl-ruta {
+        min-height: 92px;
+
+        grid-template-columns:
+            32px
+            minmax(0, 1fr)
+            minmax(152px, 47%);
+
+        column-gap: 7px;
+
+        padding: 10px 9px;
+    }
+
+    .cl-ruta__orden {
+        width: 30px;
+        height: 30px;
+
+        font-size: 0.76rem;
+    }
+
+    .cl-ruta__nombre {
+        font-size: 0.82rem;
+    }
+
+    .cl-ruta__distancia {
+        font-size: 0.7rem;
+    }
+
+    .cl-ruta__tiempos {
+        gap: 4px;
+        padding-left: 6px;
+    }
+
+    .cl-ruta__tiempo {
+        min-height: 56px;
+
+        gap: 4px;
+
+        padding: 6px 4px;
+    }
+
+    .cl-ruta__tiempo i {
+        font-size: 0.95rem;
+    }
+
+    .cl-ruta__tiempo-label {
+        font-size: 0.62rem;
+    }
+
+    .cl-ruta__tiempo-valor {
+        font-size: 0.88rem;
+        letter-spacing: -0.025em;
+    }
+
+    .cl-ruta__tiempo--largo {
+        grid-template-columns:
+            15px
+            minmax(0, 1fr);
+
+        gap: 2px;
+
+        padding-inline: 4px;
+    }
+
+    .cl-ruta__tiempo--largo i {
+        width: 15px;
+        font-size: 0.84rem;
+    }
+
+    .cl-ruta__tiempo--largo
+        .cl-ruta__tiempo-label {
+        font-size: 0.58rem;
+    }
+
+    .cl-ruta__tiempo--largo
+        .cl-ruta__tiempo-valor {
+        font-size: 0.78rem;
+        letter-spacing: -0.04em;
+    }
+
+    .cl-vuelo__ruta {
+        grid-template-columns:
+            minmax(66px, 1fr)
+            minmax(82px, 1.2fr)
+            minmax(66px, 1fr);
+
+        gap: 5px;
+    }
+
+    .cl-vuelo__departamento {
+        width: 58px;
+        height: 58px;
+    }
+
+    .cl-vuelo__ciudad {
+        font-size: 0.94rem;
+    }
+
+    .cl-vuelo__avion {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+
+        margin-inline: 4px;
+    }
+}
+
+/* ==== ACCESIBILIDAD ==== */
+
+@media (prefers-reduced-motion: reduce) {
+    .cl-tab,
+    .cl-ruta,
+    .cl-rutas-toggle i {
+        transition: none;
+    }
+}
