@@ -1,0 +1,800 @@
+/* ==== CLIMA Y TEMPORADAS - reglas quedan encapsuladas bajo .clima-temporadas ==== */
+
+/* ---------------------------------------------------------
+   1. VARIABLES DEL MÓDULO
+   --------------------------------------------------------- */
+.clima-temporadas {
+    --ct-blanco: #FFFFFF;
+    --ct-azul-oscuro: #002D89;
+    --ct-azul: #007FFF;
+    --ct-fondo: #F7F9FD;
+    --ct-fondo-card: #EEF3FB;
+    --ct-texto: #182033;
+    --ct-texto-sec: #61708C;
+    --ct-borde: #DFE7F3;
+    --ct-gradiente: linear-gradient(135deg, var(--ct-azul), var(--ct-azul-oscuro));
+
+    --ct-sombra: 0 10px 30px rgba(0, 45, 137, 0.08);
+    --ct-sombra-hover: 0 18px 38px rgba(0, 45, 137, 0.14);
+    --ct-ease: 0.25s ease;
+
+    background: var(--ct-fondo);
+    color: var(--ct-texto);
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+/* ---------------------------------------------------------
+   2. ESTRUCTURA GENERAL
+   --------------------------------------------------------- */
+.clima-temporadas__section {
+    padding: 48px 0 8px;
+}
+
+.clima-temporadas__section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 1.1rem + 1vw, 1.75rem);
+    color: var(--ct-azul-oscuro);
+    margin: 0 0 1.5rem;
+}
+
+.clima-temporadas__section-title i {
+    color: var(--ct-azul);
+    font-size: 0.9em;
+}
+
+/* ---------------------------------------------------------
+   3. ENCABEZADO (hero fotográfico)
+   --------------------------------------------------------- */
+.clima-temporadas__header {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    padding: calc(var(--vi-header-height-desktop, 78px) + 56px) 0 176px;
+    text-align: center;
+
+    background-color: #0d1f3d;
+    background-image: url("../img/clima/bg-clima-vi.png");
+    background-size: cover;
+    background-position: center 34%;
+    background-repeat: no-repeat;
+}
+
+.clima-temporadas__header--tingo-maria {
+    background-image: url("../img/clima/bg-tingomaria-clima.png");
+    background-position: center 40%;
+}
+
+.clima-temporadas__header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 22, 58, 0.68) 0%,
+        rgba(2, 16, 42, 0.42) 40%,
+        rgba(2, 12, 32, 0.65) 74%,
+        rgba(2, 9, 24, 0.88) 100%
+    );
+}
+
+.clima-temporadas__header > .container {
+    position: relative;
+}
+
+.clima-temporadas__eyebrow {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #E8F2FF;
+    text-shadow:
+        0 0 8px rgba(0, 10, 30, 0.8),
+        0 2px 12px rgba(0, 10, 30, 0.7),
+        0 4px 20px rgba(0, 10, 30, 0.6);
+    margin-bottom: 0.5rem;
+}
+
+.clima-temporadas__title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+    color: #FFFFFF;
+    text-shadow:
+        0 1px 3px rgba(0, 10, 30, 0.9),
+        0 4px 16px rgba(0, 10, 30, 0.8),
+        0 8px 28px rgba(0, 10, 30, 0.7);
+    margin: 0 0 0.75rem;
+}
+
+.clima-temporadas__subtitle {
+    max-width: 620px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.96);
+    text-shadow:
+        0 1px 4px rgba(0, 10, 30, 0.85),
+        0 3px 14px rgba(0, 10, 30, 0.75),
+        0 6px 24px rgba(0, 10, 30, 0.65);
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   4. SELECTOR DE CIUDAD
+   --------------------------------------------------------- */
+.selector-ciudad {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin: 1.5rem auto 0;
+    padding: 0.3rem;
+    border-radius: 999px;
+    background: rgba(20, 30, 55, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    box-shadow: 0 10px 30px rgba(0, 10, 35, 0.22);
+    transform: translateZ(0);
+}
+
+.selector-ciudad__opcion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background var(--ct-ease), color var(--ct-ease);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.selector-ciudad__opcion:hover {
+    color: var(--ct-blanco);
+}
+
+.selector-ciudad__opcion--activo,
+.selector-ciudad__opcion--activo:hover {
+    background: var(--ct-gradiente);
+    color: var(--ct-blanco);
+    font-weight: 700;
+}
+
+.selector-ciudad__opcion--activo::before {
+    content: "\2713";
+    margin-right: 0.4rem;
+}
+
+/* ---------------------------------------------------------
+   5. CARD METEOROLÓGICO
+   --------------------------------------------------------- */
+.clima-actual {
+    position: relative;
+    z-index: 2;
+    margin-top: -140px;
+    padding: 0 0 8px;
+}
+
+.clima-actual__card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    padding: 2rem 2.25rem;
+    min-width: 0;
+    box-shadow: 0 28px 60px -22px rgba(0, 10, 35, 0.5), 0 6px 20px rgba(0, 10, 35, 0.2);
+}
+
+.clima-actual__cuerpo {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.clima-actual__principal {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 0;
+}
+
+.clima-actual__separador {
+    position: relative;
+    z-index: 1;
+    border: none;
+    border-top: 2px var(--ct-blanco) solid;
+    margin: 1.5rem 0;
+}
+
+.clima-actual__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: right;
+}
+
+.clima-actual__info-item {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.45rem;
+    font-size: 1rem;
+    opacity: 0.92;
+}
+
+/* ---------------------------------------------------------
+   6. ILUSTRACIÓN METEOROLÓGICA
+   --------------------------------------------------------- */
+.clima-actual__icono {
+    flex-shrink: 0;
+    font-size: 3.75rem;
+    line-height: 1;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
+}
+
+.clima-actual__temp-wrap {
+    min-width: 0;
+}
+
+.clima-actual__temp {
+    margin: 0;
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    font-size: clamp(3rem, 2.4rem + 2vw, 4rem);
+    line-height: 1;
+}
+
+.clima-actual__temp-unidad {
+    font-size: 0.45em;
+    font-weight: 600;
+    vertical-align: super;
+}
+
+.clima-actual__estado {
+    margin: 0.35rem 0 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------------
+   7. FONDOS: DÍA Y NOCHE (por ciudad)
+   --------------------------------------------------------- */
+
+/* Huánuco - Día (5am a 6pm) */
+.clima-actual--huanuco:not(.clima-actual--noche) .clima-actual__card {
+    color: var(--ct-blanco);
+    background: radial-gradient(178.94% 106.41% at 26.42% 106.41%, #fdc202 14%, rgb(1, 168, 245) 71.88%), #e6ad12;
+    box-shadow: 0 28px 60px -22px rgba(0, 10, 35, 0.35), 0px 87px 52px rgba(0, 0, 0, 0.05), 0px 39px 39px rgba(0, 0, 0, 0.09), 0px 10px 21px rgba(0, 0, 0, 0.1);
+}
+
+/* Huánuco - Noche (6pm a 5am): usa la sombra elevada base de .clima-actual__card */
+.clima-actual--huanuco.clima-actual--noche .clima-actual__card {
+    color: var(--ct-blanco);
+    background: linear-gradient(180deg, #081620 0%, #132837 52%, #477D8D 100%);
+}
+
+/* Tingo María - Día: acento cálido sobre tonos verde azulado / turquesa,
+   sin acoplar el fondo al estado meteorológico (ver clima-temporadas--noche). */
+.clima-actual--tingo-maria:not(.clima-actual--noche) .clima-actual__card {
+    color: var(--ct-blanco);
+    background: radial-gradient(178.94% 106.41% at 26.42% 106.41%, #fdc202 14%, rgb(1, 168, 245) 71.88%), #e6ad12;
+    box-shadow: 0 28px 60px -22px rgba(0, 10, 35, 0.35), 0px 87px 52px rgba(0, 0, 0, 0.05), 0px 39px 39px rgba(0, 0, 0, 0.09), 0px 10px 21px rgba(0, 0, 0, 0.1);
+}
+
+/* Tingo María - Noche: verde azulado oscuro, sombra elevada base */
+.clima-actual--tingo-maria.clima-actual--noche .clima-actual__card {
+    color: var(--ct-blanco);
+    background: linear-gradient(180deg, #04231F 0%, #0B3B34 52%, #1F8A7A 100%);
+}
+
+.clima-actual--noche .clima-actual__separador {
+    border-top-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ---------------------------------------------------------
+   8. MÉTRICAS
+   --------------------------------------------------------- */
+.clima-actual__metricas {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.clima-actual__metrica {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    min-width: 0;
+}
+
+.clima-actual__metrica > i {
+    font-size: 1.3rem;
+    opacity: 0.85;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+}
+
+.clima-actual__metrica-texto {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.clima-actual__metrica-label {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.clima-actual__metrica-texto strong {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.clima-actual__metrica-sub {
+    font-size: 0.75rem;
+    opacity: 0.75;
+}
+
+.clima-actual__aviso {
+    position: relative;
+    z-index: 1;
+    margin: 1.25rem 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.clima-actual__fuente {
+    position: relative;
+    z-index: 1;
+    margin: 0.75rem 0 0;
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.clima-actual__fuente a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.clima-actual__no-disponible {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+.clima-actual__no-disponible i {
+    font-size: 2.5rem;
+    opacity: 0.85;
+}
+
+.clima-actual__no-disponible-titulo {
+    margin: 0.75rem 0 0.25rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.clima-actual__no-disponible-texto {
+    margin: 0;
+    opacity: 0.85;
+}
+
+/* ---------------------------------------------------------
+   9. TEMPORADAS
+   --------------------------------------------------------- */
+.clima-temporadas__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    align-items: stretch;
+    margin-bottom: 2rem;
+}
+
+.temporada-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--ct-blanco);
+    border: 1px solid var(--ct-borde);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: var(--ct-sombra);
+    transition: box-shadow var(--ct-ease), transform var(--ct-ease);
+}
+
+.temporada-card:hover {
+    box-shadow: var(--ct-sombra-hover);
+    transform: translateY(-2px);
+}
+
+.temporada-card--seca {
+    --ct-temporada-fondo: #FFF6E0;
+    --ct-temporada-icono: #C79B45;
+    --ct-pill-desde: rgba(255, 200, 87, 0.4);
+    --ct-pill-hasta: rgba(255, 246, 224, 0.12);
+    --ct-pill-borde: rgba(199, 155, 69, 0.5);
+    --ct-pill-brillo: rgba(255, 226, 148, 0.55);
+}
+
+.temporada-card--lluvias {
+    --ct-temporada-fondo: #E9F2FF;
+    --ct-temporada-icono: var(--ct-azul);
+    --ct-pill-desde: rgba(0, 127, 255, 0.32);
+    --ct-pill-hasta: rgba(233, 242, 255, 0.12);
+    --ct-pill-borde: rgba(0, 127, 255, 0.45);
+    --ct-pill-brillo: rgba(150, 200, 255, 0.5);
+}
+
+.temporada-card__encabezado {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-bottom: 0.9rem;
+}
+
+.temporada-card__icono {
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.75rem;
+    background: var(--ct-temporada-fondo);
+}
+
+.temporada-card__titulos {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.temporada-card__titulo {
+    margin: 0;
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--ct-azul-oscuro);
+}
+
+.temporada-card__meses {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ct-texto-sec);
+}
+
+.temporada-card__desc {
+    color: var(--ct-texto);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+}
+
+/* ---------------------------------------------------------
+   10. DISTINTIVOS (glass premium)
+   --------------------------------------------------------- */
+.temporada-card__distintivo {
+    position: relative;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    color: var(--ct-temporada-icono);
+    background: linear-gradient(135deg, var(--ct-pill-desde) 0%, var(--ct-pill-hasta) 100%);
+    backdrop-filter: blur(10px) saturate(160%);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    border: 1px solid var(--ct-pill-borde);
+    box-shadow:
+        inset 0 1px 0 var(--ct-pill-brillo),
+        0 6px 16px -6px var(--ct-pill-borde);
+}
+
+.temporada-card__distintivo i {
+    font-size: 0.85em;
+}
+
+/* ---------------------------------------------------------
+   11. RECOMENDACIONES
+   --------------------------------------------------------- */
+.temporada-card__recomendacion {
+    margin-top: auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    background: var(--ct-fondo-card);
+    border: 1px solid var(--ct-borde);
+    border-radius: 0.75rem;
+    padding: 0.9rem 1rem;
+}
+
+.temporada-card__recomendacion-icono {
+    flex-shrink: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.1rem;
+}
+
+.temporada-card__recomendacion p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ct-texto);
+    line-height: 1.55;
+}
+
+/* ---------------------------------------------------------
+   12. NOTA
+   --------------------------------------------------------- */
+.clima-temporadas__nota {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: var(--ct-fondo-card);
+    border: 1px solid var(--ct-borde);
+    border-radius: 0.9rem;
+    padding: 1rem 1.25rem;
+    margin: 0 0 2.5rem;
+    color: var(--ct-texto);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.clima-temporadas__nota-icono {
+    flex-shrink: 0;
+    color: var(--ct-azul);
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+}
+
+/* ---------------------------------------------------------
+   13. TIPS
+   --------------------------------------------------------- */
+.clima-temporadas__tips {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.clima-tip {
+    min-width: 0;
+    text-align: center;
+    background: var(--ct-blanco);
+    border: 1px solid var(--ct-borde);
+    border-radius: 1rem;
+    padding: 1.5rem 1.25rem;
+    box-shadow: var(--ct-sombra);
+    transition: box-shadow var(--ct-ease), transform var(--ct-ease);
+}
+
+.clima-tip:hover {
+    box-shadow: var(--ct-sombra-hover);
+    transform: translateY(-3px);
+}
+
+.clima-tip--azul {
+    --ct-tip-desde: #E9F2FF;
+    --ct-tip-color: var(--ct-azul);
+    --ct-tip-glow: rgba(0, 127, 255, 0.35);
+}
+
+.clima-tip--ambar {
+    --ct-tip-desde: #FFF6E0;
+    --ct-tip-color: #C79B45;
+    --ct-tip-glow: rgba(199, 155, 69, 0.35);
+}
+
+.clima-tip__icono {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.75rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ct-tip-desde, var(--ct-fondo-card)), var(--ct-blanco));
+    color: var(--ct-tip-color, var(--ct-azul));
+    font-size: 1.5rem;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 6px 14px -6px var(--ct-tip-glow, rgba(0, 127, 255, 0.3));
+    transition: transform var(--ct-ease);
+}
+
+.clima-tip:hover .clima-tip__icono {
+    transform: scale(1.08);
+}
+
+.clima-tip__titulo {
+    margin: 0 0 0.4rem;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ct-azul-oscuro);
+}
+
+.clima-tip__texto {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--ct-texto);
+    line-height: 1.55;
+}
+
+/* ---------------------------------------------------------
+   14. TABLET
+   --------------------------------------------------------- */
+@media (max-width: 992px) {
+    .clima-temporadas__header {
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 24px);
+        padding-bottom: 140px;
+    }
+
+    .clima-actual {
+        margin-top: -100px;
+    }
+
+    .clima-actual__card {
+        padding: 1.75rem;
+    }
+
+    .clima-actual__metricas {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 1.25rem;
+    }
+
+    .clima-temporadas__tips {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ---------------------------------------------------------
+   15. MÓVIL
+   --------------------------------------------------------- */
+@media (max-width: 767px) {
+    .clima-temporadas__header {
+        padding-bottom: 118px;
+        background-position: center 40%;
+    }
+
+    .clima-actual {
+        margin-top: -70px;
+    }
+
+    .clima-temporadas__section {
+        padding-top: 36px;
+    }
+
+    .clima-temporadas__section-title {
+        font-size: 1.3rem;
+    }
+
+    .clima-actual__cuerpo {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.1rem;
+    }
+
+    .clima-actual__info {
+        text-align: left;
+        width: 100%;
+    }
+
+    .clima-actual__info-item {
+        justify-content: flex-start;
+    }
+
+    .clima-actual__icono {
+        font-size: 3rem;
+    }
+
+    .clima-temporadas__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .temporada-card__distintivo {
+        margin-left: 0;
+    }
+
+    .selector-ciudad {
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .selector-ciudad__opcion {
+        flex: 1 1 0;
+    }
+}
+
+/* ---------------------------------------------------------
+   16. MÓVILES PEQUEÑOS
+   --------------------------------------------------------- */
+@media (max-width: 420px) {
+    .clima-temporadas__header {
+        padding-bottom: 96px;
+    }
+
+    .clima-actual {
+        margin-top: -54px;
+    }
+
+    .clima-temporadas__title {
+        font-size: 1.85rem;
+    }
+
+    .clima-actual__card {
+        padding: 1.35rem;
+        border-radius: 1rem;
+    }
+
+    .clima-actual__temp {
+        font-size: 2.75rem;
+    }
+
+    .clima-actual__metricas {
+        gap: 1rem;
+    }
+
+    .clima-temporadas__tips {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.9rem;
+    }
+
+    .clima-tip {
+        padding: 1.1rem 0.85rem;
+    }
+}
+
+/* ---------------------------------------------------------
+   17. ACCESIBILIDAD
+   --------------------------------------------------------- */
+.clima-temporadas :focus-visible {
+    outline: 2px solid var(--ct-azul);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------
+   18. REDUCCIÓN DE MOVIMIENTO
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .clima-actual__card::before,
+    .clima-actual__card::after {
+        animation: none !important;
+    }
+
+    .temporada-card,
+    .clima-tip,
+    .clima-tip__icono {
+        transition: none;
+    }
+}

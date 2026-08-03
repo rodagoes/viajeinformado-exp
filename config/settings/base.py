@@ -30,6 +30,13 @@ DECOLECTA_TIPO_CAMBIO_URL = env(
 # Token opcional. Si Decolecta lo exige en producción, agrégalo en el .env.
 DECOLECTA_API_TOKEN = env("DECOLECTA_API_TOKEN", default="")
 
+# Clima y temporadas (Huánuco y Tingo María) - proveedor Open-Meteo,
+# no requiere API key.
+CLIMA_HUANUCO_LATITUD = env("CLIMA_HUANUCO_LATITUD", default="")
+CLIMA_HUANUCO_LONGITUD = env("CLIMA_HUANUCO_LONGITUD", default="")
+CLIMA_TINGO_MARIA_LATITUD = env("CLIMA_TINGO_MARIA_LATITUD", default="")
+CLIMA_TINGO_MARIA_LONGITUD = env("CLIMA_TINGO_MARIA_LONGITUD", default="")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,6 +63,7 @@ INSTALLED_APPS = [
     'apps.establecimientos',
     'apps.eventos',
     'apps.movilidad',
+    'apps.clima',
     'apps.itinerarios',
     'apps.servicios_turista',
     'apps.monedas',

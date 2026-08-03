@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load clima_extras %}
+
+{% block title %}{% if ciudad.slug == "tingo-maria" %}Clima en Tingo María{% else %}Clima en Huánuco{% endif %} • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/clima-temporadas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="clima-temporadas">
+
+    <!-- ENCABEZADO -->
+    <header class="clima-temporadas__header{% if ciudad.slug == "tingo-maria" %} clima-temporadas__header--tingo-maria{% endif %}">
+        <div class="container" data-animar="animate__fadeInUp">
+            {% if ciudad.slug == "tingo-maria" %}
+            <span class="clima-temporadas__eyebrow">Naturaleza y clima tropical</span>
+            <h1 class="clima-temporadas__title">Clima en Tingo María</h1>
+            <p class="clima-temporadas__subtitle">
+                Información actual y recomendaciones para disfrutar la naturaleza
+                y el clima tropical de la selva alta.
+            </p>
+            {% else %}
+            <span class="clima-temporadas__eyebrow">El mejor clima del mundo</span>
+            <h1 class="clima-temporadas__title">Clima en Huánuco</h1>
+            <p class="clima-temporadas__subtitle">
+                Información actual y recomendaciones para que disfrutes tu viaje
+                en cualquier época del año.
+            </p>
+            {% endif %}
+
+            <!-- SELECTOR DE CIUDAD -->
+            <nav class="selector-ciudad" aria-label="Seleccionar ciudad">
+                {% for c in ciudades %}
+                <a
+                    href="?ciudad={{ c.slug }}"
+                    class="selector-ciudad__opcion{% if c.slug == ciudad.slug %} selector-ciudad__opcion--activo{% endif %}"
+                    {% if c.slug == ciudad.slug %}aria-current="page"{% endif %}>
+                    {{ c.nombre }}
+                </a>
+                {% endfor %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- CARD DEL CLIMA ACTUAL -->
+    <section
+        class="clima-actual clima-actual--{{ clima.estado_slug }} clima-actual--{{ ciudad.slug }}{% if not clima.es_dia %} clima-actual--noche{% endif %}{% if not clima.disponible %} clima-actual--sin-datos{% endif %}"
+        data-animar="animate__fadeInUp">
+        <div class="container">
+            <div class="clima-actual__card">
+
+                {% if clima.disponible %}
+                <div class="clima-actual__cuerpo">
+                    <div class="clima-actual__principal">
+                        <span class="clima-actual__icono" aria-hidden="true">
+                            <i class="bi {{ clima.estado_slug|icono_clima:clima.es_dia }}"></i>
+                        </span>
+
+                        <div class="clima-actual__temp-wrap">
+                            <p class="clima-actual__temp">
+                                {{ clima.temperatura_c }}<span class="clima-actual__temp-unidad">°C</span>
+                            </p>
+                            <p class="clima-actual__estado">{{ clima.estado_texto }}</p>
+                        </div>
+                    </div>
+
+                    <div class="clima-actual__info">
+                        <p class="clima-actual__info-item">
+                            <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                            {{ clima.ubicacion }}
+                        </p>
+                        {% if clima.actualizado_local %}
+                        <p class="clima-actual__info-item">
+                            <i class="bi bi-clock-history" aria-hidden="true"></i>
+                            Actualizado hoy {{ clima.actualizado_local }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr class="clima-actual__separador">
+
+                <div class="clima-actual__metricas">
+                    <div class="clima-actual__metrica">
+                        <i class="bi bi-thermometer-half" aria-hidden="true"></i>
+                        <span class="clima-actual__metrica-texto">
+                            <span class="clima-actual__metrica-label">Sensación térmica</span>
+                            <strong>
+                                {% if clima.sensacion_c is not None %}{{ clima.sensacion_c }} °C{% else %}—{% endif %}
+                            </strong>
+                        </span>
+                    </div>
+
+                    <div class="clima-actual__metrica">
+                        <i class="bi bi-cloud-drizzle" aria-hidden="true"></i>
+                        <span class="clima-actual__metrica-texto">
+                            <span class="clima-actual__metrica-label">Prob. de lluvia</span>
+                            <strong>
+                                {% if clima.probabilidad_lluvia_pct is not None %}{{ clima.probabilidad_lluvia_pct }} %{% else %}—{% endif %}
+                            </strong>
+                            <small class="clima-actual__metrica-sub">Ahora</small>
+                        </span>
+                    </div>
+
+                    <div class="clima-actual__metrica">
+                        <i class="bi bi-moisture" aria-hidden="true"></i>
+                        <span class="clima-actual__metrica-texto">
+                            <span class="clima-actual__metrica-label">Humedad</span>
+                            <strong>
+                                {% if clima.humedad_pct is not None %}{{ clima.humedad_pct }} %{% else %}—{% endif %}
+                            </strong>
+                        </span>
+                    </div>
+
+                    <div class="clima-actual__metrica">
+                        <i class="bi bi-wind" aria-hidden="true"></i>
+                        <span class="clima-actual__metrica-texto">
+                            <span class="clima-actual__metrica-label">Viento</span>
+                            <strong>
+                                {% if clima.viento_kph is not None %}{{ clima.viento_kph }} km/h{% else %}—{% endif %}
+                            </strong>
+                        </span>
+                    </div>
+                </div>
+
+                {% if clima.es_respaldo %}
+                <p class="clima-actual__aviso">
+                    <i class="bi bi-info-circle" aria-hidden="true"></i>
+                    Mostrando la última información disponible.
+                </p>
+                {% endif %}
+
+                <p class="clima-actual__fuente">
+                    Powered by:
+                    <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>
+                </p>
+
+                {% else %}
+                <div class="clima-actual__no-disponible">
+                    <i class="bi bi-cloud-slash" aria-hidden="true"></i>
+                    <p class="clima-actual__no-disponible-titulo">
+                        Información meteorológica temporalmente no disponible
+                    </p>
+                    <p class="clima-actual__no-disponible-texto">
+                        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                        {{ ciudad.nombre_completo }} — Intenta nuevamente más tarde.
+                    </p>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+
+    {% if ciudad.slug == "tingo-maria" %}
+    <!-- TEMPORADAS: TINGO MARÍA -->
+    <section class="clima-temporadas__section">
+        <div class="container">
+            <h2 class="clima-temporadas__section-title" data-animar="animate__fadeInUp">
+                <i class="bi bi-calendar-week-fill" aria-hidden="true"></i>
+                Temporadas en Tingo María
+            </h2>
+
+            <div class="clima-temporadas__grid">
+
+                <!-- TEMPORADA SECA (MENOR LLUVIA) -->
+                <article class="temporada-card temporada-card--seca" data-animar="animate__fadeInUp">
+                    <div class="temporada-card__encabezado">
+                        <span class="temporada-card__icono" aria-hidden="true">
+                            <lottie-player src="{% static 'assets/img/icons/icono-temporada-seca.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                        </span>
+                        <div class="temporada-card__titulos">
+                            <h3 class="temporada-card__titulo">Temporada seca</h3>
+                            <span class="temporada-card__meses">MAYO A SEPTIEMBRE</span>
+                        </div>
+                        <span class="temporada-card__distintivo">
+                            <i class="bi bi-person-walking" aria-hidden="true"></i>
+                            IDEAL PARA ACTIVIDADES AL AIRE LIBRE
+                        </span>
+                    </div>
+
+                    <p class="temporada-card__desc">
+                        Temporada con menor frecuencia de lluvias, brindando mejores condiciones para recorrer cataratas, miradores, cuevas y
+                        senderos y mejor visibilidad de la silueta de la Bella Durmiente.
+                    </p>
+
+                    <div class="temporada-card__recomendacion">
+                        <img src="{% static 'assets/img/icons/icono-ropaligera-vi.png' %}" alt="" class="temporada-card__recomendacion-icono">
+                        <p>
+                            <strong>Recomendación:</strong>
+                            Lleva ropa ligera y transpirable, bloqueador solar, repelente, agua y casaca para las noches.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- TEMPORADA DE LLUVIAS (MAYOR LLUVIA) -->
+                <article class="temporada-card temporada-card--lluvias" data-animar="animate__fadeInUp">
+                    <div class="temporada-card__encabezado">
+                        <span class="temporada-card__icono" aria-hidden="true">
+                            <lottie-player src="{% static 'assets/img/icons/icono-temporada-lluvia.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                        </span>
+                        <div class="temporada-card__titulos">
+                            <h3 class="temporada-card__titulo">Temporada de lluvias</h3>
+                            <span class="temporada-card__meses">OCTUBRE A ABRIL</span>
+                        </div>
+                        <span class="temporada-card__distintivo">
+                            <i class="bi bi-water" aria-hidden="true"></i>
+                            PAISAJES MÁS VERDES Y CAUDALOSOS
+                        </span>
+                    </div>
+
+                    <p class="temporada-card__desc">
+                        Las lluvias son más frecuentes y la vegetación luce especialmente
+                        intensa. Las cataratas y quebradas pueden presentar mayor caudal,
+                        por lo que es importante revisar las condiciones antes de realizar
+                        recorridos.
+                    </p>
+
+                    <div class="temporada-card__recomendacion">
+                        <img src="{% static 'assets/img/icons/icono-ropalluvia-vi.png' %}" alt="" class="temporada-card__recomendacion-icono">
+                        <p>
+                            <strong>Recomendación:</strong>
+                            Lleva prendas superiores impermeables, repelente, ropa de cambio y calzado antideslizante.
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- NOTA -->
+            <p class="clima-temporadas__nota" data-animar="animate__fadeInUp">
+                <span class="clima-temporadas__nota-icono" aria-hidden="true">
+                    <i class="bi bi-info-circle-fill"></i>
+                </span>
+                <span>
+                    <strong>Nota:</strong>
+                    El clima de Tingo María es más cálido y húmedo que el de la ciudad
+                    de Huánuco. Las lluvias pueden presentarse incluso durante los meses
+                    de menor precipitación.
+                </span>
+            </p>
+
+            <!-- TIPS -->
+            <h2 class="clima-temporadas__section-title" data-animar="animate__fadeInUp">
+                <i class="bi bi-stars" aria-hidden="true"></i>
+                Tips
+            </h2>
+
+            <div class="clima-temporadas__tips">
+                <article class="clima-tip clima-tip--ambar" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true"><i class="bi bi-cloud-sun"></i></span>
+                    <h3 class="clima-tip__titulo">Consulta el clima</h3>
+                    <p class="clima-tip__texto">
+                        Revisa el pronóstico antes de visitar cataratas, cuevas o senderos.
+                    </p>
+                </article>
+
+                <article class="clima-tip clima-tip--azul" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true"><i class="bi bi-bug-fill"></i></span>
+                    <h3 class="clima-tip__titulo">Lleva repelente</h3>
+                    <p class="clima-tip__texto">
+                        Utiliza repelente y ropa ligera que proteja la piel durante los
+                        recorridos.
+                    </p>
+                </article>
+
+                <article class="clima-tip clima-tip--ambar" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true">
+                        <img src="{% static 'assets/img/icons/calzado-adecuado-icono.svg' %}" alt="" style="width: 1.5rem; height: 1.5rem; object-fit: contain;">
+                    </span>
+                    <h3 class="clima-tip__titulo">Calzado adecuado</h3>
+                    <p class="clima-tip__texto">
+                        Elige calzado antideslizante para caminos húmedos y terrenos
+                        irregulares.
+                    </p>
+                </article>
+
+                <article class="clima-tip clima-tip--azul" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true">
+                        <img src="{% static 'assets/img/icons/botella-agua-icono.svg' %}" alt="" style="width: 1.5rem; height: 1.5rem; object-fit: contain;">
+                    </span>
+                    <h3 class="clima-tip__titulo">Mantente hidratado</h3>
+                    <p class="clima-tip__texto">
+                        Lleva agua y protégete del calor y la humedad durante las
+                        caminatas.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    {% else %}
+    <!-- TEMPORADAS: HUÁNUCO -->
+    <section class="clima-temporadas__section">
+        <div class="container">
+            <h2 class="clima-temporadas__section-title" data-animar="animate__fadeInUp">
+                <i class="bi bi-calendar-week-fill" aria-hidden="true"></i>
+                Temporadas en Huánuco
+            </h2>
+
+            <div class="clima-temporadas__grid">
+
+                <!-- TEMPORADA SECA -->
+                <article class="temporada-card temporada-card--seca" data-animar="animate__fadeInUp">
+                    <div class="temporada-card__encabezado">
+                        <span class="temporada-card__icono" aria-hidden="true">
+                            <lottie-player src="{% static 'assets/img/icons/icono-temporada-seca.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                        </span>
+                        <div class="temporada-card__titulos">
+                            <h3 class="temporada-card__titulo">Temporada seca</h3>
+                            <span class="temporada-card__meses">Mayo a octubre</span>
+                        </div>
+                        <span class="temporada-card__distintivo">
+                            <i class="bi bi-stars" aria-hidden="true"></i>
+                            MEJOR ÉPOCA PARA VISITAR
+                        </span>
+                    </div>
+
+                    <p class="temporada-card__desc">
+                        Días soleados y cielos despejados. Ideal para recorrer zonas
+                        arqueológicas, hacer senderismo y disfrutar de las festividades
+                        principales, como el aniversario de Huánuco en agosto.
+                    </p>
+
+                    <div class="temporada-card__recomendacion">
+                        <img src="{% static 'assets/img/icons/icono-ropaligera-vi.png' %}" alt="" class="temporada-card__recomendacion-icono">
+                        <p>
+                            <strong>Recomendación:</strong>
+                            Lleva ropa ligera para el día, bloqueador solar y gorra.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- TEMPORADA DE LLUVIAS -->
+                <article class="temporada-card temporada-card--lluvias" data-animar="animate__fadeInUp">
+                    <div class="temporada-card__encabezado">
+                        <span class="temporada-card__icono" aria-hidden="true">
+                            <lottie-player src="{% static 'assets/img/icons/icono-temporada-lluvia.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                        </span>
+                        <div class="temporada-card__titulos">
+                            <h3 class="temporada-card__titulo">Temporada de lluvias</h3>
+                            <span class="temporada-card__meses">Noviembre a abril</span>
+                        </div>
+                        <span class="temporada-card__distintivo">
+                            <i class="bi bi-balloon-heart-fill" aria-hidden="true"></i>
+                            IDEAL POR SUS FESTIVIDADES
+                        </span>
+                    </div>
+
+                    <p class="temporada-card__desc">
+                        El paisaje se torna intensamente verde. Las lluvias suelen ser
+                        fuertes, pero de corta duración, principalmente por las tardes.
+                        Es una temporada ideal para apreciar la naturaleza y disfrutar
+                        de festividades cercanas.
+                    </p>
+
+                    <div class="temporada-card__recomendacion">
+                        <img src="{% static 'assets/img/icons/icono-ropalluvia-vi.png' %}" alt="" class="temporada-card__recomendacion-icono">
+                        <p>
+                            <strong>Recomendación:</strong>
+                            Lleva casaca impermeable o poncho de lluvia, calzado antideslizante y repelente.
+                        </p>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- TIPS -->
+            <h2 class="clima-temporadas__section-title" data-animar="animate__fadeInUp">
+                <i class="bi bi-stars" aria-hidden="true"></i>
+                Tips
+            </h2>
+
+            <div class="clima-temporadas__tips">
+                <article class="clima-tip clima-tip--ambar" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true"><i class="bi bi-cloud-sun"></i></span>
+                    <h3 class="clima-tip__titulo">Consulta el clima</h3>
+                    <p class="clima-tip__texto">Revisa el pronóstico antes de tu viaje.</p>
+                </article>
+
+                <article class="clima-tip clima-tip--azul" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true"><i class="bi bi-backpack2-fill"></i></span>
+                    <h3 class="clima-tip__titulo">Empaca versátil</h3>
+                    <p class="clima-tip__texto">
+                        Lleva ropa para el calor y el frío, además de una prenda
+                        impermeable.
+                    </p>
+                </article>
+
+                <article class="clima-tip clima-tip--ambar" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true">
+                        <img src="{% static 'assets/img/icons/calzado-adecuado-icono.svg' %}" alt="" style="width: 1.5rem; height: 1.5rem; object-fit: contain;">
+                    </span>
+                    <h3 class="clima-tip__titulo">Calzado adecuado</h3>
+                    <p class="clima-tip__texto">
+                        Elige calzado cómodo para caminatas y terrenos irregulares.
+                    </p>
+                </article>
+
+                <article class="clima-tip clima-tip--azul" data-animar="animate__fadeInUp">
+                    <span class="clima-tip__icono" aria-hidden="true">
+                        <img src="{% static 'assets/img/icons/botella-agua-icono.svg' %}" alt="" style="width: 1.5rem; height: 1.5rem; object-fit: contain;">
+                    </span>
+                    <h3 class="clima-tip__titulo">Mantente hidratado</h3>
+                    <p class="clima-tip__texto">
+                        Bebe suficiente agua, especialmente durante recorridos en
+                        altura.
+                    </p>
+                </article>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/animaciones-scroll.js' %}"></script>
+{% endblock %}
