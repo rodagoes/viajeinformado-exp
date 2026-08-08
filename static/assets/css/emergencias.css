@@ -1,0 +1,1310 @@
+/* ==== EMERGENCIAS - reglas quedan encapsuladas bajo .emergencias-page ==== */
+
+/* ---------------------------------------------------------
+   1. VARIABLES
+   --------------------------------------------------------- */
+.emergencias-page {
+    --em-blanco: #FFFFFF;
+    --em-azul-oscuro: #002D89;
+    --em-azul: #007FFF;
+    --em-fondo: #F7F9FD;
+    --em-fondo-card: #EEF3FB;
+    --em-texto: #182033;
+    --em-texto-sec: #61708C;
+    --em-borde: #DFE7F3;
+    --em-borde-suave: rgba(0, 45, 137, 0.08);
+
+    --em-rojo: #D64545;
+    --em-rojo-suave: #FBEAEA;
+    --em-verde: #1E8E5A;
+
+    /* Color por defecto de la tarjeta según categoría. Cada contacto puede
+       sobreescribirlo con su propio --em-card-color (campo color_marca). */
+    --em-card-color: var(--em-azul);
+
+    --em-radius-sm: 10px;
+    --em-radius-md: 16px;
+    --em-radius-lg: 22px;
+
+    --em-shadow-sm: 0 2px 10px rgba(0, 45, 137, 0.06);
+    --em-shadow-lg: 0 18px 38px rgba(0, 45, 137, 0.14);
+
+    --em-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+    background: var(--em-fondo);
+    color: var(--em-texto);
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+/* ---------------------------------------------------------
+   2. LAYOUT
+   --------------------------------------------------------- */
+.emergencias-page .container {
+    max-width: 1140px;
+}
+
+.emergencias-page__section {
+    padding: 34px 0 6px;
+}
+
+.emergencias-page__section-heading {
+    margin-bottom: 18px;
+}
+
+.emergencias-page__section-title {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.65rem);
+    color: var(--em-azul-oscuro);
+    margin-bottom: 8px;
+}
+
+.emergencias-page__section-subtitle {
+    font-size: 0.88rem;
+    color: var(--em-texto-sec);
+    margin: 0;
+}
+
+/* ---------------------------------------------------------
+   3. HERO (compacto)
+   --------------------------------------------------------- */
+.emergencias-page__hero {
+    padding: calc(var(--vi-header-height-desktop, 78px) + 40px) 0 28px;
+    text-align: center;
+}
+
+.emergencias-page__hero-content {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.emergencias-page__hero-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--em-rojo-suave);
+    color: var(--em-rojo);
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+}
+
+.emergencias-page__hero-eyebrow {
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    color: var(--em-azul);
+    margin-bottom: 8px;
+}
+
+.emergencias-page__hero-title {
+    font-family: "Oswald", serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 1.6rem + 1.2vw, 2.4rem);
+    color: var(--em-azul-oscuro);
+    margin-bottom: 10px;
+}
+
+.emergencias-page__hero-desc {
+    font-size: 0.98rem;
+    color: var(--em-texto-sec);
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------
+   4. SELECTOR / UBICACIÓN
+   ---------------------------------------------------------
+   Nota: el botón "Detectar mi ubicación" se omite a propósito.
+   apps/ubicaciones solo tiene coordenadas en Localidad y la base
+   actual tiene un único registro (Tingo María); no hay centroide
+   para Huánuco, Amarilis, Pillco Marca ni Ambo, así que no hay
+   forma confiable de resolver la zona por geolocalización todavía.
+   --------------------------------------------------------- */
+.emergencias-selector {
+    position: relative;
+    background: linear-gradient(180deg, var(--em-blanco) 0%, var(--em-fondo-card) 220%);
+    border: 1px solid var(--em-borde-suave);
+    border-radius: var(--em-radius-lg);
+    box-shadow: 0 1px 2px rgba(0, 45, 137, 0.04), 0 22px 44px -20px rgba(0, 45, 137, 0.22);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    overflow: hidden;
+    transition: box-shadow 240ms var(--em-ease-out), transform 240ms var(--em-ease-out);
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+    .emergencias-selector:hover {
+        box-shadow: 0 1px 2px rgba(0, 45, 137, 0.05), 0 28px 54px -18px rgba(0, 45, 137, 0.28);
+        transform: translateY(-2px);
+    }
+}
+
+.emergencias-selector__intro {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1 1 220px;
+}
+
+.emergencias-selector__icon {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--em-azul) 0%, var(--em-azul-oscuro) 100%);
+    color: var(--em-blanco);
+    font-size: 1.08rem;
+    box-shadow: 0 10px 22px rgba(0, 127, 255, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+.emergencias-selector__eyebrow {
+    margin: 0 0 2px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--em-azul);
+}
+
+.emergencias-selector__title {
+    font-family: "Playfair Display", serif;
+    font-size: 1.18rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--em-azul-oscuro);
+    margin-bottom: 0;
+}
+
+.emergencias-selector__divisor {
+    flex: none;
+    align-self: stretch;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--em-borde), transparent);
+}
+
+.emergencias-selector__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 220px;
+    max-width: 270px;
+}
+
+.emergencias-selector__campo {
+    position: relative;
+    display: flex;
+}
+
+.emergencias-selector__select {
+    width: 100%;
+    min-height: 46px;
+    padding: 8px 38px 8px 18px;
+    border: 1px solid var(--em-borde);
+    border-radius: 999px;
+    background: var(--em-blanco);
+    color: var(--em-texto);
+    font-size: 0.92rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow: inset 0 1px 2px rgba(0, 45, 137, 0.05);
+    transition: border-color 160ms var(--em-ease-out), box-shadow 160ms var(--em-ease-out);
+}
+
+.emergencias-selector__select:hover {
+    border-color: var(--em-azul);
+}
+
+.emergencias-selector__select:focus-visible {
+    outline: none;
+    border-color: var(--em-azul);
+    box-shadow: inset 0 1px 2px rgba(0, 45, 137, 0.05), 0 0 0 3px rgba(0, 127, 255, 0.22);
+}
+
+.emergencias-selector__chevron {
+    position: absolute;
+    top: 50%;
+    right: 17px;
+    transform: translateY(-50%);
+    color: var(--em-azul);
+    font-size: 0.78rem;
+    pointer-events: none;
+}
+
+/* Mejora progresiva: navegadores con "Customizable Select" (::picker(select))
+   pueden diseñar el propio desplegable, no solo el campo cerrado. Donde no
+   hay soporte, el <select> sigue igual de bien con el estilo de arriba. */
+@supports (appearance: base-select) {
+    .emergencias-selector__select {
+        appearance: base-select;
+    }
+
+    /* La flecha nativa del picker queda oculta: se mantiene el mismo
+       chevron de bootstrap-icons de siempre, para que el campo cerrado
+       se vea idéntico soporte o no soporte el navegador. */
+    .emergencias-selector__select::picker-icon {
+        display: none;
+    }
+
+    .emergencias-selector__select::picker(select) {
+        appearance: base-select;
+        margin-top: 10px;
+        min-width: 240px;
+        padding: 8px;
+        border: 1px solid var(--em-borde);
+        border-radius: var(--em-radius-md);
+        background: var(--em-blanco);
+        box-shadow: 0 1px 2px rgba(0, 45, 137, 0.05), 0 24px 48px -16px rgba(0, 45, 137, 0.3);
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        transition: opacity 180ms var(--em-ease-out), transform 180ms var(--em-ease-out);
+    }
+
+    @starting-style {
+        .emergencias-selector__select:open::picker(select) {
+            opacity: 0;
+            transform: scale(0.96) translateY(-6px);
+        }
+    }
+
+    .emergencias-selector__select optgroup {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--em-texto-sec);
+        padding: 10px 10px 4px;
+    }
+
+    .emergencias-selector__select option {
+        padding: 10px 12px;
+        margin: 1px 0;
+        border-radius: var(--em-radius-sm);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--em-texto);
+        transition: background-color 120ms var(--em-ease-out);
+    }
+
+    .emergencias-selector__select option:hover {
+        background: var(--em-fondo-card);
+    }
+
+    .emergencias-selector__select option:checked {
+        background: color-mix(in srgb, var(--em-azul) 12%, white);
+        color: var(--em-azul-oscuro);
+    }
+
+    .emergencias-selector__select option::checkmark {
+        color: var(--em-azul);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    @supports (appearance: base-select) {
+        .emergencias-selector__select::picker(select) {
+            transition: none;
+        }
+    }
+}
+
+.emergencias-selector__submit {
+    min-height: 44px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--em-radius-sm);
+    background: var(--em-azul);
+    color: var(--em-blanco);
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 160ms var(--em-ease-out), background-color 160ms var(--em-ease-out);
+}
+
+.emergencias-selector__submit:active {
+    transform: scale(0.97);
+}
+
+/* ---------------------------------------------------------
+   5. CONTACTOS NACIONALES
+   --------------------------------------------------------- */
+.emergencias-nacional-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.emergencia-card {
+    position: relative;
+    border-radius: var(--em-radius-md);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    /* Manchas de color en las esquinas opuestas (identidad de la
+       institución); los fondos siempre pintan detrás del contenido, así
+       que el texto nunca queda tapado. Se recortan solas al border-radius. */
+    background:
+        radial-gradient(circle at top left, color-mix(in srgb, var(--em-card-color) 32%, transparent) 0%, transparent 70%) top left / 62% 62% no-repeat,
+        radial-gradient(circle at bottom right, color-mix(in srgb, var(--em-card-color) 32%, transparent) 0%, transparent 70%) bottom right / 55% 55% no-repeat,
+        var(--em-blanco);
+    border: 1px solid var(--em-borde);
+    box-shadow: var(--em-shadow-sm);
+    transition: transform 200ms var(--em-ease-out), box-shadow 200ms var(--em-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .emergencia-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--em-shadow-lg);
+    }
+}
+
+/* Color representativo por categoría; un color_marca por contacto
+   (aplicado inline como --em-card-color) tiene prioridad sobre esto. */
+.emergencia-card--policia { --em-card-color: #1E8FFF; }
+.emergencia-card--bomberos { --em-card-color: var(--em-rojo); }
+.emergencia-card--salud { --em-card-color: #0E6FB8; }
+
+.emergencia-card__logo {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    filter: grayscale(1);
+}
+
+/* Solo el título y la descripción ceden espacio al logo: el número y el
+   botón siguen ocupando el ancho completo de la tarjeta. */
+.emergencia-card--nacional:has(.emergencia-card__logo) .emergencia-card__nombre,
+.emergencia-card--nacional:has(.emergencia-card__logo) .emergencia-card__desc {
+    padding-right: 86px;
+}
+
+.emergencia-card__logo--local {
+    width: 52px;
+    height: 52px;
+    top: 12px;
+    right: 12px;
+}
+
+.emergencia-card--local:has(.emergencia-card__logo--local) .emergencia-card__nombre,
+.emergencia-card--local:has(.emergencia-card__logo--local) .emergencia-card__telefono {
+    padding-right: 64px;
+}
+
+.emergencia-card--nacional .emergencia-card__icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--em-card-color) 14%, white);
+    color: var(--em-card-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 14px;
+}
+
+.emergencia-card__icon-svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    display: block;
+    flex-shrink: 0;
+    fill: currentColor;
+}
+
+.emergencia-card__nombre {
+    font-family: "Inter", sans-serif;
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    color: inherit;
+}
+
+.emergencia-card__desc {
+    font-size: 0.88rem;
+    color: var(--em-texto-sec);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.emergencia-card__numero {
+    font-size: clamp(1.7rem, 1.5rem + 0.6vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+}
+
+.emergencia-card--nacional .emergencia-card__numero {
+    color: var(--em-card-color);
+}
+
+.emergencia-card__horario {
+    font-size: 0.84rem;
+    color: var(--em-texto-sec);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.emergencia-card__verificado {
+    font-size: 0.78rem;
+    color: var(--em-verde);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+/* ---------------------------------------------------------
+   6. CONTACTOS LOCALES
+   --------------------------------------------------------- */
+.emergencias-local-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+/* La tarjeta local hereda flex-direction: column de .emergencia-card;
+   el icono y el nombre/teléfono van en una fila propia arriba, así el
+   layout es el mismo en fila de 1 o de 2 columnas (no depende de un
+   breakpoint que cambie de fila a columna). Fondo propio: difuminado
+   diagonal del color de marca hacia blanco, en vez de las manchas en
+   las esquinas que usan las tarjetas nacionales. */
+.emergencia-card--local {
+    padding: 16px 18px;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--em-card-color) 26%, var(--em-blanco)), var(--em-blanco) 70%);
+}
+
+.emergencia-card__local-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.emergencia-card__icon--local {
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--em-card-color) 14%, white);
+    color: var(--em-card-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+}
+
+.emergencia-card__local-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.emergencia-card--local .emergencia-card__nombre {
+    color: var(--em-texto);
+    font-size: 0.98rem;
+    margin-bottom: 2px;
+}
+
+.emergencia-card__telefono {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--em-texto);
+}
+
+.emergencia-card__telefono i {
+    color: var(--em-card-color);
+    font-size: 0.8rem;
+}
+
+/* Números adicionales (ej. fijo + móvil): mismo estilo que el número
+   principal, en un tono más discreto para no competir con él. */
+.emergencia-card__telefono--extra {
+    margin-top: 3px;
+    font-weight: 600;
+    color: var(--em-texto-sec);
+    text-decoration: none;
+}
+
+.emergencia-card__telefono-etiqueta {
+    font-weight: 700;
+    color: var(--em-texto);
+}
+
+.emergencia-card--local .emergencia-card__desc {
+    margin-bottom: 8px;
+}
+
+.emergencia-card__meta-local {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0 0 12px;
+    font-size: 0.76rem;
+    color: var(--em-texto-sec);
+}
+
+.emergencia-card__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.emergencia-card__meta-item--verificado {
+    color: var(--em-verde);
+}
+
+.emergencia-card__meta-sep {
+    color: var(--em-borde);
+}
+
+/* ---------------------------------------------------------
+   7. ACCIONES (llamar / copiar)
+   --------------------------------------------------------- */
+.emergencia-card__acciones {
+    margin-top: auto;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.emergencias__accion-copiar {
+    display: none;
+}
+
+.emergencia-card__btn-llamar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: var(--em-radius-sm);
+    background: var(--em-card-color);
+    color: var(--em-blanco);
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 160ms var(--em-ease-out);
+}
+
+.emergencia-card__btn-llamar:active {
+    transform: scale(0.96);
+}
+
+.emergencia-card__btn-copiar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--em-card-color);
+    border-radius: var(--em-radius-sm);
+    background: var(--em-card-color);
+    color: var(--em-blanco);
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 160ms var(--em-ease-out),
+        background-color 160ms var(--em-ease-out),
+        border-color 160ms var(--em-ease-out),
+        color 160ms var(--em-ease-out);
+}
+
+.emergencia-card__btn-copiar:active {
+    transform: scale(0.96);
+}
+
+/* Acciones de las tarjetas locales: copiar (siempre) + llamar (solo
+   táctil/móvil, ver breakpoint más abajo) en una fila de igual ancho. */
+.emergencia-card__acciones--local {
+    gap: 8px;
+}
+
+.emergencia-card__acciones--local .emergencia-card__btn-copiar,
+.emergencia-card__acciones--local .emergencia-card__btn-llamar {
+    flex: 1 1 0;
+    padding: 0 12px;
+    font-size: 0.86rem;
+}
+
+.emergencia-card--local .emergencia-card__btn-copiar {
+    background: var(--em-blanco);
+    border-color: var(--em-card-color);
+    color: var(--em-card-color);
+}
+
+/* Desde una computadora no se puede llamar: en desktop/tablet solo se
+   ofrece copiar el número, a todo lo ancho. */
+@media (min-width: 992px) {
+    .emergencia-card__acciones--local .emergencia-card__btn-llamar {
+        display: none;
+    }
+}
+
+.emergencia-card__btn-copiar[data-estado="copiado"] {
+    background: var(--em-verde);
+    border-color: var(--em-verde);
+    color: var(--em-blanco);
+}
+
+/* Las tarjetas nacionales solo muestran una acción a la vez (llamar en
+   móvil, copiar en desktop): que ocupe todo el ancho, como en el diseño
+   de referencia. Las locales mantienen el botón circular + copiar en fila.
+   El wrapper también debe estirarse: es un flex item con display:block,
+   así que sin el width explícito se queda del ancho de su contenido. */
+.emergencia-card--nacional .emergencias__accion-llamar,
+.emergencia-card--nacional .emergencias__accion-copiar {
+    width: 100%;
+}
+
+.emergencia-card--nacional .emergencia-card__btn-llamar,
+.emergencia-card--nacional .emergencia-card__btn-copiar {
+    width: 100%;
+}
+
+.emergencia-card__btn-llamar:focus-visible,
+.emergencia-card__btn-copiar:focus-visible,
+.emergencias-selector__submit:focus-visible {
+    outline: 3px solid var(--em-azul);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------
+   8. QR (solo desktop) + TURISTAS EXTRANJEROS EN UNA FILA
+   --------------------------------------------------------- */
+.emergencias-page__section--secundarios {
+    padding-top: 6px;
+}
+
+.emergencias-secundarios-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: stretch;
+}
+
+@media (min-width: 992px) {
+    .emergencias-secundarios-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* El QR solo tiene sentido para continuar en el celular: si ya estás en
+   el celular, no hace falta escanear nada, así que se oculta por debajo
+   del breakpoint de escritorio. */
+.emergencias-qr {
+    display: none;
+    background: var(--em-fondo-card);
+    border: 1px solid var(--em-borde);
+    border-radius: var(--em-radius-lg);
+    padding: 24px 28px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+@media (min-width: 992px) {
+    .emergencias-qr {
+        display: flex;
+    }
+}
+
+.emergencias-qr__texto {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.emergencias-qr__icon {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--em-blanco);
+    color: var(--em-azul);
+    font-size: 1rem;
+}
+
+.emergencias-qr__title {
+    font-family: "Inter", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--em-azul-oscuro);
+    margin-bottom: 4px;
+}
+
+.emergencias-qr__desc {
+    color: var(--em-texto-sec);
+    font-size: 0.88rem;
+    margin: 0;
+    max-width: 380px;
+}
+
+.emergencias-qr__imagen {
+    flex: none;
+    width: 132px;
+    height: 132px;
+    border-radius: var(--em-radius-sm);
+    border: 1px solid var(--em-borde);
+    padding: 8px;
+    background: var(--em-blanco);
+}
+
+/* ---------------------------------------------------------
+   9. TURISTAS EXTRANJEROS
+   --------------------------------------------------------- */
+.emergencias-extranjeros {
+    background: var(--em-azul-oscuro);
+    border-radius: var(--em-radius-lg);
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    color: var(--em-blanco);
+}
+
+.emergencias-extranjeros__icon {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 1rem;
+}
+
+.emergencias-extranjeros__texto {
+    flex: 1;
+    min-width: 0;
+}
+
+.emergencias-extranjeros__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.emergencias-extranjeros__title {
+    font-family: "Inter", sans-serif;
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--em-blanco);
+}
+
+.emergencias-extranjeros__es,
+.emergencias-extranjeros__en {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+/* Interruptor de idioma ESP/ENG */
+.emergencias-idioma-switch {
+    flex: none;
+    display: inline-flex;
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.emergencias-idioma-switch__btn {
+    position: relative;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 5px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 160ms var(--em-ease-out), color 160ms var(--em-ease-out);
+}
+
+/* El área táctil real llega a 44px de alto sin agrandar la píldora
+   visualmente: un pseudo-elemento invisible extiende el hit-area por
+   encima/debajo, sin afectar el layout (queda fuera del flujo). */
+.emergencias-idioma-switch__btn::after {
+    content: "";
+    position: absolute;
+    inset: -9px 0;
+}
+
+.emergencias-idioma-switch__btn.is-active {
+    background: var(--em-blanco);
+    color: var(--em-azul-oscuro);
+}
+
+.emergencias-idioma-switch__btn:focus-visible {
+    outline: 2px solid var(--em-blanco);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------
+   10. ANTES DE LLAMAR
+   --------------------------------------------------------- */
+.emergencias-antes-llamar {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.emergencias-antes-llamar__item {
+    background: var(--em-blanco);
+    border-radius: var(--em-radius-md);
+    padding: 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    /* No usa var(--em-shadow-sm): este efecto de 3 capas (glow interior +
+       anillo + sombra) es visualmente distinto de una sombra plana de un
+       solo token. Revisado en auditoría; sin poder confirmar visualmente
+       que el token no causa una regresión, se conserva tal cual. */
+    box-shadow:inset 0 -3em 3em rgba(252, 252, 252, 0.89),  0 0  0 2px rgba(253, 253, 253, 0.562), 0.3em 0.3em 1em rgba(133, 130, 130, 0.973);
+}
+
+.emergencias-antes-llamar__icon {
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+    place-items: center;
+    border-radius: 0.75rem;
+    background: var(--em-blanco);
+}
+
+.emergencias-antes-llamar__titulo {
+    font-family: "Inter", sans-serif;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--em-azul);
+    margin-bottom: 4px;
+}
+
+.emergencias-antes-llamar__desc {
+    font-size: 0.86rem;
+    color: var(--em-texto);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ---------------------------------------------------------
+   11. ESTADOS VACÍOS
+   --------------------------------------------------------- */
+.emergencias-page__vacio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--em-fondo-card);
+    border: 1px solid var(--em-borde);
+    border-radius: var(--em-radius-md);
+    padding: 16px 20px;
+    color: var(--em-texto-sec);
+}
+
+.emergencias-page__vacio i {
+    flex: none;
+    font-size: 1.1rem;
+    color: var(--em-azul);
+}
+
+.emergencias-page__vacio p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ---------------------------------------------------------
+   12. VERIFICACIÓN
+   --------------------------------------------------------- */
+.emergencias-page__verificacion {
+    padding: 22px 0 44px;
+}
+
+.emergencias-page__verificacion-texto {
+    font-size: 0.84rem;
+    color: var(--em-texto-sec);
+    text-align: center;
+    margin: 0;
+}
+
+.emergencias-page__verificacion-link {
+    margin-left: 10px;
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--em-rojo);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 160ms var(--em-ease-out);
+}
+
+.emergencias-page__verificacion-link:hover {
+    color: #652010;
+}
+
+/* ---------------------------------------------------------
+   MODAL: REPORTAR UN PROBLEMA
+   --------------------------------------------------------- */
+.emergencias-modal[hidden] {
+    display: none;
+}
+
+/* El contenedor mismo es el que se desplaza (como una página normal),
+   en vez de centrar con flex + limitar la altura del diálogo. Así, si el
+   teclado del celular reduce el viewport visual, el navegador puede
+   llevar el campo enfocado a la vista con su propio scroll nativo, sin
+   pelear con un alto fijo ni con una hoja anclada al fondo. */
+.emergencias-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 40px 20px;
+}
+
+.emergencias-modal__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 18, 32, 0.55);
+    backdrop-filter: blur(2px);
+}
+
+.emergencias-modal__dialogo {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    background: var(--em-blanco);
+    border-radius: var(--em-radius-lg);
+    box-shadow: var(--em-shadow-lg);
+    padding: 28px 26px 24px;
+    animation: emergencias-modal-in 200ms var(--em-ease-out);
+}
+
+.emergencias-modal__dialogo:focus {
+    outline: none;
+}
+
+@keyframes emergencias-modal-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.emergencias-modal__cerrar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: var(--em-fondo-card);
+    color: var(--em-texto-sec);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 160ms var(--em-ease-out), color 160ms var(--em-ease-out);
+}
+
+.emergencias-modal__cerrar:hover {
+    background: var(--em-rojo-suave);
+    color: var(--em-rojo);
+}
+
+.emergencias-modal__titulo {
+    font-family: "Inter", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--em-azul-oscuro);
+    margin: 0 32px 18px 0;
+}
+
+.emergencias-modal__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.emergencias-modal__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.emergencias-modal__campo label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--em-texto);
+}
+
+.emergencias-modal__campo input,
+.emergencias-modal__campo textarea {
+    border: 1px solid var(--em-borde);
+    border-radius: var(--em-radius-sm);
+    padding: 11px 14px;
+    /* 16px explícitos: por debajo de eso, iOS Safari hace zoom automático
+       al enfocar el campo (y ese zoom es lo que se sentía como scroll
+       horizontal/vertical "raro" al escribir). */
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    color: var(--em-texto);
+    background: var(--em-fondo-card);
+    resize: vertical;
+    transition: border-color 160ms var(--em-ease-out), box-shadow 160ms var(--em-ease-out);
+}
+
+.emergencias-modal__campo input::placeholder,
+.emergencias-modal__campo textarea::placeholder {
+    color: var(--em-texto-sec);
+}
+
+.emergencias-modal__campo input:focus-visible,
+.emergencias-modal__campo textarea:focus-visible {
+    outline: none;
+    border-color: var(--em-azul);
+    box-shadow: 0 0 0 3px rgba(0, 127, 255, 0.18);
+}
+
+.emergencias-modal__estado {
+    min-height: 18px;
+    margin: 0 0 8px;
+    font-size: 0.82rem;
+}
+
+.emergencias-modal__estado[data-tipo="exito"] {
+    color: var(--em-verde);
+}
+
+.emergencias-modal__estado[data-tipo="error"] {
+    color: var(--em-rojo);
+}
+
+.emergencias-modal__acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.emergencias-modal__btn {
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: var(--em-radius-sm);
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: transform 160ms var(--em-ease-out), background-color 160ms var(--em-ease-out), opacity 160ms var(--em-ease-out);
+}
+
+.emergencias-modal__btn--cancelar {
+    border: 1px solid var(--em-borde);
+    background: var(--em-blanco);
+    color: var(--em-texto-sec);
+}
+
+.emergencias-modal__btn--cancelar:hover {
+    background: var(--em-fondo-card);
+}
+
+.emergencias-modal__btn--enviar {
+    border: none;
+    background: var(--em-azul);
+    color: var(--em-blanco);
+}
+
+.emergencias-modal__btn--enviar:hover {
+    background: var(--em-azul-oscuro);
+}
+
+.emergencias-modal__btn--enviar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.emergencias-modal__btn:active {
+    transform: scale(0.97);
+}
+
+.emergencias-modal__btn:focus-visible {
+    outline: 3px solid var(--em-azul);
+    outline-offset: 2px;
+}
+
+/* Móvil: sin anclar a un borde ni a una altura fija (eso es lo que
+   peleaba con el teclado); solo menos aire alrededor y botones a todo
+   lo ancho para que sea más fácil de tocar. */
+@media (max-width: 480px) {
+    .emergencias-modal {
+        padding: 16px 12px;
+    }
+
+    .emergencias-modal__dialogo {
+        padding: 24px 20px 20px;
+    }
+
+    .emergencias-modal__acciones {
+        flex-direction: column-reverse;
+    }
+
+    .emergencias-modal__btn {
+        width: 100%;
+    }
+}
+
+/* ---------------------------------------------------------
+   13. RESPONSIVE
+   --------------------------------------------------------- */
+
+/* Desktop (≥992px): tarjetas nacionales muestran copiar, no llamar */
+@media (min-width: 992px) {
+    .emergencias__accion-llamar {
+        display: none;
+    }
+
+    .emergencias__accion-copiar {
+        display: block;
+    }
+}
+
+/* Tablet (<992px) */
+@media (max-width: 991.98px) {
+    .emergencias-nacional-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .emergencias-local-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .emergencias-selector {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* La línea divisoria solo tiene sentido entre columnas en fila
+       (desktop); en columna se ve como un guion suelto flotando. */
+    .emergencias-selector__divisor {
+        display: none;
+    }
+
+    /* flex-basis de 260px/240px se pensó para el ancho en fila (desktop);
+       en columna ese mismo valor se interpreta como alto y deja un hueco
+       vacío enorme, así que aquí se resetea a contenido. */
+    .emergencias-selector__intro,
+    .emergencias-selector__form {
+        flex: none;
+    }
+
+    .emergencias-selector__form {
+        max-width: none;
+    }
+}
+
+/* Móvil (<768px) */
+@media (max-width: 767.98px) {
+    .emergencias-page__hero {
+        padding: calc(var(--vi-header-height-mobile, 68px) + 24px) 0 24px;
+    }
+
+    .emergencias-nacional-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .emergencias-antes-llamar {
+        grid-template-columns: 1fr;
+    }
+
+    .emergencias-page__verificacion-texto {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .emergencias-page__verificacion-link {
+        margin-left: 0;
+    }
+}
+
+/* ---------------------------------------------------------
+   14. ACCESIBILIDAD
+   --------------------------------------------------------- */
+.emergencias-page a:focus-visible,
+.emergencias-page button:focus-visible,
+.emergencias-page select:focus-visible {
+    outline: 3px solid var(--em-azul);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------
+   15. REDUCED MOTION
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .emergencia-card,
+    .emergencia-card__btn-llamar,
+    .emergencia-card__btn-copiar,
+    .emergencias-selector,
+    .emergencias-selector__submit,
+    .emergencias-selector__select,
+    .emergencias-page__verificacion-link {
+        transition: none;
+    }
+
+    .emergencia-card:hover,
+    .emergencias-selector:hover,
+    .emergencia-card__btn-llamar:active,
+    .emergencia-card__btn-copiar:active,
+    .emergencias-selector__submit:active {
+        transform: none;
+    }
+
+    .emergencias-modal__dialogo {
+        animation: none;
+    }
+}

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'apps.eventos',
     'apps.movilidad',
     'apps.clima',
+    'apps.emergencias',
     'apps.itinerarios',
     'apps.servicios_turista',
     'apps.monedas',

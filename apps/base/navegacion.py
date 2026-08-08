@@ -103,7 +103,13 @@ HEADER_NAV_ITEMS = [
             },
             {"key": "tipo-cambio", "label": "Tipo de cambio", "icon": "currency-exchange", "href": "#"},
             {"key": "servicios-utiles", "label": "Servicios útiles", "icon": "info-circle", "href": "#"},
-            {"key": "emergencias", "label": "Emergencias", "icon": "telephone", "href": "#"},
+            {
+                "key": "emergencias",
+                "label": "Emergencias",
+                "icon": "telephone",
+                "url_name": "emergencias:emergencias",
+                "description": "Contactos nacionales y locales para tu seguridad.",
+            },
         ],
     },
     {
