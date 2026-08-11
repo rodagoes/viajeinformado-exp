@@ -101,7 +101,13 @@ HEADER_NAV_ITEMS = [
                 "url_name": "clima:clima_temporadas",
                 "description": "Clima actual, temporadas y recomendaciones.",
             },
-            {"key": "tipo-cambio", "label": "Tipo de cambio", "icon": "currency-exchange", "href": "#"},
+            {
+                "key": "tipo-cambio",
+                "label": "Tipo de cambio",
+                "icon": "currency-exchange",
+                "url_name": "monedas:tipo_cambio",
+                "description": "Convierte soles y dólares con la tasa referencial vigente.",
+            },
             {"key": "servicios-utiles", "label": "Servicios útiles", "icon": "info-circle", "href": "#"},
             {
                 "key": "emergencias",

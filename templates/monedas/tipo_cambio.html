@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tipo de Cambio • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/tipo-cambio.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="tipo-cambio-page">
+    <div class="tc-bg" aria-hidden="true">
+        <span class="tc-bg__base"></span>
+        <span class="tc-bg__treatment"></span>
+        <span class="tc-bg__glow"></span>
+        <span class="tc-bg__particles"></span>
+        <span class="tc-bg__chromatic"></span>
+    </div>
+
+    <main class="tipo-cambio-page__content">
+        <div class="container">
+
+            {% if tipo_cambio_disponible %}
+            {{ compra_raw|json_script:"tc-compra" }}
+            {{ venta_raw|json_script:"tc-venta" }}
+            {% endif %}
+
+            <section class="tc-main-layout" aria-labelledby="tipo-cambio-title">
+                <header class="tc-intro">
+                    <span class="tc-intro__icon" aria-hidden="true">
+                        <lottie-player src="{% static 'assets/img/icons/currency_exchange.json' %}" autoplay loop mode="normal" style="width: 4rem; height: 4rem;"></lottie-player>
+                    </span>
+                    <p class="tc-intro__eyebrow">PLANIFICA TU VIAJE</p>
+                    <h1 class="tc-intro__title" id="tipo-cambio-title">Tipo de Cambio</h1>
+                    <p class="tc-intro__desc">
+                        Convierte soles y dólares de forma rápida utilizando el tipo de
+                        cambio referencial vigente.
+                    </p>
+                </header>
+
+                <div class="tc-card {% if not tipo_cambio_disponible %}tc-card--sin-datos{% endif %}">
+                    <section class="tc-card__tasas" aria-labelledby="tc-tasas-title">
+                        {% if tipo_cambio_disponible %}
+                        <div class="tc-card__heading">
+                            <h2 class="tc-card__tasas-title" id="tc-tasas-title">
+                                Tasa referencial del dólar (USD)
+                            </h2>
+                        </div>
+
+                        <div class="tc-tasas-grid">
+                            <div class="tc-tasa">
+                                <span class="tc-tasa__label">Compra</span>
+                                <strong class="tc-tasa__valor">S/ {{ compra_txt }}</strong>
+                                <span class="tc-tasa__unidad">por USD 1</span>
+                            </div>
+
+                            <span class="tc-tasas-divisor" aria-hidden="true"></span>
+
+                            <div class="tc-tasa">
+                                <span class="tc-tasa__label">Venta</span>
+                                <strong class="tc-tasa__valor">S/ {{ venta_txt }}</strong>
+                                <span class="tc-tasa__unidad">por USD 1</span>
+                            </div>
+                        </div>
+
+                        <div class="tc-tasas-info">
+                            <p class="tc-actualizado">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#1E8E5A"
+                                    class="icon icon-tabler icons-tabler-filled icon-tabler-rosette-discount-check">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M12.01 2.011a3.2 3.2 0 0 1 2.113 .797l.154 .145l.698 .698a1.2 1.2 0 0 0 .71 .341l.135 .008h1a3.2 3.2 0 0 1 3.195 3.018l.005 .182v1c0 .27 .092 .533 .258 .743l.09 .1l.697 .698a3.2 3.2 0 0 1 .147 4.382l-.145 .154l-.698 .698a1.2 1.2 0 0 0 -.341 .71l-.008 .135v1a3.2 3.2 0 0 1 -3.018 3.195l-.182 .005h-1a1.2 1.2 0 0 0 -.743 .258l-.1 .09l-.698 .697a3.2 3.2 0 0 1 -4.382 .147l-.154 -.145l-.698 -.698a1.2 1.2 0 0 0 -.71 -.341l-.135 -.008h-1a3.2 3.2 0 0 1 -3.195 -3.018l-.005 -.182v-1a1.2 1.2 0 0 0 -.258 -.743l-.09 -.1l-.697 -.698a3.2 3.2 0 0 1 -.147 -4.382l.145 -.154l.698 -.698a1.2 1.2 0 0 0 .341 -.71l.008 -.135v-1l.005 -.182a3.2 3.2 0 0 1 3.013 -3.013l.182 -.005h1a1.2 1.2 0 0 0 .743 -.258l.1 -.09l.698 -.697a3.2 3.2 0 0 1 2.269 -.944zm3.697 7.282a1 1 0 0 0 -1.414 0l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.32 1.497l2 2l.094 .083a1 1 0 0 0 1.32 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" />
+                                </svg>
+                                <span>Tipo de cambio actualizado al {{ fecha_tipo_cambio_txt }}</span>
+                            </p>
+                            <p class="tc-explicacion">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#002D89"
+                                    class="icon icon-tabler icons-tabler-filled icon-tabler-info-hexagon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M10.425 1.414a3.33 3.33 0 0 1 3.026 -.097l.19 .097l6.775 3.995l.096 .063l.092 .077l.107 .075a3.224 3.224 0 0 1 1.266 2.188l.018 .202l.005 .204v7.284c0 1.106 -.57 2.129 -1.454 2.693l-.17 .1l-6.803 4.302c-.918 .504 -2.019 .535 -3.004 .068l-.196 -.1l-6.695 -4.237a3.225 3.225 0 0 1 -1.671 -2.619l-.007 -.207v-7.285c0 -1.106 .57 -2.128 1.476 -2.705l6.95 -4.098zm1.575 9.586h-1l-.117 .007a1 1 0 0 0 0 1.986l.117 .007v3l.007 .117a1 1 0 0 0 .876 .876l.117 .007h1l.117 -.007a1 1 0 0 0 .876 -.876l.007 -.117l-.007 -.117a1 1 0 0 0 -.764 -.857l-.112 -.02l-.117 -.006v-3l-.007 -.117a1 1 0 0 0 -.876 -.876l-.117 -.007zm.01 -3l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" />
+                                </svg>
+                                <span>USD → PEN usa la tasa de compra.</span>
+                            </p>
+                            <p class="tc-explicacion">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#002D89"
+                                    class="icon icon-tabler icons-tabler-filled icon-tabler-info-hexagon">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M10.425 1.414a3.33 3.33 0 0 1 3.026 -.097l.19 .097l6.775 3.995l.096 .063l.092 .077l.107 .075a3.224 3.224 0 0 1 1.266 2.188l.018 .202l.005 .204v7.284c0 1.106 -.57 2.129 -1.454 2.693l-.17 .1l-6.803 4.302c-.918 .504 -2.019 .535 -3.004 .068l-.196 -.1l-6.695 -4.237a3.225 3.225 0 0 1 -1.671 -2.619l-.007 -.207v-7.285c0 -1.106 .57 -2.128 1.476 -2.705l6.95 -4.098zm1.575 9.586h-1l-.117 .007a1 1 0 0 0 0 1.986l.117 .007v3l.007 .117a1 1 0 0 0 .876 .876l.117 .007h1l.117 -.007a1 1 0 0 0 .876 -.876l.007 -.117l-.007 -.117a1 1 0 0 0 -.764 -.857l-.112 -.02l-.117 -.006v-3l-.007 -.117a1 1 0 0 0 -.876 -.876l-.117 -.007zm.01 -3l-.127 .007a1 1 0 0 0 0 1.986l.117 .007l.127 -.007a1 1 0 0 0 0 -1.986l-.117 -.007z" />
+                                </svg>
+                                <span>PEN → USD usa la tasa de venta.</span>
+                            </p>
+                        </div>
+                        {% else %}
+                        <div class="tc-vacio">
+                            <span class="tc-vacio__icon" aria-hidden="true">
+                                <i class="bi bi-hourglass-split"></i>
+                            </span>
+                            <div>
+                                <h2 class="tc-vacio__title" id="tc-tasas-title">
+                                    Tipo de cambio temporalmente no disponible
+                                </h2>
+                                <p class="tc-vacio__desc">
+                                    No pudimos obtener una tasa válida para realizar la conversión
+                                    en este momento. Inténtalo nuevamente más tarde.
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </section>
+
+                    <section class="tc-card__calculadora" aria-label="Conversor de moneda">
+                        <div class="tc-conversor">
+                            <div class="tc-campo">
+                                <label for="tc-input-envia" class="tc-campo__label">Tú envías</label>
+                                <div class="tc-campo__control">
+                                    <input
+                                        type="text"
+                                        inputmode="decimal"
+                                        autocomplete="off"
+                                        id="tc-input-envia"
+                                        class="tc-campo__input"
+                                        value="100.00"
+                                        {% if not tipo_cambio_disponible %}disabled{% endif %}
+                                        aria-describedby="tc-moneda-envia">
+                                    <span class="tc-campo__moneda" id="tc-moneda-envia">USD</span>
+                                </div>
+                            </div>
+
+                            <div class="tc-swap-slot">
+                                <button
+                                    type="button"
+                                    class="tc-swap"
+                                    id="tc-swap"
+                                    aria-label="Intercambiar monedas"
+                                    {% if not tipo_cambio_disponible %}disabled{% endif %}>
+                                    <i class="bi bi-arrow-down-up" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                            <div class="tc-campo tc-campo--resultado">
+                                <span class="tc-campo__label">Tú recibes</span>
+                                <div class="tc-campo__control">
+                                    <output
+                                        for="tc-input-envia"
+                                        id="tc-resultado"
+                                        class="tc-campo__resultado"
+                                        aria-live="polite">{% if tipo_cambio_disponible %}0.00{% else %}—{% endif %}</output>
+                                    <span class="tc-campo__moneda" id="tc-moneda-recibe">PEN</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if tipo_cambio_disponible %}
+                        <p class="tc-referencial">
+                            <i class="bi bi-info-circle" aria-hidden="true"></i>
+                            <span>
+                                Este cálculo es referencial. El monto final puede variar según la
+                                tasa aplicada por la casa de cambio, banco u operador.
+                            </span>
+                        </p>
+                        {% endif %}
+                    </section>
+                </div>
+            </section>
+
+            <aside class="tc-consejo">
+                <span class="tc-consejo__icon" aria-hidden="true">
+                    <lottie-player src="{% static 'assets/img/icons/cseguridad-icono-tc.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                </span>
+                <div>
+                    <h2 class="tc-consejo__title">Consejo de seguridad</h2>
+                    <p class="tc-consejo__desc">
+                        Por tu seguridad, evita cambiar grandes cantidades de dinero en la
+                        vía pública. Prefiere casas de cambio formales o entidades
+                        financieras reconocidas.
+                    </p>
+                </div>
+            </aside>
+
+            <section class="tc-info" aria-labelledby="tc-info-title">
+                <h2 class="tc-info__title" id="tc-info-title">Información importante</h2>
+
+                <div class="tc-info-grid">
+                    <article class="tc-info-card">
+                        <span class="tc-info-card__icon" aria-hidden="true">
+                            <lottie-player src="{% static 'assets/img/icons/tasasref-icono-tc.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                        </span>
+                        <h3 class="tc-info-card__title">Tasas referenciales</h3>
+                        <p class="tc-info-card__desc">
+                            Las tasas mostradas son referenciales y pueden variar durante el día.
+                        </p>
+                    </article>
+
+                    <article class="tc-info-card">
+                        <span class="tc-info-card__icon" aria-hidden="true">
+                            <lottie-player src="{% static 'assets/img/icons/bank-icono-tc.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                        </span>
+                        <h3 class="tc-info-card__title">Lugares seguros</h3>
+                        <p class="tc-info-card__desc">
+                            Realiza tus operaciones en establecimientos formales o entidades financieras.
+                        </p>
+                    </article>
+
+                    <article class="tc-info-card">
+                        <span class="tc-info-card__icon" aria-hidden="true">
+                            <lottie-player src="{% static 'assets/img/icons/verify-icono-tc.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
+                        </span>
+                        <h3 class="tc-info-card__title">Verifica siempre</h3>
+                        <p class="tc-info-card__desc">
+                            Consulta y compara la tasa antes de realizar una operación de cambio.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/tipo-cambio.js' %}"></script>
+{% endblock %}
