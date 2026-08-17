@@ -15,6 +15,7 @@ urlpatterns = [
     path('', include('apps.accounts.urls')),
     path('cuentas/', include('allauth.urls')),
     path('', include('apps.establecimientos.urls')),
+    path('gastronomia/', include('apps.gastronomia.urls')),
     path('', include('apps.turismo.urls')),
     path('planifica/', include('apps.movilidad.urls')),
     path('planifica/', include('apps.clima.urls')),

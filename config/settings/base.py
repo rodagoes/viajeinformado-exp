@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'apps.ubicaciones',
     'apps.turismo',
     'apps.establecimientos',
+    'apps.gastronomia',
     'apps.eventos',
     'apps.movilidad',
     'apps.clima',

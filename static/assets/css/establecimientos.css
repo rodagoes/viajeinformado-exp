@@ -63,6 +63,40 @@
 }
 
 /* =========================================================
+   Indicador de filtro por plato típico ("Dónde comer")
+========================================================= */
+
+.establecimientos-pagina .est-filtro-plato-etiqueta {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--est-azul-claro);
+    margin-bottom: 6px;
+}
+
+.establecimientos-pagina .est-chip-plato-activo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    background: var(--est-azul-oscuro);
+    color: var(--est-blanco);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.establecimientos-pagina .est-chip-plato-activo:hover,
+.establecimientos-pagina .est-chip-plato-activo:focus-visible {
+    background: var(--est-azul-claro);
+    color: var(--est-blanco);
+}
+
+/* =========================================================
    Contenedor de filtros
 ========================================================= */
 

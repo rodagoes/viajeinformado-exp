@@ -1,0 +1,310 @@
+/* =========================================================
+   Platos típicos - Viaje Informado
+   CSS encapsulado bajo .pt-page para no afectar otras páginas
+========================================================= */
+
+.pt-page {
+    --pt-blanco: #FFFFFF;
+    --pt-azul-oscuro: #002D89;
+    --pt-azul-brillante: #007FFF;
+    --pt-fondo-general: #F7F9FD;
+    --pt-fondo-tarjeta: #EEF3FB;
+    --pt-texto-principal: #182033;
+    --pt-texto-secundario: #61708C;
+    --pt-bordes: #DFE7F3;
+}
+
+/* =========================================================
+   Hero
+========================================================= */
+
+.pt-page .pt-hero {
+    position: relative;
+    background: linear-gradient(135deg, var(--pt-azul-oscuro) 0%, var(--pt-azul-brillante) 100%);
+    padding: 140px 0 40px;
+    overflow: hidden;
+}
+
+.pt-page .pt-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='%23FFFFFF'%3E%3Ccircle cx='12' cy='12' r='2.4'/%3E%3Ccircle cx='58' cy='30' r='2.4'/%3E%3Ccircle cx='30' cy='62' r='2.4'/%3E%3Ccircle cx='75' cy='75' r='2.4'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 90px 90px;
+}
+
+.pt-page .pt-hero__inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.pt-page .pt-hero__eyebrow {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.pt-page .pt-hero__title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    color: var(--pt-blanco);
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+}
+
+.pt-page .pt-hero__desc {
+    color: rgba(255, 255, 255, 0.88);
+    max-width: 620px;
+    margin: 0 auto 30px;
+    font-size: 1.02rem;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   Filtros de categoría (scroll horizontal en móvil)
+========================================================= */
+
+.pt-page .pt-filters {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+}
+
+.pt-page .pt-filters::-webkit-scrollbar {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .pt-page .pt-filters {
+        justify-content: center;
+        flex-wrap: wrap;
+        overflow-x: visible;
+    }
+}
+
+.pt-page .pt-filter-pill {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 20px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: var(--pt-blanco);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pt-page .pt-filter-pill:hover,
+.pt-page .pt-filter-pill:focus-visible {
+    background: rgba(255, 255, 255, 0.22);
+    color: var(--pt-blanco);
+}
+
+.pt-page .pt-filter-pill.is-active {
+    background: var(--pt-blanco);
+    color: var(--pt-azul-oscuro);
+    border-color: var(--pt-blanco);
+}
+
+/* =========================================================
+   Grilla de platos
+========================================================= */
+
+.pt-page .pt-content {
+    background: var(--pt-fondo-general);
+    padding: 48px 0 100px;
+}
+
+.pt-page .pt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+@media (max-width: 991px) {
+    .pt-page .pt-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 575px) {
+    .pt-page .pt-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   Tarjeta de plato
+========================================================= */
+
+.pt-page .pt-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--pt-fondo-tarjeta);
+    border: 1px solid var(--pt-bordes);
+    border-radius: 16px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.pt-page .pt-card__image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--pt-bordes);
+}
+
+.pt-page .pt-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.pt-page .pt-card__image-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--pt-texto-secundario);
+    font-size: 2.4rem;
+}
+
+.pt-page .pt-badge-bandera {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: rgba(0, 45, 137, 0.85);
+    color: var(--pt-blanco);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.pt-page .pt-card__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 22px;
+}
+
+.pt-page .pt-card__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--pt-texto-principal);
+    margin: 0 0 8px;
+}
+
+.pt-page .pt-card__desc {
+    color: var(--pt-texto-secundario);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin-bottom: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.pt-page .pt-card__ingredients {
+    margin-bottom: 16px;
+}
+
+.pt-page .pt-card__ingredients-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pt-azul-oscuro);
+    margin-bottom: 8px;
+}
+
+.pt-page .pt-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pt-page .pt-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: rgba(0, 45, 137, 0.06);
+    border: 1px solid rgba(0, 45, 137, 0.12);
+    border-radius: 999px;
+    color: var(--pt-azul-oscuro);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.pt-page .pt-card__action {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--pt-azul-oscuro);
+    color: var(--pt-azul-oscuro);
+    background: transparent;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.pt-page .pt-card__action:hover,
+.pt-page .pt-card__action:focus-visible {
+    background: var(--pt-azul-oscuro);
+    color: var(--pt-blanco);
+}
+
+/* =========================================================
+   Estado vacío
+========================================================= */
+
+.pt-page .pt-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--pt-texto-secundario);
+}
+
+.pt-page .pt-empty i {
+    font-size: 3rem;
+    margin-bottom: 14px;
+    display: block;
+}
+
+/* =========================================================
+   Paginación
+========================================================= */
+
+.pt-page .pt-pagination {
+    margin-top: 44px;
+}

@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Platos típicos de Huánuco | Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/platos-tipicos.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="pt-page">
+
+    <section class="pt-hero">
+        <div class="container pt-hero__inner">
+            <p class="pt-hero__eyebrow">Gastronomía y alojamiento • Platos típicos</p>
+            <h1 class="pt-hero__title">{{ titulo }}</h1>
+            <p class="pt-hero__desc">{{ subtitulo }}</p>
+
+            <nav class="pt-filters" aria-label="Filtrar por categoría">
+                <a href="{% url 'gastronomia:platos_tipicos' %}"
+                    class="pt-filter-pill {% if not categoria_sel %}is-active{% endif %}">
+                    Todos
+                </a>
+                {% for categoria in categorias_opciones %}
+                    <a href="?categoria={{ categoria.slug }}"
+                        class="pt-filter-pill {% if categoria.selected %}is-active{% endif %}">
+                        {{ categoria.nombre }}
+                    </a>
+                {% endfor %}
+            </nav>
+        </div>
+    </section>
+
+    <section class="pt-content">
+        <div class="container">
+            <div class="pt-grid">
+
+                {% for plato in page_obj %}
+                    <article class="pt-card">
+                        <div class="pt-card__image">
+                            {% if plato.imagen %}
+                                <img src="{{ plato.imagen.url }}"
+                                    alt="{{ plato.texto_alt_imagen|default:plato.nombre }}" loading="lazy">
+                            {% else %}
+                                <div class="pt-card__image-empty">
+                                    <i class="bi bi-egg-fried"></i>
+                                </div>
+                            {% endif %}
+
+                            {% if plato.es_plato_bandera %}
+                                <span class="pt-badge-bandera">Plato bandera</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="pt-card__body">
+                            <h2 class="pt-card__title">{{ plato.nombre }}</h2>
+
+                            {% if plato.descripcion_corta %}
+                                <p class="pt-card__desc">{{ plato.descripcion_corta }}</p>
+                            {% endif %}
+
+                            {% if plato.ingredientes.all %}
+                                <div class="pt-card__ingredients">
+                                    <span class="pt-card__ingredients-label">Ingredientes clave</span>
+                                    <div class="pt-chips">
+                                        {% for ingrediente in plato.ingredientes.all %}
+                                            <span class="pt-chip">{{ ingrediente.nombre }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <a href="{% url 'establecimientos:listado_restaurantes' %}?plato={{ plato.slug }}"
+                                class="pt-card__action">
+                                <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                                Dónde comer
+                            </a>
+                        </div>
+                    </article>
+
+                {% empty %}
+
+                    <div class="pt-empty">
+                        <i class="bi bi-egg-fried" aria-hidden="true"></i>
+                        <h3 class="text-dark">No hay platos disponibles en esta categoría</h3>
+                        <p>Prueba explorando otra categoría.</p>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Navegación de páginas" class="d-flex justify-content-center pt-pagination">
+                    <ul class="pagination">
+
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?page={{ page_obj.previous_page_number }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}"
+                                    aria-label="Anterior">
+                                    <span aria-hidden="true">&lsaquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+                        {% endif %}
+
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">{{ i }}</span>
+                                </li>
+                            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page={{ i }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}">
+                                        {{ i }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?page={{ page_obj.next_page_number }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}"
+                                    aria-label="Siguiente">
+                                    <span aria-hidden="true">&rsaquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+            {% endif %}
+
+        </div>
+    </section>
+
+</main>
+
+{% endblock %}

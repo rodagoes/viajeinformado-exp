@@ -62,7 +62,7 @@ HEADER_NAV_ITEMS = [
                 "key": "platos-tipicos",
                 "label": "Platos típicos",
                 "icon": "egg-fried",
-                "href": "#",
+                "url_name": "gastronomia:platos_tipicos",
                 "description": "Sabores tradicionales de Huánuco.",
             },
             {

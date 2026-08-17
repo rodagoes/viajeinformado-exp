@@ -1,9 +1,12 @@
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+from urllib.parse import urlencode
+
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
 
 from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
+from apps.gastronomia.models import PlatoTipico
 from apps.monedas.models import TipoCambio
 
 
@@ -75,6 +78,7 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
     q = request.GET.get("q", "").strip()
     categoria_id = request.GET.get("categoria", "").strip()
     orden = request.GET.get("orden", "").strip()
+    plato_slug = request.GET.get("plato", "").strip()
 
     # Filtro por nombre
     if q:
@@ -86,6 +90,19 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
             Q(categoria_principal_id=categoria_id) |
             Q(categorias_secundarias__id=categoria_id)
         ).distinct()
+
+    # Filtro por plato típico (llegada desde "Dónde comer").
+    # Solo aplica para restaurantes; un slug inválido se ignora sin generar error.
+    plato_filtro = None
+    if plato_slug and tipo_establecimiento == "restaurante":
+        plato_filtro = PlatoTipico.objects.filter(slug=plato_slug, activo=True).first()
+        if plato_filtro:
+            qs = qs.filter(
+                platos_disponibles__plato=plato_filtro,
+                platos_disponibles__activo=True
+            ).distinct()
+        else:
+            plato_slug = ""
 
     # Ordenamiento
     if orden == "nombre_asc":
@@ -149,6 +166,14 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
         },
     ]
 
+    # URL para quitar el filtro de plato sin perder los demás parámetros activos.
+    parametros_sin_plato = {
+        clave: valor for clave, valor in {"q": q, "categoria": categoria_id, "orden": orden}.items() if valor
+    }
+    quitar_plato_url = request.path
+    if parametros_sin_plato:
+        quitar_plato_url = f"{request.path}?{urlencode(parametros_sin_plato)}"
+
     context = {
         "page_obj": page_obj,
         "titulo": titulo,
@@ -161,6 +186,11 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
         "categorias_opciones": categorias_opciones,
         "opciones_orden": opciones_orden,
         "total_resultados": paginator.count,
+
+        # Filtro por plato típico
+        "plato_sel": plato_slug,
+        "plato_filtro": plato_filtro,
+        "quitar_plato_url": quitar_plato_url,
 
         # Switcher de apartados
         "es_restaurante": tipo_establecimiento == "restaurante",

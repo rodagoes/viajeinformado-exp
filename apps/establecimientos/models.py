@@ -269,6 +269,15 @@ class RecomendacionEstablecimiento(models.Model):
         verbose_name="Ícono para alojamiento",
         help_text="Opcional. Para alojamientos: sube un ícono SVG, PNG, JPG o WebP para esta recomendación."
     )
+    plato_tipico = models.ForeignKey(
+        "gastronomia.PlatoTipico",
+        related_name="recomendaciones",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Plato típico relacionado",
+        help_text="Opcional. Vincula esta recomendación con un plato del catálogo de Platos típicos."
+    )
     orden = models.PositiveSmallIntegerField(
         default=1,
         help_text="Orden de visualización. Usar 1, 2 o 3."

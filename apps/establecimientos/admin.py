@@ -1,13 +1,14 @@
 from django.contrib import admin
 from .models import (
-    CategoriaEstablecimiento, 
+    CategoriaEstablecimiento,
     ServicioEstablecimiento,
-    Establecimiento, 
+    Establecimiento,
     SucursalEstablecimiento,
     ImagenEstablecimiento,
     RecomendacionEstablecimiento,
     ContactoSucursalEstablecimiento
 )
+from apps.gastronomia.models import PlatoEstablecimiento
 
 @admin.register(CategoriaEstablecimiento)
 class CategoriaEstablecimientoAdmin(admin.ModelAdmin):
@@ -101,10 +102,20 @@ class RecomendacionEstablecimientoInline(admin.TabularInline):
     model = RecomendacionEstablecimiento
     extra = 1
     max_num = 3
-    fields = ("orden", "nombre", "imagen", "icono_archivo", "activo")
+    fields = ("orden", "nombre", "imagen", "icono_archivo", "plato_tipico", "activo")
+    autocomplete_fields = ("plato_tipico",)
     ordering = ("orden", "id")
     verbose_name = "Recomendación Top 3"
     verbose_name_plural = "Recomendaciones Top 3"
+
+
+class PlatoEstablecimientoInline(admin.TabularInline):
+    model = PlatoEstablecimiento
+    extra = 1
+    fields = ("plato", "activo")
+    autocomplete_fields = ("plato",)
+    verbose_name = "Plato típico disponible"
+    verbose_name_plural = "PLATOS TÍPICOS DISPONIBLES"
 
 class ContactoSucursalEstablecimientoInline(admin.TabularInline):
     model = ContactoSucursalEstablecimiento
@@ -137,8 +148,19 @@ class EstablecimientoAdmin(admin.ModelAdmin):
     autocomplete_fields = ("categoria_principal",)
     filter_horizontal = ("categorias_secundarias", "servicios")
     readonly_fields = ("creado", "actualizado")
-    inlines = [SucursalEstablecimientoInline, ImagenEstablecimientoInline, RecomendacionEstablecimientoInline]
-    
+    inlines = [
+        SucursalEstablecimientoInline,
+        ImagenEstablecimientoInline,
+        RecomendacionEstablecimientoInline,
+        PlatoEstablecimientoInline,
+    ]
+
+    def get_inline_instances(self, request, obj=None):
+        inlines = super().get_inline_instances(request, obj)
+        if obj is not None and obj.tipo != "restaurante":
+            inlines = [i for i in inlines if not isinstance(i, PlatoEstablecimientoInline)]
+        return inlines
+
     fieldsets = (
         ("Información principal", {
             "fields": (
