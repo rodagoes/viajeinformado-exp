@@ -71,9 +71,19 @@ class ServicioTuristaAdmin(admin.ModelAdmin):
         }),
         ("Ubicación", {
             "fields": (
-                "distrito", "localidad", "direccion", 
+                "distrito", "localidad", "direccion",
                 "referencia", "latitud", "longitud"
             )
+        }),
+        ("Google Maps (precisión exacta)", {
+            "description": (
+                "Rellena estos campos solo si el servicio aparece en Google Maps. "
+                "Permiten mostrar el pin con el nombre real del negocio y que los botones "
+                "'Abrir mapa' y 'Cómo llegar' apunten a la ficha exacta. "
+                "Si el local no aparece en Google Maps, déjalos vacíos y se usarán las coordenadas o la dirección."
+            ),
+            "fields": ("embed_maps", "maps_url"),
+            "classes": ("collapse",),
         }),
         ("Atención", {
             "fields": (
@@ -120,11 +130,8 @@ class ContactoServicioTuristaAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(ImagenServicioTurista)
-class ImagenServicioTuristaAdmin(admin.ModelAdmin):
-    list_display = ["servicio", "titulo", "orden", "activo", "creado"]
-    search_fields = ["servicio__nombre", "titulo", "texto_alt"]
-    list_filter = ["activo", "servicio"]
-    autocomplete_fields = ["servicio"]
-    ordering = ["servicio__nombre", "orden", "id"]
-    list_per_page = 25
+
+# ImagenServicioTurista no se registra como entrada independiente: la UI de
+# Servicios útiles no usa galería, solo ServicioTurista.imagen_principal.
+# El modelo, la tabla y los datos existentes se conservan; se sigue editando
+# desde el inline de ServicioTuristaAdmin (ImagenServicioTuristaInline).

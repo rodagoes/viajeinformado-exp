@@ -1,11 +1,10 @@
-import re
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
-from urllib.parse import quote
 
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
 
+from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
 from apps.monedas.models import TipoCambio
 from .models import (
     CategoriaLugarTuristico,
@@ -245,13 +244,8 @@ def detalle_lugar(request, slug):
         }
 
     # Google Maps — misma lógica de prioridad que establecimientos.
-    def coord_str(value):
-        return format(value, "f") if value is not None else ""
-
-    latitud = coord_str(lugar.latitud)
-    longitud = coord_str(lugar.longitud)
-    embed_code = (lugar.embed_maps or "").strip()
-    maps_url_raw = (lugar.maps_url or "").strip()
+    latitud = coord_a_texto(lugar.latitud)
+    longitud = coord_a_texto(lugar.longitud)
 
     provincia_nombre = ""
     distrito_nombre = ""
@@ -278,61 +272,15 @@ def detalle_lugar(request, slug):
 
     ubicacion_resumen = " - ".join([p for p in [provincia_nombre, distrito_nombre] if p])
 
-    # Extraer el src del iframe (acepta código completo o solo la URL)
-    embed_src = ""
-    if embed_code:
-        match = re.search(r"src=[\"']([^\"']+)[\"']", embed_code)
-        if match:
-            embed_src = match.group(1)
-        elif embed_code.startswith("https://"):
-            embed_src = embed_code
-
-    # Prioridad para embed_url (mapa visual):
-    # 1. embed_maps  → pin con nombre real (sin API key)
-    # 2. lat/lng     → lugar no indexado en Google Maps
-    # 3. dirección   → fallback textual
-    if embed_src:
-        embed_url = embed_src
-    elif latitud and longitud:
-        embed_url = f"https://www.google.com/maps?q={quote(latitud + ',' + longitud)}&z=16&hl=es&output=embed"
-    elif direccion_maps_texto:
-        embed_url = f"https://www.google.com/maps?q={quote(direccion_maps_texto)}&z=15&hl=es&output=embed"
-    else:
-        embed_url = ""
-
-    # Prioridad para open_url (botón "Abrir en Google Maps"):
-    # 1. maps_url    → ficha exacta del lugar
-    # 2. lat/lng     → centrar mapa en coordenadas
-    # 3. dirección   → búsqueda textual
-    if maps_url_raw:
-        open_url = maps_url_raw
-    elif latitud and longitud:
-        open_url = f"https://www.google.com/maps/search/?api=1&query={quote(latitud + ',' + longitud)}"
-    elif direccion_maps_texto:
-        open_url = f"https://www.google.com/maps/search/?api=1&query={quote(direccion_maps_texto)}"
-    else:
-        open_url = ""
-
-    # Prioridad para route_url (botón "Cómo llegar"):
-    # Extraer !3d/!4d de maps_url para el pin exacto; fallback a @lat,lng o dirección.
-    coords_from_url = ""
-    if maps_url_raw:
-        match_3d4d = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", maps_url_raw)
-        if match_3d4d:
-            coords_from_url = f"{match_3d4d.group(1)},{match_3d4d.group(2)}"
-        else:
-            match_at = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", maps_url_raw)
-            if match_at:
-                coords_from_url = f"{match_at.group(1)},{match_at.group(2)}"
-
-    if coords_from_url:
-        route_url = f"https://www.google.com/maps/dir/?api=1&destination={quote(coords_from_url)}"
-    elif latitud and longitud:
-        route_url = f"https://www.google.com/maps/dir/?api=1&destination={quote(latitud + ',' + longitud)}"
-    elif direccion_maps_texto:
-        route_url = f"https://www.google.com/maps/dir/?api=1&destination={quote(direccion_maps_texto)}"
-    else:
-        route_url = ""
+    embed_url, open_url, route_url = construir_urls_mapa(
+        latitud=latitud,
+        longitud=longitud,
+        direccion_mapa=direccion_maps_texto,
+        maps_url=lugar.maps_url,
+        embed_maps=lugar.embed_maps,
+        zoom_coordenadas=16,
+        zoom_direccion=15,
+    )
 
     recomendaciones_items = list(lugar.recomendaciones_items.all())
 

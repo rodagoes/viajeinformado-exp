@@ -59,6 +59,25 @@ class ServicioTurista(models.Model):
     latitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
     longitud = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
 
+    embed_maps = models.TextField(
+        blank=True,
+        verbose_name="Código embed de Google Maps",
+        help_text=(
+            "Pega aquí el código &lt;iframe&gt; completo que te da Google Maps en "
+            "'Compartir → Insertar un mapa'. Muestra el pin con el nombre real "
+            "del servicio. Déjalo vacío si no aparece en Google Maps."
+        ),
+    )
+    maps_url = models.TextField(
+        blank=True,
+        verbose_name="URL de la ficha en Google Maps",
+        help_text=(
+            "Pega aquí la URL de la ficha del negocio en Google Maps. Se usa "
+            "para los botones 'Abrir mapa' y 'Cómo llegar'. Déjalo vacío si no "
+            "aparece en Google Maps."
+        ),
+    )
+
     tipo_atencion = models.CharField(max_length=20, choices=TIPO_ATENCION_CHOICES, default="presencial")
     disponibilidad = models.CharField(max_length=30, choices=DISPONIBILIDAD_CHOICES, default="consultar")
     horario_atencion = models.CharField(max_length=180, blank=True, help_text="Ejemplo: Lunes a domingo: 8:00 a. m. - 10:00 p. m. o Atención 24 horas.")

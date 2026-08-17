@@ -108,7 +108,13 @@ HEADER_NAV_ITEMS = [
                 "url_name": "monedas:tipo_cambio",
                 "description": "Convierte soles y dólares con la tasa referencial vigente.",
             },
-            {"key": "servicios-utiles", "label": "Servicios útiles", "icon": "info-circle", "href": "#"},
+            {
+                "key": "servicios-utiles",
+                "label": "Servicios útiles",
+                "icon": "info-circle",
+                "url_name": "servicios_turista:servicios_utiles",
+                "description": "Salud, seguridad, bancos, transporte e información turística.",
+            },
             {
                 "key": "emergencias",
                 "label": "Emergencias",

@@ -20,6 +20,7 @@ urlpatterns = [
     path('planifica/', include('apps.clima.urls')),
     path('planifica/', include('apps.emergencias.urls')),
     path('planifica/', include('apps.monedas.urls')),
+    path('planifica/', include('apps.servicios_turista.urls')),
 ]
 
 if settings.DEBUG:
