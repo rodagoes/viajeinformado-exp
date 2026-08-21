@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Historia de Huánuco | Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/historia.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="historia-page">
+
+    {# 1. HERO #}
+    <section class="his-hero">
+        <div class="container">
+            <div class="his-hero__content">
+                <img class="his-hero__icon" src="{% static 'assets/img/historia/escudo-huanuco.webp' %}"
+                    alt="Escudo de Huánuco" loading="eager">
+                <p class="his-hero__eyebrow">EXPLORAR</p>
+                <h1 class="his-hero__title">Historia de Huánuco</h1>
+                <p class="his-hero__desc">Conoce los acontecimientos, símbolos y datos que forman parte de la identidad de Huánuco.</p>
+            </div>
+        </div>
+    </section>
+
+    {# 2. HUÁNUCO EN DATOS #}
+    <section class="his-datos-wrap">
+        <div class="container">
+            <div class="his-datos__grid">
+                <div class="his-dato-card">
+                    <img src="{% static 'assets/img/icons/icono-card1-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
+                    <span class="his-dato-card__cifra">1 894 m s. n. m.</span>
+                    <span class="his-dato-card__desc">Altitud aproximada de la ciudad de Huánuco.</span>
+                </div>
+                <div class="his-dato-card">
+                    <img src="{% static 'assets/img/icons/icono-card2-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
+                    <span class="his-dato-card__cifra">15 de agosto de 1539</span>
+                    <span class="his-dato-card__desc">Fecha de fundación española de Huánuco.</span>
+                </div>
+                <div class="his-dato-card">
+                    <img src="{% static 'assets/img/icons/icono-card3-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
+                    <span class="his-dato-card__cifra">11 provincias</span>
+                    <span class="his-dato-card__desc">Provincias que conforman el departamento de Huánuco.</span>
+                </div>
+                <div class="his-dato-card">
+                    <img src="{% static 'assets/img/icons/icono-card4-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
+                    <span class="his-dato-card__cifra">84 distritos</span>
+                    <span class="his-dato-card__desc">Distritos distribuidos dentro del departamento de Huánuco.</span>
+                </div>
+                <div class="his-dato-card">
+                    <img src="{% static 'assets/img/icons/icono-card5-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
+                    <span class="his-dato-card__cifra">738.383 habitantes</span>
+                    <span class="his-dato-card__desc">Fuente: INEI, 2026. Población total estimada</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# 3. FUNDACIÓN DE HUÁNUCO #}
+    <section class="his-fundacion-wrap">
+        <div class="container">
+            <div class="his-fundacion">
+                <span class="his-fundacion__badge" aria-hidden="true"><i class="bi bi-bank2"></i></span>
+                <div class="his-fundacion__texto">
+                    <h2>Fundación de Huánuco</h2>
+                    <p>
+                        El 15 de agosto de 1539, el capitán español Gómez de Alvarado y Contreras fundó la ciudad
+                        bajo el nombre de «León de Huánuco de los Caballeros», dentro de la estrategia española
+                        para consolidar su dominio en el centro del virreinato.
+                    </p>
+                    <p>
+                        La fundación se realizó primero en Huánuco Pampa, en la actual provincia de Dos de Mayo.
+                        El asedio de fuerzas incas obligó a trasladar la ciudad, en 1540, al valle del río Huallaga,
+                        donde se ubica hasta hoy.
+                    </p>
+                    <p>
+                        Desde entonces, Huánuco se consolidó como un punto de encuentro entre la sierra y la selva
+                        central, un rol que conserva en su identidad cultural.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# 4. ORGANIZACIÓN TERRITORIAL #}
+    <section class="his-provincias-wrap">
+        <div class="container">
+            <div class="his-provincias">
+                <h2 class="his-section-title">Huánuco y sus provincias</h2>
+                <p class="his-provincias__intro">Conoce las 11 provincias y los distritos que conforman nuestro región.</p>
+                <div class="his-provincias__grid">
+                    <ul class="his-provincias__lista" data-provincias-lista>
+                        <li><button type="button" class="is-active" data-provincia="huanuco" aria-pressed="true"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Huánuco</button></li>
+                        <li><button type="button" data-provincia="ambo" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Ambo</button></li>
+                        <li><button type="button" data-provincia="dos-de-mayo" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Dos de Mayo</button></li>
+                        <li><button type="button" data-provincia="huacaybamba" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Huacaybamba</button></li>
+                        <li><button type="button" data-provincia="huamalies" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Huamalíes</button></li>
+                        <li><button type="button" data-provincia="leoncio-prado" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Leoncio Prado</button></li>
+                        <li><button type="button" data-provincia="maranon" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Marañón</button></li>
+                        <li><button type="button" data-provincia="pachitea" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Pachitea</button></li>
+                        <li><button type="button" data-provincia="puerto-inca" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Puerto Inca</button></li>
+                        <li><button type="button" data-provincia="lauricocha" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Lauricocha</button></li>
+                        <li><button type="button" data-provincia="yarowilca" aria-pressed="false"><i
+                                    class="bi bi-geo-alt-fill" aria-hidden="true"></i>Yarowilca</button></li>
+                    </ul>
+                    <div class="his-provincias__mapa">
+                      <div class="his-mapa-flip" data-mapa-flip>
+                        <div class="his-mapa-flip__inner">
+                          <div class="his-mapa-flip__front" data-provincias-mapa>
+                            <button type="button" class="his-mapa-info-btn" data-info-btn>
+                                <i class="bi bi-info-circle" aria-hidden="true"></i> Info
+                            </button>
+                            <svg viewBox="0 0 640 508" role="img"
+                                aria-label="Mapa del departamento de Huánuco por provincias">
+                            <path class="mapa-provincia is-active" data-provincia="huanuco"
+                                d="M 187.74,430.80 L 182.03,412.19 L 171.22,410.00 L 168.94,402.92 L 175.09,394.02 L 176.81,378.09 L 181.59,369.91 L 202.26,360.73 L 199.55,347.00 L 200.51,321.52 L 197.43,314.28 L 208.50,308.94 L 222.13,292.80 L 223.08,285.86 L 233.51,279.10 L 242.62,281.10 L 257.79,275.21 L 267.38,268.56 L 286.84,269.09 L 300.16,277.19 L 315.44,272.70 L 326.40,260.45 L 335.06,258.93 L 344.32,251.08 L 349.95,254.17 L 348.83,267.79 L 360.39,299.58 L 364.16,301.67 L 347.27,320.74 L 344.50,334.46 L 347.98,344.70 L 341.37,349.63 L 330.45,340.90 L 289.74,347.23 L 283.51,360.67 L 276.81,365.54 L 272.61,384.14 L 265.07,383.92 L 239.39,403.11 L 220.07,420.63 L 211.53,418.71 L 190.15,421.26 L 187.74,430.80 Z">
+                                <title>Huánuco</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="ambo"
+                                d="M 193.68,456.65 L 189.51,452.47 L 187.74,430.80 L 190.15,421.26 L 211.53,418.71 L 220.07,420.63 L 239.39,403.11 L 265.07,383.92 L 272.61,384.14 L 275.02,402.17 L 293.03,409.36 L 288.59,416.47 L 287.80,430.73 L 293.98,440.14 L 293.09,460.94 L 296.94,482.50 L 295.68,489.17 L 273.88,483.31 L 253.46,471.04 L 242.85,470.20 L 235.18,479.38 L 228.58,451.24 L 204.72,458.89 L 193.68,456.65 Z">
+                                <title>Ambo</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="dos-de-mayo"
+                                d="M 143.80,364.48 L 140.30,372.43 L 130.60,377.60 L 132.08,385.88 L 120.86,389.67 L 123.15,378.62 L 105.16,345.97 L 103.80,335.89 L 94.09,320.70 L 123.83,301.76 L 148.95,288.30 L 174.03,287.05 L 201.86,275.08 L 219.31,272.69 L 220.72,262.68 L 233.95,256.78 L 237.04,250.46 L 250.74,257.11 L 257.65,263.48 L 257.79,275.21 L 242.62,281.10 L 233.51,279.10 L 223.08,285.86 L 222.13,292.80 L 208.50,308.94 L 197.43,314.28 L 186.55,312.44 L 154.10,316.02 L 143.16,322.67 L 147.68,330.86 L 140.89,337.88 L 135.43,351.98 L 143.80,364.48 Z">
+                                <title>Dos de Mayo</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="huacaybamba"
+                                d="M 198.23,166.32 L 196.72,202.06 L 211.52,203.25 L 223.60,207.67 L 234.16,203.15 L 242.63,211.43 L 234.25,207.50 L 215.33,216.90 L 205.95,214.91 L 190.08,205.21 L 172.04,201.37 L 158.47,191.42 L 134.33,187.54 L 122.16,192.04 L 94.19,180.23 L 86.43,177.65 L 73.84,163.43 L 59.29,157.42 L 46.85,140.57 L 43.47,126.38 L 50.43,114.55 L 64.08,113.27 L 78.28,127.94 L 105.21,132.61 L 121.25,126.57 L 140.56,134.69 L 150.56,148.23 L 163.18,173.74 L 178.79,168.36 L 198.23,166.32 Z">
+                                <title>Huacaybamba</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="huamalies"
+                                d="M 94.09,320.70 L 86.23,325.62 L 76.78,321.09 L 71.35,308.37 L 83.09,298.53 L 86.12,290.03 L 95.72,281.34 L 92.56,268.62 L 96.33,252.71 L 116.84,222.11 L 123.00,236.49 L 135.55,244.58 L 142.55,220.97 L 140.79,210.31 L 128.69,194.05 L 122.16,192.04 L 134.33,187.54 L 158.47,191.42 L 172.04,201.37 L 190.08,205.21 L 205.95,214.91 L 215.33,216.90 L 234.25,207.50 L 242.63,211.43 L 248.80,196.45 L 255.45,209.29 L 280.90,210.94 L 290.13,226.58 L 284.31,231.67 L 271.56,231.41 L 252.43,248.57 L 250.74,257.11 L 237.04,250.46 L 233.95,256.78 L 220.72,262.68 L 219.31,272.69 L 201.86,275.08 L 174.03,287.05 L 148.95,288.30 L 123.83,301.76 L 94.09,320.70 Z">
+                                <title>Huamalíes</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="lauricocha"
+                                d="M 187.74,430.80 L 189.51,452.47 L 193.68,456.65 L 198.35,462.74 L 194.35,471.94 L 159.88,480.04 L 148.93,486.16 L 142.70,495.83 L 132.78,491.15 L 126.19,480.94 L 113.73,471.58 L 102.73,448.52 L 100.69,414.02 L 124.31,406.18 L 120.86,389.67 L 132.08,385.88 L 130.60,377.60 L 140.30,372.43 L 143.80,364.48 L 167.74,370.86 L 176.81,378.09 L 175.09,394.02 L 168.94,402.92 L 171.22,410.00 L 182.03,412.19 L 187.74,430.80 Z">
+                                <title>Lauricocha</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="leoncio-prado"
+                                d="M 386.15,252.30 L 383.49,264.25 L 375.74,277.54 L 373.79,288.83 L 365.79,300.55 L 364.16,301.67 L 360.39,299.58 L 348.83,267.79 L 349.95,254.17 L 344.32,251.08 L 335.06,258.93 L 326.40,260.45 L 315.44,272.70 L 300.16,277.19 L 286.84,269.09 L 267.38,268.56 L 257.79,275.21 L 257.65,263.48 L 250.74,257.11 L 252.43,248.57 L 271.56,231.41 L 284.31,231.67 L 290.13,226.58 L 280.90,210.94 L 255.45,209.29 L 248.80,196.45 L 242.63,211.43 L 234.16,203.15 L 223.60,207.67 L 211.52,203.25 L 196.72,202.06 L 198.23,166.32 L 210.17,160.54 L 222.03,169.47 L 249.59,157.12 L 253.85,146.96 L 252.67,133.13 L 257.35,126.43 L 253.34,116.94 L 265.94,109.11 L 273.71,86.83 L 277.09,87.01 L 273.89,44.44 L 278.58,24.85 L 283.43,15.30 L 305.98,12.00 L 314.58,29.60 L 310.41,40.98 L 310.10,72.35 L 307.13,82.19 L 314.63,100.11 L 319.95,114.57 L 320.91,136.58 L 330.38,156.93 L 330.05,168.38 L 336.99,175.10 L 345.36,190.75 L 348.09,205.71 L 361.84,224.47 L 375.28,252.28 L 386.15,252.30 Z">
+                                <title>Leoncio Prado</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="maranon"
+                                d="M 43.47,126.38 L 27.47,99.35 L 24.55,84.98 L 16.99,81.50 L 18.28,71.74 L 12.00,58.51 L 23.78,44.51 L 36.99,48.57 L 52.52,38.36 L 50.59,46.37 L 62.44,47.93 L 61.82,55.57 L 71.06,63.78 L 100.51,67.46 L 115.74,62.17 L 119.20,55.50 L 148.83,59.02 L 164.93,54.44 L 182.94,53.94 L 199.82,67.37 L 204.72,49.27 L 210.71,39.12 L 219.76,34.46 L 229.09,36.00 L 231.14,57.17 L 241.23,69.09 L 243.83,86.44 L 252.21,107.25 L 253.34,116.94 L 257.35,126.43 L 252.67,133.13 L 253.85,146.96 L 249.59,157.12 L 222.03,169.47 L 210.17,160.54 L 198.23,166.32 L 178.79,168.36 L 163.18,173.74 L 150.56,148.23 L 140.56,134.69 L 121.25,126.57 L 105.21,132.61 L 78.28,127.94 L 64.08,113.27 L 50.43,114.55 L 43.47,126.38 Z">
+                                <title>Marañón</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="pachitea"
+                                d="M 305.86,495.18 L 295.68,489.17 L 296.94,482.50 L 293.09,460.94 L 293.98,440.14 L 287.80,430.73 L 288.59,416.47 L 293.03,409.36 L 275.02,402.17 L 272.61,384.14 L 276.81,365.54 L 283.51,360.67 L 289.74,347.23 L 330.45,340.90 L 341.37,349.63 L 347.98,344.70 L 344.50,334.46 L 347.27,320.74 L 364.16,301.67 L 365.79,300.55 L 366.32,318.06 L 363.43,329.07 L 365.26,343.00 L 357.17,346.28 L 355.30,355.11 L 378.72,374.63 L 392.31,376.43 L 389.02,392.32 L 374.39,397.74 L 368.16,416.96 L 367.97,433.43 L 349.96,443.65 L 337.93,444.96 L 334.34,454.68 L 319.34,466.83 L 319.18,478.17 L 305.86,495.18 Z">
+                                <title>Pachitea</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="puerto-inca"
+                                d="M 594.52,259.37 L 583.36,268.68 L 578.32,280.90 L 581.71,291.66 L 565.85,317.12 L 566.43,326.79 L 556.52,330.92 L 545.86,328.42 L 535.84,333.79 L 523.41,351.08 L 510.07,346.89 L 499.37,352.83 L 487.96,351.42 L 470.17,339.32 L 456.42,338.82 L 462.43,353.61 L 459.76,358.20 L 441.80,358.32 L 435.99,367.97 L 418.33,381.39 L 402.24,383.54 L 392.31,376.43 L 378.72,374.63 L 355.30,355.11 L 357.17,346.28 L 365.26,343.00 L 363.43,329.07 L 366.32,318.06 L 365.79,300.55 L 373.79,288.83 L 375.74,277.54 L 383.49,264.25 L 386.15,252.30 L 399.20,253.07 L 414.21,247.97 L 423.54,229.94 L 450.71,230.01 L 460.91,232.87 L 465.41,224.05 L 477.02,215.01 L 476.82,199.17 L 470.87,187.46 L 483.35,181.70 L 489.97,172.24 L 491.67,157.37 L 502.46,146.21 L 513.23,142.16 L 527.95,152.86 L 537.81,147.98 L 533.51,131.84 L 536.36,131.81 L 556.25,109.22 L 557.11,87.83 L 567.95,81.23 L 607.60,62.67 L 623.19,70.68 L 628.00,107.52 L 626.49,113.52 L 609.56,123.38 L 601.76,145.42 L 600.20,174.49 L 594.30,184.61 L 602.55,190.10 L 602.80,199.29 L 613.86,231.38 L 595.14,251.80 L 594.52,259.37 Z">
+                                <title>Puerto Inca</title>
+                            </path>
+                            <path class="mapa-provincia" data-provincia="yarowilca"
+                                d="M 176.81,378.09 L 167.74,370.86 L 143.80,364.48 L 135.43,351.98 L 140.89,337.88 L 147.68,330.86 L 143.16,322.67 L 154.10,316.02 L 186.55,312.44 L 197.43,314.28 L 200.51,321.52 L 199.55,347.00 L 202.26,360.73 L 181.59,369.91 L 176.81,378.09 Z">
+                                <title>Yarowilca</title>
+                            </path>
+                            </svg>
+                          </div>
+
+                          <div class="his-mapa-flip__back">
+                            <button type="button" class="his-mapa-back-btn" data-back-btn>
+                                <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al mapa
+                            </button>
+                            <div class="his-mapa-info" data-mapa-info>
+                                <p class="his-mapa-info__cargando">Cargando información…</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# 5. NUESTROS SÍMBOLOS #}
+    <section class="his-simbolos">
+        <div class="container">
+            <h2 class="his-section-title">Nuestros símbolos</h2>
+            <div class="his-simbolos__grid">
+                <article class="his-simbolo-card">
+                    <div class="his-simbolo-card__media" aria-hidden="true">
+                        <img src="{% static 'assets/img/historia/bandera1-hco.webp' %}" alt="Primera bandera"
+                            loading="lazy">
+                    </div>
+                    <div class="his-simbolo-card__body">
+                        <h3>Primera bandera de Huánuco</h3>
+                        <p>
+                            Usada en marzo de 1812 durante la rebelión independentista liderada por 
+                            Juan José Crespo y Castillo, y se enarboló en la entrada de Ambo. 
+                            Representaba la unión y valentía de los pueblos indígenas y mestizos contra el dominio español
+                        </p>
+                    </div>
+                </article>
+                <article class="his-simbolo-card">
+                    <div class="his-simbolo-card__media" aria-hidden="true">
+                        <img src="{% static 'assets/img/historia/bandera2-hco.webp' %}" alt="Bandera actual"
+                            loading="lazy">
+                    </div>
+                    <div class="his-simbolo-card__body">
+                        <h3>Bandera actual de Huánuco</h3>
+                        <p>
+                            Sus orígenes se remontan a 1976, la bandera actual combina crema y verde nilo en diagonal. El verde representa la
+                            vegetación de la selva alta huanuqueña, mientras que el crema simboliza
+                            la fertilidad de los suelos de la región.
+                        </p>
+                    </div>
+                </article>
+                <article class="his-simbolo-card">
+                    <div class="his-simbolo-card__media">
+                        <img src="{% static 'assets/img/historia/escudo-huanuco.webp' %}" alt="Escudo de Huánuco"
+                            loading="lazy">
+                    </div>
+                    <div class="his-simbolo-card__body">
+                        <h3>Escudo de Huánuco</h3>
+                        <p>
+                            El escudo tiene su origen en 1543, cuando el gobernador Cristóbal Vaca de Castro
+                            concedió a la ciudad su blasón. Representa la unión entre la historia hispana y las
+                            raíces andinas de la región.
+                        </p>
+                    </div>
+                </article>
+                <article class="his-simbolo-card">
+                    <div class="his-simbolo-card__media his-simbolo-card__media--icono" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512" fill="#002D89"><title xmlns="" fill="#002D89">anthem</title><path fill="#002D89" d="M356.906 49.594c-108.533.34-194.246 85.275-306.719 20.312c17.05 30.293 55.26 55.692 101.47 67.688C127.244 173.63 60.63 189.984 15.75 186c141.27 81.595 210.67-64.442 380.313 29.656l-19.907 48.688H18.312v18.687h350.22l-17.907 43.814H17.78v18.687h325.19l-18.845 46.126H19.937v18.688h304.938c1.4 12.458 8.875 23.708 19.625 31.5c14 10.147 33.528 15.774 55.875 15.812c22.347.04 43.583-5.58 60.438-15.062c16.854-9.482 29.862-23.084 33.156-40c3.293-16.916-5.158-32.884-19.158-43.03c-14-10.15-33.527-15.776-55.875-15.814s-43.583 5.55-60.437 15.03c-.327.185-.645.377-.97.564L471.345 81l-17.313-7.063l-.06.126c-34.838-18.096-66.836-24.564-97.064-24.47zm85.53 41.906c.567-.02 1.122-.022 1.69 0c.864.033 1.728.145 2.593.28l-42.75 104.532c-26.664-27.147 4.468-103.57 38.467-104.812"/></svg>
+                    </div>
+                    <div class="his-simbolo-card__body">
+                        <h3>Himno de Huánuco</h3>
+                        <p>
+                            Compuesto en 1969 para el centenario de la creación política del departamento,
+                            con letra de Augusto Rivera Vargas y música de Jaime Díaz Orihuela.
+                        </p>
+                        <button type="button" class="his-himno-btn" data-himno-abrir>
+                            <i class="bi bi-file-text" aria-hidden="true"></i> Leer el himno
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <div class="his-himno-modal" data-himno-modal hidden>
+        <div class="his-himno-modal__backdrop" data-himno-cerrar></div>
+        <div class="his-himno-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="his-himno-titulo">
+            <button type="button" class="his-himno-modal__cerrar" data-himno-cerrar aria-label="Cerrar">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+            <div class="his-himno-pergamino">
+                <p class="his-himno-pergamino__eyebrow">Departamento de Huánuco</p>
+                <h3 id="his-himno-titulo">Himno de Huánuco</h3>
+                <div class="his-himno-pergamino__divider" aria-hidden="true"><span></span><i></i><span></span></div>
+                <p class="his-himno-pergamino__autoria">Letra: Augusto Rivera Vargas — Música: Jaime Díaz Orihuela (1969)</p>
+                <div class="his-himno-pergamino__texto">
+                    <p>
+                        <em>
+                            Salve oh Huánuco tierra bravía<br>
+                            de hidalguía y sin par tradición<br>
+                            que hoy tus hijos de júbilo henchidos<br>
+                            cantan loas con viva emoción.
+                        </em>
+                    </p>
+                    
+                    <p>
+                        <em>
+                            Torre enhiesta de noble pasado<br>
+                            que se agitó tu llama y ardor<br>
+                            Yarowilcas te infunden sus glorias<br>
+                            e Illatupac su férreo valor.
+                        </em>
+                    </p>
+                    
+                    <p>
+                        <em>
+                            Que perenne en los siglos ostentes<br>
+                            tus blasones, tus galas, viril<br>
+                            y a la patria sus sienes remoses<br>
+                            con diademas de palma y laurel.
+                        </em>
+                    </p>
+                    
+                    <p>
+                        <em>
+                            Como antaño el león aguerrido<br>
+                            a un tirano procaz combatió<br>
+                            a la lucha salgamos valientes<br>
+                            a lidear en los surcos de amor.
+                        </em>
+                    </p>
+                    
+                    <p>
+                        <em>
+                            Al trabajo entusiatas marchemos<br>
+                            con denuedo, coraje y tezón<br>
+                            que al conjuro de nuestros esfuerzos<br>
+                            forjaremos una grande nación.
+                        </em>
+                    </p>
+                    
+                    <p>
+                        <em>
+                            En tu suelo se guarda el dorado<br>
+                            que el destino en enigma ocultó<br>
+                            y las Gracias tejieron tu encanto<br>
+                            con que Dios en solaz, te dotó.
+                        </em>
+                    </p>
+                    
+                    <p>
+                        <em>
+                            Refulgente y perpetuo, alcemos<br>
+                            en la diestra potente el fanal<br>
+                            alumbrado las sendas gloriosas<br>
+                            que le aguardan su ascenso triunfal.
+                        </em>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# 6. ¿SABÍAS QUE? #}
+    <section class="his-sabias">
+        <div class="container">
+            <h2 class="his-section-title">¿Sabías que?</h2>
+            <div class="his-sabias__grid">
+                <div class="his-sabias__card">
+                    <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/pataamarilla-icono-historia.png' %}" alt="Pata amarilla" loading="lazy"></span>
+                    <p>
+                        Uno de los términos que se les dio a los huanuqueños es el de “Pata amarilla”
+                        y está relacionado con el suelo arcilloso de la región.
+                    </p>
+                </div>
+                <div class="his-sabias__card">
+                    <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/artista-icono-historia.png' %}" alt="Artista" loading="lazy"></span>
+                    <p>
+                        Una de las melodías peruanas más famosas del mundo "El Cóndor Pasa" nació del compositor huanuqueño
+                        Daniel Alomía Robles en 1871.
+                    </p>
+                </div>
+                <div class="his-sabias__card">
+                    <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/rio-icono-historia.png' %}" alt="Rio huallaga" loading="lazy"></span>
+                    <p>
+                        La ciudad de Huánuco se encuentra sobre un valle que fue moldeado durante siglos por el río Huallaga.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# 7. CTA FINAL #}
+    <section class="his-cta">
+        <div class="container his-cta__inner">
+            <h2>Continúa descubriendo Huánuco</h2>
+            <p>Conoce los lugares turísticos, paisajes y atractivos que forman parte de nuestra historia.</p>
+            <a href="{% url 'turismo:listado_lugares' %}" class="his-cta__btn">
+                Explorar lugares turísticos
+                <i class="bi bi-arrow-right" aria-hidden="true"></i>
+            </a>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/historia.js' %}"></script>
+{% endblock %}

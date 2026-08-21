@@ -16,6 +16,14 @@ class PrivacidadView(TemplateView):
 class TerminosView(TemplateView):
     template_name = 'base/terminos.html'
 
+class HistoriaView(TemplateView):
+    template_name = 'base/historia.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_nav"] = "historia"
+        return context
+
 class ContactoView(TemplateView):
     template_name = 'base/contacto.html'
 

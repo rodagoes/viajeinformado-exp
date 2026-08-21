@@ -1,0 +1,1005 @@
+/* =========================================================
+   Historia de Huánuco - Viaje Informado
+   CSS encapsulado bajo .historia-page para no afectar otras páginas
+========================================================= */
+
+.historia-page {
+    --his-blanco: #FFFFFF;
+    --his-azul-oscuro: #002D89;
+    --his-azul: #007FFF;
+    --his-fondo-general: #F7F9FD;
+    --his-fondo-tarjeta: #EEF3FB;
+    --his-texto-principal: #182033;
+    --his-texto-secundario: #61708C;
+    --his-bordes: #DFE7F3;
+    --his-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+    background-color: transparent;
+    overflow-x: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .historia-page * {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+.historia-page .container {
+    max-width: 1200px;
+}
+
+.historia-page h2.his-section-title {
+    color: var(--his-azul);
+    font-family: "Urbanist", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    letter-spacing: 1px;
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+}
+
+/* =========================================================
+   1. Hero
+========================================================= */
+
+.historia-page .his-hero {
+    padding: calc(var(--vi-header-height-desktop, 78px) + 40px) 0 28px;
+    text-align: center;
+}
+
+@media (max-width: 1199px) {
+    .historia-page .his-hero {
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 24px);
+    }
+}
+
+.historia-page .his-hero__content {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.historia-page .his-hero__icon {
+    display: block;
+    width: 68px;
+    height: auto;
+    margin: 0 auto 16px;
+}
+
+.historia-page .his-hero__eyebrow {
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    color: var(--his-azul);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.historia-page .his-hero__title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 1.6rem + 1.2vw, 2.4rem);
+    color: var(--his-azul-oscuro);
+    margin-bottom: 10px;
+}
+
+.historia-page .his-hero__desc {
+    font-size: 0.98rem;
+    color: var(--his-texto-secundario);
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   2. Huánuco en datos / Fundación
+========================================================= */
+
+.historia-page .his-datos-wrap {
+    padding: 40px 0 8px;
+}
+
+.historia-page .his-fundacion-wrap {
+    padding: 8px 0 48px;
+}
+
+/* Datos rápidos */
+
+.historia-page .his-datos__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.historia-page .his-dato-card {
+    background: var(--his-blanco);
+    border: 1px solid var(--his-bordes);
+    border-radius: 14px;
+    padding: 22px 18px;
+    box-shadow: 0 10px 28px rgba(0, 45, 137, 0.09);
+    transition: transform 0.25s var(--his-ease-out), box-shadow 0.25s var(--his-ease-out);
+    animation: his-fade-up 0.6s var(--his-ease-out) both;
+}
+
+.historia-page .his-datos__grid .his-dato-card:nth-child(1) { animation-delay: 0.05s; }
+.historia-page .his-datos__grid .his-dato-card:nth-child(2) { animation-delay: 0.1s; }
+.historia-page .his-datos__grid .his-dato-card:nth-child(3) { animation-delay: 0.15s; }
+.historia-page .his-datos__grid .his-dato-card:nth-child(4) { animation-delay: 0.2s; }
+.historia-page .his-datos__grid .his-dato-card:nth-child(5) { animation-delay: 0.25s; }
+
+.historia-page .his-dato-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(0, 45, 137, 0.14);
+}
+
+.historia-page .his-dato-card .detalle__icono {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    transition: transform 0.25s var(--his-ease-out);
+}
+
+.historia-page .his-dato-card:hover .detalle__icono {
+    transform: scale(1.1);
+}
+
+.historia-page .his-dato-card__cifra {
+    display: block;
+    font-weight: 800;
+    color: var(--his-texto-principal);
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+.historia-page .his-dato-card__desc {
+    display: block;
+    color: var(--his-texto-secundario);
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+/* Fundación */
+
+.historia-page .his-fundacion {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--his-blanco);
+    border: 1px solid var(--his-bordes);
+    border-radius: 20px;
+    padding: 44px 48px;
+    text-align: center;
+    box-shadow: 0 2px 14px rgba(0, 45, 137, 0.05);
+}
+
+.historia-page .his-fundacion__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--his-azul-oscuro) 0%, var(--his-azul) 100%);
+    color: var(--his-blanco);
+    font-size: 1.4rem;
+    margin-bottom: 18px;
+}
+
+.historia-page .his-fundacion__texto h2 {
+    color: var(--his-azul);
+    font-family: "Urbanist", sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    font-style: normal;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+}
+
+.historia-page .his-fundacion__texto p {
+    color: var(--his-texto-secundario);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-size: 0.96rem;
+    text-align: left;
+}
+
+@keyframes his-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   3. Provincias + mapa
+========================================================= */
+
+.historia-page .his-provincias-wrap {
+    padding: 8px 0 48px;
+}
+
+.historia-page .his-provincias {
+    background: var(--his-blanco);
+    border: 1px solid var(--his-bordes);
+    border-radius: 20px;
+    padding: 36px 40px;
+    box-shadow: 0 2px 14px rgba(0, 45, 137, 0.05);
+}
+
+.historia-page .his-provincias__intro {
+    color: var(--his-texto-secundario);
+    margin-bottom: 24px;
+}
+
+.historia-page .his-provincias__grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: center;
+}
+
+.historia-page .his-provincias__lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+.historia-page .his-provincias__lista li {
+    margin: 0;
+}
+
+.historia-page .his-provincias__lista button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: var(--his-blanco);
+    color: var(--his-texto-principal);
+    border: 1px solid var(--his-bordes);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.historia-page .his-provincias__lista button:hover {
+    border-color: var(--his-azul);
+}
+
+.historia-page .his-provincias__lista button:focus-visible {
+    outline: 2px solid var(--his-azul);
+    outline-offset: 2px;
+}
+
+.historia-page .his-provincias__lista button i {
+    color: var(--his-azul);
+    font-size: 0.85rem;
+}
+
+.historia-page .his-provincias__lista button.is-active {
+    background: var(--his-azul);
+    border-color: var(--his-azul);
+    color: var(--his-blanco);
+}
+
+.historia-page .his-provincias__lista button.is-active i {
+    color: var(--his-blanco);
+}
+
+.historia-page .his-provincias__mapa {
+    width: 100%;
+}
+
+/* ---- Tarjeta flip (mapa / info de la provincia) ---- */
+
+.historia-page .his-mapa-flip {
+    width: 100%;
+    perspective: 1400px;
+}
+
+.historia-page .his-mapa-flip__inner {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    transform-style: preserve-3d;
+    transition: transform 0.6s var(--his-ease-out);
+}
+
+.historia-page .his-mapa-flip.is-flipped .his-mapa-flip__inner {
+    transform: rotateY(180deg);
+}
+
+.historia-page .his-mapa-flip__front,
+.historia-page .his-mapa-flip__back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 16px;
+}
+
+.historia-page .his-mapa-flip__front {
+    background: var(--his-fondo-tarjeta);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.historia-page .his-mapa-flip__front svg {
+    width: 100%;
+    max-height: 380px;
+}
+
+.historia-page .his-mapa-flip__back {
+    background: var(--his-fondo-tarjeta);
+    padding: 20px;
+    transform: rotateY(180deg);
+    overflow-y: auto;
+    visibility: hidden;
+}
+
+/* backface-visibility no oculta de forma confiable la cara frontal en todos los
+   navegadores (el botón "Info", al ser position:absolute, puede seguir
+   capturando clics aunque no se vea) — se refuerza con visibility explícito. */
+.historia-page .his-mapa-flip.is-flipped .his-mapa-flip__front {
+    visibility: hidden;
+}
+
+.historia-page .his-mapa-flip.is-flipped .his-mapa-flip__back {
+    visibility: visible;
+}
+
+.historia-page .his-mapa-info-btn,
+.historia-page .his-mapa-back-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--his-blanco);
+    color: var(--his-azul);
+    border: 1px solid var(--his-bordes);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 45, 137, 0.1);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.historia-page .his-mapa-info-btn:hover,
+.historia-page .his-mapa-back-btn:hover {
+    background: var(--his-azul);
+    color: var(--his-blanco);
+}
+
+.historia-page .his-mapa-back-btn {
+    position: static;
+    margin-bottom: 14px;
+    box-shadow: none;
+}
+
+.historia-page .his-mapa-info__cargando {
+    color: var(--his-texto-secundario);
+    font-size: 0.9rem;
+}
+
+.historia-page .his-mapa-info__titulo {
+    color: var(--his-azul-oscuro);
+    font-family: "Urbanist", sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    font-size: 1.2rem;
+    margin-bottom: 14px;
+}
+
+.historia-page .his-mapa-info__datos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.historia-page .his-mapa-info__dato {
+    background: var(--his-blanco);
+    border: 1px solid var(--his-bordes);
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 45, 137, 0.05);
+}
+
+.historia-page .his-mapa-info__dato i {
+    display: block;
+    color: var(--his-azul);
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+
+.historia-page .his-mapa-info__dato dt {
+    font-size: 0.68rem;
+    color: var(--his-texto-secundario);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+}
+
+.historia-page .his-mapa-info__dato dd {
+    margin: 0;
+    font-weight: 800;
+    color: var(--his-texto-principal);
+    font-size: 0.9rem;
+}
+
+.historia-page .his-mapa-info__distritos h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--his-texto-principal);
+    margin-bottom: 8px;
+}
+
+.historia-page .his-mapa-info__distritos ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+.historia-page .his-mapa-info__distritos li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--his-fondo-tarjeta);
+    border: 1px solid var(--his-bordes);
+    border-radius: 10px;
+    padding: 8px 8px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--his-texto-principal);
+    text-transform: capitalize;
+}
+
+.historia-page .his-mapa-info__error {
+    color: var(--his-texto-secundario);
+    font-size: 0.9rem;
+}
+
+.historia-page .mapa-provincia {
+    fill: #c7d5ec;
+    stroke: var(--his-blanco);
+    stroke-width: 2;
+    cursor: pointer;
+    transition: fill 0.2s ease;
+}
+
+.historia-page .mapa-provincia:hover {
+    fill: #9db8e0;
+}
+
+.historia-page .mapa-provincia.is-active {
+    fill: var(--his-azul);
+}
+
+/* =========================================================
+   4. Símbolos
+========================================================= */
+
+.historia-page .his-simbolos {
+    padding: 8px 0 48px;
+}
+
+.historia-page .his-simbolos__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.historia-page .his-simbolo-card {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    background: var(--his-blanco);
+    border: 1px solid var(--his-bordes);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.historia-page .his-simbolo-card__media {
+    background: var(--his-fondo-tarjeta);
+}
+
+.historia-page .his-simbolo-card__media svg,
+.historia-page .his-simbolo-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.historia-page .his-simbolo-card__media--icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    color: var(--his-azul);
+}
+
+.historia-page .his-simbolo-card__body {
+    padding: 20px 22px;
+}
+
+.historia-page .his-simbolo-card__body h3 {
+    color: var(--his-azul-oscuro);
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+}
+
+.historia-page .his-simbolo-card__body p {
+    color: var(--his-texto-secundario);
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.88rem;
+}
+
+.historia-page .his-himno-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    background: var(--his-fondo-tarjeta);
+    color: var(--his-azul);
+    border: 1px solid var(--his-bordes);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.historia-page .his-himno-btn:hover {
+    background: var(--his-azul);
+    color: var(--his-blanco);
+}
+
+/* ---- Modal del himno (pergamino) ---- */
+
+.historia-page .his-himno-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.historia-page .his-himno-modal[hidden] {
+    display: none;
+}
+
+.historia-page .his-himno-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 14, 26, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 1;
+    transition: opacity 0.25s var(--his-ease-out);
+}
+
+/* Arranca invisible en el frame de entrada: evita el flash negro que
+   produce el navegador al crear la capa de backdrop-filter de golpe. */
+@starting-style {
+    .historia-page .his-himno-modal:not([hidden]) .his-himno-modal__backdrop {
+        opacity: 0;
+    }
+}
+
+.historia-page .his-himno-modal__dialog {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    max-height: 85vh;
+    animation: his-fade-up 0.3s var(--his-ease-out) both;
+}
+
+.historia-page .his-himno-modal__cerrar {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    z-index: 1;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--his-blanco);
+    border: 1px solid var(--his-bordes);
+    color: var(--his-texto-principal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.historia-page .his-himno-pergamino {
+    max-height: 85vh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #faf3e2 0%, #f1e3c3 100%);
+    border: 1px solid #d9c497;
+    border-radius: 10px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), inset 0 0 0 6px #faf3e2, inset 0 0 0 7px #d9c497;
+    padding: 40px 36px;
+    text-align: center;
+}
+
+.historia-page .his-himno-pergamino__eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #8a6d3b;
+    margin-bottom: 6px;
+}
+
+.historia-page .his-himno-pergamino h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4a3510;
+    margin-bottom: 12px;
+}
+
+.historia-page .his-himno-pergamino__divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 12px;
+}
+
+.historia-page .his-himno-pergamino__divider span {
+    display: block;
+    width: 34px;
+    height: 2px;
+    background: #b4924f;
+}
+
+.historia-page .his-himno-pergamino__divider i {
+    display: block;
+    width: 7px;
+    height: 7px;
+    background: #b4924f;
+    transform: rotate(45deg);
+}
+
+.historia-page .his-himno-pergamino__autoria {
+    font-size: 0.8rem;
+    color: #8a6d3b;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.historia-page .his-himno-pergamino__texto {
+    font-family: 'Playfair Display', serif;
+    color: #4a3510;
+    line-height: 1.9;
+    font-size: 0.98rem;
+}
+
+.historia-page .his-himno-pergamino__texto p {
+    margin-bottom: 14px;
+}
+
+/* =========================================================
+   5. ¿Sabías que?
+========================================================= */
+
+.historia-page .his-sabias {
+    padding: 8px 0 56px;
+}
+
+.historia-page .his-sabias__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.historia-page .his-sabias__card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid var(--his-bordes);
+    border-left: 4px solid transparent;
+    border-radius: 14px;
+    padding: 20px 18px;
+    box-shadow: 0 12px 26px -22px rgba(0, 45, 137, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.25s var(--his-ease-out), box-shadow 0.25s var(--his-ease-out);
+}
+
+.historia-page .his-sabias__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 32px -20px rgba(0, 45, 137, 0.45);
+}
+
+.historia-page .his-sabias__card:nth-child(1) { border-left-color: #FFD700; }
+.historia-page .his-sabias__card:nth-child(2) { border-left-color: #1E8E5A; }
+.historia-page .his-sabias__card:nth-child(3) { border-left-color: #007FFF; }
+
+.historia-page .his-sabias__icono {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--his-azul);
+    color: var(--his-blanco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 0.85rem;
+}
+
+.historia-page .his-sabias__icono img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+.historia-page .his-sabias__card:nth-child(1) .his-sabias__icono { background: #FFD700; }
+.historia-page .his-sabias__card:nth-child(2) .his-sabias__icono { background: #1E8E5A; }
+.historia-page .his-sabias__card:nth-child(3) .his-sabias__icono { background: #007FFF; }
+
+.historia-page .his-sabias__card p {
+    color: var(--his-texto-secundario);
+    margin: 0;
+    line-height: 1.45;
+    font-size: 0.88rem;
+}
+
+/* =========================================================
+   6. CTA final
+========================================================= */
+
+.historia-page .his-cta {
+    padding: 8px 0 64px;
+}
+
+.historia-page .his-cta__inner {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--his-azul-oscuro) 0%, var(--his-azul) 100%);
+    border-radius: 24px;
+    padding: 56px 32px;
+    text-align: center;
+    color: var(--his-blanco);
+    box-shadow: 0 28px 56px -24px rgba(0, 45, 137, 0.55);
+}
+
+.historia-page .his-cta__inner::before,
+.historia-page .his-cta__inner::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.historia-page .his-cta__inner::before {
+    width: 320px;
+    height: 320px;
+    top: -160px;
+    right: -80px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.historia-page .his-cta__inner::after {
+    width: 220px;
+    height: 220px;
+    bottom: -110px;
+    left: -60px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.historia-page .his-cta__inner > * {
+    position: relative;
+    z-index: 1;
+}
+
+.historia-page .his-cta__inner h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.9rem);
+    margin-bottom: 10px;
+    color: #FFFFFF;
+}
+
+.historia-page .his-cta__inner p {
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 520px;
+    margin: 0 auto 28px;
+}
+
+.historia-page .his-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--his-blanco);
+    color: var(--his-azul-oscuro);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 14px 30px;
+    border-radius: 999px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s var(--his-ease-out), box-shadow 0.2s var(--his-ease-out);
+}
+
+.historia-page .his-cta__btn i {
+    transition: transform 0.2s var(--his-ease-out);
+}
+
+.historia-page .his-cta__btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.26);
+    color: var(--his-azul-oscuro);
+}
+
+.historia-page .his-cta__btn:hover i {
+    transform: translateX(3px);
+}
+
+/* =========================================================
+   Responsive - Tablet
+========================================================= */
+
+@media (max-width: 991.98px) {
+    .historia-page .his-datos__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .historia-page .his-fundacion {
+        padding: 36px 28px;
+    }
+
+    .historia-page .his-provincias__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .historia-page .his-provincias__lista {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .historia-page .his-provincias__lista li {
+        flex: 1 1 auto;
+    }
+
+    .historia-page .his-mapa-info__distritos ul {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .historia-page .his-simbolos__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .historia-page .his-sabias__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   Responsive - Móvil
+========================================================= */
+
+@media (max-width: 575.98px) {
+    .historia-page .his-provincias {
+        padding: 24px 20px;
+    }
+
+    .historia-page .his-datos__grid {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 12px;
+        padding-bottom: 6px;
+    }
+
+    .historia-page .his-datos__grid .his-dato-card {
+        flex: 0 0 auto;
+        width: 74vw;
+        max-width: 260px;
+        scroll-snap-align: start;
+        padding: 16px 12px;
+    }
+
+    .historia-page .his-fundacion {
+        padding: 28px 20px;
+    }
+
+    .historia-page .his-mapa-flip__inner {
+        height: 340px;
+    }
+
+    .historia-page .his-mapa-info__datos {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 10px;
+        padding-bottom: 4px;
+    }
+
+    .historia-page .his-mapa-info__dato {
+        flex: 0 0 auto;
+        min-width: 128px;
+        scroll-snap-align: start;
+    }
+
+    .historia-page .his-mapa-info__distritos ul {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .historia-page .his-simbolo-card {
+        grid-template-columns: 96px 1fr;
+    }
+
+    .historia-page .his-simbolo-card__body {
+        padding: 14px 16px;
+    }
+
+    .historia-page .his-simbolo-card__body h3 {
+        font-size: 0.95rem;
+    }
+
+    .historia-page .his-simbolo-card__body p {
+        font-size: 0.82rem;
+    }
+
+    .historia-page .his-simbolo-card__media--icono {
+        font-size: 1.7rem;
+    }
+
+    .historia-page .his-himno-modal {
+        padding: 16px;
+    }
+
+    .historia-page .his-himno-pergamino {
+        padding: 30px 20px;
+    }
+
+    .historia-page .his-himno-pergamino h3 {
+        font-size: 1.25rem;
+    }
+
+    .historia-page .his-cta__inner {
+        padding: 36px 20px;
+    }
+}

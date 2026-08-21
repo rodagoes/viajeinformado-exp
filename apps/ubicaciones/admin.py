@@ -10,8 +10,8 @@ class DepartamentoAdmin(admin.ModelAdmin):
 
 @admin.register(Provincia)
 class ProvinciaAdmin(admin.ModelAdmin):
-    list_display = ('nombre_oficial', 'departamento', 'codigo_inei', 'activo')
-    search_fields = ('nombre_oficial', 'codigo_inei', 'departamento__nombre_oficial')
+    list_display = ('nombre_oficial', 'departamento', 'capital', 'superficie_km2', 'altitud_m', 'codigo_inei', 'activo')
+    search_fields = ('nombre_oficial', 'codigo_inei', 'departamento__nombre_oficial', 'capital')
     list_filter = ('activo', 'departamento')
     prepopulated_fields = {'slug': ('nombre_oficial',)}
     autocomplete_fields = ('departamento',)

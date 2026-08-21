@@ -1,6 +1,9 @@
 from decimal import Decimal
 from unittest import TestCase
 
+from django.test import TestCase as DjangoTestCase
+from django.urls import reverse
+
 from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
 
 
@@ -102,3 +105,22 @@ class ConstruirUrlsMapaTests(TestCase):
             direccion_mapa="Huánuco, Perú", zoom_coordenadas=16, zoom_direccion=15
         )
         self.assertIn("&z=15&hl=es&output=embed", embed_url)
+
+
+class HistoriaViewTests(DjangoTestCase):
+    def test_responde_200_y_usa_el_template_correcto(self):
+        response = self.client.get(reverse("base:historia"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "base/historia.html")
+
+    def test_h1_principal_presente(self):
+        response = self.client.get(reverse("base:historia"))
+        self.assertContains(response, '<h1 class="his-hero__title">Historia de Huánuco</h1>')
+
+    def test_cta_enlaza_a_lugares_turisticos(self):
+        response = self.client.get(reverse("base:historia"))
+        self.assertContains(response, reverse("turismo:listado_lugares"))
+
+    def test_no_requiere_autenticacion(self):
+        response = self.client.get(reverse("base:historia"))
+        self.assertNotIn(response.status_code, (302, 401, 403))

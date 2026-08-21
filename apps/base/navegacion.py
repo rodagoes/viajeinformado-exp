@@ -40,7 +40,7 @@ HEADER_NAV_ITEMS = [
                 "key": "historia",
                 "label": "Historia",
                 "icon": "book",
-                "href": "#",
+                "url_name": "base:historia",
                 "description": "El pasado histórico de Huánuco.",
             },
         ],
