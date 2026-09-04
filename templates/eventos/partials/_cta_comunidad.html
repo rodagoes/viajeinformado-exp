@@ -1,0 +1,24 @@
+{% comment %}
+Partial reutilizable del CTA "¿Tienes un evento para compartir?" (E5,
+sección 26): se incluye dos veces desde agenda-eventos.html —una fija
+debajo del panel de filtros en desktop, otra debajo de la paginación en
+mobile— porque ambas posiciones viven en ramas del DOM demasiado alejadas
+(separadas por `.ev-cards` y `.ev-paginacion`) para resolverlas con
+grid-area/order sobre una sola instancia sin hacks de posicionamiento.
+Recibe `extra_class` (opcional) para controlar en qué breakpoint se
+muestra cada instancia.
+{% endcomment %}
+<div class="ev-cta-comunidad{% if extra_class %} {{ extra_class }}{% endif %}">
+    <p class="ev-cta-comunidad__titulo">¿Tienes un evento para compartir?</p>
+    <p class="ev-cta-comunidad__desc">Ayúdanos a mantener la agenda de Huánuco activa y actualizada.</p>
+    <div class="ev-cta-comunidad__acciones">
+        <button type="button" class="ev-cta-comunidad__btn ev-cta-comunidad__btn--primario"
+                data-bs-toggle="modal" data-bs-target="#ev-modal-promocionar">
+            Promociona tu evento
+        </button>
+        <button type="button" class="ev-cta-comunidad__btn ev-cta-comunidad__btn--secundario"
+                data-bs-toggle="modal" data-bs-target="#ev-modal-reportar">
+            Reportar un problema
+        </button>
+    </div>
+</div>

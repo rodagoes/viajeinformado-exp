@@ -27,7 +27,9 @@
                         {% endif %}
                         <div class="vi-dropdown__list">
                             {% for child in item.children %}
-                            <a href="{{ child.href }}" class="vi-dropdown__item">
+                            <a href="{{ child.href }}"
+                                class="vi-dropdown__item{% if child.url_name == request.resolver_match.view_name %} is-current{% endif %}"
+                                {% if child.url_name == request.resolver_match.view_name %}aria-current="page"{% endif %}>
                                 <span class="vi-dropdown__icon"><i class="bi bi-{{ child.icon }}"
                                         aria-hidden="true"></i></span>
                                 <span class="vi-dropdown__text">
@@ -43,7 +45,8 @@
                 </div>
                 {% else %}
                 <a href="{{ item.href }}"
-                    class="vi-nav__link {% if active_nav == item.key %}active{% endif %}">{{ item.label }}</a>
+                    class="vi-nav__link {% if active_nav == item.key %}active{% endif %}"
+                    {% if active_nav == item.key %}aria-current="page"{% endif %}>{{ item.label }}</a>
                 {% endif %}
             {% endfor %}
         </nav>
@@ -112,7 +115,7 @@
         <div class="vi-mobile-menu__inner">
             {% for item in header_nav_items %}
                 {% if item.children %}
-                <details class="vi-mobile-group">
+                <details class="vi-mobile-group{% if active_nav == item.key %} active{% endif %}">
                     <summary class="vi-mobile-group__summary">
                         <i class="bi bi-{{ item.icon }}" aria-hidden="true"></i>
                         <span>{{ item.label }}</span>
@@ -120,7 +123,9 @@
                     </summary>
                     <div class="vi-mobile-group__items">
                         {% for child in item.children %}
-                        <a href="{{ child.href }}" class="vi-mobile-menu__item">
+                        <a href="{{ child.href }}"
+                            class="vi-mobile-menu__item{% if child.url_name == request.resolver_match.view_name %} is-current{% endif %}"
+                            {% if child.url_name == request.resolver_match.view_name %}aria-current="page"{% endif %}>
                             <i class="bi bi-{{ child.icon }}" aria-hidden="true"></i> {{ child.label }}
                         </a>
                         {% endfor %}
@@ -128,7 +133,8 @@
                 </details>
                 {% else %}
                 <a href="{{ item.href }}"
-                    class="vi-mobile-menu__item vi-mobile-menu__item--top {% if active_nav == item.key %}active{% endif %}">
+                    class="vi-mobile-menu__item vi-mobile-menu__item--top {% if active_nav == item.key %}active{% endif %}"
+                    {% if active_nav == item.key %}aria-current="page"{% endif %}>
                     <i class="bi bi-{{ item.icon }}" aria-hidden="true"></i> {{ item.label }}
                 </a>
                 {% endif %}

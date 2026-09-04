@@ -11,7 +11,6 @@ class ClimaTemporadasView(TemplateView):
         context = super().get_context_data(**kwargs)
         ciudad_slug = ciudad_valida(self.request.GET.get("ciudad"))
 
-        context["active_nav"] = "planifica"
         context["ciudad"] = obtener_ciudad(ciudad_slug)
         context["ciudades"] = listar_ciudades()
         context["clima"] = obtener_clima_actual(ciudad_slug)

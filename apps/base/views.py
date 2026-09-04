@@ -6,7 +6,6 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_nav"] = "inicio"
         context["hero_slides"] = HomeHeroSlide.objects.filter(activo=True).order_by("orden", "id")
         return context
 
@@ -18,11 +17,6 @@ class TerminosView(TemplateView):
 
 class HistoriaView(TemplateView):
     template_name = 'base/historia.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_nav"] = "historia"
-        return context
 
 class ContactoView(TemplateView):
     template_name = 'base/contacto.html'

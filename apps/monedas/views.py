@@ -16,7 +16,6 @@ class TipoCambioView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_nav"] = "planifica"
 
         tipo_cambio = TipoCambio.vigente()
         context["tipo_cambio_disponible"] = tipo_cambio is not None

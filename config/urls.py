@@ -17,6 +17,7 @@ urlpatterns = [
     path('', include('apps.establecimientos.urls')),
     path('gastronomia/', include('apps.gastronomia.urls')),
     path('', include('apps.turismo.urls')),
+    path('eventos/', include('apps.eventos.urls')),
     path('planifica/', include('apps.movilidad.urls')),
     path('planifica/', include('apps.clima.urls')),
     path('planifica/', include('apps.emergencias.urls')),

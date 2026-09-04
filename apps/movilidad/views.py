@@ -17,7 +17,6 @@ class TarifasTaxiView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_nav"] = "planifica"
         context["transportes"] = obtener_transportes_con_tarifas()
         context["consejos"] = obtener_consejos_movilidad()
         return context
@@ -28,7 +27,6 @@ class ComoLlegarView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_nav"] = "planifica"
         context["rutas_terrestres"] = obtener_rutas_terrestres()
         context["rutas_aereas"] = obtener_rutas_aereas()
         context["consejos_terrestres"] = obtener_consejos_terrestres()

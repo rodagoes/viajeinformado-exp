@@ -227,6 +227,18 @@
     background: rgba(0, 127, 255, .07);
 }
 
+/* Item exacto dentro del dropdown (R13/R30): discreto a propósito — un
+   borde de acento + color de texto, sin fondo sólido ni gradiente propio,
+   para no competir con la barra activa del item padre en `.vi-nav__link`. */
+.vi-dropdown__item.is-current {
+    background: rgba(0, 127, 255, .05);
+    box-shadow: inset 3px 0 0 var(--vi-h-blue);
+}
+
+.vi-dropdown__item.is-current .vi-dropdown__label {
+    color: var(--vi-h-blue-dark);
+}
+
 .vi-dropdown__icon {
     flex-shrink: 0;
     width: 30px;
@@ -534,6 +546,15 @@
 
     .vi-mobile-menu__item.active { color: var(--vi-h-blue-dark); }
 
+    /* Item exacto dentro del acordeón mobile: mismo lenguaje discreto que
+       `.vi-dropdown__item.is-current` en desktop (R13/R19), sin competir
+       con el estado `.active` del grupo padre (más abajo). */
+    .vi-mobile-menu__item.is-current {
+        background: rgba(0, 127, 255, .05);
+        box-shadow: inset 3px 0 0 var(--vi-h-blue);
+        color: var(--vi-h-blue-dark);
+    }
+
     /* ── Grupos tipo acordeón (sin JS, <details> nativo) ── */
     .vi-mobile-group {
         border-radius: 10px;
@@ -576,6 +597,19 @@
 
     .vi-mobile-group[open] .vi-mobile-group__summary {
         background: rgba(0, 127, 255, .06);
+    }
+
+    /* Sección activa del acordeón mobile (R19): misma señal visual que el
+       resto del header (`--vi-h-blue-dark` + fondo azul translúcido), sin
+       depender de [open] — debe verse aunque el usuario no haya
+       desplegado el grupo. */
+    .vi-mobile-group.active .vi-mobile-group__summary {
+        background: rgba(0, 127, 255, .08);
+        color: var(--vi-h-blue-dark);
+    }
+
+    .vi-mobile-group.active .vi-mobile-group__summary i:first-child {
+        color: var(--vi-h-blue-dark);
     }
 
     .vi-mobile-group[open] .vi-mobile-group__caret {

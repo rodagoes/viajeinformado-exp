@@ -21,7 +21,6 @@ class EmergenciasView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_nav"] = "planifica"
 
         zona_actual = resolver_zona(self.request.GET.get("zona") or None)
         contactos_nacionales = obtener_contactos_nacionales()

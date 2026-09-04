@@ -98,6 +98,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.base.context_processors.header_nav_items',
+                'apps.base.context_processors.active_nav',
             ],
         },
     },
@@ -209,6 +210,12 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='Viaje Informado <no-responder@viajeinformado.digital>')
+
+# Destinatario de los formularios de "Promociona tu evento" / "Reportar un
+# problema" del módulo Eventos. Reutiliza el backend/credenciales SMTP de
+# arriba (no hay una segunda config de correo) — solo el destinatario es
+# específico de este módulo y configurable por entorno.
+EVENTOS_CONTACT_EMAIL = env('EVENTOS_CONTACT_EMAIL', default='viajeinformadohuanuco@gmail.com')
 
 # ==========================================================
 # OTP

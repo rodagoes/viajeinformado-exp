@@ -2,8 +2,9 @@ from decimal import Decimal
 from unittest import TestCase
 
 from django.test import TestCase as DjangoTestCase
-from django.urls import reverse
+from django.urls import resolve, reverse
 
+from apps.base.navegacion import resolver_seccion_activa
 from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
 
 
@@ -124,3 +125,83 @@ class HistoriaViewTests(DjangoTestCase):
     def test_no_requiere_autenticacion(self):
         response = self.client.get(reverse("base:historia"))
         self.assertNotIn(response.status_code, (302, 401, 403))
+
+
+class ResolverSeccionActivaTests(DjangoTestCase):
+    """Verifica que la sección activa del header se resuelva por
+    namespace/url_name (nunca por request.path) para cada ruta pública
+    real de cada sección del menú."""
+
+    def _seccion_para(self, url_name):
+        match = resolve(reverse(url_name))
+        return resolver_seccion_activa(match)
+
+    def test_home_resuelve_a_inicio(self):
+        self.assertEqual(self._seccion_para("base:home"), "inicio")
+
+    def test_historia_resuelve_a_explorar(self):
+        self.assertEqual(self._seccion_para("base:historia"), "explorar")
+
+    def test_lugares_turisticos_resuelve_a_explorar(self):
+        self.assertEqual(self._seccion_para("turismo:listado_lugares"), "explorar")
+
+    def test_restaurantes_resuelve_a_gastronomia(self):
+        self.assertEqual(self._seccion_para("establecimientos:listado_restaurantes"), "gastronomia")
+
+    def test_platos_tipicos_resuelve_a_gastronomia(self):
+        self.assertEqual(self._seccion_para("gastronomia:platos_tipicos"), "gastronomia")
+
+    def test_alojamientos_resuelve_a_gastronomia(self):
+        self.assertEqual(self._seccion_para("establecimientos:listado_alojamientos"), "gastronomia")
+
+    def test_tarifas_taxi_resuelve_a_planifica(self):
+        self.assertEqual(self._seccion_para("movilidad:tarifas_taxi"), "planifica")
+
+    def test_como_llegar_resuelve_a_planifica(self):
+        self.assertEqual(self._seccion_para("movilidad:como_llegar"), "planifica")
+
+    def test_clima_temporadas_resuelve_a_planifica(self):
+        self.assertEqual(self._seccion_para("clima:clima_temporadas"), "planifica")
+
+    def test_tipo_cambio_resuelve_a_planifica(self):
+        self.assertEqual(self._seccion_para("monedas:tipo_cambio"), "planifica")
+
+    def test_servicios_utiles_resuelve_a_planifica(self):
+        self.assertEqual(self._seccion_para("servicios_turista:servicios_utiles"), "planifica")
+
+    def test_emergencias_resuelve_a_planifica(self):
+        self.assertEqual(self._seccion_para("emergencias:emergencias"), "planifica")
+
+    def test_eventos_resuelve_a_eventos(self):
+        self.assertEqual(self._seccion_para("eventos:listado_eventos"), "eventos")
+
+    def test_pagina_sin_seccion_no_marca_ninguna(self):
+        self.assertIsNone(self._seccion_para("base:privacidad"))
+
+    def test_resolver_match_none_no_marca_ninguna(self):
+        self.assertIsNone(resolver_seccion_activa(None))
+
+
+class ActiveNavContextProcessorTests(DjangoTestCase):
+    """Confirma que el context processor global (no cada vista) es quien
+    deja `active_nav` correcto en el template — la causa real de la
+    inconsistencia reportada."""
+
+    def test_header_marca_explorar_activo_en_historia(self):
+        response = self.client.get(reverse("base:historia"))
+        self.assertEqual(response.context["active_nav"], "explorar")
+
+    def test_header_marca_planifica_activo_en_servicios_utiles(self):
+        response = self.client.get(reverse("servicios_turista:servicios_utiles"))
+        self.assertEqual(response.context["active_nav"], "planifica")
+
+    def test_header_marca_eventos_activo_en_eventos(self):
+        response = self.client.get(reverse("eventos:listado_eventos"))
+        self.assertEqual(response.context["active_nav"], "eventos")
+
+    def test_header_marca_inicio_activo_solo_en_inicio(self):
+        response = self.client.get(reverse("base:home"))
+        self.assertEqual(response.context["active_nav"], "inicio")
+
+        response = self.client.get(reverse("base:historia"))
+        self.assertNotEqual(response.context["active_nav"], "inicio")

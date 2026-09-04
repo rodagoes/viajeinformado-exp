@@ -1,0 +1,558 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eventos en Huánuco | Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet" href="{% static 'assets/css/agenda-eventos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="eventos-page">
+
+    <!-- INTRO -->
+    <section class="ev-intro">
+        <p class="ev-intro__eyebrow">Agenda turística y cultural</p>
+        <h1 class="ev-intro__titulo">Eventos en Huánuco</h1>
+        <p class="ev-intro__desc">
+            Descubre celebraciones, ferias, actividades culturales y experiencias
+            que están ocurriendo durante tu visita.
+        </p>
+    </section>
+
+    <!-- BARRA TEMPORAL: quick filters + selector semanal como una sola unidad visual -->
+    <section class="ev-barra-temporal" aria-label="Explora por fecha">
+        <!-- SELECTOR HORIZONTAL DE DÍAS -->
+        <p class="ev-selector-dias__mes" aria-hidden="true">{{ calendario_label }}</p>
+        <div class="ev-selector-dias" aria-label="Selector de fechas cercanas" aria-live="polite"
+             data-hoy="{{ hoy|date:'Y-m-d' }}"
+             data-fecha-activa="{% if fecha_activa %}{{ fecha_activa|date:'Y-m-d' }}{% endif %}"
+             data-ancla="{{ ancla_selector|date:'Y-m-d' }}"
+             data-base-query="{{ querystring_todos }}">
+            <button type="button" class="ev-selector-dias__flecha" data-direccion="anterior" aria-label="Día anterior">&lsaquo;</button>
+            <ul class="ev-selector-dias__lista">
+                {% for dia in dias_selector %}
+                <li>
+                    <a href="?{{ dia.querystring }}" data-date="{{ dia.fecha|date:'Y-m-d' }}"
+                       class="ev-selector-dias__dia {% if dia.activo %}is-activo{% endif %} {% if dia.es_hoy %}is-hoy{% endif %}"
+                       {% if dia.activo %}aria-current="date"{% endif %}>
+                        <span class="ev-selector-dias__mesdia">{{ dia.mes_abrev }}</span>
+                        <span class="ev-selector-dias__nombre">{{ dia.dia_semana }}</span>
+                        <span class="ev-selector-dias__numero">{{ dia.numero }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="button" class="ev-selector-dias__flecha" data-direccion="siguiente" aria-label="Día siguiente">&rsaquo;</button>
+        </div>
+
+        <nav class="ev-filtros-rapidos" aria-label="Filtros rápidos de fecha">
+            <a href="?{{ querystrings_cuando.hoy }}"
+               class="ev-filtros-rapidos__item {% if cuando_activo == 'hoy' %}is-active{% endif %}"
+               {% if cuando_activo == 'hoy' %}aria-current="page"{% endif %}>Hoy</a>
+            <a href="?{{ querystrings_cuando.manana }}"
+               class="ev-filtros-rapidos__item {% if cuando_activo == 'manana' %}is-active{% endif %}"
+               {% if cuando_activo == 'manana' %}aria-current="page"{% endif %}>Mañana</a>
+            <a href="?{{ querystrings_cuando.fin_de_semana }}"
+               class="ev-filtros-rapidos__item {% if cuando_activo == 'fin_de_semana' %}is-active{% endif %}"
+               {% if cuando_activo == 'fin_de_semana' %}aria-current="page"{% endif %}>Este fin de semana</a>
+            <a href="?{{ querystrings_cuando.esta_semana }}"
+               class="ev-filtros-rapidos__item {% if cuando_activo == 'esta_semana' %}is-active{% endif %}"
+               {% if cuando_activo == 'esta_semana' %}aria-current="page"{% endif %}>Esta semana</a>
+
+            <form method="get" class="ev-filtros-rapidos__fecha-form">
+                {% if filtros_activos.categoria %}<input type="hidden" name="categoria" value="{{ filtros_activos.categoria }}">{% endif %}
+                {% if filtros_activos.provincia %}<input type="hidden" name="provincia" value="{{ filtros_activos.provincia }}">{% endif %}
+                {% if filtros_activos.distrito %}<input type="hidden" name="distrito" value="{{ filtros_activos.distrito }}">{% endif %}
+                {% for tag in filtros_activos.tags %}<input type="hidden" name="tags" value="{{ tag }}">{% endfor %}
+                <label for="ev-fecha-input" class="visually-hidden">Elegir fecha</label>
+                <div class="ev-fecha-picker {% if fecha_activa %}is-active{% endif %}">
+                    <span class="ev-fecha-picker__visual" aria-hidden="true">
+                        <i class="bi bi-calendar-event" aria-hidden="true"></i>
+                        {% if fecha_activa %}{{ fecha_activa|date:"d/m/Y" }}{% else %}Elegir fecha{% endif %}
+                    </span>
+                    <input type="date" id="ev-fecha-input" name="fecha"
+                           value="{% if fecha_activa %}{{ fecha_activa|date:'Y-m-d' }}{% endif %}">
+                </div>
+                <noscript><button type="submit" class="ev-filtros-rapidos__item">Ver</button></noscript>
+            </form>
+
+            {% if cuando_activo or fecha_activa %}
+            <a href="?{{ querystring_todos }}" class="ev-filtros-rapidos__limpiar">Ver todos</a>
+            {% endif %}
+        </nav>
+    </section>
+
+    <!-- ZONA PRINCIPAL: FILTROS + LISTADO -->
+    <div class="ev-layout">
+
+        <div class="ev-acciones-rapidas d-lg-none">
+            <button type="button" class="ev-btn-filtros"
+                    data-bs-toggle="offcanvas" data-bs-target="#ev-filtros-offcanvas"
+                    aria-controls="ev-filtros-offcanvas">
+                <i class="bi bi-funnel" aria-hidden="true"></i> Filtros
+                {% if cantidad_filtros_activos %}<span class="ev-btn-filtros__badge">{{ cantidad_filtros_activos }}</span>{% endif %}
+            </button>
+            {% if hay_filtros_activos %}
+            <a href="{% url 'eventos:listado_eventos' %}" class="ev-btn-limpiar-rapido" aria-label="Limpiar todos los filtros">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </a>
+            {% endif %}
+        </div>
+
+        <aside class="ev-sidebar">
+
+        <div class="offcanvas-lg offcanvas-bottom ev-filtros-offcanvas" tabindex="-1"
+             id="ev-filtros-offcanvas" aria-labelledby="ev-filtros-offcanvas-titulo">
+            <div class="offcanvas-header ev-filtros__header">
+                <h2 class="offcanvas-title ev-filtros__titulo" id="ev-filtros-offcanvas-titulo">Filtros</h2>
+                {% if hay_filtros_activos %}
+                <a href="{% url 'eventos:listado_eventos' %}" class="ev-filtros__limpiar d-lg-none">
+                    <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Limpiar
+                </a>
+                {% endif %}
+                <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#ev-filtros-offcanvas" aria-label="Cerrar"></button>
+            </div>
+            <div class="offcanvas-body ev-filtros__body">
+                <form method="get" class="ev-filtros" id="ev-filtros-form" aria-label="Filtrar eventos">
+                    {% if cuando_activo %}<input type="hidden" name="cuando" value="{{ cuando_activo }}">{% endif %}
+                    {% if fecha_activa %}<input type="hidden" name="fecha" value="{{ fecha_activa|date:'Y-m-d' }}">{% endif %}
+
+                    <div class="ev-filtros__grupo">
+                        <label for="ev-filtro-categoria">Categoría</label>
+                        <select name="categoria" id="ev-filtro-categoria">
+                            <option value="">Todas</option>
+                            {% for cat in categorias %}
+                            <option value="{{ cat.slug }}" {% if cat.slug == filtros_activos.categoria %}selected{% endif %}>{{ cat.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="ev-filtros__grupo">
+                        <label for="ev-filtro-provincia">Provincia</label>
+                        <select name="provincia" id="ev-filtro-provincia">
+                            <option value="">Todas</option>
+                            {% for prov in provincias %}
+                            <option value="{{ prov.slug }}" {% if prov.slug == filtros_activos.provincia %}selected{% endif %}>{{ prov.nombre_oficial }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="ev-filtros__grupo">
+                        <label for="ev-filtro-distrito">Distrito</label>
+                        <select name="distrito" id="ev-filtro-distrito">
+                            <option value="">Todos</option>
+                            {% for dist in distritos %}
+                            <option value="{{ dist.slug }}" {% if dist.slug == filtros_activos.distrito %}selected{% endif %}>{{ dist.nombre_oficial }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {% if tags_experiencia %}
+                    <fieldset class="ev-filtros__grupo ev-filtros__grupo--tags">
+                        <legend>Experiencia</legend>
+                        <div class="ev-chips">
+                            {% for tag in tags_experiencia %}
+                            <label class="ev-chip" title="{{ tag.nombre }}">
+                                <input type="checkbox" name="tags" value="{{ tag.slug }}"
+                                       {% if tag.slug in filtros_activos.tags %}checked{% endif %}>
+                                <span class="ev-chip__contenido">
+                                    {% if tag.icono_archivo_evento %}
+                                    <img src="{{ tag.icono_archivo_evento }}" alt="" class="ev-chip__icono" aria-hidden="true">
+                                    {% elif tag.icono_bootstrap %}
+                                    <i class="bi {{ tag.icono_bootstrap }}" aria-hidden="true"></i>
+                                    {% endif %}
+                                    <span class="ev-chip__texto">{{ tag.nombre }}</span>
+                                    <span class="ev-chip__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                    {% endif %}
+
+                    <div class="ev-filtros__acciones d-none d-lg-flex">
+                        {% if hay_filtros_activos %}
+                        <a href="{% url 'eventos:listado_eventos' %}" class="ev-filtros__pill ev-filtros__pill--limpiar">
+                            <img src="{% static 'assets/img/eventos/limpiar-filtros-icono.svg' %}" alt="" aria-hidden="true" class="ev-filtros__pill-icono">
+                            Limpiar filtros
+                        </a>
+                        {% endif %}
+                        <button type="submit" class="ev-filtros__pill ev-filtros__pill--aplicar">Aplicar filtros</button>
+                    </div>
+                </form>
+            </div>
+            <div class="ev-filtros__footer d-lg-none">
+                <button type="submit" form="ev-filtros-form" class="ev-filtros__aplicar">Aplicar filtros</button>
+            </div>
+        </div>
+
+        {% include "eventos/partials/_cta_comunidad.html" with extra_class="d-none d-lg-block" %}
+
+        </aside>
+
+        <div class="ev-cards">
+            {% if not eventos %}
+            <div class="ev-vacio">
+                <span class="ev-vacio__icon" aria-hidden="true"><i class="bi bi-calendar-x"></i></span>
+                <p class="ev-vacio__titulo">No encontramos eventos para estos filtros.</p>
+                <p class="ev-vacio__desc">Prueba otra fecha o ajusta los filtros.</p>
+            </div>
+            {% else %}
+            {% for tarjeta in tarjetas %}
+            <article class="ev-card" aria-labelledby="ev-evento-titulo-{{ tarjeta.evento.id }}">
+                <div class="ev-card__media">
+                    {% if tarjeta.evento.imagen_principal %}
+                    <img src="{{ tarjeta.evento.imagen_principal.url }}"
+                         alt="{% if tarjeta.evento.texto_alt_imagen %}{{ tarjeta.evento.texto_alt_imagen }}{% else %}{{ tarjeta.evento.nombre }}{% endif %}"
+                         loading="lazy">
+                    {% else %}
+                    <span class="ev-card__media-fallback" aria-hidden="true"><i class="bi bi-calendar-event"></i></span>
+                    {% endif %}
+                </div>
+
+                <div class="ev-card__body">
+                    <header class="ev-card__encabezado">
+                        <div class="ev-card__eyebrow-row">
+                            <p class="ev-card__categoria">{{ tarjeta.evento.categoria_principal.nombre }}</p>
+                            {% if tarjeta.estado %}
+                            <span class="ev-card__estado ev-card__estado--{{ tarjeta.estado|slugify }}">
+                                <span class="ev-card__estado-punto" aria-hidden="true"></span>
+                                {{ tarjeta.estado }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <h3 class="ev-card__nombre" id="ev-evento-titulo-{{ tarjeta.evento.id }}">{{ tarjeta.evento.nombre }}</h3>
+                    </header>
+
+                    <div class="ev-card__separador" aria-hidden="true"><span></span></div>
+
+                    <div class="ev-card__meta">
+                        {% if tarjeta.fecha.principal %}
+                        <div class="ev-card__meta-item">
+                            <span class="ev-card__meta-icono" aria-hidden="true">
+                                <i class="bi bi-calendar-event"></i>
+                            </span>
+                            <div class="ev-card__meta-contenido">
+                                <span class="ev-card__meta-etiqueta">Fecha:</span>
+                                <span class="ev-card__meta-valor">{{ tarjeta.fecha.principal }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if tarjeta.ubicacion %}
+                        <div class="ev-card__meta-item">
+                            <span class="ev-card__meta-icono" aria-hidden="true">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </span>
+                            <div class="ev-card__meta-contenido">
+                                <span class="ev-card__meta-etiqueta">Ubicación:</span>
+                                <span class="ev-card__meta-valor ev-card__meta-valor--ubicacion">{{ tarjeta.ubicacion }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    {% if tarjeta.evento.descripcion_corta %}
+                    <div class="ev-card__teaser">
+                        <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+                        <p>{{ tarjeta.evento.descripcion_corta|truncatechars:100 }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="ev-card__acciones">
+                    <button type="button" class="ev-card__cta" data-abrir-evento data-evento-id="{{ tarjeta.evento.id }}"
+                            aria-haspopup="dialog" aria-controls="ev-modal-info">
+                        <span class="ev-card__cta-icono" aria-hidden="true"><i class="bi bi-eye"></i></span>
+                        <span>Conocer más</span>
+                    </button>
+                </div>
+            </article>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Paginación de eventos" class="ev-paginacion">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?{{ querystring_paginacion }}&page=1" aria-label="Primera página">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?{{ querystring_paginacion }}&page={{ page_obj.previous_page_number }}" aria-label="Página anterior">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="Primera página">&laquo;</span></li>
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="Página anterior">&lsaquo;</span></li>
+            {% endif %}
+
+            {% for pagina in paginas_paginador %}
+                {% if page_obj.number == pagina.numero %}
+                <li class="page-item page-number active{% if pagina.solo_desktop %} page-number--solo-desktop{% endif %}" aria-current="page">
+                    <span class="page-link"><span>{{ pagina.numero }}</span></span>
+                </li>
+                {% else %}
+                <li class="page-item page-number{% if pagina.solo_desktop %} page-number--solo-desktop{% endif %}">
+                    <a class="page-link" href="?{{ querystring_paginacion }}&page={{ pagina.numero }}"><span>{{ pagina.numero }}</span></a>
+                </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?{{ querystring_paginacion }}&page={{ page_obj.next_page_number }}" aria-label="Página siguiente">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?{{ querystring_paginacion }}&page={{ page_obj.paginator.num_pages }}" aria-label="Última página">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="Página siguiente">&rsaquo;</span></li>
+            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="Última página">&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% include "eventos/partials/_cta_comunidad.html" with extra_class="d-lg-none ev-cta-comunidad--final" %}
+
+</div>
+
+{{ distritos_por_provincia|json_script:"ev-distritos-data" }}
+
+<!-- MODAL: PROMOCIONA TU EVENTO -->
+<div class="modal fade" id="ev-modal-promocionar" tabindex="-1" aria-labelledby="ev-modal-promocionar-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ev-form-modal-dialog">
+        <div class="modal-content ev-form-modal">
+            <div class="modal-header ev-form-modal__header">
+                <h2 class="modal-title ev-form-modal__titulo" id="ev-modal-promocionar-titulo">Promociona tu evento</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form method="post" action="{% url 'eventos:promocionar_evento' %}" class="ev-form-modal__form" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ ruta_actual }}">
+                <input type="text" name="website" class="ev-form-modal__honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <div class="modal-body ev-form-modal__body">
+                    <div class="ev-form-modal__campo">
+                        <label for="ev-promo-nombre">Nombre del evento</label>
+                        <input type="text" id="ev-promo-nombre" name="nombre_evento" required maxlength="160"
+                               placeholder="Ejemplo: Festival Gastronómico de Amarilis">
+                    </div>
+
+                    <div class="ev-form-modal__campo">
+                        <label for="ev-promo-tipo">Tipo de evento</label>
+                        <select id="ev-promo-tipo" name="tipo_evento" required>
+                            <option value="">Selecciona una opción</option>
+                            {% for cat in categorias %}
+                            <option value="{{ cat.slug }}">{{ cat.nombre }}</option>
+                            {% endfor %}
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="ev-form-modal__campo">
+                        <label for="ev-promo-desc">Describe brevemente tu evento</label>
+                        <textarea id="ev-promo-desc" name="descripcion_evento" required maxlength="2000" rows="4"
+                                  placeholder="Cuéntanos de qué trata, dónde se realizará, fecha aproximada y cualquier información importante."></textarea>
+                    </div>
+
+                    <div class="ev-form-modal__campo">
+                        <label for="ev-promo-correo">Ingresa tu correo electrónico</label>
+                        <input type="email" id="ev-promo-correo" name="correo" required maxlength="254"
+                               placeholder="nombre@correo.com">
+                    </div>
+
+                    <p class="ev-form-modal__nota">
+                        Toda la información será evaluada por el equipo de Viaje Informado. Si necesitamos ampliar
+                        algún dato o la propuesta continúa con el proceso de publicación, nos comunicaremos contigo
+                        al correo indicado.
+                    </p>
+                </div>
+                <div class="modal-footer ev-form-modal__footer">
+                    <button type="button" class="ev-form-modal__btn ev-form-modal__btn--cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="ev-form-modal__btn ev-form-modal__btn--enviar">Enviar propuesta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: REPORTAR UN PROBLEMA (Eventos) -->
+<div class="modal fade" id="ev-modal-reportar" tabindex="-1" aria-labelledby="ev-modal-reportar-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ev-form-modal-dialog">
+        <div class="modal-content ev-form-modal">
+            <div class="modal-header ev-form-modal__header">
+                <h2 class="modal-title ev-form-modal__titulo" id="ev-modal-reportar-titulo">Reportar un problema</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <form method="post" action="{% url 'eventos:reportar_problema_evento' %}" class="ev-form-modal__form" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ ruta_actual }}">
+                <input type="text" name="website" class="ev-form-modal__honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <div class="modal-body ev-form-modal__body">
+                    <div class="ev-form-modal__campo">
+                        <label for="ev-reporte-nombre">Nombre del problema</label>
+                        <input type="text" id="ev-reporte-nombre" name="nombre_problema" required maxlength="160"
+                               placeholder="Ejemplo: Información errónea">
+                    </div>
+
+                    <div class="ev-form-modal__campo">
+                        <label for="ev-reporte-desc">Describe el problema</label>
+                        <textarea id="ev-reporte-desc" name="descripcion_problema" required maxlength="1500" rows="4"
+                                  placeholder="Ejemplo: La información del evento &quot;X&quot; no está actualizada."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer ev-form-modal__footer">
+                    <button type="button" class="ev-form-modal__btn ev-form-modal__btn--cancelar" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="ev-form-modal__btn ev-form-modal__btn--enviar">Enviar reporte</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if eventos %}
+{{ datos_modal|json_script:"ev-eventos-data" }}
+
+<!-- MODAL ÚNICO REUTILIZABLE -->
+<div class="modal fade" id="ev-modal-info" tabindex="-1" role="dialog" aria-modal="true"
+     aria-labelledby="ev-modal-info-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg ev-modal-dialog">
+        <div class="modal-content ev-modal">
+            <button type="button" class="btn-close ev-modal__cerrar" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            <div class="modal-body ev-modal__body">
+
+                <div class="ev-modal__galeria-wrap">
+                    <div class="ev-modal__galeria">
+                        <div class="swiper ev-modal-swiper" data-info-swiper>
+                            <div class="swiper-wrapper" data-info-swiper-wrapper></div>
+                        </div>
+                        <button type="button" class="ev-modal__zoom" data-info-swiper-zoom aria-label="Ver imagen en grande" hidden>
+                            <i class="bi bi-arrows-angle-expand" aria-hidden="true"></i>
+                        </button>
+                        <span class="ev-modal__media-fallback" data-info-imagen-fallback aria-hidden="true" hidden>
+                            <i class="bi bi-calendar-event"></i>
+                        </span>
+                    </div>
+                    <div class="ev-modal__galeria-controles">
+                        <div class="ev-modal-swiper-left">
+                            <button type="button" class="ev-modal-swiper-play" data-info-swiper-play aria-label="Pausar carrusel" hidden>
+                                <i class="bi bi-pause-fill" aria-hidden="true"></i>
+                            </button>
+                            <div class="swiper-pagination ev-modal-swiper-pagination" data-info-swiper-pagination hidden></div>
+                        </div>
+                        <div class="ev-modal-swiper-arrows">
+                            <button type="button" class="ev-modal-swiper-arrow ev-modal-swiper-prev" data-info-swiper-prev aria-label="Imagen anterior" hidden>
+                                <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="ev-modal-swiper-arrow ev-modal-swiper-next" data-info-swiper-next aria-label="Imagen siguiente" hidden>
+                                <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ev-modal__info">
+                    <div class="ev-modal__info-top">
+                        <p class="ev-modal__contador" data-info-contador hidden></p>
+                        <p class="ev-modal__categoria" data-info-categoria></p>
+                        <h2 class="ev-modal__titulo" id="ev-modal-info-titulo" data-info-nombre></h2>
+
+                        <div class="ev-modal__meta">
+                            <p class="ev-modal__meta-linea" data-info-fila="fecha" hidden>
+                                <span class="ev-modal__meta-icono"><i class="bi bi-calendar-event" aria-hidden="true"></i></span>
+                                <span><strong>Se celebra:</strong> <span data-info-fecha></span></span>
+                            </p>
+                            <p class="ev-modal__meta-linea" data-info-fila="ubicacion" hidden>
+                                <span class="ev-modal__meta-icono"><i class="bi bi-geo-alt" aria-hidden="true"></i></span>
+                                <span><strong>Ubicación:</strong> <span data-info-ubicacion></span></span>
+                            </p>
+                            <p class="ev-modal__meta-linea" data-info-fila="costo" hidden>
+                                <span class="ev-modal__meta-icono"><i class="bi bi-cash-coin" aria-hidden="true"></i></span>
+                                <span><strong>Costo:</strong> <span data-info-costo></span></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="ev-modal__ideal" data-info-fila="tags" hidden>
+                        <h3 class="ev-modal__seccion-titulo">Ideal para:</h3>
+                        <div class="ev-chips ev-chips--scroll" data-info-tags></div>
+                    </div>
+                </div>
+
+                <div class="ev-accordion">
+                    <details class="ev-accordion__item" data-info-fila="descripcion" hidden>
+                        <summary class="ev-accordion__cabecera">
+                            <span class="ev-accordion__icono"><i class="bi bi-bank2" aria-hidden="true"></i></span>
+                            <span class="ev-accordion__titulo">Sobre el evento</span>
+                            <i class="bi bi-chevron-down ev-accordion__chevron" aria-hidden="true"></i>
+                        </summary>
+                        <p class="ev-modal__texto" data-info-descripcion></p>
+                    </details>
+
+                    <details class="ev-accordion__item" data-info-fila="contexto" hidden>
+                        <summary class="ev-accordion__cabecera">
+                            <span class="ev-accordion__icono"><i class="bi bi-info-circle" aria-hidden="true"></i></span>
+                            <span class="ev-accordion__titulo">¿Qué debes saber?</span>
+                            <i class="bi bi-chevron-down ev-accordion__chevron" aria-hidden="true"></i>
+                        </summary>
+                        <p class="ev-modal__texto" data-info-contexto></p>
+                    </details>
+
+                    <details class="ev-accordion__item" data-info-fila="recomendaciones" hidden>
+                        <summary class="ev-accordion__cabecera">
+                            <span class="ev-accordion__icono"><i class="bi bi-lightbulb" aria-hidden="true"></i></span>
+                            <span class="ev-accordion__titulo">Recomendaciones</span>
+                            <i class="bi bi-chevron-down ev-accordion__chevron" aria-hidden="true"></i>
+                        </summary>
+                        <div class="ev-reco-list" data-info-recomendaciones></div>
+                    </details>
+
+                    <details class="ev-accordion__item" data-info-fila="organizador" hidden>
+                        <summary class="ev-accordion__cabecera">
+                            <span class="ev-accordion__icono"><i class="bi bi-people" aria-hidden="true"></i></span>
+                            <span class="ev-accordion__titulo">Organizador</span>
+                            <i class="bi bi-chevron-down ev-accordion__chevron" aria-hidden="true"></i>
+                        </summary>
+                        <p class="ev-modal__texto" data-info-organizador></p>
+                        <div class="ev-modal__enlaces" data-info-enlaces></div>
+                    </details>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lightbox de la galería -->
+<div class="ev-lightbox" id="ev-lightbox" hidden>
+    <button type="button" class="ev-lightbox__cerrar" data-lightbox-cerrar aria-label="Cerrar imagen">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+    </button>
+    <button type="button" class="ev-lightbox__flecha ev-lightbox__flecha--prev" data-lightbox-prev aria-label="Imagen anterior">
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+    </button>
+    <img class="ev-lightbox__img" data-lightbox-img alt="">
+    <button type="button" class="ev-lightbox__flecha ev-lightbox__flecha--next" data-lightbox-next aria-label="Imagen siguiente">
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    </button>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{% static 'assets/js/agenda-eventos.js' %}"></script>
+{% endblock %}

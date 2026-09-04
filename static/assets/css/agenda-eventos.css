@@ -1,0 +1,2799 @@
+/* ==== EVENTOS — AGENDA TURÍSTICA Y CULTURAL ==== */
+
+/* En :root (no en `.eventos-page`) a propósito: el modal (`#ev-modal-info`)
+   vive como hermano de `.eventos-page` en el DOM, no como descendiente —
+   así evita cualquier problema de stacking/containing-block si algún día
+   `.eventos-page` gana un `transform`/`filter`. Las custom properties solo
+   heredan hacia abajo del árbol, así que si vivieran en `.eventos-page` el
+   modal jamás las vería: cualquier `var(--ev-*)` ahí dentro quedaría
+   silenciosamente inválida en tiempo de cómputo (spec de CSS Custom
+   Properties) y el navegador ignoraría esa declaración entera, cayendo al
+   valor por defecto de Bootstrap sin ningún error visible. Verificado en
+   vivo: era exactamente lo que pasaba con `.ev-modal__galeria`'s
+   border-radius antes de este cambio (0px en vez de 16px). Nombres
+   prefijados `--ev-*`, así que vivir en :root no afecta a otros módulos
+   (ninguna otra hoja de estilos los referencia). */
+:root {
+    --ev-blanco: #FFFFFF;
+    --ev-azul-oscuro: #002D89;
+    --ev-azul: #007FFF;
+    --ev-fondo: #F7F9FD;
+    --ev-fondo-card: #EEF3FB;
+    --ev-texto: #182033;
+    --ev-texto-sec: #61708C;
+    --ev-borde: #DFE7F3;
+
+    --ev-grad: linear-gradient(135deg, var(--ev-azul), var(--ev-azul-oscuro));
+
+    --ev-radius-sm: 10px;
+    --ev-radius-md: 16px;
+    --ev-radius-lg: 22px;
+
+    --ev-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+    /* Mismos valores que `.his-himno-modal__backdrop` en Historia (E9):
+       oscurecido translúcido + blur, no negro sólido. */
+    --ev-backdrop-color: rgba(10, 14, 26, 0.55);
+    --ev-backdrop-blur: 8px;
+}
+
+.eventos-page {
+    background: var(--ev-fondo);
+    color: var(--ev-texto);
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+.eventos-page .container {
+    max-width: 1180px;
+}
+
+/* ---- 1. INTRO ---- */
+.ev-intro {
+    padding: calc(var(--vi-header-height-desktop, 78px) + 36px) 0 20px;
+    text-align: center;
+}
+
+.ev-intro__eyebrow {
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    color: var(--ev-azul);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.ev-intro__titulo {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 1.6rem + 1.2vw, 2.4rem);
+    color: var(--ev-azul-oscuro);
+    margin-bottom: 10px;
+}
+
+.ev-intro__desc {
+    max-width: 560px;
+    margin: 0 auto;
+    font-size: 0.98rem;
+    color: var(--ev-texto-sec);
+    line-height: 1.6;
+}
+
+/* ---- 1.5 BARRA TEMPORAL ----
+   Quick filters + selector semanal como una sola superficie visual (R3,
+   sección 8-9): mismo max-width/eje que sidebar+grid (.ev-layout), fondo
+   blanco, borde suave, sin sombra pesada. Los dos bloques que contiene
+   pierden su propio max-width/margin/padding lateral (más abajo) porque
+   ahora esta tarjeta es la que da el margen de 20px con el borde. */
+.ev-barra-temporal {
+    max-width: 1180px;
+    margin: 0 auto 28px;
+    padding: 16px 20px 18px;
+    background: var(--ev-blanco);
+    border: 1px solid var(--ev-borde);
+    border-radius: var(--ev-radius-lg);
+    box-shadow: 0 2px 10px rgba(0, 45, 137, 0.05);
+}
+
+/* ---- 2. FILTROS RÁPIDOS ----
+   Fila horizontal SIN wrap en cualquier ancho (R2, sección 9): en vez de
+   mostrar/ocultar comportamiento por breakpoint, el propio contenedor hace
+   scroll nativo cuando el contenido no cabe. En desktop los 5 controles
+   caben siempre dentro de max-width, así que nunca llega a desbordar.
+
+   `contain: layout` (R3, sección 5-6 — causa real del overflow horizontal
+   mobile): esta fila ocupa todo el ancho del viewport y sus hijos son
+   flex:0 0 auto (no se encogen), así que su contenido interno mide más que
+   su propia caja (639px de scrollWidth en 393px de viewport). La caja en sí
+   ya queda contenida en 393px (offsetWidth/clientWidth lo confirman) y
+   overflow-x:auto la hace desplazable — pero en Chrome/Safari mobile el
+   layout viewport (window.innerWidth) se agranda igual para "acomodar" ese
+   contenido desbordado, aunque esté clippeado y sea scrolleable: eso es
+   literalmente la franja en blanco a la derecha que se puede arrastrar en
+   iPhone. `contain: layout` aísla el contenido interno del cálculo de
+   tamaño del documento — verificado quitando/añadiendo la propiedad en
+   vivo: sin ella window.innerWidth pasa a 485px en un viewport de 393px;
+   con ella vuelve a 393px. `.eventos-page { overflow-x: hidden/clip }` no
+   basta por sí solo porque el layout viewport se decide ANTES de aplicar
+   ese recorte visual.
+
+   Separado visualmente del selector de 7 días con un divisor + margen
+   propio (antes quedaba pegado justo debajo, sin ningún respiro). */
+.ev-filtros-rapidos {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 14px 0 0;
+    border-top: 1px solid var(--ev-borde);
+    overflow-x: auto;
+    contain: layout;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.ev-filtros-rapidos::-webkit-scrollbar {
+    display: none;
+}
+
+.ev-filtros-rapidos__item {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    min-height: 44px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background 0.15s var(--ev-ease-out), border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-filtros-rapidos__item:hover {
+    border-color: var(--ev-azul);
+    color: var(--ev-azul);
+}
+
+.ev-filtros-rapidos__item.is-active {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.ev-filtros-rapidos__fecha-form {
+    display: inline-flex;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+}
+
+/* "Elegir fecha" (R2, sección 11): el <input type="date"> nativo sigue
+   siendo el único control real y el que abre el picker (Safari/iOS y
+   Chrome/Brave), pero queda transparente y apilado (CSS Grid, misma celda)
+   sobre un pill decorativo que muestra "Elegir fecha" o la fecha elegida.
+   Así nunca se ve el "dd/mm/aaaa" vacío de Safari, y el foco nativo del
+   input (único elemento con tabindex real) dibuja su outline exactamente
+   sobre el pill: no hay doble foco. */
+.ev-fecha-picker {
+    position: relative;
+    display: grid;
+    min-height: 44px;
+}
+
+.ev-fecha-picker__visual,
+.ev-fecha-picker input[type="date"] {
+    grid-area: 1 / 1;
+}
+
+.ev-fecha-picker__visual {
+    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.15s var(--ev-ease-out), border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-fecha-picker.is-active .ev-fecha-picker__visual {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.ev-fecha-picker input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: transparent;
+    cursor: pointer;
+}
+
+/* Chrome/Brave no abren el picker al hacer clic en cualquier punto del
+   input salvo que se estire el icono nativo a toda el área (Safari no
+   necesita esto: todo el input ya es tappable). */
+.ev-fecha-picker input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.ev-filtros-rapidos__limpiar {
+    flex: 0 0 auto;
+    font-size: 0.85rem;
+    color: var(--ev-texto-sec);
+    text-decoration: underline;
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+/* ---- 3. SELECTOR HORIZONTAL DE 7 DÍAS ----
+   `justify-content: center` + la lista sin flex-grow (R2, sección 14) son
+   lo que pega las flechas al carrusel: antes `.ev-selector-dias__lista`
+   tenía flex:1 1 auto y se estiraba a ocupar todo el ancho disponible del
+   contenedor aunque su contenido (7 chips) fuera más angosto, dejando la
+   flecha derecha aislada en el extremo con un hueco muerto en medio. */
+.ev-selector-dias__mes {
+    margin: 0 0 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--ev-azul-oscuro);
+    text-transform: capitalize;
+}
+
+.ev-selector-dias {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ev-selector-dias__flecha {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-azul-oscuro);
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-selector-dias__flecha:hover {
+    border-color: var(--ev-azul);
+    color: var(--ev-azul);
+}
+
+.ev-selector-dias__lista {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 2px 2px 6px;
+    overflow-x: auto;
+    contain: layout;
+    flex: 0 1 auto;
+    min-width: 0;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    /* Scroll oculto visualmente pero sigue siendo funcional por táctil/teclado/rueda. */
+    scrollbar-width: none;
+}
+
+.ev-selector-dias__lista::-webkit-scrollbar {
+    display: none;
+}
+
+.ev-selector-dias__lista li {
+    scroll-snap-align: start;
+}
+
+.ev-selector-dias__dia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 60px;
+    min-height: 44px;
+    padding: 10px 6px;
+    border-radius: var(--ev-radius-sm);
+    border: 2px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    text-decoration: none;
+    transition: background 0.15s var(--ev-ease-out), border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-selector-dias__dia:hover {
+    border-color: var(--ev-azul);
+}
+
+.ev-selector-dias__dia.is-hoy {
+    border-color: var(--ev-azul);
+}
+
+.ev-selector-dias__dia.is-activo {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul-oscuro);
+    color: var(--ev-blanco);
+    font-weight: 800;
+    box-shadow: 0 2px 8px rgba(0, 45, 137, 0.28);
+}
+
+.ev-selector-dias__mesdia {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--ev-texto-sec);
+}
+
+.ev-selector-dias__dia.is-activo .ev-selector-dias__mesdia {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.ev-selector-dias__nombre {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.ev-selector-dias__numero {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+/* ---- 4. LAYOUT PRINCIPAL ---- */
+.ev-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 20px 48px;
+}
+
+/* Contenedor único de filtros + CTA comunidad (E2): un solo item de grid
+   en la columna izquierda de desktop, en vez de darle a cada uno su propio
+   grid-column (que rompería el auto-placement de 2 columnas de .ev-layout
+   apenas hubiera un 3er hijo). En mobile el offcanvas es `position:fixed`
+   (no ocupa espacio en el flujo, ver comentario de .ev-filtros-offcanvas),
+   así que este mismo flex column deja el CTA como único contenido visible
+   — justo debajo del botón "Filtros" y antes de las cards. */
+.ev-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+/* ---- 5. FILTROS ----
+   La tarjeta (borde/radio/fondo) vive en `.ev-filtros-offcanvas`, que es el
+   mismo elemento en los dos breakpoints: panel fijo sticky en desktop
+   (≥lg, Bootstrap `.offcanvas-lg` lo vuelve `position:static`) y bottom
+   sheet parcial de Bootstrap (`.offcanvas-bottom`) por debajo de lg. Header
+   (título + Limpiar + cerrar) y footer (Aplicar) son siempre los mismos
+   nodos; solo "Cerrar" y el footer se ocultan en desktop porque ahí no hay
+   nada que cerrar/aplicar (cada control ya envía el form al cambiar, ver JS). */
+.ev-filtros-offcanvas {
+    background: var(--ev-blanco);
+    border: 1px solid var(--ev-borde);
+}
+
+.ev-filtros__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--ev-borde);
+}
+
+.ev-filtros__titulo {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--ev-azul-oscuro);
+}
+
+.ev-filtros__limpiar {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ev-texto-sec);
+    text-decoration: none;
+}
+
+.ev-filtros__limpiar:hover {
+    color: var(--ev-azul);
+    text-decoration: underline;
+}
+
+.ev-filtros__body {
+    display: flex;
+    flex-direction: column;
+    overscroll-behavior: contain;
+}
+
+.ev-filtros {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 16px 18px;
+}
+
+.ev-filtros__grupo label,
+.ev-filtros__grupo legend {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ev-azul-oscuro);
+    margin-bottom: 6px;
+}
+
+.ev-filtros__grupo select {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: var(--ev-radius-sm);
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font-size: 0.88rem;
+}
+
+.ev-filtros__grupo--tags {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Experiencias: dos columnas estables. `minmax(0, 1fr)` evita que una
+   etiqueta larga fuerce el ancho de la columna o produzca overflow. */
+.ev-filtros__grupo--tags .ev-chips {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+/* Cada pill mantiene una altura uniforme. El contenido visible queda
+   agrupado en `.ev-chip__contenido`; en mobile se conserva el flujo ya
+   validado y en desktop se fuerza una única fila horizontal. */
+.ev-filtros__grupo--tags .ev-chip {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    overflow: hidden;
+    flex-wrap: nowrap;
+}
+
+/* Wrapper neutro por defecto: no altera el layout mobile existente. */
+.ev-chip__contenido {
+    display: contents;
+}
+
+.ev-filtros__grupo--tags .ev-chip__texto {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Los SVG de experiencia tienen un slot fijo para que su tamaño intrínseco
+   nunca modifique la altura ni desplace el texto. */
+.ev-chip__icono {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+}
+
+/* Los SVG traen fill sólido (--ev-azul-oscuro) para verse bien sobre fondo
+   blanco; en el estado marcado el chip pasa a fondo azul y ese mismo tono
+   quedaría casi invisible. brightness(0)+invert(1) es el truco estándar
+   para recolorear a blanco un <img> de un solo color sin duplicar el SVG
+   ni depender de currentColor (que <img> no puede heredar del CSS). */
+.ev-chip:has(input:checked) .ev-chip__icono {
+    filter: brightness(0) invert(1);
+}
+
+/* Chips de Experiencia (R3, sección 19-20): el <input type="checkbox"> real
+   sigue existiendo y sigue siendo el único elemento focuseable (técnica
+   visually-hidden, no display:none — conserva foco/semántica/lectura por
+   lector de pantalla). El chip entero es la <label>; su fondo, el check y
+   el anillo de foco reaccionan al estado real del input vía :has(), sin JS. */
+.ev-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.ev-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s var(--ev-ease-out), border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-chip input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.ev-chip:hover {
+    border-color: var(--ev-azul);
+}
+
+.ev-chip:has(input:checked) {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.ev-chip:has(input:focus-visible) {
+    outline: 3px solid var(--ev-azul);
+    outline-offset: 2px;
+}
+
+.ev-chip__check {
+    display: none;
+    font-size: 0.8rem;
+}
+
+.ev-chip:has(input:checked) .ev-chip__check {
+    display: inline-flex;
+}
+
+/* Acciones de escritorio del panel de filtros (R29): reemplazan el
+   auto-envío al cambiar un control (agenda-eventos.js) — el turista confirma
+   su combinación con "Aplicar filtros" (siempre visible en desktop) y solo
+   ve "Limpiar filtros" cuando ya hay filtros aplicados. `d-none d-lg-flex`
+   en el template ya las oculta en mobile (que sigue con su propio footer). */
+.ev-filtros__acciones {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ev-filtros__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out), border-color 0.15s var(--ev-ease-out);
+}
+
+.ev-filtros__pill--limpiar {
+    background: var(--ev-blanco);
+    border-color: var(--ev-azul);
+    color: var(--ev-azul);
+}
+
+.ev-filtros__pill--limpiar:hover {
+    background: var(--ev-fondo-card);
+}
+
+.ev-filtros__pill-icono {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+}
+
+.ev-filtros__pill--aplicar {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.ev-filtros__pill--aplicar:hover {
+    background: var(--ev-azul-oscuro);
+    border-color: var(--ev-azul-oscuro);
+}
+
+.ev-filtros__footer {
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--ev-borde);
+}
+
+.ev-filtros__aplicar {
+    width: 100%;
+    min-height: 48px;
+    border: none;
+    border-radius: 999px;
+    background: var(--ev-azul);
+    color: var(--ev-blanco);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* Fila con el botón "Filtros" + acceso rápido de "limpiar" (E4): antes
+   .ev-btn-filtros era hijo directo de .ev-layout (grid), así que un botón
+   hermano caía en la siguiente fila del grid en vez de quedar al lado. */
+.ev-acciones-rapidas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.ev-btn-filtros {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: start;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-azul-oscuro);
+    font-weight: 700;
+    font-size: 0.92rem;
+}
+
+/* Icono de limpieza rápida (E4): visible solo cuando ya hay filtros
+   activos, para no obligar a abrir el offcanvas solo para ver "Limpiar". */
+.ev-btn-limpiar-rapido {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-texto-sec);
+    font-size: 0.95rem;
+    transition: border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-btn-limpiar-rapido:hover,
+.ev-btn-limpiar-rapido:focus-visible {
+    border-color: #B3261E;
+    color: #B3261E;
+}
+
+.ev-btn-filtros:hover {
+    border-color: var(--ev-azul);
+    color: var(--ev-azul);
+}
+
+.ev-btn-filtros__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--ev-azul);
+    color: var(--ev-blanco);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+/* Por debajo de lg: bottom sheet parcial (nunca fullscreen) con altura fija
+   y esquinas superiores redondeadas; Bootstrap ya aporta el fondo blanco,
+   el backdrop y el foco atrapado dentro del sheet. */
+@media (max-width: 991.98px) {
+    .ev-filtros-offcanvas.offcanvas-bottom {
+        height: 76dvh;
+        max-height: 76dvh;
+        border-top-left-radius: var(--ev-radius-lg);
+        border-top-right-radius: var(--ev-radius-lg);
+        border-bottom: none;
+    }
+
+    /* Refuerzo defensivo: Bootstrap ya trae `.offcanvas-lg.show:not(.hiding)
+       {transform:none}` (misma especificidad, 3 clases) para deslizar el
+       sheet a la vista al abrir. Esta regla es redundante en el caso normal
+       (llega después en el archivo, así que el empate de especificidad ya
+       lo gana), pero se deja explícita por si algún build/versión de
+       Bootstrap resuelve ese empate de otro modo. */
+    .ev-filtros-offcanvas.offcanvas-bottom.show {
+        transform: none;
+    }
+
+    .ev-filtros__body {
+        flex: 1 1 auto;
+        overflow-y: auto;
+    }
+}
+
+/* Desde lg: panel fijo integrado al grid, sticky para acompañar el scroll
+   de la página sin tapar contenido (R3, sección 18) — el contenido es
+   corto (3 selects + chips) así que no necesita alto máximo ni scroll propio. */
+@media (min-width: 992px) {
+    .ev-filtros-offcanvas {
+        border-radius: var(--ev-radius-md);
+        position: sticky;
+        top: calc(var(--vi-header-height-desktop, 78px) + 16px);
+        /* Bootstrap fuerza background-color:transparent!important y
+           .offcanvas-header{display:none!important} en `.offcanvas-lg` a
+           partir de este breakpoint (pensado para ocultar el "header de
+           sheet" cuando se vuelve panel fijo). Aquí SÍ queremos la tarjeta
+           blanca y el header con "Filtros + Limpiar" visibles también en
+           desktop (R3, sección 14), así que hace falta el mismo peso. */
+        background: var(--ev-blanco) !important;
+    }
+
+    .ev-filtros__header {
+        display: flex !important;
+        padding: 14px 16px;
+    }
+
+    .ev-filtros {
+        padding: 14px 16px 16px;
+    }
+}
+
+/* Selects "modernos" en desktop, mejora progresiva (R3, sección 25-27):
+   la base sigue siendo un <select> semántico y funcional en todos los
+   navegadores/dispositivos. `appearance: base-select` + `::picker(select)`
+   solo se activan si el navegador lo soporta (@supports, sintaxis
+   verificada contra MDN/Chrome for Developers) Y el dispositivo tiene
+   puntero fino con hover real — nunca en touch/mobile, aunque el navegador
+   lo soporte, y sin sniffing de user-agent. */
+@media (hover: hover) and (pointer: fine) {
+    @supports (appearance: base-select) {
+        .ev-filtros__grupo select,
+        .ev-form-modal__campo select {
+            appearance: base-select;
+        }
+
+        /* `max-height` + scroll (R5): sin tope, "Distrito" (~80 opciones del
+           ubigeo completo) abre un picker sin límite de alto que cubre casi
+           toda la pantalla — mucho más agresivo que el <select> nativo del
+           navegador, que sí trae su propio scroll acotado por defecto. */
+        .ev-filtros__grupo select::picker(select),
+        .ev-form-modal__campo select::picker(select) {
+            appearance: base-select;
+            border-radius: var(--ev-radius-sm);
+            border: 1px solid var(--ev-borde);
+            margin-top: 4px;
+            max-height: min(320px, 50vh);
+            overflow-y: auto;
+        }
+    }
+}
+
+/* ---- 5b. CTA COMUNIDAD: "Promociona tu evento" / "Reportar un problema" ----
+   Tarjeta propia (no reutiliza `.ev-filtros__grupo`) para que se lea
+   claramente como algo distinto de un filtro más, tal como pide el
+   encargo (E2/E3). Fondo en gradiente (E20) con las mismas custom
+   properties del módulo — nada de hex nuevos. */
+.ev-cta-comunidad {
+    padding: 16px 16px 18px;
+    background: linear-gradient(135deg, var(--ev-azul), var(--ev-azul-oscuro));
+    border: 1px solid var(--ev-azul-oscuro);
+    border-radius: var(--ev-radius-md);
+}
+
+/* Título en tamaño "grande" de WCAG (>=18.66px en negrita) a propósito
+   (E21): sobre el extremo más claro del gradiente (--ev-azul) el blanco
+   puro ronda ~3.8:1 de contraste — insuficiente para texto normal (4.5:1)
+   pero sí cumple el umbral de texto grande (3:1). La descripción, más
+   pequeña, se queda cerca de ese límite sin poder superarlo sin alterar
+   los colores exactos pedidos; se compensa con opacidad alta (0.92, no
+   0.7-0.8) para maximizar la legibilidad real dentro de esa restricción. */
+.ev-cta-comunidad__titulo {
+    margin: 0 0 4px;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--ev-blanco);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.ev-cta-comunidad__desc {
+    margin: 0 0 14px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.5;
+}
+
+.ev-cta-comunidad__acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ev-cta-comunidad__btn {
+    min-height: 44px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-align: center;
+    transition: background 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out), border-color 0.15s var(--ev-ease-out);
+}
+
+/* Blanco sólido sobre el gradiente (E21, ejemplo pedido): máximo contraste
+   posible para la acción principal. */
+.ev-cta-comunidad__btn--primario {
+    background: var(--ev-blanco);
+    border-color: var(--ev-blanco);
+    color: var(--ev-azul-oscuro);
+}
+
+.ev-cta-comunidad__btn--primario:hover {
+    background: var(--ev-fondo-card);
+    border-color: var(--ev-fondo-card);
+}
+
+/* Ghost/outline blanco (E21): el fondo blanco sólido original quedaba
+   invisible sobre el nuevo gradiente azul. */
+.ev-cta-comunidad__btn--secundario {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.7);
+    color: var(--ev-blanco);
+}
+
+.ev-cta-comunidad__btn--secundario:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: var(--ev-blanco);
+}
+
+/* Instancia mobile del CTA, ubicada fuera de `.ev-layout` después de la
+   paginación (E23/E24): necesita su propio ancho/gutter porque ya no vive
+   dentro del grid con `padding:0 20px` de `.ev-layout`. */
+.ev-cta-comunidad--final {
+    margin: 32px 20px 40px;
+}
+
+/* ---- 5c. MODALES DE FORMULARIO (Promociona tu evento / Reportar un problema) ----
+   Mismo lenguaje visual que `.ev-modal` (radio 22px, no fullscreen en
+   mobile, `env(safe-area-inset-bottom)`), pero con su propio max-width más
+   angosto — `.ev-modal-dialog` está pensado para la galería+ficha del
+   evento (940px) y aquí solo hay 2-4 campos de texto. */
+.ev-form-modal-dialog {
+    max-width: 480px;
+    width: calc(100% - 24px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 576px) {
+    .ev-form-modal-dialog {
+        width: calc(100% - 48px);
+    }
+}
+
+.ev-form-modal-dialog.modal-dialog-scrollable .modal-content {
+    max-height: 90vh;
+    max-height: 90dvh;
+}
+
+.ev-form-modal {
+    border-radius: var(--ev-radius-lg);
+    overflow: hidden;
+}
+
+.ev-form-modal__header {
+    align-items: flex-start;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+.ev-form-modal__titulo {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.2rem);
+    line-height: 1.25;
+    color: var(--ev-azul-oscuro);
+    margin: 0;
+}
+
+/* Causa real de que el footer (Cancelar/Enviar) quedara fuera de la vista
+   en mobile (E13/E14): Bootstrap solo distribuye header/body/footer como
+   flex fijo/flexible/fijo cuando son HIJOS DIRECTOS de `.modal-content`
+   (que trae `display:flex; flex-direction:column`) — pero aquí el body y
+   el footer viven dentro de un <form>, que pasaba a ser un único item de
+   flex de tamaño "auto" (la suma de body+footer) en vez de repartir el
+   alto disponible. Con `.modal-content` acotado a 90dvh + `overflow:hidden`,
+   ese exceso simplemente se recortaba por abajo — justo donde está el
+   footer. Convertir el <form> en su propia columna flex (con
+   `min-height:0`, el permiso explícito para que un hijo flex se encoja
+   por debajo de su contenido) reestablece el reparto correcto: header fijo
+   arriba, body flexible con scroll interno, footer fijo abajo. */
+.ev-form-modal__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.ev-form-modal__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 18px 18px calc(18px + env(safe-area-inset-bottom));
+}
+
+.ev-form-modal__campo label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ev-azul-oscuro);
+    margin-bottom: 6px;
+}
+
+.ev-form-modal__campo input[type="text"],
+.ev-form-modal__campo input[type="email"],
+.ev-form-modal__campo select,
+.ev-form-modal__campo textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: var(--ev-radius-sm);
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font-family: inherit;
+    /* >=16px (R25): evita el auto-zoom de iOS Safari al enfocar el campo. */
+    font-size: 16px;
+}
+
+.ev-form-modal__campo textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.ev-form-modal__campo input:focus-visible,
+.ev-form-modal__campo select:focus-visible,
+.ev-form-modal__campo textarea:focus-visible {
+    outline: 3px solid var(--ev-azul);
+    outline-offset: 2px;
+    border-color: var(--ev-azul);
+}
+
+.ev-form-modal__nota {
+    margin: 0;
+    padding: 10px 12px;
+    background: var(--ev-fondo-card);
+    border-radius: var(--ev-radius-sm);
+    font-size: 0.78rem;
+    color: var(--ev-texto-sec);
+    line-height: 1.5;
+}
+
+/* Honeypot (R16): fuera de pantalla para cualquier persona (con o sin
+   lector de pantalla), pero sigue siendo un campo real que un bot simple
+   puede llegar a completar. Mismo patrón que
+   `.emergencias-modal__honeypot` en apps.emergencias. */
+.ev-form-modal__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.ev-form-modal__footer {
+    flex: 0 0 auto;
+    border-top: 1px solid var(--ev-borde);
+    padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+    gap: 10px;
+}
+
+.ev-form-modal__btn {
+    min-height: 44px;
+    padding: 9px 18px;
+    border-radius: var(--ev-radius-sm);
+    border: 1px solid transparent;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.ev-form-modal__btn--cancelar {
+    background: var(--ev-blanco);
+    border-color: var(--ev-borde);
+    color: var(--ev-texto-sec);
+}
+
+.ev-form-modal__btn--cancelar:hover {
+    border-color: var(--ev-azul);
+    color: var(--ev-azul);
+}
+
+.ev-form-modal__btn--enviar {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.ev-form-modal__btn--enviar:hover {
+    background: var(--ev-azul-oscuro);
+    border-color: var(--ev-azul-oscuro);
+}
+
+.ev-form-modal__btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ---- 5d. BACKDROP CON BLUR (homologado con Emergencias/Servicios útiles) ----
+   Bootstrap crea un único `.modal-backdrop` compartido por TODOS los
+   modales del sitio, así que no se puede darle blur por selector propio
+   de cada modal — de ahí la clase temporal en `<body>` (E38), añadida por
+   JS solo mientras hay un modal de Eventos abierto (ver
+   agenda-eventos.js) y encapsulada aquí para no tocar `.modal-backdrop`
+   de otros módulos. No se toca el propio `.modal`/`.modal-dialog`: el
+   blur es solo del fondo, nunca del contenido (E10).
+
+   `opacity: 1` explícito (R74 backdrop, causa raíz verificada en vivo):
+   Bootstrap solo pinta el backdrop mediante `.modal-backdrop.show {
+   opacity: var(--bs-backdrop-opacity) }` — con `--ev-backdrop-color` ya
+   semitransparente (rgba, alpha 0.55) esa opacity adicional del elemento
+   es redundante Y frágil (comprobado: la transición de opacity de
+   Bootstrap puede quedar completamente sin aplicar, dejando el backdrop
+   invisible pese a `background-color`/`backdrop-filter` correctos).
+   `servicios-utiles.css` (`.modal-backdrop.su-backdrop-blur`) ya resuelve
+   exactamente este caso así: opacity del elemento fija en 1, toda la
+   transparencia real vale del alpha del rgba — mismo patrón aprobado,
+   reutilizado aquí en vez de depender de la variable de Bootstrap. */
+body.ev-modal-abierto .modal-backdrop {
+    opacity: 1;
+    background-color: var(--ev-backdrop-color);
+    backdrop-filter: blur(var(--ev-backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--ev-backdrop-blur));
+}
+
+/* ---- 6. CARDS ----
+   Composición editorial: imagen protagonista + encabezado + un único
+   separador + metadata + teaser + CTA. Este bloque reemplaza la versión
+   anterior completa; no hay overrides acumulados ni parches al final. */
+.ev-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-content: start;
+    min-width: 0;
+}
+
+.ev-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    background: var(--ev-blanco);
+    border: 1px solid rgba(0, 45, 137, 0.12);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 45, 137, 0.07);
+    transition: transform 0.18s var(--ev-ease-out), box-shadow 0.18s var(--ev-ease-out), border-color 0.18s var(--ev-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ev-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(0, 127, 255, 0.30);
+        box-shadow: 0 14px 34px rgba(0, 45, 137, 0.12);
+    }
+}
+
+.ev-card__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--ev-fondo-card);
+}
+
+.ev-card__media::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 34%;
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(0, 20, 64, 0.12), transparent);
+}
+
+.ev-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s var(--ev-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ev-card:hover .ev-card__media img {
+        transform: scale(1.018);
+    }
+}
+
+.ev-card__media-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--ev-azul);
+    font-size: 2rem;
+}
+
+.ev-card__body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    padding: 18px 18px 0;
+}
+
+.ev-card__encabezado {
+    min-width: 0;
+}
+
+.ev-card__eyebrow-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+    margin-bottom: 7px;
+}
+
+.ev-card__categoria {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--ev-azul);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.055em;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Los estados funcionales no se superponen a la fotografía ni compiten
+   con la única pill promocional ("Cada año"). Se muestran como texto
+   discreto con punto de estado dentro del encabezado. */
+.ev-card__estado {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 5px;
+    color: var(--ev-texto-sec);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.ev-card__estado-punto {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.ev-card__estado--cancelado {
+    color: #B3261E;
+}
+
+.ev-card__estado--reprogramado,
+.ev-card__estado--fecha-por-confirmar {
+    color: var(--ev-texto-sec);
+}
+
+.ev-card__estado--hoy,
+.ev-card__estado--en-curso {
+    color: var(--ev-azul);
+}
+
+.ev-card__nombre {
+    display: -webkit-box;
+    min-height: calc(1.28em * 2);
+    margin: 0;
+    overflow: hidden;
+    color: var(--ev-azul-oscuro);
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.12rem, 1.02rem + 0.22vw, 1.28rem);
+    font-weight: 700;
+    line-height: 1.28;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.ev-card__separador {
+    position: relative;
+    height: 2px;
+    margin: 16px 0;
+    overflow: hidden;
+    background: var(--ev-grad);
+}
+
+.ev-card__separador span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: min(42%, 92px);
+    height: 2px;
+    transform: translateY(-0.5px);
+    border-radius: 999px;
+    background: var(--ev-grad);
+}
+
+.ev-card__meta {
+    display: grid;
+    gap: 11px;
+    min-width: 0;
+}
+
+.ev-card__meta-item {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    align-items: start;
+    gap: 9px;
+    min-width: 0;
+}
+
+.ev-card__meta-icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-top: -1px;
+    color: var(--ev-azul);
+    font-size: 1rem;
+}
+
+.ev-card__meta-contenido {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 5px;
+    min-width: 0;
+    color: var(--ev-texto-sec);
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+.ev-card__meta-etiqueta {
+    color: var(--ev-texto);
+    font-weight: 750;
+}
+
+.ev-card__meta-valor {
+    min-width: 0;
+    color: var(--ev-texto-sec);
+}
+
+.ev-card__meta-valor--ubicacion {
+    display: -webkit-box;
+    flex: 1 1 100%;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.ev-card__teaser {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 9px;
+    /* 3 líneas (línea × 0.82rem × 1.48 = ~21.9px c/u) para que quepan los
+       100 caracteres máximo que ya limita `truncatechars:100` en el
+       template, sin cortar antes de llegar al tope (R28). */
+    min-height: 88px;
+    margin-top: 15px;
+    padding: 11px 12px;
+    border-radius: 12px;
+    background: var(--ev-fondo);
+}
+
+.ev-card__teaser > i {
+    margin-top: 1px;
+    color: var(--ev-azul);
+    font-size: 0.95rem;
+}
+
+.ev-card__teaser p {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    color: var(--ev-texto-sec);
+    font-size: 0.82rem;
+    line-height: 1.48;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+}
+
+.ev-card__acciones {
+    margin-top: auto;
+    padding: 16px 18px 18px;
+}
+
+.ev-card__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    gap: 9px;
+    padding: 9px 14px;
+    border: 1px solid var(--ev-azul);
+    border-radius: 12px;
+    background: var(--ev-blanco);
+    color: var(--ev-azul);
+    font-size: 0.9rem;
+    font-weight: 800;
+    transition: background 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out), border-color 0.15s var(--ev-ease-out), box-shadow 0.15s var(--ev-ease-out);
+}
+
+.ev-card__cta-icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ev-azul);
+    color: var(--ev-blanco);
+    font-size: 0.82rem;
+    transition: background 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-card__cta:hover {
+    border-color: var(--ev-azul);
+    background: var(--ev-azul);
+    color: var(--ev-blanco);
+    box-shadow: 0 6px 18px rgba(0, 127, 255, 0.18);
+}
+
+.ev-card__cta:hover .ev-card__cta-icono {
+    background: var(--ev-blanco);
+    color: var(--ev-azul);
+}
+
+@media (max-width: 575.98px) {
+    .ev-card {
+        border-radius: 16px;
+    }
+
+    .ev-card__body {
+        padding: 17px 16px 0;
+    }
+
+    .ev-card__acciones {
+        padding: 15px 16px 17px;
+    }
+
+    .ev-card__nombre {
+        font-size: 1.12rem;
+    }
+
+    .ev-card__separador {
+        margin-block: 14px;
+    }
+
+    .ev-card__meta-contenido {
+        font-size: 0.85rem;
+    }
+}
+
+/* ---- 7. ESTADO VACÍO ---- */
+.ev-vacio {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 56px 20px;
+}
+
+.ev-vacio__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ev-fondo-card);
+    color: var(--ev-azul);
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+}
+
+.ev-vacio__titulo {
+    margin: 0 0 6px;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--ev-azul-oscuro);
+}
+
+.ev-vacio__desc {
+    margin: 0;
+    color: var(--ev-texto-sec);
+    font-size: 0.92rem;
+}
+
+/* ---- 8. PAGINACIÓN ----
+   Homologado con el paginador ya aprobado en Establecimientos
+   (static/assets/css/establecimientos.css, "Paginación premium tipo
+   tabs"): mismos 6 controles (« ‹ N N › »), mismas proporciones, mismo
+   número activo con relleno degradado + punto inferior animados, mismo
+   hover, y mismo criterio responsive (un único breakpoint <576px que
+   reduce tamaños; de ahí hasta desktop usa las mismas medidas). Se
+   replica dentro del namespace de Eventos — no se importa
+   establecimientos.css — porque ese archivo está acoplado a
+   `.establecimientos-pagina` y a su propio armado de querystring por
+   parámetro suelto; Eventos conserva su propio helper
+   `querystring_paginacion` (views.py), que ya preserva categoría/
+   provincia/distrito/tags múltiples/cuando/fecha y excluye semana/costo
+   (sin tocar esa lógica). Colores: mismos tokens `--ev-*` ya usados en el
+   resto de esta página (--ev-grad, --ev-azul-oscuro, --ev-blanco), no una
+   paleta nueva; rgba(0,45,137,x) es el mismo azul oscuro en baja opacidad
+   (--ev-azul-oscuro = #002D89 = rgb(0,45,137)). */
+.ev-paginacion {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0 56px;
+}
+
+/* `flex-wrap: wrap` (única adaptación real respecto a Establecimientos,
+   R4/R34): se conserva solo como defensa extrema (V2.1, sección 12) — con
+   la ventana mobile ya limitada a 3 números (máximo 7 controles: « ‹ +
+   hasta 3 números + › », ver el breakpoint <576px más abajo) el paginador
+   cabe en una sola fila en todos los anchos soportados (probado
+   360-1920), así que en la práctica nunca llega a activarse. Se deja
+   igualmente como red de seguridad: sin wrap, `.eventos-page{overflow-x:
+   clip}` (necesario para el bug de layout viewport ya documentado en este
+   archivo, sección 2) recortaría silenciosamente los controles de los
+   extremos en vez de dejarlos inaccesibles pero "sin overflow" ante
+   cualquier caso extremo no contemplado (zoom, fuente del sistema muy
+   grande, etc.). */
+.ev-paginacion .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    row-gap: 10px;
+    margin-bottom: 0;
+    overflow: visible;
+}
+
+/* Flechas (« ‹ › ») */
+.ev-paginacion .page-link {
+    min-width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 45, 137, 0.16);
+    background: var(--ev-blanco);
+    color: var(--ev-azul-oscuro);
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: none;
+    transition: color 0.25s var(--ev-ease-out), border-color 0.25s var(--ev-ease-out), background 0.25s var(--ev-ease-out), transform 0.25s var(--ev-ease-out);
+}
+
+.ev-paginacion .page-link:hover {
+    border-color: var(--ev-azul-oscuro);
+    color: var(--ev-azul-oscuro);
+    background: var(--ev-fondo);
+    transform: translateY(-1px);
+}
+
+.ev-paginacion .page-item.disabled .page-link {
+    color: rgba(0, 45, 137, 0.28);
+    background: var(--ev-fondo);
+    border-color: rgba(0, 45, 137, 0.10);
+    pointer-events: none;
+}
+
+/* Números (1, 2, 3...): más grandes que las flechas (R13, peso visual
+   destacado), con el fondo degradado y el punto inferior del activo como
+   pseudo-elementos — nunca afectan el flujo/alto de `.pagination` porque
+   son `position:absolute` sobre el propio `.page-link` (`position:relative;
+   isolation:isolate` lo ancla). */
+.ev-paginacion .page-number .page-link {
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 45, 137, 0.18);
+    background: transparent;
+    color: var(--ev-texto);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.48s var(--ev-ease-out), border-color 0.48s var(--ev-ease-out), transform 0.48s var(--ev-ease-out), background 0.48s var(--ev-ease-out);
+}
+
+.ev-paginacion .page-number .page-link span {
+    position: relative;
+    z-index: 2;
+}
+
+/* Fondo degradado del número activo: crece desde arriba (scale 0 -> 1). */
+.ev-paginacion .page-number .page-link::before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--ev-grad);
+    transform: translate(-50%, -50%) scale(0);
+    transform-origin: center;
+    opacity: 0;
+    z-index: 1;
+    transition: top 0.48s var(--ev-ease-out), opacity 0.48s var(--ev-ease-out), transform 0.48s var(--ev-ease-out);
+}
+
+/* Punto inferior del número activo (R14): centrado respecto al botón vía
+   left:50% + translateX(-50%), sin afectar el flujo del resto de
+   controles (position:absolute) ni generar overflow (el margen inferior
+   de `.ev-paginacion`, 56px, contiene sobradamente su desplazamiento
+   máximo de 24px bajo el botón). */
+.ev-paginacion .page-number .page-link::after {
+    content: "";
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ev-grad);
+    transform: translateX(-50%) scale(0);
+    transform-origin: center;
+    opacity: 0;
+    z-index: 1;
+    transition: bottom 0.48s 0.2s var(--ev-ease-out), opacity 0.48s 0.2s var(--ev-ease-out), transform 0.48s 0.2s var(--ev-ease-out);
+}
+
+.ev-paginacion .page-number .page-link:hover {
+    border-color: var(--ev-azul-oscuro);
+    color: var(--ev-azul-oscuro);
+    background: transparent;
+}
+
+/* Número activo (R13): mismo --ev-grad ya usado en el resto de la página
+   (chips, CTA, separador de card), texto blanco, radio 12px consistente
+   con el resto de los controles, sombra en capas ya aprobada. */
+.ev-paginacion .page-number.active .page-link {
+    border-color: transparent;
+    color: var(--ev-blanco);
+    background: transparent;
+    transform: scale(1.08);
+}
+
+.ev-paginacion .page-number.active .page-link::before {
+    top: 50%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.16),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06),
+        0 97px 39px rgba(0, 45, 137, 0.02);
+}
+
+.ev-paginacion .page-number.active .page-link::after {
+    bottom: -16px;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.14),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06);
+}
+
+/* Único breakpoint responsive del paginador (R23/R25): igual que
+   Establecimientos, de 576px hacia arriba (tablet y desktop incluidos)
+   usa las mismas medidas y hasta 5 números — no hace falta un breakpoint
+   dedicado a tablet porque ese diseño ya escala correctamente ahí. Por
+   debajo de 576px se reducen tamaños y la ventana numérica baja a un
+   máximo de 3 (`.page-number--solo-desktop`, calculado server-side en
+   `paginas_paginador`/views.py — nunca por posición/nth-child) para que
+   los 7 controles como máximo (« ‹ + hasta 3 números + › ») quepan
+   siempre en una sola fila, sin overflow ni solape (probado en
+   360/390/393/430 con paginador de 12 páginas, el caso más ancho). */
+@media (max-width: 575.98px) {
+    .ev-paginacion .pagination {
+        gap: 6px;
+    }
+
+    .ev-paginacion .page-number--solo-desktop {
+        display: none;
+    }
+
+    .ev-paginacion .page-link {
+        min-width: 40px;
+        height: 40px;
+    }
+
+    .ev-paginacion .page-number .page-link {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+    }
+
+    .ev-paginacion .page-number .page-link::before {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* ---- 9. MODAL ----
+   R4: deja de sentirse "fullscreen incrustado" en mobile. Ya no se usa
+   `modal-fullscreen-sm-down` (Bootstrap nativo, 100dvh sin radio ni
+   margen); en su lugar el diálogo se dimensiona a mano (90dvh, radio
+   22px) para que el fondo siga visible alrededor y se perciba como
+   modal, no como una página nueva.
+
+   `width` explícito (no `auto`) a propósito: Bootstrap resuelve
+   `.modal-dialog{width:auto;margin:var(--bs-modal-margin)}` sin
+   `margin:auto` para los lados — con `width:auto` el bloque llena el 100%
+   del contenedor antes de mirar `max-width`, así que en cualquier
+   viewport más angosto que max-width (ej. una tablet de 768px) el modal
+   quedaba pegado borde a borde sin gutter, aunque max-width fuera 940px
+   (verificado en vivo). Fijar `width` a `calc(100% - Npx)` convierte el
+   ancho en un valor definido, que sí dispara el centrado por
+   margin:auto una vez alcanzado max-width. */
+.ev-modal-dialog {
+    max-width: 940px;
+    width: calc(100% - 24px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 576px) {
+    .ev-modal-dialog {
+        width: calc(100% - 48px);
+    }
+}
+
+/* `.modal-dialog-centered` trae `min-height:calc(100% - margen*2)` para
+   centrar verticalmente — con contenido corto esa min-height (~90% del
+   viewport) supera nuestro max-height y gana ella (CSS: min-height >
+   max-height siempre gana min-height), dejando un .modal-dialog casi del
+   alto completo del viewport aunque .modal-content sea mucho más bajo.
+   Eso es solo el contenedor flex invisible de centrado (comportamiento
+   estándar de Bootstrap, no un bug en sí) — lo que sí hay que fijar es que
+   `.modal-content` (la tarjeta visible) respete 90dvh con un valor
+   absoluto, no el `calc(100% - margen*2)` relativo de Bootstrap que hereda
+   la altura ya inflada del dialog. */
+.ev-modal-dialog.modal-dialog-scrollable .modal-content {
+    max-height: 90vh;
+    max-height: 90dvh;
+}
+
+/* Reserva de espacio para la X flotante + safe-area (R74, sección 16): la X
+   nunca debe superponerse al contador/categoría/título, así que el propio
+   padding-top del body deja el hueco necesario en vez de un offset manual
+   sobre `.ev-modal__info-top`. `.ev-modal__header` (regla huérfana: esa
+   clase no existe en el template) queda eliminada como parte de la
+   auditoría de deuda técnica del modal. */
+@media (max-width: 575.98px) {
+    .ev-modal__body {
+        padding-top: calc(64px + env(safe-area-inset-top));
+    }
+}
+
+/* `.ev-modal` está en el mismo <div> que `.modal-content` (no es un
+   ancestro), así que el selector es `.ev-modal` a secas — `.ev-modal
+   .modal-content` con espacio jamás coincide con nada. Radio consistente
+   en todos los anchos (22px = --ev-radius-lg); overflow hidden para que la
+   galería y el header respeten la esquina redondeada. */
+.ev-modal {
+    border-radius: var(--ev-radius-lg);
+    overflow: hidden;
+}
+
+/* Botón cerrar flotante: esquina superior derecha ABSOLUTA del modal (R74,
+   sección 15-16) — cierra TODO el modal, así que vive en `.ev-modal`, no en
+   la columna de información. El espacio que ocupa ya está reservado en el
+   layout (padding-top de `.ev-modal__body` + `.ev-modal__info-top` con su
+   propio flujo), así que nunca se superpone al contador/categoría/título. */
+.ev-modal__cerrar {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 6;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ev-blanco);
+    background-size: 0.85rem;
+    border-radius: 50%;
+    box-shadow: 0 4px 14px rgba(0, 45, 137, 0.18);
+}
+
+@media (max-width: 575.98px) {
+    .ev-modal__cerrar {
+        top: calc(11px + env(safe-area-inset-top));
+        right: calc(11px + env(safe-area-inset-right));
+        width: 44px;
+        height: 44px;
+    }
+}
+
+.ev-modal {
+    position: relative;
+}
+
+.ev-modal__body {
+    overscroll-behavior: contain;
+    padding: 54px 18px calc(20px + env(safe-area-inset-bottom));
+    display: grid;
+    /* minmax(0, 1fr), no 1fr a secas: un track `1fr` normal se dimensiona
+       primero según el max-content de su contenido (min-width:auto
+       implícito en los grid items) — con el carrusel adentro eso hacía que
+       la columna (y por lo tanto el propio swiper) se calculara más ancha
+       que el modal, aunque `.ev-modal { overflow:hidden }` lo recortara
+       visualmente después. El `minmax(0, ...)` fuerza al track a respetar
+       el ancho real del contenedor en vez del tamaño intrínseco del hijo. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+}
+
+@media (min-width: 768px) {
+    .ev-modal__body {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        /* clamp en vez de fijo (causa real de la invasión desktop, R74 ajuste
+           de layout): 32px ya era el piso a este mismo breakpoint (768px),
+           así que tablet no cambia; crece hasta 48px en pantallas más
+           anchas, dando más aire real entre la columna de galería y la de
+           información. */
+        column-gap: clamp(32px, 3.5vw, 48px);
+        row-gap: 24px;
+        padding: 58px 30px calc(28px + env(safe-area-inset-bottom));
+    }
+
+    /* Mismo motivo que el ancho mobile de `.ev-modal__galeria` (arriba): sin
+       margen propio, el offset/rotación del efecto `cards` estira la pila
+       hasta casi tocar el título/categoría de la columna derecha. Al dejar
+       ~8% libre y centrado dentro de la propia columna, ese margen absorbe
+       el peek sin necesitar márgenes negativos ni translateX manual. */
+    .ev-modal__galeria {
+        width: min(92%, 460px);
+        margin-inline: auto;
+    }
+
+    /* Ambos items de grid reciben la misma altura por `align-items: stretch`
+       (comportamiento por defecto de CSS Grid) — aquí solo se convierten en
+       flex column para que los controles del carrusel queden anclados al
+       fondo real de SU columna con `margin-top: auto` (sobrevive imágenes
+       de cualquier alto sin offsets manuales). "Ideal para" ya NO usa este
+       mismo anclaje (ver `.ev-modal__ideal` más abajo): igualar su
+       coordenada Y a la de los controles producía un vacío artificial
+       cuando la columna de galería era más alta que el contenido real de
+       la columna de info — ahora sigue el ritmo natural del contenido. */
+    .ev-modal__galeria-wrap {
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .ev-modal__galeria-controles {
+        margin-top: auto;
+        padding-top: 10px;
+    }
+
+    .ev-modal__info {
+        grid-row: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .ev-accordion { grid-column: 1 / -1; }
+}
+
+.ev-modal__categoria {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ev-azul);
+    margin: 0 0 4px;
+}
+
+.ev-modal__titulo {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.2rem, 1.02rem + 1.1vw, 1.65rem);
+    line-height: 1.25;
+    color: var(--ev-azul-oscuro);
+    margin: 0 0 14px;
+}
+
+/* ---- Carousel de galería ----
+   Viewport único (16:9) para todas las fotos, sin importar sus dimensiones
+   originales — cada eslabón de la cadena width/height:100% hasta la propia
+   <img> (object-fit:cover) hace que ninguna imagen determine el alto del
+   carrusel. Misma proporción en todos los breakpoints a propósito (no una
+   altura arbitraria distinta por mobile/tablet/desktop): así ninguna
+   imagen "salta" de tamaño al cambiar de slide ni de viewport. */
+
+/* Shell de contención (R4-R5 del encargo de layout): `.ev-modal__galeria`
+   necesita `overflow: visible` para el efecto `cards` de Swiper (más
+   abajo), así que el recorte real vive un nivel arriba, en este wrap.
+   `contain: layout` es el mismo fix ya verificado en vivo para
+   `.ev-filtros-rapidos` (sección 2 de este archivo): sin él, el layout
+   viewport de mobile Safari/Chrome se agranda igual para "acomodar"
+   contenido internamente clippeado/transformado (las cards traseras del
+   carrusel), aunque `overflow: hidden` ya lo recorte visualmente. */
+.ev-modal__galeria-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    overflow: clip;
+    contain: layout;
+}
+
+/* aspect-ratio 4/3 (R74, sección 11): más superficie visual que 16:9 para
+   fotografía turística y deja ver el stack de cards detrás; misma
+   proporción en todos los breakpoints para que ninguna imagen "salte" de
+   tamaño al cambiar de slide o de viewport. `overflow: visible` a
+   propósito (no `hidden` como antes): el efecto `cards` de Swiper dibuja
+   las cards siguientes ligeramente desplazadas/rotadas FUERA del área del
+   slide activo — recortarlas con overflow:hidden aquí eliminaría el efecto
+   de pila que pide el encargo (R74, sección 9-10). El radio/objeto de cada
+   slide ya evita que el contenido se vea "suelto". */
+.ev-modal__galeria {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: visible;
+}
+
+/* Ancho contenido en mobile (causa real del overflow horizontal global):
+   antes el carrusel ocupaba el 100% del wrap, así que el offset/rotación
+   del efecto `cards` (perSlideOffset/perSlideRotate en agenda-eventos.js)
+   no tenía margen propio donde caer y su ink overflow disparaba el bug de
+   layout viewport descrito arriba en `.ev-modal__galeria-wrap`. Al dejar
+   de ocupar el 100% y centrarse, ese margen libre es exactamente donde
+   caen las cards traseras — contenidas dentro del shell sin recortarse. */
+@media (max-width: 767.98px) {
+    .ev-modal__galeria {
+        width: min(88%, 420px);
+        margin-inline: auto;
+    }
+}
+
+.ev-modal-swiper,
+.ev-modal-swiper .swiper-wrapper,
+.ev-modal-swiper .swiper-slide {
+    width: 100%;
+    height: 100%;
+}
+
+/* Oculto por defecto (visibility, no display:none: la caja debe conservar
+   sus dimensiones reales para que Swiper mida un contenedor con tamaño real
+   al inicializarse en `shown.bs.modal`) hasta que el JS confirma que Swiper
+   ya terminó de montarse — así el usuario nunca ve el `.swiper-wrapper` sin
+   inicializar (flex en fila, todas las slides "sueltas") ni el reflow que
+   eso producía al aplicarse la instancia. */
+.ev-modal-swiper {
+    visibility: hidden;
+}
+
+.ev-modal-swiper.is-ready {
+    visibility: visible;
+}
+
+/* El radio/sombra ahora vive en cada slide (ya no en `.ev-modal__galeria`,
+   que pasó a `overflow: visible` para permitir el efecto `cards`, sección
+   9-11). Sombra ligera y estática (no la de Swiper: `slideShadows: false`
+   en el JS) para dar profundidad sin exagerar el efecto de pila. */
+.ev-modal-swiper .swiper-slide {
+    overflow: hidden;
+    border-radius: var(--ev-radius-md);
+    box-shadow: 0 12px 28px rgba(0, 45, 137, 0.22);
+}
+
+.ev-modal-swiper .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+}
+
+.ev-modal__media-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: var(--ev-azul);
+    font-size: 2.4rem;
+    background: var(--ev-fondo-card);
+}
+
+/* Botón "ver en grande": glassmorphism (fondo translúcido + blur) sobre la
+   esquina superior derecha de la imagen ACTIVA (R74, sección 12-14): cerca
+   del borde (10-12px), no hundido 30-40px como antes. 40px en desktop,
+   44px en mobile (mínimo táctil). */
+.ev-modal__zoom {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--ev-blanco);
+    box-shadow: 0 4px 14px rgba(0, 45, 137, 0.2);
+}
+
+.ev-modal__zoom:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 767.98px) {
+    .ev-modal__zoom {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* Flechas + dots en su propia fila, debajo de la pila (no superpuestas a
+   la foto, a diferencia del carrusel plano anterior). */
+/* Fila única (R74, sección 18): play/pause + bullets a la izquierda, flechas
+   a la derecha — `justify-content: space-between` reemplaza el centrado
+   anterior de 3 elementos sueltos. En desktop (>=768px, ver media query de
+   `.ev-modal__body`) el margin-top pasa a `auto` para anclarse al fondo de
+   la columna (simetría con "Ideal para"); en mobile un margen fijo basta,
+   no hay columna que igualar. */
+.ev-modal__galeria-controles {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+/* Mobile (columna única, sin columna que igualar): margen fijo simple. En
+   desktop (>=768px) el margin-top pasa a `auto` — ver media query junto a
+   `.ev-modal__body` más arriba en este archivo — para anclarse al fondo de
+   la columna (simetría con "Ideal para"). */
+@media (max-width: 767.98px) {
+    .ev-modal__galeria-controles {
+        margin-top: 10px;
+    }
+}
+
+.ev-modal-swiper-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.ev-modal-swiper-arrows {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+.ev-modal-swiper-arrow {
+    position: static;
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-azul-oscuro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+}
+
+.ev-modal-swiper-arrow:hover {
+    border-color: var(--ev-azul);
+    color: var(--ev-azul);
+}
+
+/* Play/pause (R74, sección 17-19): mismo comportamiento que
+   `.detalle-swiper-play` en Establecimientos — icono cambia entre pausa/play
+   y el estado `.is-paused` se refleja visualmente, sin duplicar el
+   autoplay/timer (uno solo, en agenda-eventos.js). */
+.ev-modal-swiper-play {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: var(--ev-azul);
+    color: var(--ev-blanco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: background 0.15s var(--ev-ease-out);
+}
+
+.ev-modal-swiper-play:hover {
+    background: var(--ev-azul-oscuro);
+}
+
+.ev-modal-swiper-play.is-paused {
+    background: var(--ev-fondo-card);
+    color: var(--ev-azul-oscuro);
+}
+
+/* Swiper trae su propia regla `.swiper-pagination-bullets.swiper-pagination-horizontal`
+   (position:absolute; left:0; width:100%) con más especificidad (2 clases)
+   que este selector de una clase — sin !important, esa regla de Swiper
+   gana y los dots quedan posicionados de forma absoluta respecto al
+   ancestro posicionado más cercano (`.ev-modal`, arriba de toda la
+   columna), no centrados en esta fila. Mismo problema ya resuelto para el
+   carrusel de establecimientos (ver `.detalle-swiper-pagination` en
+   detalle-establecimiento.css) — misma solución aquí. */
+.ev-modal-swiper-pagination {
+    position: static !important;
+    width: auto !important;
+    margin: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    /* Mismo criterio is-ready que `.ev-modal-swiper`: Swiper pinta los
+       bullets al inicializarse, así que hasta entonces tampoco deben quedar
+       expuestos con su geometría "cruda" (pre-clickable, sin bullet activo). */
+    visibility: hidden;
+}
+
+.ev-modal-swiper-pagination.is-ready {
+    visibility: visible;
+}
+
+/* Bullets con progreso/timer (R74, sección 17): mismo lenguaje visual que
+   `.detalle-swiper-pagination` en Establecimientos (detalle-establecimiento.css)
+   — el bullet activo se ensancha a una píldora y una barra de progreso
+   (`.ev-modal-bullet-progress`, pintada por agenda-eventos.js en cada
+   frame) avanza dentro de ella hasta completar el autoplay. La geometría
+   solo cambia DESPUÉS de `is-ready` (mismo guard que arriba), nunca durante
+   el montaje — evita el flash de bullets creciendo del fix anterior. */
+.ev-modal-swiper-pagination .swiper-pagination-bullet {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    margin: 0 4px !important;
+    overflow: hidden;
+    background: rgba(0, 127, 255, 0.35);
+    opacity: 1;
+    transform: none;
+    transition: width 0.25s var(--ev-ease-out), background 0.25s var(--ev-ease-out);
+}
+
+.ev-modal-swiper-pagination .swiper-pagination-bullet-active {
+    width: 34px;
+    background: rgba(0, 127, 255, 0.25);
+    opacity: 1;
+    transform: none;
+}
+
+.ev-modal-bullet-progress {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--ev-azul);
+}
+
+/* ---- Columna de info (derecha) ---- */
+
+/* Alineado a la derecha, encima de la categoría (R74, sección 7), tanto en
+   mobile como en desktop — nunca sobre la fotografía. `display: table` +
+   `margin-left: auto` empuja un bloque shrink-to-fit hacia la derecha sin
+   depender de que su padre (`.ev-modal__info-top`) sea flex/grid. */
+.ev-modal__contador {
+    display: table;
+    margin: 0 0 10px auto;
+    padding: 4px 12px;
+    border: 1px solid var(--ev-borde);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ev-texto-sec);
+}
+
+.ev-modal__meta {
+    margin: 16px 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ev-modal__meta-linea {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--ev-texto);
+}
+
+.ev-modal__meta-icono {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ev-fondo-card);
+    color: var(--ev-azul);
+    font-size: 0.95rem;
+}
+
+.ev-modal__meta-linea strong {
+    color: var(--ev-texto);
+    font-weight: 700;
+}
+
+/* Regla única para mobile y desktop (antes había una versión mobile fija de
+   18px y otra desktop con `margin-top: auto` que anclaba "Ideal para" al
+   fondo de la columna — esa segunda regla era la causa real del vacío
+   enorme entre "Ubicación" e "Ideal para" cuando la columna de galería era
+   más alta que el contenido de la columna de info). Ritmo natural del
+   contenido: separación clara pero moderada, sin igualar coordenadas Y. */
+.ev-modal__ideal {
+    margin-top: clamp(18px, 2vw, 24px);
+}
+
+.ev-modal__seccion-titulo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ev-azul-oscuro);
+    margin: 0 0 10px;
+}
+
+/* Chips de "Ideal para conocer": una sola fila horizontal con scroll propio
+   en vez de envolver, para no empujar el resto de la columna hacia abajo
+   cuando el evento tiene muchos tags. */
+.ev-chips--scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+}
+
+/* Desktop (R74, sección 24/26): los tags envuelven en vez de hacer scroll
+   horizontal — mismo breakpoint que el panel de filtros (`lg`, 992px) para
+   quedar consistente con el resto del modal. Por debajo de 992px (mobile Y
+   tablet) se conserva la fila única con scroll táctil (sección 25-26). */
+@media (min-width: 992px) {
+    .ev-chips--scroll {
+        flex-wrap: wrap;
+        overflow-x: visible;
+        padding-bottom: 0;
+    }
+}
+
+/* Chip informativo (R4, sección 23): reutiliza los tokens visuales del
+   chip de filtros de R3 (radio, borde, tipografía) pero sin sus estados de
+   interacción — aquí es solo lectura, no hay <input> ni :has(:checked). */
+.ev-chip--info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-fondo-card);
+    color: var(--ev-texto);
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+
+.ev-chip--info i {
+    color: var(--ev-azul);
+}
+
+/* ---- Accordion dinámico (usa <details>/<summary> nativos: sin JS propio
+   para abrir/cerrar, foco y teclado ya vienen gratis del navegador). ---- */
+
+.ev-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.ev-accordion__item {
+    border: 1px solid var(--ev-borde);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--ev-blanco);
+}
+
+.ev-accordion__item[open] {
+    background: var(--ev-fondo);
+}
+
+.ev-accordion__cabecera {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.ev-accordion__cabecera::-webkit-details-marker {
+    display: none;
+}
+
+.ev-accordion__cabecera:focus-visible {
+    outline: 3px solid var(--ev-azul);
+    outline-offset: -3px;
+}
+
+.ev-accordion__icono {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ev-fondo-card);
+    color: var(--ev-azul);
+}
+
+.ev-accordion__titulo {
+    flex: 1 1 auto;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ev-azul-oscuro);
+}
+
+.ev-accordion__chevron {
+    flex: 0 0 auto;
+    color: var(--ev-texto-sec);
+    transition: transform 0.2s var(--ev-ease-out);
+}
+
+.ev-accordion__item[open] .ev-accordion__chevron {
+    transform: rotate(180deg);
+}
+
+.ev-accordion__item > .ev-modal__texto,
+.ev-accordion__item > .ev-modal__enlaces {
+    padding: 0 16px 16px 56px;
+}
+
+/* Recomendaciones (V3): ya no hereda el indent de 56px de las otras
+   secciones del acordeón — con el scroll horizontal mobile (más abajo)
+   ese indent asimétrico dejaba menos ancho real para las cards y
+   descentraba el peek de la siguiente. Simétrico con el header del
+   acordeón (16px), una capa de padding menos (R32: auditoría de la suma
+   de paddings modal->accordion->accordion-body->card). */
+.ev-accordion__item > .ev-reco-list {
+    padding: 0 16px 16px;
+}
+
+.ev-modal__texto {
+    max-width: 68ch;
+    font-size: 0.92rem;
+    color: var(--ev-texto);
+    line-height: 1.65;
+    margin: 0;
+    white-space: pre-line;
+}
+
+/* ---- Recomendaciones estructuradas (V3) ----
+   Ya no son "card dentro de card": el acordeón sigue siendo el contenedor
+   principal, así que cada recomendación es una tarjeta ligera (fondo
+   blanco, borde sutil, sin sombra) con un acento de color en el borde
+   izquierdo — mismo idioma visual que `.his-sabias__card` en Historia
+   (historia.css: `border-left` transparente + color por posición vía
+   nth-child, sin guardar hex en BD). Desktop/tablet (>=768px, mismo
+   breakpoint que ya usa `.ev-modal__body` para 2 columnas — el acordeón
+   ocupa el ancho completo del modal vía `grid-column:1/-1`, así que a esa
+   medida ya sobra espacio para 2 columnas sin comprimir el texto):
+   grid de 2 columnas. Mobile: fila con scroll horizontal nativo
+   (overflow-x + scroll-snap, sin Swiper ni JS de swipe) y peek de la
+   siguiente card como affordance — ver R74 V3, secciones 15-27. */
+.ev-reco-list {
+    display: grid;
+    gap: 14px;
+}
+
+@media (min-width: 768px) {
+    .ev-reco-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Grid explícito por hijo (icono/título/descripción son hijos DIRECTOS de
+   `.ev-reco-item`, sin wrapper — ver agenda-eventos.js): en desktop el
+   icono ocupa la columna 1 abarcando las 2 filas de texto (mismo aspecto
+   visual que antes, cuando título+descripción vivían apiladas dentro de
+   un único `<div>` en la columna 2); `row-gap:0` + el `margin-bottom:4px`
+   propio de `h4` reproducen exactamente la separación título/descripción
+   previa, sin doble espaciado. Declarada ANTES del breakpoint mobile (más
+   abajo) a propósito: con igual especificidad, CSS resuelve por orden de
+   aparición — si esta regla quedara después, sus valores pisarían los
+   overrides mobile aunque `@media` matchee. El breakpoint mobile
+   sobreescribe esta posición para que la descripción pase a su propia
+   fila completa. */
+.ev-reco-item {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 0;
+    align-items: start;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--ev-borde);
+    border-left: 4px solid transparent;
+    border-radius: 12px;
+    background: var(--ev-blanco);
+}
+
+/* Rotación de acento por posición (R33-R34): mismos 3 colores ya
+   aprobados en Historia (`.his-sabias__card`, historia.css) + un 4to
+   "celeste" para el ciclo de 4. Puramente decorativo vía CSS, nunca un
+   color guardado en BD. */
+.ev-reco-item:nth-child(4n+1) { border-left-color: #007FFF; }
+.ev-reco-item:nth-child(4n+2) { border-left-color: #1E8E5A; }
+.ev-reco-item:nth-child(4n+3) { border-left-color: #FFD700; }
+.ev-reco-item:nth-child(4n)   { border-left-color: #00B4D8; }
+
+.ev-reco-icon {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(0, 127, 255, 0.08);
+    color: var(--ev-azul);
+    font-size: 1.05rem;
+    /* Icono alineado arriba con el título (R28), no centrado con toda la
+       card (que crece con la descripción). */
+    align-self: start;
+}
+
+.ev-reco-icon img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.ev-reco-item h4 {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0 0 4px;
+    color: var(--ev-azul-oscuro);
+    font-family: "Playfair Display", serif;
+    font-size: clamp(0.98rem, 0.92rem + 0.25vw, 1.05rem);
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* Sin line-clamp/ellipsis/max-height a propósito (R30): la recomendación
+   se lee completa siempre — el ancho y la tipografía son la solución,
+   no ocultar contenido. */
+.ev-reco-item p {
+    grid-column: 2;
+    grid-row: 2;
+    margin: 0;
+    min-width: 0;
+    color: var(--ev-texto-sec);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 767.98px) {
+    .ev-reco-list {
+        display: flex;
+        gap: 14px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-inline: contain;
+        -webkit-overflow-scrolling: touch;
+        /* Scroll oculto visualmente pero sigue siendo funcional (táctil,
+           trackpad, rueda horizontal, teclado) — mismo patrón que
+           `.ev-selector-dias__lista` en este archivo. */
+        scrollbar-width: none;
+        padding-bottom: 2px;
+        /* Causa real de "huecos" entre cards de distinto alto (V3.1): el
+           default `stretch` del flex estiraba TODAS las cards a la altura
+           de la más alta de la fila — una recomendación corta quedaba con
+           espacio vacío artificial abajo. Con flex-start cada card
+           conserva su alto natural según su propio contenido. */
+        align-items: flex-start;
+    }
+
+    .ev-reco-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Card más ancha (V3.1, causa real de la altura excesiva): antes
+       min(84%,320px) dejaba poco ancho útil para la descripción, que se
+       fragmentaba en muchas líneas. calc(100% - 28px) da una card
+       principal más ancha (menos líneas) conservando un peek pequeño y
+       legible de la siguiente — nunca `100vw` (R23), siempre relativo al
+       ancho real del wrapper.
+
+       Reestructura del contenido (causa raíz de la altura excesiva):
+       icono + título comparten la primera fila; la descripción pasa a una
+       segunda fila a ANCHO COMPLETO (`grid-column: 1 / -1`) en vez de
+       quedar encajonada en la columna estrecha junto al icono. Icono
+       también más compacto (40px/22px vs. 44px/24px en desktop) para
+       restar aún menos ancho útil al texto. Sin line-clamp/max-height: la
+       descripción se sigue leyendo completa, solo con menos líneas por
+       fila más ancha. */
+    .ev-reco-item {
+        flex: 0 0 calc(100% - 28px);
+        scroll-snap-align: start;
+        grid-template-columns: 40px minmax(0, 1fr);
+        column-gap: 10px;
+        row-gap: 10px;
+        padding: 12px 12px 14px;
+    }
+
+    /* 1 sola recomendación (R21): ancho completo, sin sensación de
+       carousel ni peek artificial. Vía `:has()` (ya usado en este mismo
+       archivo, ver `.ev-chip:has(input:checked)`) — sin clase ni estado JS. */
+    .ev-reco-list:has(.ev-reco-item:only-child) .ev-reco-item {
+        flex-basis: 100%;
+    }
+
+    .ev-reco-icon {
+        grid-column: 1;
+        grid-row: 1;
+        width: 40px;
+        height: 40px;
+    }
+
+    .ev-reco-icon img {
+        width: 22px;
+        height: 22px;
+    }
+
+    .ev-reco-item h4 {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: center;
+        margin: 0;
+        font-size: 0.98rem;
+    }
+
+    .ev-reco-item p {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}
+
+.ev-modal__enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ev-modal__enlaces a {
+    color: var(--ev-azul);
+    font-size: 0.88rem;
+}
+
+/* ---- Lightbox (botón "ver en grande") ---- */
+
+.ev-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 14, 26, 0.9);
+    padding: 40px;
+}
+
+.ev-lightbox[hidden] {
+    display: none;
+}
+
+.ev-lightbox__img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: var(--ev-radius-sm);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.ev-lightbox__cerrar,
+.ev-lightbox__flecha {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--ev-blanco);
+    border-radius: 50%;
+}
+
+.ev-lightbox__cerrar {
+    top: 18px;
+    right: 18px;
+    width: 42px;
+    height: 42px;
+}
+
+.ev-lightbox__flecha {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    font-size: 1.2rem;
+}
+
+.ev-lightbox__flecha--prev { left: 18px; }
+.ev-lightbox__flecha--next { right: 18px; }
+
+/* ---- 10. RESPONSIVE ---- */
+
+/* Flechas del selector semanal: 44px es el target táctil mínimo en mobile
+   (base). Desde lg hay espacio de sobra y el mouse no necesita ese tamaño,
+   así que se compactan (R2, sección 14: "desktop puede ser compacto pero
+   accesible"). */
+@media (min-width: 992px) {
+    .ev-selector-dias__flecha {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+    }
+
+    /* Centrado en vez de pegado al borde izquierdo (R igual que el selector
+       de días justo arriba), con espacio de sobra para no sentirse
+       apretado contra él. */
+    .ev-filtros-rapidos {
+        justify-content: center;
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+}
+
+/* Cards: 1 col móvil → 2 col tablet/desktop medio → 3 col solo
+   cuando el ancho útil permite que metadata y teaser respiren. Con la
+   sidebar de 340px, forzar 3 columnas desde 1200px comprimía cada card y
+   era la causa principal de la sensación de texto "amontonado". */
+@media (min-width: 700px) {
+    .ev-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1200px) {
+    .ev-barra-temporal,
+    .ev-layout {
+        max-width: 1420px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .ev-cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* El filtro pasa de offcanvas (< lg) a panel fijo (≥ lg), alineado con el
+   breakpoint `offcanvas-lg` de Bootstrap usado en el template. */
+/* `.ev-acciones-rapidas` (con `.ev-btn-filtros` dentro) ya se oculta en
+   desktop vía `d-lg-none` de Bootstrap en el template. */
+@media (min-width: 992px) {
+    .ev-layout {
+        /* Corrección exclusiva de desktop: la sidebar pasa de 260px a 340px.
+           Con dos columnas de pills esto deja espacio suficiente para
+           icono + texto en una única línea sin penalizar mobile. */
+        grid-template-columns: 340px minmax(0, 1fr);
+        align-items: start;
+    }
+
+    /* Regla canónica desktop:
+       [ICONO] [TEXTO] [CHECK opcional]
+       Todo el contenido visible vive en una sola fila flex. */
+    .ev-filtros__grupo--tags .ev-chip {
+        padding-inline: 12px;
+        justify-content: stretch;
+    }
+
+    .ev-filtros__grupo--tags .ev-chip__contenido {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+        line-height: 1;
+    }
+
+    .ev-filtros__grupo--tags .ev-chip__contenido > i.bi,
+    .ev-filtros__grupo--tags .ev-chip__icono {
+        flex: 0 0 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        text-align: center;
+    }
+
+    .ev-filtros__grupo--tags .ev-chip__texto {
+        display: block;
+        flex: 1 1 auto;
+        min-width: 0;
+        line-height: 1.15;
+        white-space: nowrap;
+    }
+
+    .ev-filtros__grupo--tags .ev-chip__check {
+        flex: 0 0 auto;
+        margin-left: auto;
+        line-height: 1;
+    }
+}
+
+@media (max-width: 599px) {
+    .ev-intro {
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 24px);
+    }
+}
+
+/* iOS Safari hace auto-zoom en inputs/selects con font-size < 16px. */
+@media (max-width: 991.98px) {
+    .ev-filtros__grupo select,
+    .ev-filtros-rapidos__fecha-form input[type="date"] {
+        font-size: 16px;
+    }
+}
+
+/* En mobile el CTA pasa a vivir justo debajo de la paginación (E23), así
+   que el margen inferior grande del paginador (pensado para separarlo
+   directamente del footer del sitio en desktop) ya no aplica ahí — el
+   propio `.ev-cta-comunidad--final` es quien ahora deja el espacio antes
+   del footer. Sin esta reducción, paginación→CTA quedaría con ~88px en
+   vez de los ~40px pedidos (E28). */
+@media (max-width: 991.98px) {
+    .ev-paginacion {
+        margin-bottom: 8px;
+    }
+}
+
+/* ---- 11. FOCUS VISIBLE (accesibilidad por teclado) ---- */
+.eventos-page a:focus-visible,
+.eventos-page button:focus-visible,
+.eventos-page input:focus-visible,
+.eventos-page select:focus-visible,
+.eventos-page .ev-selector-dias__dia:focus-visible,
+.ev-modal :focus-visible,
+.ev-form-modal :focus-visible {
+    outline: 3px solid var(--ev-azul);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+.eventos-page .ev-card:focus-within {
+    box-shadow: 0 0 0 3px var(--ev-azul);
+}
+
+/* ---- 12. REDUCED MOTION ---- */
+@media (prefers-reduced-motion: reduce) {
+    .eventos-page *,
+    .ev-modal *,
+    .ev-filtros-offcanvas * {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .ev-card:hover {
+        transform: none;
+    }
+
+    .ev-selector-dias__lista {
+        scroll-behavior: auto;
+    }
+}
