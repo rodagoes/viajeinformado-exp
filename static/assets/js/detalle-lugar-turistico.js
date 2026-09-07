@@ -1,8 +1,8 @@
 /**
  * detalle-lugar-turistico.js — Viaje Informado
  *
- * JS propio de la vista Detalle Lugar Turístico: scroll suave interno,
- * botón favorito y botón compartir.
+ * JS propio de la vista Detalle Lugar Turístico: scroll suave interno
+ * y botón compartir. El toggle de favoritos vive en favoritos.js.
  */
 (function () {
   'use strict';
@@ -52,16 +52,6 @@
       if (!target) return;
       e.preventDefault();
       desplazarConEasing(target);
-    });
-  });
-
-  document.querySelectorAll('[data-action="favorite"]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var active = btn.classList.toggle('is-active');
-      btn.querySelectorAll('i').forEach(function (ic) {
-        ic.className = active ? 'bi bi-heart-fill' : 'bi bi-heart';
-      });
-      btn.setAttribute('aria-label', active ? 'Quitar de favoritos' : 'Añadir a favoritos');
     });
   });
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from apps.ubicaciones.models import Distrito, Localidad
 
 class CategoriaEstablecimiento(models.Model):
@@ -164,6 +165,13 @@ class Establecimiento(models.Model):
 
     def __str__(self):
         return self.nombre
+
+    def get_absolute_url(self):
+        if self.tipo == "restaurante":
+            return reverse("establecimientos:detalle_restaurante", kwargs={"slug": self.slug})
+        if self.tipo == "alojamiento":
+            return reverse("establecimientos:detalle_alojamiento", kwargs={"slug": self.slug})
+        raise ValueError(f"Tipo de establecimiento desconocido: {self.tipo!r}")
 
 
 class SucursalEstablecimiento(models.Model):

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eliminar cuenta • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/cuenta.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="perfil-pagina">
+    <div class="container">
+        <div class="perfil-tarjeta perfil-tarjeta--angosta cuenta-zona-riesgo">
+            <h1>Eliminar cuenta</h1>
+            <p class="cuenta-texto-ayuda">Esta acción eliminará permanentemente:</p>
+            <ul class="cuenta-lista-eliminar">
+                <li>Tu perfil</li>
+                <li>Tus favoritos</li>
+                <li>Tus valoraciones y reseñas</li>
+                <li>Las conexiones de acceso asociadas a Viaje Informado</li>
+            </ul>
+            <p class="cuenta-texto-ayuda">
+                Esta acción no eliminará tu cuenta personal de Google o Facebook.
+            </p>
+
+            <form method="post" class="cuenta-form" novalidate id="form-eliminar-cuenta" data-username="{{ request.user.username }}">
+                {% csrf_token %}
+                <label for="{{ form.confirmacion.id_for_label }}" class="perfil-fila-label">
+                    Para confirmar, escribe tu nombre de usuario: <strong>{{ request.user.username }}</strong>
+                </label>
+                {{ form.confirmacion }}
+                {% if form.confirmacion.errors %}<div class="perfil-error" role="alert">{{ form.confirmacion.errors.0 }}</div>{% endif %}
+
+                <div class="perfil-fila-acciones">
+                    <button type="submit" class="vi-btn-danger" id="btn-eliminar-cuenta" disabled>Eliminar cuenta</button>
+                    <a href="{% url 'accounts:cuenta' %}" class="perfil-cancelar-btn">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/cuenta.js' %}"></script>
+{% endblock %}

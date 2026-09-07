@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static socialaccount %}
+
+{% block title %}Cuenta • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/cuenta.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="perfil-pagina">
+    <div class="container">
+        <div class="perfil-tarjeta">
+            <h1>Mi perfil</h1>
+
+            {% include "accounts/includes/tabs_cuenta.html" with activo="cuenta" %}
+
+            <section class="perfil-seccion">
+                <div class="vi-section-heading">
+                    <span class="vi-section-heading__icon" aria-hidden="true"><i class="bi bi-shield-lock"></i></span>
+                    <h2 class="vi-section-heading__title">Seguridad de la cuenta</h2>
+                </div>
+
+                <div class="perfil-fila">
+                    <div class="perfil-fila-texto">
+                        <span class="perfil-fila-label">Correo electrónico</span>
+                        <span class="perfil-fila-valor">{{ request.user.email|default:"No especificado" }}</span>
+                        <p class="perfil-fila-ayuda">
+                            {% if email_verificado %}
+                                <span class="cuenta-badge cuenta-badge--ok"><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Verificado</span>
+                            {% else %}
+                                <span class="cuenta-badge cuenta-badge--pendiente">Pendiente de verificación</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'accounts:cambiar_email' %}" class="vi-btn-secondary">Cambiar correo</a>
+                </div>
+
+                <div class="perfil-fila">
+                    <div class="perfil-fila-texto">
+                        <span class="perfil-fila-label">Contraseña</span>
+                        <span class="perfil-fila-valor">
+                            {% if metodos.password %}Contraseña configurada{% else %}Aún no has configurado una contraseña{% endif %}
+                        </span>
+                    </div>
+                    <a href="{% url 'accounts:gestionar_password' %}" class="vi-btn-secondary">
+                        {% if metodos.password %}Cambiar contraseña{% else %}Crear contraseña{% endif %}
+                    </a>
+                </div>
+            </section>
+
+            <section class="perfil-seccion">
+                <div class="vi-section-heading">
+                    <span class="vi-section-heading__icon" aria-hidden="true"><i class="bi bi-key"></i></span>
+                    <h2 class="vi-section-heading__title">Métodos de acceso</h2>
+                </div>
+
+                <div class="perfil-fila">
+                    <div class="perfil-fila-texto">
+                        <span class="perfil-fila-label"><i class="bi bi-google cuenta-provider-icono cuenta-provider-icono--google" aria-hidden="true"></i>Google</span>
+                        <span class="perfil-fila-valor">
+                            {% if metodos.google %}
+                                <span class="cuenta-badge cuenta-badge--ok">Conectado</span>
+                                {% if metodos.google.extra_data.email %}<span class="perfil-fila-ayuda">{{ metodos.google.extra_data.email }}</span>{% endif %}
+                            {% else %}
+                                <span class="cuenta-badge">No conectado</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% if metodos.google %}
+                    <form method="post" action="{% url 'accounts:desconectar_social' 'google' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="vi-btn-secondary">Desconectar</button>
+                    </form>
+                    {% elif settings_google_client_id %}
+                        {% if reauth_reciente %}
+                        <a href="{% provider_login_url 'google' process='connect' next=request.path %}" class="vi-btn-secondary">Conectar</a>
+                        {% else %}
+                        <a href="{% url 'accounts:reauth' %}" class="vi-btn-secondary">Conectar</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="perfil-fila">
+                    <div class="perfil-fila-texto">
+                        <span class="perfil-fila-label"><i class="bi bi-facebook cuenta-provider-icono cuenta-provider-icono--facebook" aria-hidden="true"></i>Facebook</span>
+                        <span class="perfil-fila-valor">
+                            {% if metodos.facebook %}
+                                <span class="cuenta-badge cuenta-badge--ok">Conectado</span>
+                                {% if metodos.facebook.extra_data.email %}<span class="perfil-fila-ayuda">{{ metodos.facebook.extra_data.email }}</span>{% endif %}
+                            {% else %}
+                                <span class="cuenta-badge">No conectado</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% if metodos.facebook %}
+                    <form method="post" action="{% url 'accounts:desconectar_social' 'facebook' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="vi-btn-secondary">Desconectar</button>
+                    </form>
+                    {% elif settings_facebook_client_id %}
+                        {% if reauth_reciente %}
+                        <a href="{% provider_login_url 'facebook' process='connect' next=request.path %}" class="vi-btn-secondary">Conectar</a>
+                        {% else %}
+                        <a href="{% url 'accounts:reauth' %}" class="vi-btn-secondary">Conectar</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="perfil-seccion cuenta-zona-riesgo">
+                <h2 class="vi-section-heading__title">Zona de riesgo</h2>
+                <div class="perfil-fila">
+                    <div class="perfil-fila-texto">
+                        <span class="perfil-fila-label">Eliminar cuenta</span>
+                        <span class="perfil-fila-valor">Elimina permanentemente tu cuenta y tus datos asociados.</span>
+                    </div>
+                    <a href="{% url 'accounts:eliminar_cuenta' %}" class="vi-btn-danger">Eliminar cuenta</a>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}

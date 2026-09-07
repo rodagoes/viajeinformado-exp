@@ -15,6 +15,9 @@
 <link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
 <!-- Desplegable "Cómo llegar" dentro del card de ubicación -->
 <link rel="stylesheet" href="{% static 'assets/css/componentes/como-llegar-desplegable.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/resenas.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -113,15 +116,7 @@
         <div class="dl-sobre-icons animar-delay-2" role="group" aria-label="Acciones del lugar" data-animar="animate__fadeInUp">
 
           <div class="dl-icon-wrap">
-            <button
-              class="dl-icon-circle s1"
-              type="button"
-              data-action="favorite"
-              aria-label="Añadir a favoritos"
-              title="Favorito"
-            >
-              <i class="bi bi-heart" aria-hidden="true"></i>
-            </button>
+            {% include "interacciones/includes/corazon.html" with tipo="lugar" pk=lugar.pk es_favorito=es_favorito nombre=lugar.nombre boton_class="dl-icon-circle s1" %}
             <span class="dl-icon-label">Favorito</span>
           </div>
 
@@ -551,81 +546,11 @@
   </section>
 
   {# ================================================================ #}
-  {# 6. VALORACIONES PLACEHOLDER                                     #}
+  {# 6. VALORACIONES Y RESEÑAS                                        #}
   {# ================================================================ #}
-  <section class="dl-section-val" id="dl-valoraciones" aria-labelledby="dl-val-title">
+  <section class="dl-section-resenas">
     <div class="container-xl">
-      <div class="dl-val-card" data-animar="animate__fadeInUp">
-        <div class="dl-val-header">
-          <div>
-            <span>Vista previa</span>
-            <h2 id="dl-val-title">Valoraciones y reseñas</h2>
-          </div>
-
-          <div class="dl-val-badge">Próximamente</div>
-        </div>
-
-        <div class="dl-val-grid">
-          <article class="dl-rating-preview-card">
-            <div class="dl-rating-icon" aria-hidden="true">
-              <i class="bi bi-star"></i>
-            </div>
-
-            <div>
-              <small>Estado actual</small>
-              <h3>Sin valoraciones activas</h3>
-              <p>
-                Esta sección está preparada visualmente para mostrar opiniones de turistas cuando la funcionalidad sea activada en una próxima fase.
-              </p>
-            </div>
-          </article>
-
-          <article class="dl-rating-bars" aria-label="Distribución visual pendiente de valoraciones">
-            <div class="dl-rating-bar-row">
-              <span>5 estrellas</span>
-              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
-              <small>Pendiente</small>
-            </div>
-            <div class="dl-rating-bar-row">
-              <span>4 estrellas</span>
-              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
-              <small>Pendiente</small>
-            </div>
-            <div class="dl-rating-bar-row">
-              <span>3 estrellas</span>
-              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
-              <small>Pendiente</small>
-            </div>
-            <div class="dl-rating-bar-row">
-              <span>2 estrellas</span>
-              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
-              <small>Pendiente</small>
-            </div>
-            <div class="dl-rating-bar-row">
-              <span>1 estrella</span>
-              <div class="dl-rating-bar-track"><div class="dl-rating-bar-fill"></div></div>
-              <small>Pendiente</small>
-            </div>
-          </article>
-        </div>
-
-        <div class="dl-comments-preview">
-          <div class="dl-comments-empty">
-            <i class="bi bi-chat-square-text" aria-hidden="true"></i>
-            <div>
-              <h3>Los comentarios estarán disponibles próximamente</h3>
-              <p>
-                Más adelante, los visitantes podrán consultar experiencias, dejar valoraciones y compartir recomendaciones sobre este lugar turístico.
-              </p>
-            </div>
-          </div>
-
-          <button type="button" class="dl-comments-disabled" disabled>
-            <i class="bi bi-lock" aria-hidden="true"></i>
-            Función no disponible todavía
-          </button>
-        </div>
-      </div>
+      {% include "interacciones/includes/resenas_seccion.html" with tipo="lugar" pk=lugar.pk recurso=lugar %}
     </div>
   </section>
 
@@ -687,6 +612,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'assets/js/favoritos.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'assets/js/resenas.js' %}"></script>
 <script src="{% static 'assets/js/detalle-lugar-turistico.js' %}"></script>
 <script src="{% static 'assets/js/carousel-3d.js' %}"></script>
 <!-- Animaciones de entrada al hacer scroll (IntersectionObserver + Animate.css) -->

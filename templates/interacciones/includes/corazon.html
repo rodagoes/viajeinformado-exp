@@ -1,0 +1,21 @@
+{% if request.user.is_authenticated %}
+<form class="vi-favorito-form" method="post"
+      data-action-url="{% url 'interacciones:toggle_favorito' tipo=tipo pk=pk %}">
+    {% csrf_token %}
+    <button type="submit" class="{{ boton_class }}{% if es_favorito %} is-active{% endif %}"
+            aria-pressed="{{ es_favorito|yesno:'true,false' }}"
+            data-nombre-recurso="{{ nombre }}"
+            aria-label="{% if es_favorito %}Quitar {{ nombre }} de favoritos{% else %}Agregar {{ nombre }} a favoritos{% endif %}">
+        <i class="bi {% if es_favorito %}bi-heart-fill{% else %}bi-heart{% endif %}" aria-hidden="true"></i>
+        {% if mostrar_texto %}<span>{% if es_favorito %}Guardado{% else %}Guardar{% endif %}</span>{% endif %}
+    </button>
+</form>
+{% else %}
+<button type="button" class="{{ boton_class }} vi-favorito-anon" aria-pressed="false"
+        aria-label="Inicia sesión para agregar {{ nombre }} a favoritos"
+        data-login-url="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"
+        data-registro-url="{% url 'accounts:registro' %}?next={{ request.get_full_path|urlencode }}">
+    <i class="bi bi-heart" aria-hidden="true"></i>
+    {% if mostrar_texto %}<span>Guardar</span>{% endif %}
+</button>
+{% endif %}

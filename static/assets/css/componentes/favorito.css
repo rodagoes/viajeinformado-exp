@@ -1,0 +1,128 @@
+/* componentes/favorito.css — Viaje Informado
+ * Corazón de favoritos reutilizable (cards de listados/Favoritos) y el
+ * popover de "inicia sesión" para usuarios anónimos. Compartido entre
+ * establecimientos, turismo e interacciones.
+ */
+
+/* El <form> que envuelve el botón autenticado no debe alterar el layout del
+   contenedor (grid/flex) donde vivía el botón original. */
+.vi-favorito-form {
+    display: contents;
+}
+
+.vi-heart-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #61708C;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(24, 32, 51, 0.16);
+    transition: transform 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.vi-heart-btn:hover {
+    transform: scale(1.08);
+    background-color: #ffffff;
+}
+
+.vi-heart-btn.is-active {
+    color: #e11d48;
+}
+
+.vi-heart-btn:focus-visible,
+.detalle-accion-icono:focus-visible,
+.dl-icon-circle:focus-visible,
+.detalle-mobile-actions button:focus-visible,
+.vi-favorito-anon:focus-visible {
+    outline: 2px solid #007FFF;
+    outline-offset: 3px;
+}
+
+/* Estado activo genérico para las barras de detalle que aún no lo definían. */
+.detalle-accion-icono.is-active,
+.detalle-mobile-actions button.is-active {
+    color: #e11d48;
+    border-color: rgba(225, 29, 72, 0.42);
+}
+
+.detalle-mobile-actions button.is-active i {
+    color: #e11d48;
+}
+
+/* Botón "Guardar" para usuarios anónimos: mismo aspecto, cursor claro. */
+.vi-favorito-anon {
+    cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vi-heart-btn {
+        transition: none;
+    }
+    .vi-heart-btn:hover {
+        transform: none;
+    }
+}
+
+/* --- Popover "inicia sesión" para anónimos --------------------------------- */
+
+.vi-favorito-anon-popover {
+    position: fixed;
+    z-index: 1060;
+    width: 240px;
+    max-width: calc(100vw - 2rem);
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 12px 32px rgba(24, 32, 51, 0.22);
+    border: 1px solid #DFE7F3;
+}
+
+.vi-favorito-anon-popover p {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    color: #182033;
+    line-height: 1.4;
+}
+
+.vi-favorito-anon-popover__acciones {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.vi-favorito-anon-popover__acciones a {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid #007FFF;
+    color: #007FFF;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.vi-favorito-anon-popover__acciones a:first-child {
+    background-color: #007FFF;
+    color: #ffffff;
+}
+
+.vi-favorito-anon-popover__acciones a:hover {
+    background-color: #002D89;
+    border-color: #002D89;
+    color: #ffffff;
+}
+
+.vi-favorito-anon-popover__acciones a:focus-visible {
+    outline: 2px solid #002D89;
+    outline-offset: 2px;
+}

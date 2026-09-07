@@ -5,10 +5,12 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/establecimientos.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
 {% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'assets/js/switch-establecimientos.js' %}" defer></script>
+<script src="{% static 'assets/js/favoritos.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -142,6 +144,7 @@
                                         <i class="bi bi-image"></i>
                                     </div>
                                 {% endif %}
+                                {% include "interacciones/includes/corazon.html" with tipo="establecimiento" pk=est.pk es_favorito=est.es_favorito nombre=est.nombre boton_class="vi-heart-btn" %}
                             </div>
 
                             <div class="est-contenido-grupo">

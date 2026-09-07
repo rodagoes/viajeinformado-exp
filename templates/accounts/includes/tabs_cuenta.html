@@ -1,0 +1,5 @@
+{% comment %} Pestañas compartidas entre Mi perfil y Cuenta. Contexto: activo ("perfil"|"cuenta") {% endcomment %}
+<nav class="perfil-tabs" aria-label="Secciones de Mi perfil">
+    <a href="{% url 'accounts:perfil' %}" class="perfil-tab{% if activo == 'perfil' %} is-active{% endif %}"{% if activo == 'perfil' %} aria-current="page"{% endif %}>Ajustes de cuenta</a>
+    <a href="{% url 'accounts:cuenta' %}" class="perfil-tab{% if activo == 'cuenta' %} is-active{% endif %}"{% if activo == 'cuenta' %} aria-current="page"{% endif %}>Cuenta</a>
+</nav>

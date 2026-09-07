@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mi perfil • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="perfil-pagina">
+    <div class="container">
+        <div class="perfil-tarjeta">
+            <h1>Mi perfil</h1>
+
+            {% include "accounts/includes/tabs_cuenta.html" with activo="perfil" %}
+
+            <section class="perfil-seccion">
+                <div class="vi-section-heading">
+                    <span class="vi-section-heading__icon" aria-hidden="true"><i class="bi bi-person"></i></span>
+                    <h2 class="vi-section-heading__title">Información personal</h2>
+                </div>
+
+                {% include "accounts/includes/fila_perfil.html" with campo="nombres" label="Nombres" valor_actual=request.user.first_name campo_form=forms_por_campo.nombres.first_name campo_en_edicion=campo_en_edicion %}
+
+                {% include "accounts/includes/fila_perfil.html" with campo="apellidos" label="Apellidos" valor_actual=request.user.last_name campo_form=forms_por_campo.apellidos.last_name campo_en_edicion=campo_en_edicion %}
+            </section>
+
+            <section class="perfil-seccion">
+                <div class="vi-section-heading">
+                    <span class="vi-section-heading__icon" aria-hidden="true"><i class="bi bi-person-vcard"></i></span>
+                    <h2 class="vi-section-heading__title">Información de cuenta</h2>
+                </div>
+
+                {% include "accounts/includes/fila_perfil.html" with campo="username" label="Nombre de usuario" valor_actual=request.user.username campo_form=forms_por_campo.username.username campo_en_edicion=campo_en_edicion ayuda="Este nombre podrá mostrarse públicamente en tus reseñas." %}
+
+                <div class="perfil-fila perfil-fila--solo-lectura">
+                    <div class="perfil-fila-texto">
+                        <span class="perfil-fila-label">Registrado desde</span>
+                        <span class="perfil-fila-valor">{{ request.user.date_joined|date }}</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/perfil.js' %}"></script>
+{% endblock %}

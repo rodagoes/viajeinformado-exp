@@ -116,6 +116,109 @@ class LoginForm(forms.Form):
     )
 
 
+NOMBRE_APELLIDO_CARACTERES_EXTRA = " '’-"
+
+
+def limpiar_nombre_persona(valor, etiqueta):
+    """Exige al menos una letra y que empiece/termine en letra (Unicode) —
+    rechaza valores formados solo por guiones/apóstrofes o que empiecen/
+    terminen con ellos, pero permite 'O'Connor', 'Pérez-Ríos', 'De la Cruz'."""
+    texto = re.sub(r'\s+', ' ', (valor or '').strip())
+    valido = (
+        bool(texto)
+        and all(c.isalpha() or c in NOMBRE_APELLIDO_CARACTERES_EXTRA for c in texto)
+        and texto[0].isalpha()
+        and texto[-1].isalpha()
+    )
+    if not valido:
+        raise forms.ValidationError(
+            f'El {etiqueta} debe contener solo letras, espacios, guiones o apóstrofes, '
+            'y empezar y terminar con una letra.'
+        )
+    return texto
+
+
+class NombreForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name']
+        widgets = {'first_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'given-name'})}
+
+    def clean_first_name(self):
+        return limpiar_nombre_persona(self.cleaned_data['first_name'], 'nombre')
+
+
+class ApellidoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['last_name']
+        widgets = {'last_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'family-name'})}
+
+    def clean_last_name(self):
+        return limpiar_nombre_persona(self.cleaned_data['last_name'], 'apellido')
+
+
+class UsernameForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']
+        widgets = {'username': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'username'})}
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].strip()
+        if not USERNAME_RE.fullmatch(username):
+            raise forms.ValidationError(
+                'El nombre de usuario solo puede contener letras, números, punto, guion o guion bajo. '
+                'No puede empezar ni terminar con punto, guion o guion bajo.'
+            )
+        if User.objects.filter(username__iexact=username).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError('Este nombre de usuario ya está en uso. Elige otro.')
+        return username
+
+
+class CambiarEmailForm(forms.Form):
+    nuevo_email = forms.EmailField(
+        label='Nuevo correo electrónico',
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'email', 'inputmode': 'email'}),
+    )
+
+    def __init__(self, *args, usuario_actual, **kwargs):
+        self.usuario_actual = usuario_actual
+        super().__init__(*args, **kwargs)
+
+    def clean_nuevo_email(self):
+        email = self.cleaned_data['nuevo_email'].strip().lower()
+        if email == (self.usuario_actual.email or '').lower():
+            raise forms.ValidationError('Este ya es tu correo electrónico actual.')
+        if User.objects.filter(email__iexact=email).exclude(pk=self.usuario_actual.pk).exists():
+            raise forms.ValidationError('Ya existe una cuenta registrada con este correo.')
+        return email
+
+
+class ReauthPasswordForm(forms.Form):
+    password = forms.CharField(
+        label='Contraseña actual',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'current-password'}),
+    )
+
+
+class EliminarCuentaForm(forms.Form):
+    confirmacion = forms.CharField(
+        label='Escribe tu nombre de usuario para confirmar',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
+    )
+
+    def __init__(self, *args, usuario, **kwargs):
+        self.usuario = usuario
+        super().__init__(*args, **kwargs)
+
+    def clean_confirmacion(self):
+        valor = self.cleaned_data['confirmacion'].strip()
+        if valor != self.usuario.username:
+            raise forms.ValidationError('El nombre de usuario no coincide.')
+        return valor
+
+
 class OTPForm(forms.Form):
     codigo = forms.CharField(
         label='Código de verificación', min_length=4, max_length=4,

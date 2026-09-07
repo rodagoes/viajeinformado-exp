@@ -1,0 +1,34 @@
+{% comment %}
+Fila de perfil con edición progresiva. Contexto esperado:
+  campo         -> clave en CAMPOS_PERFIL ("nombres"/"apellidos"/"username")
+  label         -> etiqueta visible ("Nombres", "Apellidos", "Nombre de usuario")
+  valor_actual  -> valor persistido en BD (para modo lectura y data-valor-original)
+  campo_form    -> BoundField del form correspondiente (forms_por_campo.<campo>.<field>)
+  campo_en_edicion -> clave del bloque que debe abrirse (o None)
+  ayuda         -> texto de ayuda opcional bajo el valor
+{% endcomment %}
+<div class="perfil-fila">
+    <div class="perfil-fila-lectura"{% if campo_en_edicion == campo %} hidden{% endif %}>
+        <div class="perfil-fila-texto">
+            <span class="perfil-fila-label">{{ label }}</span>
+            <span class="perfil-fila-valor">{{ valor_actual|default:"No especificado" }}</span>
+            {% if ayuda %}<p class="perfil-fila-ayuda">{{ ayuda }}</p>{% endif %}
+        </div>
+        <button type="button" class="vi-btn-ghost-icon" aria-label="Editar {{ label|lower }}" data-abrir="{{ campo }}">
+            <i class="bi bi-pencil" aria-hidden="true"></i>
+        </button>
+    </div>
+    <form method="post" class="perfil-fila-edicion" data-campo="{{ campo }}"
+          data-valor-original="{{ valor_actual }}"
+          {% if campo_en_edicion != campo %} hidden{% endif %}>
+        {% csrf_token %}
+        <input type="hidden" name="accion" value="{{ campo }}">
+        <label for="{{ campo_form.id_for_label }}" class="perfil-fila-label">{{ label }}</label>
+        {{ campo_form }}
+        {% if campo_form.errors %}<div class="perfil-error" role="alert">{{ campo_form.errors.0 }}</div>{% endif %}
+        <div class="perfil-fila-acciones">
+            <button type="submit" class="btn perfil-guardar-btn">Guardar</button>
+            <button type="button" class="perfil-cancelar-btn" data-cancelar="{{ campo }}">Cancelar</button>
+        </div>
+    </form>
+</div>

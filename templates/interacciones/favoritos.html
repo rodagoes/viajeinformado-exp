@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tus favoritos • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/favoritos.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="favoritos-pagina">
+
+    <section class="favoritos-encabezado">
+        <div class="container">
+            <h1>Tus favoritos</h1>
+            <p>Guarda lugares, restaurantes y alojamientos que quieras tener a mano durante tu viaje.</p>
+        </div>
+    </section>
+
+    <section class="seccion-fondo-principal">
+        <div class="container">
+
+            <nav class="favoritos-filtros" aria-label="Filtrar favoritos por tipo">
+                <a href="?tipo=todos" class="favoritos-filtro-chip{% if tipo == 'todos' %} is-active{% endif %}"{% if tipo == 'todos' %} aria-current="page"{% endif %}>Todos</a>
+                <a href="?tipo=lugares" class="favoritos-filtro-chip{% if tipo == 'lugares' %} is-active{% endif %}"{% if tipo == 'lugares' %} aria-current="page"{% endif %}>Lugares turísticos</a>
+                <a href="?tipo=restaurantes" class="favoritos-filtro-chip{% if tipo == 'restaurantes' %} is-active{% endif %}"{% if tipo == 'restaurantes' %} aria-current="page"{% endif %}>Restaurantes</a>
+                <a href="?tipo=alojamientos" class="favoritos-filtro-chip{% if tipo == 'alojamientos' %} is-active{% endif %}"{% if tipo == 'alojamientos' %} aria-current="page"{% endif %}>Alojamientos</a>
+            </nav>
+
+            {% if favoritos %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 favoritos-grilla" data-favoritos-page="1">
+                {% for favorito in favoritos %}
+                {% with recurso=favorito.establecimiento|default:favorito.lugar_turistico %}
+                <div class="col">
+                    <article class="favorito-tarjeta">
+                        <div class="favorito-imagen-contenedor">
+                            {% if recurso.imagen_principal %}
+                            <img src="{{ recurso.imagen_principal.url }}" alt="{{ recurso.texto_alt_imagen|default:recurso.nombre }}" loading="lazy">
+                            {% else %}
+                            <div class="favorito-imagen-vacia"><i class="bi bi-image"></i></div>
+                            {% endif %}
+                            {% if favorito.establecimiento %}
+                            {% include "interacciones/includes/corazon.html" with tipo="establecimiento" pk=recurso.pk es_favorito=True nombre=recurso.nombre boton_class="vi-heart-btn" %}
+                            {% else %}
+                            {% include "interacciones/includes/corazon.html" with tipo="lugar" pk=recurso.pk es_favorito=True nombre=recurso.nombre boton_class="vi-heart-btn" %}
+                            {% endif %}
+                        </div>
+                        <div class="favorito-cuerpo">
+                            <div class="favorito-tipo">
+                                {% if favorito.establecimiento %}
+                                    {% if favorito.establecimiento.tipo == "restaurante" %}Restaurante{% else %}Alojamiento{% endif %}
+                                {% else %}
+                                    Lugar turístico
+                                {% endif %}
+                            </div>
+                            <h3 class="favorito-titulo">{{ recurso.nombre }}</h3>
+                            <div class="favorito-ubicacion">
+                                <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                                <span>
+                                    {% if favorito.establecimiento %}
+                                        {% with sucursal=favorito.establecimiento.sucursales.all.0 %}
+                                            {% if sucursal and sucursal.distrito %}{{ sucursal.distrito }}{% if sucursal.localidad %}, {{ sucursal.localidad }}{% endif %}{% else %}Huánuco{% endif %}
+                                        {% endwith %}
+                                    {% else %}
+                                        {{ favorito.lugar_turistico.distrito }}{% if favorito.lugar_turistico.localidad %}, {{ favorito.lugar_turistico.localidad }}{% endif %}
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="favorito-rating">
+                                {% if favorito.rating %}
+                                <span class="favorito-rating-estrella" aria-hidden="true">★</span>
+                                {{ favorito.rating.0|floatformat:1 }} · {{ favorito.rating.1 }} valoraci{{ favorito.rating.1|pluralize:"ón,ones" }}
+                                {% else %}
+                                <span class="favorito-sin-rating">Aún sin valoraciones</span>
+                                {% endif %}
+                            </div>
+                            <a href="{{ recurso.get_absolute_url }}" class="favorito-ver-mas">Ver información &rarr;</a>
+                        </div>
+                    </article>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            {% elif not tiene_favoritos_globales %}
+            <div class="vi-empty-state">
+                <div class="vi-empty-state__icon" aria-hidden="true"><i class="bi bi-heart"></i></div>
+                <h2 class="vi-empty-state__title">Aún no tienes favoritos</h2>
+                <p class="vi-empty-state__text">Guarda los lugares, restaurantes y alojamientos que quieras visitar durante tu viaje.</p>
+                <div class="vi-empty-state__actions">
+                    <a href="{% url 'turismo:listado_lugares' %}" class="vi-btn-primary">Explorar Huánuco</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="vi-empty-state">
+                <div class="vi-empty-state__icon" aria-hidden="true"><i class="bi bi-heart"></i></div>
+                <h2 class="vi-empty-state__title">
+                    {% if tipo == 'lugares' %}Aún no tienes lugares turísticos guardados.
+                    {% elif tipo == 'restaurantes' %}Aún no tienes restaurantes guardados.
+                    {% elif tipo == 'alojamientos' %}Aún no tienes alojamientos guardados.
+                    {% endif %}
+                </h2>
+                <p class="vi-empty-state__text">Prueba con otro filtro o revisa todos tus favoritos guardados.</p>
+                <div class="vi-empty-state__actions">
+                    <a href="?tipo=todos" class="vi-btn-secondary">Ver todos tus favoritos</a>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/favoritos.js' %}"></script>
+{% endblock %}

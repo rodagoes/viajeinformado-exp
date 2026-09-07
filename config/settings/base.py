@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.humanize',
 
     # Autenticación social
     'allauth',
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
     'apps.establecimientos',
     'apps.gastronomia',
     'apps.eventos',
+    'apps.interacciones',
     'apps.movilidad',
     'apps.clima',
     'apps.emergencias',

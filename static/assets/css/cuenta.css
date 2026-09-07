@@ -1,0 +1,146 @@
+/* cuenta.css — Viaje Informado
+ * Página /mi-cuenta/cuenta/ y sub-páginas (email, password, reauth,
+ * eliminar). Reutiliza .perfil-tarjeta/.perfil-fila/.perfil-tabs de
+ * perfil.css; aquí solo lo que no existe todavía.
+ */
+
+.perfil-tarjeta--angosta {
+    max-width: 520px;
+}
+
+.cuenta-texto-ayuda {
+    color: #61708C;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+/* --- Badges de estado ---------------------------------------------------- */
+
+.cuenta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #EEF3FB;
+    color: #61708C;
+}
+
+.cuenta-badge--ok {
+    background: rgba(22, 163, 74, 0.12);
+    color: #15803d;
+}
+
+.cuenta-badge--pendiente {
+    background: rgba(217, 119, 6, 0.12);
+    color: #b45309;
+}
+
+/* --- Botones: .vi-btn-secondary/.vi-btn-danger (ui-comun.css) --------------
+   .cuenta-btn-secundario/.cuenta-btn-peligro quedaron reemplazados por los
+   botones compartidos; sin reglas propias aquí. */
+
+/* --- Iconos de proveedor social ------------------------------------------- */
+
+.perfil-fila-label:has(.cuenta-provider-icono) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cuenta-provider-icono {
+    font-size: 1.1rem;
+}
+
+.cuenta-provider-icono--google {
+    color: #EA4335;
+}
+
+.cuenta-provider-icono--facebook {
+    color: #1877F2;
+}
+
+/* --- Zona de riesgo: borde sobrio, el rojo solo vive en el botón --------- */
+
+.cuenta-zona-riesgo {
+    border: 1px solid #f3d0d0;
+    border-radius: 12px;
+    padding: 16px 20px;
+}
+
+.cuenta-lista-eliminar {
+    margin: 0 0 16px;
+    padding-left: 20px;
+    color: #182033;
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+/* --- Formularios de una columna (email, password, reauth, eliminar) ------ */
+
+.cuenta-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cuenta-form input[type="text"],
+.cuenta-form input[type="password"],
+.cuenta-form input[type="email"] {
+    width: 100%;
+    font-size: 16px; /* evita zoom automático de Safari/iOS en focus */
+    padding: 10px 14px;
+    border: 1px solid #DFE7F3;
+    border-radius: 8px;
+    color: #182033;
+    margin-bottom: 4px;
+}
+
+.cuenta-form input:focus {
+    border-color: #007FFF;
+    outline: none;
+}
+
+.cuenta-form input:focus-visible {
+    outline: 2px solid #007FFF;
+    outline-offset: 2px;
+}
+
+/* --- Input de código OTP --------------------------------------------------- */
+
+.cuenta-otp-input {
+    display: block;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto 8px;
+    font-size: 2rem;
+    letter-spacing: 0.6em;
+    text-align: center;
+    padding: 12px 0 12px 0.6em;
+    border: 1px solid #DFE7F3;
+    border-radius: 10px;
+    color: #002D89;
+}
+
+.cuenta-otp-input:focus {
+    border-color: #007FFF;
+    outline: none;
+}
+
+.cuenta-reenviar {
+    text-align: center;
+    margin-top: 12px;
+}
+
+@media (max-width: 576px) {
+    .perfil-tarjeta--angosta {
+        max-width: 100%;
+    }
+    .cuenta-otp-input {
+        font-size: 1.6rem;
+        letter-spacing: 0.5em;
+    }
+}

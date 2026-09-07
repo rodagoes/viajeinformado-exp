@@ -1,10 +1,16 @@
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.db import IntegrityError, transaction
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
+from django.urls import reverse
 
 from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
+from apps.interacciones.forms import ResenaForm
+from apps.interacciones.models import Favorito, Resena
+from apps.interacciones.services import construir_contexto_resenas
 from apps.monedas.models import TipoCambio
 from .models import (
     CategoriaLugarTuristico,
@@ -77,6 +83,19 @@ def listado_lugares(request):
     paginator = Paginator(qs, 9)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
+    # Estado del corazón: una sola query extra por página (no una por card).
+    if request.user.is_authenticated:
+        favoritos_ids = set(
+            Favorito.objects.filter(
+                usuario=request.user,
+                lugar_turistico_id__in=[lugar.pk for lugar in page_obj],
+            ).values_list("lugar_turistico_id", flat=True)
+        )
+    else:
+        favoritos_ids = set()
+    for lugar in page_obj:
+        lugar.es_favorito = lugar.pk in favoritos_ids
 
     # Opciones preparadas para templates
     categorias_opciones = [
@@ -182,6 +201,29 @@ def detalle_lugar(request, slug):
         slug=slug
     )
 
+    form_resena_invalido = None
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('accounts:login')}?next={request.path}%23resenas")
+        mi_resena = Resena.objects.filter(usuario=request.user, lugar_turistico=lugar).first()
+        form = ResenaForm(request.POST, instance=mi_resena)
+        if form.is_valid():
+            resena = form.save(commit=False)
+            resena.usuario = request.user
+            resena.lugar_turistico = lugar
+            try:
+                with transaction.atomic():
+                    resena.save()
+            except IntegrityError:
+                messages.error(request, "Ya existe una reseña tuya para este lugar turístico.")
+                return redirect(f"{lugar.get_absolute_url()}#resenas")
+            messages.success(
+                request,
+                "Tu reseña se ha actualizado correctamente." if mi_resena else "Tu reseña se ha publicado correctamente.",
+            )
+            return redirect(f"{lugar.get_absolute_url()}#resenas")
+        form_resena_invalido = form
+
     # Multimedia para galería y visor.
     media_items = []
     urls_vistas = set()
@@ -284,6 +326,10 @@ def detalle_lugar(request, slug):
 
     recomendaciones_items = list(lugar.recomendaciones_items.all())
 
+    es_favorito = False
+    if request.user.is_authenticated:
+        es_favorito = Favorito.objects.filter(usuario=request.user, lugar_turistico=lugar).exists()
+
     # Conversión referencial PEN → USD para entrada pagada.
     tipo_cambio_vigente = TipoCambio.vigente()
     precio_desde_usd = _convertir_pen_a_usd(lugar.precio_desde, tipo_cambio_vigente)
@@ -297,6 +343,7 @@ def detalle_lugar(request, slug):
 
     context = {
         "lugar": lugar,
+        "es_favorito": es_favorito,
         "media_items": media_items,
         "media_count": len(media_items),
         "historia_imagen": historia_imagen,
@@ -324,5 +371,12 @@ def detalle_lugar(request, slug):
         "precio_hasta_usd_txt": _format_decimal_dot(precio_hasta_usd, ".2f"),
         "entrada_usd_disponible": entrada_usd_disponible,
     }
+
+    context.update(construir_contexto_resenas(
+        request, "lugar", lugar,
+        form_resena=form_resena_invalido,
+        page_number=request.GET.get("resenas_page"),
+        orden=request.GET.get("orden"),
+    ))
 
     return render(request, "turismo/detalle-lugar-turistico.html", context)

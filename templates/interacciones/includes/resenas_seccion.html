@@ -1,0 +1,207 @@
+{% load humanize %}
+<section class="vi-resenas{% if es_card %} detalle-bloque{% endif %}" id="resenas">
+    <div class="vi-resenas-encabezado">
+        <span class="vi-resenas-encabezado__icono" aria-hidden="true"><i class="bi bi-star-fill"></i></span>
+        <div class="vi-resenas-encabezado__texto">
+            <h2 class="vi-resenas-encabezado__titulo">Valoraciones y comentarios</h2>
+            <span class="vi-resenas-encabezado__linea" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <div class="vi-resenas-resumen">
+        <div class="vi-resenas-promedio">
+            {% if resumen_resenas.total %}
+            <span class="vi-resenas-promedio-numero">{{ resumen_resenas.promedio|floatformat:1 }}</span>
+            {% with promedio_redondeado=resumen_resenas.promedio|floatformat:"0"|add:"0" %}
+            {% include "interacciones/includes/estrellas_estaticas.html" with valor=promedio_redondeado %}
+            {% endwith %}
+            <span class="vi-resenas-promedio-total">{{ resumen_resenas.total }} valoraci{{ resumen_resenas.total|pluralize:"ón,ones" }}</span>
+            {% else %}
+            {% include "interacciones/includes/estrellas_estaticas.html" with valor=0 %}
+            <span class="vi-resenas-promedio-vacio">Aún no ha recibido valoraciones</span>
+            {% endif %}
+        </div>
+        <div class="vi-resenas-distribucion">
+            {% for fila in resumen_resenas.distribucion %}
+            <div class="vi-resenas-dist-row">
+                <span class="vi-resenas-dist-label">{{ fila.estrella }}<i class="bi bi-star-fill" aria-hidden="true"></i></span>
+                <div class="vi-resenas-dist-track">
+                    <div class="vi-resenas-dist-fill" data-porcentaje="{{ fila.porcentaje }}"></div>
+                </div>
+                <span class="vi-resenas-dist-porcentaje">{{ fila.porcentaje }}%</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="vi-resena-compose">
+        <i class="bi bi-quote vi-resena-compose__comilla" aria-hidden="true"></i>
+        <div class="vi-resena-compose__header">
+            <span class="vi-resena-compose__icono" aria-hidden="true"><i class="bi bi-pencil-fill"></i></span>
+            <div>
+                <h3 class="vi-resena-compose__titulo">¿Visitaste este lugar? Comparte tu experiencia</h3>
+                <p class="vi-resena-compose__ayuda">Tu opinión ayuda a otros viajeros a descubrir lo mejor de Huánuco.</p>
+            </div>
+        </div>
+
+        {% if mi_resena and mi_resena.estado == mi_resena.ESTADO_OCULTO %}
+        <p class="vi-resena-aviso">Tu reseña no está visible públicamente.</p>
+        {% endif %}
+
+        <form method="post" id="resena-form" class="vi-resena-form"
+              data-autenticado="{{ request.user.is_authenticated|yesno:'true,false' }}"
+              data-max-caracteres="{{ resena_form.comentario.field.widget.attrs.maxlength }}"
+              data-login-url="{% url 'accounts:login' %}?next={{ request.path|urlencode }}%23resenas">
+            {% csrf_token %}
+            <fieldset class="vi-rating-fieldset" {% if resena_form.valoracion.errors %}aria-describedby="{{ resena_id_prefijo }}-rating-error"{% endif %}>
+                <legend class="visually-hidden">Tu valoración</legend>
+                <div class="vi-rating">
+                    {% for valor in "54321" %}
+                    <input id="{{ resena_id_prefijo }}-rating-{{ valor }}" type="radio" name="valoracion" value="{{ valor }}" aria-label="{{ valor }} estrella{{ valor|pluralize }}" {% if resena_form.valoracion.value|stringformat:"s" == valor %}checked{% endif %}>
+                    <label for="{{ resena_id_prefijo }}-rating-{{ valor }}" title="{{ valor }} estrella{{ valor|pluralize }}">
+                        <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"></path></svg>
+                    </label>
+                    {% endfor %}
+                </div>
+                <button type="button" class="vi-rating-quitar" data-rating-quitar {% if not resena_form.valoracion.value %}hidden{% endif %}>Quitar valoración</button>
+                {% if resena_form.valoracion.errors %}
+                <div id="{{ resena_id_prefijo }}-rating-error" class="vi-resena-error" role="alert">{{ resena_form.valoracion.errors.0 }}</div>
+                {% endif %}
+            </fieldset>
+
+            <div class="vi-resena-campo">
+                <label for="{{ resena_form.comentario.id_for_label }}" class="visually-hidden">Comentario (opcional)</label>
+                {{ resena_form.comentario }}
+                <span class="vi-resena-contador" data-resena-contador>{{ resena_form.comentario.value|default:""|length }}/{{ resena_form.comentario.field.widget.attrs.maxlength }}</span>
+                {% if resena_form.comentario.errors %}
+                <div class="vi-resena-error" role="alert">{{ resena_form.comentario.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="vi-resena-form-acciones">
+                <button type="submit" class="vi-btn-primary vi-resena-submit">
+                    {% if mi_resena %}Guardar cambios{% else %}Publicar reseña{% endif %} <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="vi-resenas-listado-encabezado">
+        <span class="vi-resenas-listado-encabezado__icono" aria-hidden="true"><i class="bi bi-chat-square-text-fill"></i></span>
+        <div class="vi-resenas-listado-encabezado__texto">
+            <h3>Reseñas de viajeros</h3>
+        </div>
+        {% if resumen_resenas.total %}
+        <div class="dropdown vi-resenas-orden">
+            <button class="vi-resenas-orden__boton dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-sliders" aria-hidden="true"></i> {{ orden_label }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                {% for clave, datos in orden_opciones.items %}
+                <li><a class="dropdown-item {% if clave == orden_actual %}active{% endif %}" href="?orden={{ clave }}#resenas">{{ datos.0 }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <span class="vi-resenas-listado-encabezado__total">0 reseñas</span>
+        {% endif %}
+    </div>
+
+    <div class="vi-resenas-listado">
+        {% for resena in resenas_page %}
+        <article class="vi-resena-item">
+            <div class="vi-resena-item-header">
+                {% if resena.usuario.perfil.foto_perfil %}
+                <img class="vi-resena-item-avatar" src="{{ resena.usuario.perfil.foto_perfil.url }}" alt="" aria-hidden="true">
+                {% else %}
+                <span class="vi-resena-item-avatar vi-resena-item-avatar--inicial" aria-hidden="true">{{ resena.usuario.username|first|upper }}</span>
+                {% endif %}
+                <div class="vi-resena-item-autor-bloque">
+                    <strong class="vi-resena-item-autor">{{ resena.usuario.username }}</strong>
+                    <time class="vi-resena-item-fecha" datetime="{{ resena.creado|date:'c' }}">{{ resena.creado|naturaltime }}</time>
+                </div>
+                <div class="vi-resena-item-valoracion">
+                    {% include "interacciones/includes/estrellas_estaticas.html" with valor=resena.valoracion %}
+                    <span class="vi-resena-item-valoracion-numero">{{ resena.valoracion }}.0</span>
+                    <i class="bi bi-quote vi-resena-item-comilla" aria-hidden="true"></i>
+                </div>
+                {% if request.user.is_authenticated and resena.usuario_id == request.user.id %}
+                <div class="dropdown vi-resena-item-menu">
+                    <button class="vi-resena-item-menu__boton" type="button" data-bs-toggle="dropdown" aria-label="Opciones de tu reseña" aria-expanded="false">
+                        <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#resena-form"><i class="bi bi-pencil" aria-hidden="true"></i> Editar</a></li>
+                        <li><button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#{{ resena_id_prefijo }}-modal-eliminar"><i class="bi bi-trash3" aria-hidden="true"></i> Eliminar</button></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            {% if resena.comentario %}<p class="vi-resena-item-comentario">{{ resena.comentario }}</p>{% endif %}
+        </article>
+        {% empty %}
+        <div class="vi-resenas-vacio">
+            <i class="bi bi-quote" aria-hidden="true"></i>
+            <div class="vi-resenas-vacio__contenido">
+                <p class="vi-resenas-vacio__titulo">Aún no hay comentarios.</p>
+                <p class="vi-resenas-vacio__texto">Sé el primero en compartir tu experiencia.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if mi_resena %}
+    <div class="modal fade" id="{{ resena_id_prefijo }}-modal-eliminar" tabindex="-1" aria-labelledby="{{ resena_id_prefijo }}-modal-eliminar-titulo" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="{{ resena_id_prefijo }}-modal-eliminar-titulo">¿Eliminar tu reseña?</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body"><p>Esta acción no se puede deshacer.</p></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form method="post" action="{% url 'interacciones:eliminar_resena' tipo=resena_tipo pk=resena_pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Eliminar reseña</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resenas_page.paginator.num_pages > 1 %}
+    <nav aria-label="Paginación de reseñas" class="d-flex justify-content-center">
+        <ul class="pagination">
+            {% if resenas_page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?resenas_page={{ resenas_page.previous_page_number }}&orden={{ orden_actual }}#resenas" aria-label="Anterior">
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+            {% endif %}
+
+            {% for i in resenas_page.paginator.page_range %}
+            {% if resenas_page.number == i %}
+            <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?resenas_page={{ i }}&orden={{ orden_actual }}#resenas">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if resenas_page.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?resenas_page={{ resenas_page.next_page_number }}&orden={{ orden_actual }}#resenas" aria-label="Siguiente">
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</section>

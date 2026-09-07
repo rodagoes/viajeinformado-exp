@@ -60,6 +60,6 @@
 </div>
 
 <p class="vi-auth-footer-link">
-    ¿Aún no tienes cuenta? <a href="{% url 'accounts:registro' %}">Regístrate</a>
+    ¿Aún no tienes cuenta? <a href="{% url 'accounts:registro' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Regístrate</a>
 </p>
 {% endblock %}

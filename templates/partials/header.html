@@ -64,18 +64,16 @@
                 </button>
                 <div class="vi-dropdown__panel vi-dropdown__panel--right">
                     <div class="vi-dropdown__list">
-                        <a href="#" class="vi-dropdown__item vi-dropdown__item--disabled" tabindex="-1" aria-disabled="true">
+                        <a href="{% url 'interacciones:favoritos' %}" class="vi-dropdown__item">
                             <span class="vi-dropdown__icon"><i class="bi bi-heart" aria-hidden="true"></i></span>
                             <span class="vi-dropdown__text">
                                 <span class="vi-dropdown__label">Favoritos</span>
-                                <span class="vi-dropdown__desc">Próximamente</span>
                             </span>
                         </a>
-                        <a href="#" class="vi-dropdown__item vi-dropdown__item--disabled" tabindex="-1" aria-disabled="true">
+                        <a href="{% url 'accounts:perfil' %}" class="vi-dropdown__item">
                             <span class="vi-dropdown__icon"><i class="bi bi-gear" aria-hidden="true"></i></span>
                             <span class="vi-dropdown__text">
                                 <span class="vi-dropdown__label">Configuración de cuenta</span>
-                                <span class="vi-dropdown__desc">Próximamente</span>
                             </span>
                         </a>
                         <a href="{% url 'accounts:logout' %}" class="vi-dropdown__item">

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cambiar correo • Viaje Informado{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/cuenta.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="perfil-pagina">
+    <div class="container">
+        <div class="perfil-tarjeta perfil-tarjeta--angosta">
+            <h1>Cambiar correo electrónico</h1>
+            <p class="cuenta-texto-ayuda">
+                Te enviaremos un código de verificación al nuevo correo. Tu correo actual
+                (<strong>{{ request.user.email|default:"sin correo registrado" }}</strong>) se mantendrá
+                hasta que confirmes el nuevo.
+            </p>
+
+            <form method="post" class="cuenta-form" novalidate>
+                {% csrf_token %}
+                <label for="{{ form.nuevo_email.id_for_label }}" class="perfil-fila-label">Nuevo correo electrónico</label>
+                {{ form.nuevo_email }}
+                {% if form.nuevo_email.errors %}<div class="perfil-error" role="alert">{{ form.nuevo_email.errors.0 }}</div>{% endif %}
+
+                <div class="perfil-fila-acciones">
+                    <button type="submit" class="vi-btn-primary">Continuar</button>
+                    <a href="{% url 'accounts:cuenta' %}" class="perfil-cancelar-btn">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

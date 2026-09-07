@@ -1,0 +1,660 @@
+/* componentes/resenas.css — Viaje Informado
+ * Sección de reseñas/valoraciones: resumen, distribución, formulario de
+ * composición (siempre visible) y listado público. Compartida entre
+ * establecimientos y turismo.
+ */
+
+.vi-resenas {
+    padding: 32px 0;
+    border-top: 1px solid #DFE7F3;
+    font-family: 'Inter', sans-serif;
+}
+
+/* La hoja global define h1..h6 en Playfair Display; esta sección usa Inter
+   en todos sus títulos, así que se pisa explícitamente esa regla. */
+.vi-resenas h2,
+.vi-resenas h3,
+.vi-resenas h4 {
+    font-family: inherit;
+}
+
+/* --- Encabezado de sección ------------------------------------------------ */
+
+.vi-resenas-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: nowrap;
+}
+
+.vi-resenas-encabezado__icono {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #002D89;
+    color: #ffffff;
+    font-size: 1.15rem;
+}
+
+.vi-resenas-encabezado__texto {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.vi-resenas-encabezado__titulo {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: #002D89;
+    font-weight: 800;
+    font-size: clamp(1.3rem, 1.05rem + 1.1vw, 1.75rem);
+    line-height: 1.15;
+}
+
+.vi-resenas-encabezado__linea {
+    display: block;
+    width: 90px;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #002D89, #007FFF);
+}
+
+/* --- Resumen / distribución ------------------------------------------------ */
+
+.vi-resenas-resumen {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 24px;
+    padding: 28px 32px;
+    border: 1px solid #DFE7F3;
+    border-radius: 20px;
+    background: #ffffff;
+}
+
+.vi-resenas-promedio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    min-width: 160px;
+    padding-right: 32px;
+    border-right: 1px solid #DFE7F3;
+}
+
+.vi-resenas-promedio-numero {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #002D89;
+    line-height: 1;
+}
+
+.vi-resenas-promedio .vi-rating-estatica {
+    font-size: 1.3rem;
+}
+
+.vi-resenas-promedio-total {
+    color: #002D89;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.vi-resenas-promedio-vacio {
+    color: #002D89;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.vi-resenas-distribucion {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.vi-resenas-dist-row {
+    display: grid;
+    grid-template-columns: 30px 1fr 44px;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: #182033;
+    font-weight: 700;
+}
+
+.vi-resenas-dist-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.vi-resenas-dist-label i {
+    color: #ffa723;
+    font-size: 0.75rem;
+}
+
+.vi-resenas-dist-track {
+    height: 10px;
+    border-radius: 999px;
+    background: #EEF3FB;
+    overflow: hidden;
+}
+
+.vi-resenas-dist-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #002D89, #007FFF);
+    border-radius: 999px;
+}
+
+.vi-resenas-dist-porcentaje {
+    text-align: right;
+    color: #182033;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --- Tarjeta de composición ------------------------------------------------ */
+
+.vi-resena-compose {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 28px;
+    padding: 24px;
+    border: 2px dashed #B9CFF2;
+    border-radius: 16px;
+    background: #F7F9FD;
+}
+
+.vi-resena-compose__comilla {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 3rem;
+    color: #DFE7F3;
+    opacity: 0.7;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.vi-resena-compose__header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-right: 48px;
+}
+
+.vi-resena-compose__icono {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #EEF3FB;
+    color: #007FFF;
+    font-size: 1rem;
+}
+
+.vi-resena-compose__titulo {
+    margin: 0 0 2px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #182033;
+}
+
+.vi-resena-compose__ayuda {
+    margin: 0;
+    color: #61708C;
+    font-size: 0.85rem;
+}
+
+.vi-resena-aviso {
+    color: #b45309;
+    font-size: 0.85rem;
+    margin: 0 0 12px;
+}
+
+.vi-resena-campo {
+    position: relative;
+    margin-top: 24px;
+}
+
+.vi-resena-campo textarea {
+    width: 100%;
+    font-size: 16px; /* evita zoom automático de Safari/iOS en focus */
+    padding: 12px 14px;
+    border: 1px solid #DFE7F3;
+    border-radius: 10px;
+    background: #ffffff;
+    resize: vertical;
+}
+
+.vi-resena-campo textarea:focus-visible {
+    outline: 2px solid #007FFF;
+    outline-offset: 1px;
+}
+
+.vi-resena-contador {
+    position: absolute;
+    right: 12px;
+    bottom: -20px;
+    color: #61708C;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.vi-resena-error {
+    color: #dc2626;
+    font-size: 0.82rem;
+    margin-top: 6px;
+}
+
+.vi-resena-form-acciones {
+    display: flex;
+    margin-top: 22px;
+}
+
+.vi-resena-submit {
+    background: linear-gradient(90deg, #002D89, #007FFF);
+    border: none;
+}
+
+.vi-resena-submit:hover {
+    background: linear-gradient(90deg, #001d5c, #0066cc);
+}
+
+/* --- Encabezado del listado ------------------------------------------------ */
+
+.vi-resenas-listado-encabezado {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    row-gap: 10px;
+}
+
+.vi-resenas-listado-encabezado__icono {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #EEF3FB;
+    color: #007FFF;
+    font-size: 1rem;
+}
+
+.vi-resenas-listado-encabezado__texto h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #182033;
+}
+
+.vi-resenas-listado-encabezado__texto p {
+    margin: 2px 0 0;
+    color: #61708C;
+    font-size: 0.85rem;
+}
+
+.vi-resenas-listado-encabezado__total {
+    margin-left: auto;
+    color: #61708C;
+    font-size: 0.85rem;
+}
+
+.vi-resenas-orden {
+    margin-left: auto;
+}
+
+.vi-resenas-orden__boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    min-height: 40px;
+    border: 1px solid #DFE7F3;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #182033;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.vi-resenas-orden__boton:hover {
+    border-color: #007FFF;
+    color: #007FFF;
+}
+
+/* --- Listado público -------------------------------------------------------- */
+
+.vi-resenas-listado {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.vi-resena-item {
+    border: 1px solid #DFE7F3;
+    border-radius: 14px;
+    padding: 16px 18px;
+    background: #ffffff;
+}
+
+.vi-resena-item-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vi-resena-item-avatar {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.vi-resena-item-avatar--inicial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #EEF3FB;
+    color: #002D89;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.vi-resena-item-autor-bloque {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.vi-resena-item-autor {
+    color: #002D89;
+    font-size: 0.95rem;
+}
+
+.vi-resena-item-fecha {
+    color: #61708C;
+    font-size: 0.78rem;
+}
+
+.vi-resena-item-valoracion {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #182033;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.vi-resena-item-comilla {
+    color: #DFE7F3;
+    font-size: 1.3rem;
+}
+
+.vi-resena-item-menu {
+    flex-shrink: 0;
+}
+
+.vi-resena-item-menu__boton {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #61708C;
+    cursor: pointer;
+}
+
+.vi-resena-item-menu__boton:hover {
+    background: #EEF3FB;
+    color: #182033;
+}
+
+.vi-resena-item-comentario {
+    color: #182033;
+    margin: 10px 0 0;
+}
+
+.vi-resenas-vacio {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+    padding: 20px 24px;
+    border: 1px solid #DFE7F3;
+    border-radius: 14px;
+    background: #F7F9FD;
+}
+
+.vi-resenas-vacio i {
+    flex-shrink: 0;
+    font-size: 1.8rem;
+    color: #C7D4EA;
+}
+
+.vi-resenas-vacio__contenido {
+    min-width: 0;
+}
+
+.vi-resenas-vacio__titulo {
+    margin: 0 0 2px;
+    color: #182033;
+    font-weight: 700;
+}
+
+.vi-resenas-vacio__texto {
+    margin: 0;
+    color: #61708C;
+    font-size: 0.9rem;
+}
+
+/* --- Estrellas estáticas (resumen individual / listado) --------------------- */
+
+.vi-rating-estatica {
+    display: inline-flex;
+    gap: 2px;
+    font-size: 0.95rem;
+}
+
+.vi-rating-estatica svg.is-llena {
+    fill: #ffa723;
+}
+
+.vi-rating-estatica svg.is-vacia {
+    fill: #DFE7F3;
+}
+
+.vi-rating-quitar {
+    display: block;
+    width: fit-content;
+    margin: 6px auto 0;
+    padding: 2px 4px;
+    border: 0;
+    background: transparent;
+    color: #61708C;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.vi-rating-quitar:hover,
+.vi-rating-quitar:focus-visible {
+    color: #007FFF;
+}
+
+.vi-rating-quitar:focus-visible {
+    outline: 2px solid #007FFF;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* =========================================================================
+ * Selector Uiverse — LeonKohli/wicked-bird-87 (https://uiverse.io)
+ * Adaptado como .vi-rating. Estado sin marcar recoloreado a contorno azul
+ * para reflejar el diseño de referencia (antes era gris sólido).
+ * ========================================================================= */
+
+.vi-rating {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-direction: row-reverse;
+}
+.vi-rating > input {
+    position: absolute;
+    appearance: none;
+}
+.vi-rating > label {
+    cursor: pointer;
+    font-size: 30px;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+.vi-rating > label > svg {
+    fill: none;
+    stroke: #007FFF;
+    stroke-width: 22px;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+.vi-rating > label::before,
+.vi-rating > label::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: #ff9e0b;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    animation: particle-explosion 1s ease-out;
+}
+.vi-rating > label::before { top: -15px; left: 50%; transform: translateX(-50%) scale(0); }
+.vi-rating > label::after { bottom: -15px; left: 50%; transform: translateX(-50%) scale(0); }
+.vi-rating > label:hover::before,
+.vi-rating > label:hover::after { opacity: 1; transform: translateX(-50%) scale(1.5); }
+.vi-rating > label:hover { transform: scale(1.2); animation: pulse 0.6s infinite alternate; }
+.vi-rating > label:hover > svg,
+.vi-rating > label:hover ~ label > svg {
+    fill: #ff9e0b;
+    stroke: none;
+    filter: drop-shadow(0 0 15px rgba(255, 158, 11, 0.9));
+    animation: shimmer 1s ease infinite alternate;
+}
+.vi-rating > input:checked + label > svg,
+.vi-rating > input:checked + label ~ label > svg {
+    fill: #ff9e0b;
+    stroke: none;
+    filter: drop-shadow(0 0 15px rgba(255, 158, 11, 0.9));
+    animation: pulse 0.8s infinite alternate;
+}
+@keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+@keyframes particle-explosion { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0; transform: scale(0.5); } }
+@keyframes shimmer { 0% { filter: drop-shadow(0 0 10px rgba(255, 158, 11, 0.5)); } 100% { filter: drop-shadow(0 0 20px rgba(255, 158, 11, 1)); } }
+.vi-rating > input:checked + label:hover > svg,
+.vi-rating > input:checked + label:hover ~ label > svg { fill: #e58e09; stroke: none; }
+.vi-rating > label:hover > svg,
+.vi-rating > label:hover ~ label > svg { fill: #ff9e0b; stroke: none; }
+.vi-rating input:checked ~ label svg { fill: #ffa723; stroke: none; }
+
+/* Foco visible (adaptación de accesibilidad, no forma parte del original) */
+.vi-rating > input:focus-visible + label {
+    outline: 2px solid #007FFF;
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vi-rating > label,
+    .vi-rating > label::before,
+    .vi-rating > label::after,
+    .vi-rating > label > svg {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .vi-resenas-resumen {
+        flex-direction: column;
+        gap: 20px;
+        padding: 22px 20px;
+    }
+    .vi-resenas-promedio {
+        width: 100%;
+        padding-right: 0;
+        padding-bottom: 20px;
+        border-right: none;
+        border-bottom: 1px solid #DFE7F3;
+    }
+    .vi-resenas-distribucion {
+        min-width: 0;
+        width: 100%;
+    }
+    .vi-resenas-orden,
+    .vi-resenas-listado-encabezado__total {
+        margin-left: 0;
+        width: 100%;
+    }
+    .vi-resenas-orden__boton {
+        width: 100%;
+        justify-content: center;
+    }
+    .vi-resena-item-header {
+        flex-wrap: wrap;
+    }
+    .vi-resena-item-valoracion {
+        margin-left: 0;
+    }
+    .vi-resena-compose {
+        padding: 20px;
+    }
+    .vi-resenas-vacio {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .vi-resena-compose__comilla {
+        font-size: 2.25rem;
+        top: 8px;
+        right: 16px;
+    }
+    .vi-resena-compose__header {
+        padding-right: 38px;
+    }
+}

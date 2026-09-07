@@ -5,6 +5,11 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/listado-lugar-turistico.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/favoritos.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -142,6 +147,8 @@
                                         Destacado
                                     </span>
                                 {% endif %}
+
+                                {% include "interacciones/includes/corazon.html" with tipo="lugar" pk=lugar.pk es_favorito=lugar.es_favorito nombre=lugar.nombre boton_class="vi-heart-btn" %}
                             </div>
 
                             <!-- Cuerpo de la tarjeta -->

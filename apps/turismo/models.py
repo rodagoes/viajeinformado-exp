@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+from django.urls import reverse
 from PIL import Image, ImageSequence, UnidentifiedImageError
 from apps.ubicaciones.models import Distrito, Localidad
 
@@ -160,6 +161,9 @@ class LugarTuristico(models.Model):
         if self.precio_desde is not None and self.precio_hasta is not None:
             if self.precio_hasta < self.precio_desde:
                 raise ValidationError("El precio hasta no puede ser menor que el precio desde.")
+
+    def get_absolute_url(self):
+        return reverse("turismo:detalle_lugar", kwargs={"slug": self.slug})
 
 
 class ImagenLugarTuristico(models.Model):

@@ -1,0 +1,16 @@
+{% extends 'accounts/base_auth.html' %}
+
+{% block title %}Cuenta eliminada - Viaje Informado{% endblock %}
+
+{% block auth_content %}
+<div class="vi-auth-success">
+    <div class="vi-auth-success-icon"><i class="bi bi-check-circle-fill"></i></div>
+    <h1 class="vi-auth-title">Tu cuenta fue eliminada</h1>
+    <p class="vi-auth-subtitle">
+        Tu cuenta de Viaje Informado y la información asociada fueron eliminadas correctamente.
+    </p>
+    <a href="{% url 'base:home' %}" class="vi-auth-btn-primary">
+        <i class="bi bi-house"></i> Volver al inicio
+    </a>
+</div>
+{% endblock %}

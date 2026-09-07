@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="{% static 'assets/css/establecimientos.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/detalle-establecimiento.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/componentes/como-llegar-desplegable.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/resenas.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -50,8 +53,13 @@
                     <div class="detalle-hero-meta">
 
                         <div class="detalle-meta-item detalle-meta-rating-preview">
+                            {% if resumen_resenas.total %}
+                            <i class="bi bi-star-fill"></i>
+                            <span>{{ resumen_resenas.promedio|floatformat:1 }} · {{ resumen_resenas.total }} valoraci{{ resumen_resenas.total|pluralize:"ón,ones" }}</span>
+                            {% else %}
                             <i class="bi bi-chat-square-heart"></i>
-                            <span>Valoraciones próximamente</span>
+                            <span>Aún sin valoraciones</span>
+                            {% endif %}
                         </div>
 
                         <div class="detalle-hero-meta-line">
@@ -162,23 +170,11 @@
 
             <div class="detalle-hero-acciones">
 
-                <button type="button" class="detalle-accion-icono" aria-label="Agregar a favoritos">
-                    <i class="bi bi-heart"></i>
-                </button>
+                {% include "interacciones/includes/corazon.html" with tipo="establecimiento" pk=establecimiento.pk es_favorito=es_favorito nombre=establecimiento.nombre boton_class="detalle-accion-icono" %}
 
-                <button type="button" class="detalle-accion-boton">
-                    <i class="bi bi-calendar2-check"></i>
-                    <span>
-                        {% if es_restaurante %}
-                        Ver disponibilidad
-                        {% else %}
-                        Consultar disponibilidad
-                        {% endif %}
-                    </span>
-                </button>
-
-                <button type="button" class="detalle-accion-boton">
-                    <i class="bi bi-share"></i>
+                <button type="button" class="detalle-accion-boton" data-action="compartir-establecimiento"
+                    data-compartir-nombre="{{ establecimiento.nombre }}">
+                    <i class="bi bi-share" aria-hidden="true"></i>
                     <span>Compartir</span>
                 </button>
 
@@ -266,8 +262,13 @@
 
                 <div class="detalle-mobile-meta">
                     <div class="detalle-mobile-rating-preview">
+                        {% if resumen_resenas.total %}
+                        <i class="bi bi-star-fill"></i>
+                        <span>{{ resumen_resenas.promedio|floatformat:1 }} · {{ resumen_resenas.total }} valoraci{{ resumen_resenas.total|pluralize:"ón,ones" }}</span>
+                        {% else %}
                         <i class="bi bi-chat-square-heart"></i>
-                        <span>Valoraciones próximamente</span>
+                        <span>Aún sin valoraciones</span>
+                        {% endif %}
                     </div>
 
                     {% if establecimiento.precio_desde or establecimiento.precio_hasta %}
@@ -339,10 +340,7 @@
                     </button>
                     {% endif %}
 
-                    <button type="button">
-                        <i class="bi bi-heart"></i>
-                        <span>Guardar</span>
-                    </button>
+                    {% include "interacciones/includes/corazon.html" with tipo="establecimiento" pk=establecimiento.pk es_favorito=es_favorito nombre=establecimiento.nombre boton_class="" mostrar_texto=True %}
                 </div>
 
                 <div class="detalle-mobile-tabs">
@@ -356,7 +354,7 @@
 
                     <a href="#detalle-tarifas">Tarifas</a>
                     <a href="#detalle-ubicacion">Ubicación</a>
-                    <a href="#detalle-valoraciones">Valoraciones</a>
+                    <a href="#resenas">Valoraciones</a>
                 </div>
             </div>
         </div>
@@ -948,98 +946,7 @@
                     {% endif %}
 
                     <!-- SECCIÓN VALORACIONES Y COMENTARIOS -->
-                    <section class="detalle-bloque detalle-valoraciones-placeholder" id="detalle-valoraciones">
-                        <div class="detalle-bloque-encabezado detalle-bloque-encabezado-flex">
-                            <div>
-                                <span>Vista previa</span>
-                                <h2>Comentarios y valoraciones</h2>
-                            </div>
-
-                            <div class="detalle-valoraciones-badge">
-                                Próximamente
-                            </div>
-                        </div>
-
-                        <div class="detalle-valoraciones-grid">
-
-                            <div class="detalle-rating-preview-card">
-                                <div class="detalle-rating-icon">
-                                    <i class="bi bi-star"></i>
-                                </div>
-
-                                <div>
-                                    <small>Estado actual</small>
-                                    <h3>Sin valoraciones activas</h3>
-                                    <p>
-                                        Esta sección está preparada visualmente para mostrar opiniones de turistas
-                                        cuando la funcionalidad sea activada en una próxima fase.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="detalle-rating-bars" aria-label="Distribución visual pendiente de valoraciones">
-                                <div class="detalle-rating-bar-row">
-                                    <span>5 estrellas</span>
-                                    <div class="detalle-rating-bar-track">
-                                        <div class="detalle-rating-bar-fill"></div>
-                                    </div>
-                                    <small>Pendiente</small>
-                                </div>
-
-                                <div class="detalle-rating-bar-row">
-                                    <span>4 estrellas</span>
-                                    <div class="detalle-rating-bar-track">
-                                        <div class="detalle-rating-bar-fill"></div>
-                                    </div>
-                                    <small>Pendiente</small>
-                                </div>
-
-                                <div class="detalle-rating-bar-row">
-                                    <span>3 estrellas</span>
-                                    <div class="detalle-rating-bar-track">
-                                        <div class="detalle-rating-bar-fill"></div>
-                                    </div>
-                                    <small>Pendiente</small>
-                                </div>
-
-                                <div class="detalle-rating-bar-row">
-                                    <span>2 estrellas</span>
-                                    <div class="detalle-rating-bar-track">
-                                        <div class="detalle-rating-bar-fill"></div>
-                                    </div>
-                                    <small>Pendiente</small>
-                                </div>
-
-                                <div class="detalle-rating-bar-row">
-                                    <span>1 estrella</span>
-                                    <div class="detalle-rating-bar-track">
-                                        <div class="detalle-rating-bar-fill"></div>
-                                    </div>
-                                    <small>Pendiente</small>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="detalle-comentarios-preview">
-                            <div class="detalle-comentarios-empty">
-                                <i class="bi bi-chat-square-text"></i>
-
-                                <div>
-                                    <h3>Los comentarios estarán disponibles próximamente</h3>
-                                    <p>
-                                        Más adelante, los visitantes podrán consultar experiencias, dejar valoraciones
-                                        y compartir recomendaciones sobre este establecimiento.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <button type="button" class="detalle-comentarios-disabled" disabled>
-                                <i class="bi bi-lock"></i>
-                                Función no disponible todavía
-                            </button>
-                        </div>
-                    </section>
+                    {% include "interacciones/includes/resenas_seccion.html" with tipo="establecimiento" pk=establecimiento.pk recurso=establecimiento es_card=True %}
 
                 </div>
 
@@ -1178,5 +1085,9 @@
 <script src="{% static 'assets/js/detalle-galeria-est.js' %}"></script>
 <script src="{% static 'assets/js/desplazable-como-llegar.js' %}"></script>
 <script src="{% static 'assets/js/animacion-botones-contacto.js' %}"></script>
+<script src="{% static 'assets/js/favoritos.js' %}"></script>
+<script src="{% static 'assets/js/compartir-establecimiento.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'assets/js/resenas.js' %}"></script>
 
 {% endblock %}

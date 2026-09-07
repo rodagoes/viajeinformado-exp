@@ -1,12 +1,18 @@
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from urllib.parse import urlencode
 
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.db import IntegrityError, transaction
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
+from django.urls import reverse
 
 from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
 from apps.gastronomia.models import PlatoTipico
+from apps.interacciones.forms import ResenaForm
+from apps.interacciones.models import Favorito, Resena
+from apps.interacciones.services import construir_contexto_resenas
 from apps.monedas.models import TipoCambio
 
 
@@ -125,6 +131,19 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
     paginator = Paginator(qs, 6)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
+    # Estado del corazón: una sola query extra por página (no una por card).
+    if request.user.is_authenticated:
+        favoritos_ids = set(
+            Favorito.objects.filter(
+                usuario=request.user,
+                establecimiento_id__in=[est.pk for est in page_obj],
+            ).values_list("establecimiento_id", flat=True)
+        )
+    else:
+        favoritos_ids = set()
+    for est in page_obj:
+        est.es_favorito = est.pk in favoritos_ids
 
     # Opciones de categorías preparadas para el template.
     # Así evitamos usar comparaciones tipo categoria_sel == c.id dentro del HTML.
@@ -293,9 +312,36 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         slug=slug
     )
 
+    form_resena_invalido = None
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('accounts:login')}?next={request.path}%23resenas")
+        mi_resena = Resena.objects.filter(usuario=request.user, establecimiento=establecimiento).first()
+        form = ResenaForm(request.POST, instance=mi_resena)
+        if form.is_valid():
+            resena = form.save(commit=False)
+            resena.usuario = request.user
+            resena.establecimiento = establecimiento
+            try:
+                with transaction.atomic():
+                    resena.save()
+            except IntegrityError:
+                messages.error(request, "Ya existe una reseña tuya para este establecimiento.")
+                return redirect(f"{establecimiento.get_absolute_url()}#resenas")
+            messages.success(
+                request,
+                "Tu reseña se ha actualizado correctamente." if mi_resena else "Tu reseña se ha publicado correctamente.",
+            )
+            return redirect(f"{establecimiento.get_absolute_url()}#resenas")
+        form_resena_invalido = form
+
     # Sucursales ordenadas: principal primero.
     sucursales = list(establecimiento.sucursales.all())
     sucursal_principal = sucursales[0] if sucursales else None
+
+    es_favorito = False
+    if request.user.is_authenticated:
+        es_favorito = Favorito.objects.filter(usuario=request.user, establecimiento=establecimiento).exists()
 
     # Contactos principales.
     # Orden de prioridad:
@@ -478,6 +524,7 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         "establecimiento": establecimiento,
         "es_restaurante": tipo_establecimiento == "restaurante",
         "es_alojamiento": tipo_establecimiento == "alojamiento",
+        "es_favorito": es_favorito,
 
         # Datos preparados para el detalle
         "sucursales": sucursales,
@@ -509,6 +556,13 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
         if tipo_establecimiento == "restaurante"
         else "establecimientos:listado_alojamientos",
     }
+
+    context.update(construir_contexto_resenas(
+        request, "establecimiento", establecimiento,
+        form_resena=form_resena_invalido,
+        page_number=request.GET.get("resenas_page"),
+        orden=request.GET.get("orden"),
+    ))
 
     return render(request, "establecimientos/detalle_establecimiento.html", context)
 

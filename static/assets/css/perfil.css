@@ -1,0 +1,219 @@
+/* perfil.css — Viaje Informado
+ * Página privada /mi-cuenta/perfil/. Tarjeta blanca centrada, edición
+ * progresiva por bloque. No es un panel administrativo.
+ */
+
+.perfil-pagina {
+    padding: calc(var(--vi-header-height-desktop, 78px) + 32px) 0 64px;
+    background: #F7F9FD;
+    min-height: 60vh;
+}
+
+@media (max-width: 1199px) {
+    .perfil-pagina {
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 16px);
+    }
+}
+
+.perfil-tarjeta {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #DFE7F3;
+    border-radius: 18px;
+    padding: 32px 36px 40px;
+    box-shadow: 0 10px 30px rgba(24, 32, 51, 0.06);
+}
+
+.perfil-tarjeta h1 {
+    font-family: "Playfair Display", serif;
+    color: #002D89;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.perfil-tabs {
+    display: inline-flex;
+    gap: 4px;
+    background: #F7F9FD;
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 28px;
+}
+
+.perfil-tab {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #61708C;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.perfil-tab:hover {
+    color: #002D89;
+}
+
+.perfil-tab.is-active {
+    background: #ffffff;
+    color: #002D89;
+    box-shadow: 0 2px 8px rgba(24, 32, 51, 0.08);
+}
+
+.perfil-tab:focus-visible {
+    outline: 2px solid #007FFF;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .perfil-tab {
+        transition: none;
+    }
+}
+
+.perfil-seccion {
+    margin-bottom: 28px;
+}
+
+.perfil-seccion:last-child {
+    margin-bottom: 0;
+}
+
+.perfil-seccion .vi-section-heading__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #182033;
+}
+
+.perfil-fila {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid #EEF3FB;
+}
+
+.perfil-fila:last-child {
+    border-bottom: none;
+}
+
+.perfil-fila-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.perfil-fila-label {
+    font-size: 0.8rem;
+    color: #61708C;
+    font-weight: 500;
+}
+
+.perfil-fila-valor {
+    font-size: 1.1rem;
+    color: #182033;
+    word-break: break-word;
+}
+
+.perfil-fila-ayuda {
+    font-size: 0.78rem;
+    color: #61708C;
+    font-style: italic;
+    margin: 4px 0 0;
+}
+
+.perfil-fila-lectura {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+}
+
+.perfil-fila-lectura .vi-btn-ghost-icon {
+    flex-shrink: 0;
+}
+
+.perfil-cancelar-btn:focus-visible,
+.perfil-guardar-btn:focus-visible,
+.perfil-fila-edicion input:focus-visible {
+    outline: 2px solid #007FFF;
+    outline-offset: 2px;
+}
+
+/* --- Modo edición ------------------------------------------------------- */
+
+.perfil-fila-edicion {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.perfil-fila-edicion input[type="text"] {
+    width: 100%;
+    font-size: 16px; /* evita el zoom automático de Safari/iOS en focus */
+    padding: 10px 14px;
+    border: 1px solid #DFE7F3;
+    border-radius: 8px;
+    color: #182033;
+}
+
+.perfil-fila-edicion input[type="text"]:focus {
+    border-color: #007FFF;
+    outline: none;
+}
+
+.perfil-error {
+    font-size: 0.82rem;
+    color: #dc2626;
+}
+
+.perfil-fila-acciones {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+}
+
+.perfil-guardar-btn {
+    background: #007FFF;
+    color: #ffffff;
+    border: 1px solid #002D89;
+    border-radius: 7px;
+    padding: 8px 20px;
+    font-weight: 700;
+    min-height: 40px;
+}
+
+.perfil-guardar-btn:hover {
+    background: #002D89;
+}
+
+.perfil-cancelar-btn {
+    background: transparent;
+    border: none;
+    color: #61708C;
+    font-weight: 600;
+    padding: 8px 4px;
+    min-height: 40px;
+    cursor: pointer;
+}
+
+.perfil-cancelar-btn:hover {
+    color: #182033;
+    text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+    .perfil-tarjeta {
+        padding: 24px 20px 32px;
+        border-radius: 14px;
+    }
+    .perfil-fila-lectura {
+        align-items: center;
+    }
+}

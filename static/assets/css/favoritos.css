@@ -1,0 +1,192 @@
+/* favoritos.css — Viaje Informado
+ * Página privada /mi-cuenta/favoritos/. Reutiliza el lenguaje visual de las
+ * cards de establecimientos/lugares turísticos (radio, sombra, tipografía).
+ */
+
+.favoritos-encabezado {
+    background: linear-gradient(180deg, #F7F9FD 0%, #EEF3FB 100%);
+    padding: calc(var(--vi-header-height-desktop, 78px) + 40px) 0 32px;
+    text-align: center;
+}
+
+@media (max-width: 1199px) {
+    .favoritos-encabezado {
+        padding-top: calc(var(--vi-header-height-mobile, 68px) + 24px);
+    }
+}
+
+.favoritos-encabezado h1 {
+    font-family: "Playfair Display", serif;
+    color: #002D89;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.favoritos-encabezado p {
+    color: #61708C;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.favoritos-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0 24px;
+}
+
+.favoritos-filtro-chip {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: 1px solid #DFE7F3;
+    background: #ffffff;
+    color: #182033;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.favoritos-filtro-chip:hover {
+    border-color: #007FFF;
+    color: #007FFF;
+}
+
+.favoritos-filtro-chip.is-active {
+    background: #007FFF;
+    border-color: #007FFF;
+    color: #ffffff;
+}
+
+.favoritos-filtro-chip:focus-visible {
+    outline: 2px solid #002D89;
+    outline-offset: 2px;
+}
+
+/* --- Card ------------------------------------------------------------- */
+
+.favorito-tarjeta {
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #DFE7F3;
+    box-shadow: 0 10px 26px rgba(24, 32, 51, 0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.favoritos-grilla .col.is-removing,
+.favoritos-grilla .favorito-tarjeta.is-removing {
+    opacity: 0;
+    transform: scale(0.97);
+}
+
+.favorito-imagen-contenedor {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background: #EEF3FB;
+    overflow: hidden;
+}
+
+.favorito-imagen-contenedor img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.favorito-imagen-vacia {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #61708C;
+    font-size: 1.6rem;
+}
+
+.favorito-cuerpo {
+    padding: 16px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.favorito-tipo {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #007FFF;
+    margin-bottom: 4px;
+}
+
+.favorito-titulo {
+    font-family: "Playfair Display", serif;
+    font-size: 1.15rem;
+    color: #182033;
+    margin: 0 0 8px;
+    word-break: break-word;
+}
+
+.favorito-ubicacion {
+    font-size: 0.85rem;
+    color: #61708C;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.favorito-ubicacion span {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.favorito-rating {
+    font-size: 0.85rem;
+    color: #182033;
+    margin-bottom: 14px;
+}
+
+.favorito-rating-estrella {
+    color: #ffa723;
+}
+
+.favorito-sin-rating {
+    color: #61708C;
+    font-style: italic;
+}
+
+.favorito-ver-mas {
+    margin-top: auto;
+    align-self: flex-start;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #002D89;
+    text-decoration: none;
+}
+
+.favorito-ver-mas:hover {
+    color: #007FFF;
+}
+
+.favorito-ver-mas:focus-visible {
+    outline: 2px solid #007FFF;
+    outline-offset: 3px;
+}
+
+/* Empty states: markup ahora usa .vi-empty-state/.vi-btn-primary/
+   .vi-btn-secondary compartidos (ui-comun.css) — sin reglas propias aquí. */
+
+@media (max-width: 576px) {
+    .favoritos-encabezado {
+        padding-bottom: 24px;
+    }
+    .favoritos-encabezado h1 {
+        font-size: 1.6rem;
+    }
+}

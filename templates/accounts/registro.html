@@ -53,6 +53,6 @@
 </form>
 
 <p class="vi-auth-footer-link">
-    ¿Ya tienes cuenta? <a href="{% url 'accounts:login' %}">Inicia sesión</a>
+    ¿Ya tienes cuenta? <a href="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Inicia sesión</a>
 </p>
 {% endblock %}

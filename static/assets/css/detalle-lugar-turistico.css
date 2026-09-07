@@ -397,14 +397,14 @@
 }
 
 .dl-feature-row--recomendaciones {
-    background: rgba(0, 45, 137, 0.03);
+    background: #ffffff;
 }
 
 .dl-feature-media {
     position: relative;
     min-height: 460px;
     overflow: hidden;
-    background: rgba(0, 45, 137, 0.06);
+    background: #ffffff;
 }
 
 .dl-feature-media img,
@@ -627,6 +627,14 @@
     text-align: center;
 }
 
+/* Sección de valoraciones y comentarios (compartida con establecimientos):
+   se envuelve en una sección de ancho completo, igual que sus vecinas
+   (.dl-section-datos, .dl-section-experiencia), para que el blanco llegue
+   de borde a borde y no deje ver el fondo lavanda de la página a los costados. */
+.dl-section-resenas {
+    background: #ffffff;
+}
+
 .dl-datos-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -783,247 +791,6 @@
     font-weight: 800;
 }
 
-/* ==== 6. VALORACIONES ==== */
-
-.dl-section-val {
-    background:
-        radial-gradient(circle at 72% 8%, rgba(0, 127, 255, 0.06), transparent 34%),
-        #ffffff;
-    padding: 76px 0 84px;
-    color: var(--dl-text);
-}
-
-.dl-val-card {
-    position: relative;
-    overflow: hidden;
-    width: min(1120px, calc(100% - 48px));
-    margin: 0 auto;
-    padding: 36px;
-    border: 1px solid rgba(0, 45, 137, 0.12);
-    border-radius: 28px;
-    background: #f2f5fb;
-    box-shadow: 0 12px 48px rgba(0, 45, 137, 0.08);
-}
-
-.dl-val-card::before {
-    content: "";
-    position: absolute;
-    top: -110px;
-    right: -110px;
-    width: 240px;
-    height: 240px;
-    border-radius: 999px;
-    background: radial-gradient(circle, rgba(0, 127, 255, 0.08), transparent 68%);
-    pointer-events: none;
-}
-
-.dl-val-header {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 22px;
-    margin-bottom: 26px;
-}
-
-.dl-val-header span {
-    display: inline-flex;
-    margin-bottom: 10px;
-    color: var(--dl-blue);
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.16em;
-    line-height: 1;
-    text-transform: uppercase;
-}
-
-.dl-val-header h2 {
-    margin: 0;
-    color: var(--dl-navy);
-    font-family: var(--dl-display);
-    font-size: clamp(1.9rem, 3vw, 2.6rem);
-    font-weight: 400;
-    line-height: 1.12;
-    letter-spacing: 0.01em;
-}
-
-.dl-val-header h2::after {
-    content: "";
-    display: block;
-    width: 64px;
-    height: 3px;
-    margin: 14px 0 0;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--dl-blue), var(--dl-navy));
-}
-
-.dl-val-badge {
-    min-height: 38px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 16px;
-    border-radius: 999px;
-    background: rgba(0, 45, 137, 0.08);
-    color: var(--dl-navy);
-    font-size: 0.76rem;
-    font-weight: 900;
-    letter-spacing: 0.10em;
-    line-height: 1;
-    text-transform: uppercase;
-    white-space: nowrap;
-    border: 1px solid rgba(0, 45, 137, 0.15);
-}
-
-.dl-val-grid {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 22px;
-}
-
-.dl-rating-preview-card,
-.dl-rating-bars,
-.dl-comments-preview {
-    border: 1px solid rgba(0, 45, 137, 0.12);
-    border-radius: 22px;
-    background: rgba(0, 45, 137, 0.025);
-}
-
-.dl-rating-preview-card {
-    display: flex;
-    gap: 18px;
-    padding: 24px;
-}
-
-.dl-rating-icon {
-    flex: 0 0 auto;
-    width: 58px;
-    height: 58px;
-    display: grid;
-    place-items: center;
-    border-radius: 18px;
-    background: linear-gradient(135deg, var(--dl-blue), var(--dl-navy));
-    color: #ffffff;
-    font-size: 1.45rem;
-    box-shadow: 0 14px 30px rgba(0, 127, 255, 0.16);
-}
-
-.dl-rating-preview-card small {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--dl-blue);
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-}
-
-.dl-rating-preview-card h3,
-.dl-comments-empty h3 {
-    margin: 0;
-    color: var(--dl-navy);
-    font-size: 1.08rem;
-    font-weight: 900;
-    line-height: 1.25;
-}
-
-.dl-rating-preview-card p,
-.dl-comments-empty p {
-    margin: 8px 0 0;
-    color: var(--dl-muted);
-    font-size: 0.9rem;
-    line-height: 1.58;
-}
-
-.dl-rating-bars {
-    display: grid;
-    gap: 13px;
-    padding: 24px;
-}
-
-.dl-rating-bar-row {
-    display: grid;
-    grid-template-columns: 86px minmax(0, 1fr) 80px;
-    gap: 12px;
-    align-items: center;
-}
-
-.dl-rating-bar-row span,
-.dl-rating-bar-row small {
-    color: var(--dl-muted);
-    font-size: 0.76rem;
-    font-weight: 900;
-}
-
-.dl-rating-bar-row small {
-    text-align: right;
-    color: rgba(0, 45, 137, 0.40);
-}
-
-.dl-rating-bar-track {
-    height: 9px;
-    overflow: hidden;
-    border-radius: 999px;
-    background: rgba(0, 45, 137, 0.10);
-}
-
-.dl-rating-bar-fill {
-    width: 0%;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(135deg, var(--dl-blue), var(--dl-navy));
-}
-
-.dl-comments-preview {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    margin-top: 22px;
-    padding: 22px 24px;
-}
-
-.dl-comments-empty {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-}
-
-.dl-comments-empty > i {
-    flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
-    display: grid;
-    place-items: center;
-    border-radius: 15px;
-    background: rgba(0, 127, 255, 0.10);
-    color: var(--dl-blue);
-    font-size: 1.18rem;
-}
-
-.dl-comments-disabled {
-    flex: 0 0 auto;
-    min-height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    padding: 0 18px;
-    border: 1px solid rgba(0, 45, 137, 0.15);
-    border-radius: 999px;
-    background: rgba(0, 45, 137, 0.05);
-    color: rgba(0, 45, 137, 0.50);
-    font-size: 0.82rem;
-    font-weight: 900;
-    cursor: not-allowed;
-}
-
-
 /* Ajuste para mantener texto "recomendaciones para el visitante" en una sola línea solo para desktop */
 @media (min-width: 992px) {
     .dl-feature-row--recomendaciones .dl-feature-content {
@@ -1110,18 +877,6 @@
 
     .dl-datos-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .dl-val-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .dl-comments-preview {
-        display: grid;
-    }
-
-    .dl-comments-disabled {
-        width: fit-content;
     }
 
     .detalle-lugar {
@@ -1313,81 +1068,6 @@
     .dl-dato-val {
         font-size: 0.68rem;
         line-height: 1.25;
-    }
-
-    .dl-section-val {
-        padding: 56px 0 64px;
-    }
-
-    .dl-val-card {
-        width: calc(100% - 32px);
-        padding: 22px;
-        border-radius: 22px;
-    }
-
-    .dl-val-header {
-        display: grid;
-        gap: 16px;
-    }
-
-    .dl-val-header h2 {
-        white-space: normal;
-    }
-
-    .dl-val-header h2::after {
-        margin-right: 0;
-        margin-left: 0;
-    }
-
-    .dl-val-badge {
-        width: fit-content;
-    }
-
-    .dl-rating-preview-card,
-    .dl-rating-bars,
-    .dl-comments-preview {
-        border-radius: 18px;
-    }
-
-    .dl-rating-preview-card {
-        padding: 18px;
-    }
-
-    .dl-rating-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 15px;
-    }
-
-    .dl-rating-bars {
-        padding: 18px;
-    }
-
-    .dl-rating-bar-row {
-        grid-template-columns: 76px minmax(0, 1fr);
-        gap: 9px;
-    }
-
-    .dl-rating-bar-row small {
-        grid-column: 2;
-        text-align: left;
-    }
-
-    .dl-comments-preview {
-        padding: 18px;
-    }
-
-    .dl-comments-empty {
-        gap: 13px;
-    }
-
-    .dl-comments-empty > i {
-        width: 42px;
-        height: 42px;
-    }
-
-    .dl-comments-disabled {
-        width: 100%;
     }
 }
 

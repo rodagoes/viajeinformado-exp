@@ -1,9 +1,14 @@
 import re
 
+from allauth.core.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
+from allauth.socialaccount.providers.base import AuthProcess
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
+from django.urls import reverse
 
 from .forms import USERNAME_RE
+from .security import tiene_reauth_reciente
 
 USERNAME_MIN_LENGTH = 4
 USERNAME_MAX_LENGTH = 30
@@ -47,6 +52,14 @@ class ViajeInformadoSocialAccountAdapter(DefaultSocialAccountAdapter):
         """Si ya existe un usuario local con ese correo y el proveedor lo
         entrega verificado, conecta la cuenta social a ese usuario en vez
         de intentar crear uno nuevo (evita duplicados e IntegrityError)."""
+        es_connect = sociallogin.state.get('process') == AuthProcess.CONNECT
+        if es_connect and not (request.user.is_authenticated and tiene_reauth_reciente(request)):
+            # Vincular un nuevo proveedor social a una cuenta existente es una
+            # acción sensible (F4): exige reauth reciente, igual que cambiar
+            # email/password o eliminar la cuenta. Esto se aplica ANTES de que
+            # se cree o actualice cualquier SocialAccount, y solo afecta a
+            # process=connect — login/alta social normales no pasan por aquí.
+            raise ImmediateHttpResponse(redirect(reverse('accounts:reauth')))
         if sociallogin.is_existing:
             return
         email = None
