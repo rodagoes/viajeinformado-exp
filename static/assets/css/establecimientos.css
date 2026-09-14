@@ -667,184 +667,6 @@
 }
 
 /* =========================================================
-   Paginación premium tipo tabs
-========================================================= */
-
-.establecimientos-pagina .est-paginacion-contenedor {
-    margin-top: 62px;
-}
-
-.establecimientos-pagina .pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-
-    overflow: visible;
-    margin-bottom: 0;
-}
-
-/* Flechas */
-.establecimientos-pagina .pagination .page-link {
-    min-width: 42px;
-    height: 42px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 10px;
-    border: 1px solid rgba(0, 45, 137, 0.16);
-    background-color: var(--est-blanco);
-    color: var(--est-azul-oscuro);
-
-    font-weight: 700;
-    text-decoration: none;
-
-    box-shadow: none;
-
-    transition:
-        color 0.25s ease,
-        border-color 0.25s ease,
-        background 0.25s ease,
-        transform 0.25s ease;
-}
-
-.establecimientos-pagina .pagination .page-link:hover {
-    border-color: var(--est-azul-oscuro);
-    color: var(--est-azul-oscuro);
-    background-color: var(--est-fondo-suave);
-    transform: translateY(-1px);
-}
-
-.establecimientos-pagina .pagination .page-item.disabled .page-link {
-    color: rgba(0, 45, 137, 0.28);
-    background-color: var(--est-fondo-suave);
-    border-color: rgba(0, 45, 137, 0.10);
-    pointer-events: none;
-}
-
-/* Números */
-.establecimientos-pagina .pagination .page-number .page-link {
-    position: relative;
-    isolation: isolate;
-    overflow: visible;
-
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
-
-    border-radius: 12px;
-    border: 1px solid rgba(0, 45, 137, 0.18);
-    background-color: transparent;
-
-    color: var(--est-texto-titulo);
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1;
-
-    cursor: pointer;
-
-    transition:
-        color 0.48s cubic-bezier(0.23, 1, 0.32, 1),
-        border-color 0.48s cubic-bezier(0.23, 1, 0.32, 1),
-        transform 0.48s cubic-bezier(0.23, 1, 0.32, 1),
-        background 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.establecimientos-pagina .pagination .page-number .page-link span {
-    position: relative;
-    z-index: 2;
-}
-
-/* Fondo animado del número activo */
-.establecimientos-pagina .pagination .page-number .page-link::before {
-    content: "";
-    position: absolute;
-    top: -24px;
-    left: 50%;
-
-    width: 48px;
-    height: 48px;
-
-    border-radius: 12px;
-    background: var(--est-acento-gradiente);
-
-    transform: translate(-50%, -50%) scale(0);
-    transform-origin: center;
-    opacity: 0;
-
-    z-index: 1;
-
-    transition:
-        top 0.48s cubic-bezier(0.23, 1, 0.32, 1),
-        opacity 0.48s cubic-bezier(0.23, 1, 0.32, 1),
-        transform 0.48s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-/* Puntito inferior del número activo */
-.establecimientos-pagina .pagination .page-number .page-link::after {
-    content: "";
-    position: absolute;
-    bottom: -32px;
-    left: 50%;
-
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-    background: var(--est-acento-gradiente);
-
-    transform: translateX(-50%) scale(0);
-    transform-origin: center;
-    opacity: 0;
-
-    z-index: 1;
-
-    transition:
-        bottom 0.48s 0.2s cubic-bezier(0.23, 1, 0.32, 1),
-        opacity 0.48s 0.2s cubic-bezier(0.23, 1, 0.32, 1),
-        transform 0.48s 0.2s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.establecimientos-pagina .pagination .page-number .page-link:hover {
-    border-color: var(--est-azul-oscuro);
-    color: var(--est-azul-oscuro);
-    background-color: transparent;
-}
-
-/* Número activo */
-.establecimientos-pagina .pagination .page-number.active .page-link {
-    border-color: transparent;
-    color: var(--est-fondo-suave);
-    background-color: transparent;
-    transform: scale(1.08);
-}
-
-.establecimientos-pagina .pagination .page-number.active .page-link::before {
-    top: 50%;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-
-    box-shadow:
-        0 6px 13px rgba(0, 45, 137, 0.16),
-        0 24px 24px rgba(0, 45, 137, 0.10),
-        0 55px 33px rgba(0, 45, 137, 0.06),
-        0 97px 39px rgba(0, 45, 137, 0.02);
-}
-
-.establecimientos-pagina .pagination .page-number.active .page-link::after {
-    bottom: -16px;
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-
-    box-shadow:
-        0 6px 13px rgba(0, 45, 137, 0.14),
-        0 24px 24px rgba(0, 45, 137, 0.10),
-        0 55px 33px rgba(0, 45, 137, 0.06);
-}
-
-/* =========================================================
    Responsive escritorio grande
 ========================================================= */
 
@@ -1146,25 +968,43 @@
         border-radius: 20px;
     }
 
-    .establecimientos-pagina .pagination {
+    .establecimientos-pagina .vi-paginacion {
         gap: 8px;
     }
 
-    .establecimientos-pagina .pagination .page-link {
+    .establecimientos-pagina .vi-paginacion .page-link {
         min-width: 40px;
         height: 40px;
     }
 
-    .establecimientos-pagina .pagination .page-number .page-link {
+    .establecimientos-pagina .vi-paginacion .page-number .page-link {
         width: 44px;
         height: 44px;
         min-width: 44px;
     }
 
-    .establecimientos-pagina .pagination .page-number .page-link::before {
+    .establecimientos-pagina .vi-paginacion .page-number .page-link::before {
         width: 44px;
         height: 44px;
     }
+}
+
+/* Esta página usa una sombra más marcada (4 capas) en el número activo que
+   el componente compartido (2 capas) — se preserva tal cual estaba antes de
+   extraer static/assets/css/componentes/paginacion.css. */
+.establecimientos-pagina .vi-paginacion .page-number.active .page-link::before {
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.16),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06),
+        0 97px 39px rgba(0, 45, 137, 0.02);
+}
+
+.establecimientos-pagina .vi-paginacion .page-number.active .page-link::after {
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.14),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06);
 }
 
 /* Movimiento decorativo (hover lift) fuera si el usuario prefiere menos animación */

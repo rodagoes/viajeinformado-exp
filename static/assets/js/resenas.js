@@ -1,17 +1,28 @@
 /**
  * resenas.js — Viaje Informado
  *
- * El formulario de reseña (.vi-resena-form) está siempre visible y se envía
- * con un POST tradicional a la misma página de detalle (sin fetch). Este
- * archivo se encarga de tres cosas independientes:
+ * El formulario de reseña (.vi-resena-form) se envía con un POST tradicional
+ * a la misma página de detalle (sin fetch). Este archivo se encarga de:
  *
- * 1. Contador de caracteres del comentario.
- * 2. Gate de sesión: si el usuario no está autenticado
- *    (data-autenticado="false"), intercepta el submit, guarda un borrador
- *    (estrella + comentario) en sessionStorage y muestra un SweetAlert que
- *    lleva al login con `next` de vuelta a esta misma página (#resenas).
- * 3. Restaurar ese borrador si existe al volver a cargar la página (tras
- *    completar el login/registro/OAuth).
+ * 1. Mover el/los modal(es) de "Eliminar reseña" a <body>. Bootstrap crea su
+ *    .modal-backdrop como hijo directo de <body>, pero el propio .modal vive
+ *    donde lo puso el template — anidado dentro de .vi-resenas. En mobile,
+ *    .detalle-contenido gana position:relative;z-index:1 (ver
+ *    detalle-establecimiento.css), lo que atrapa al modal en un stacking
+ *    context de valor bajo: el backdrop (hijo directo de body, z-index:1050)
+ *    termina pintando por encima y bloquea los clics aunque el modal se vea.
+ *    Sacarlo a body evita depender de cualquier ancestro presente o futuro.
+ * 2. Bloquear el scroll de fondo mientras el modal de eliminar está abierto.
+ *    Bootstrap ya agrega `.modal-open`/`overflow:hidden` al body, pero eso no
+ *    alcanza en iOS Safari: el "rubber-band" táctil sigue moviendo la página
+ *    por debajo del backdrop pese al overflow:hidden (bug histórico de
+ *    WebKit, independiente de este proyecto). El fix estándar es fijar el
+ *    body en su posición de scroll actual mientras el modal está visible.
+ * 3. Abrir/cerrar el compositor solo mediante "Editar" (nunca queda visible
+ *    y poblado automáticamente tras publicar).
+ * 4. Habilitar/deshabilitar "Publicar reseña"/"Guardar cambios" según si hay
+ *    una valoración marcada (la validación real sigue siendo server-side).
+ * 5. Contador de caracteres del comentario.
  *
  * También corrige la navegación por flechas del selector Uiverse: verificado
  * en navegador que `flex-direction: row-reverse` (DOM 5→4→3→2→1, visual
@@ -23,10 +34,33 @@
 (function () {
     'use strict';
 
+    document.querySelectorAll('.vi-resenas .modal').forEach(function (modal) {
+        document.body.appendChild(modal);
+    });
+
+    var SCROLL_LOCK_CLASS = 'vi-modal-scroll-lock';
+    var scrollLockY = 0;
+
+    document.querySelectorAll('[id$="-modal-eliminar"]').forEach(function (modal) {
+        modal.addEventListener('show.bs.modal', function () {
+            scrollLockY = window.scrollY;
+            document.body.style.top = (-scrollLockY) + 'px';
+            document.body.classList.add(SCROLL_LOCK_CLASS);
+        });
+        modal.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove(SCROLL_LOCK_CLASS);
+            document.body.style.top = '';
+            window.scrollTo(0, scrollLockY);
+        });
+    });
+
     var form = document.querySelector('.vi-resena-form');
     if (!form) return;
 
-    var BORRADOR_KEY = 'vi-resena-borrador:' + window.location.pathname;
+    var compose = document.querySelector('[data-resena-compose]');
+    var submitBtn = form.querySelector('[data-resena-submit]');
+    var cancelarBtn = form.querySelector('[data-resena-cancelar]');
+    var snapshotOriginal = null;
 
     function actualizarContador() {
         var textarea = form.querySelector('textarea[name="comentario"]');
@@ -36,76 +70,56 @@
         contador.textContent = textarea.value.length + '/' + max;
     }
 
-    function leerFormulario() {
+    function actualizarBotonSubmit() {
+        if (!submitBtn) return;
+        submitBtn.disabled = !form.querySelector('input[name="valoracion"]:checked');
+    }
+
+    function leerValores() {
         var estrella = form.querySelector('input[name="valoracion"]:checked');
         var textarea = form.querySelector('textarea[name="comentario"]');
-        return {
-            valoracion: estrella ? estrella.value : '',
-            comentario: textarea ? textarea.value : '',
-        };
+        return { valoracion: estrella ? estrella.value : '', comentario: textarea ? textarea.value : '' };
     }
 
-    function aplicarFormulario(datos) {
-        if (datos.valoracion) {
-            var input = form.querySelector('input[name="valoracion"][value="' + datos.valoracion + '"]');
-            if (input) input.checked = true;
-        }
+    function aplicarValores(datos) {
+        form.querySelectorAll('input[name="valoracion"]').forEach(function (r) {
+            r.checked = r.value === datos.valoracion;
+        });
         var textarea = form.querySelector('textarea[name="comentario"]');
-        if (textarea && datos.comentario) textarea.value = datos.comentario;
+        if (textarea) textarea.value = datos.comentario;
+        var botonQuitar = form.querySelector('[data-rating-quitar]');
+        if (botonQuitar) botonQuitar.hidden = !datos.valoracion;
         actualizarContador();
+        actualizarBotonSubmit();
     }
 
-    function restaurarBorrador() {
-        var guardado;
-        try {
-            guardado = sessionStorage.getItem(BORRADOR_KEY);
-        } catch (error) {
-            return;
-        }
-        if (!guardado) return;
-        try {
-            sessionStorage.removeItem(BORRADOR_KEY);
-            aplicarFormulario(JSON.parse(guardado));
-        } catch (error) {
-            /* borrador corrupto: se ignora */
-        }
+    if (compose && !compose.hidden) snapshotOriginal = leerValores();
+
+    document.querySelectorAll('[data-resena-editar]').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (!compose) return;
+            snapshotOriginal = leerValores();
+            compose.hidden = false;
+            compose.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var foco = form.querySelector('input[name="valoracion"]:checked') || form.querySelector('input[name="valoracion"]');
+            if (foco) foco.focus();
+        });
+    });
+
+    if (cancelarBtn) {
+        cancelarBtn.addEventListener('click', function () {
+            if (snapshotOriginal) aplicarValores(snapshotOriginal);
+            if (compose) compose.hidden = true;
+        });
     }
 
     form.addEventListener('input', function (event) {
         if (event.target.matches('textarea[name="comentario"]')) actualizarContador();
     });
 
-    form.addEventListener('submit', function (event) {
-        if (form.dataset.autenticado === 'true') return;
-        event.preventDefault();
-
-        try {
-            sessionStorage.setItem(BORRADOR_KEY, JSON.stringify(leerFormulario()));
-        } catch (error) {
-            /* almacenamiento no disponible: se continúa igual, solo se pierde el borrador */
-        }
-
-        var loginUrl = form.dataset.loginUrl;
-        if (!window.Swal) {
-            window.location.href = loginUrl;
-            return;
-        }
-
-        Swal.fire({
-            icon: 'warning',
-            title: 'Necesitas una cuenta para poder dejar tu reseña',
-            showCancelButton: true,
-            confirmButtonText: 'Iniciar sesión',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#007FFF',
-            cancelButtonColor: '#dc2626',
-        }).then(function (resultado) {
-            if (resultado.isConfirmed) window.location.href = loginUrl;
-        });
-    });
-
     actualizarContador();
-    restaurarBorrador();
+    actualizarBotonSubmit();
 
     document.querySelectorAll('.vi-resenas-dist-fill[data-porcentaje]').forEach(function (barra) {
         barra.style.width = barra.dataset.porcentaje + '%';
@@ -144,10 +158,14 @@
             botonQuitar.hidden = !hayMarcada;
         }
 
-        grupo.addEventListener('change', actualizarBotonQuitar);
+        grupo.addEventListener('change', function () {
+            actualizarBotonQuitar();
+            actualizarBotonSubmit();
+        });
         botonQuitar.addEventListener('click', function () {
             radiosValoracion.forEach(function (r) { r.checked = false; });
             actualizarBotonQuitar();
+            actualizarBotonSubmit();
         });
 
         actualizarBotonQuitar();

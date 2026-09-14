@@ -6,6 +6,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/establecimientos.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/paginacion.css' %}">
 {% endblock %}
 
 {% block extra_js %}
@@ -241,8 +242,8 @@
 
             <!-- Paginación -->
             {% if page_obj.has_other_pages %}
-                <nav aria-label="Navegación de páginas" class="d-flex justify-content-center est-paginacion-contenedor">
-                    <ul class="pagination">
+                <nav aria-label="Navegación de páginas" class="d-flex justify-content-center vi-paginacion-contenedor">
+                    <ul class="pagination vi-paginacion">
 
                         {% if page_obj.has_previous %}
                             <li class="page-item">

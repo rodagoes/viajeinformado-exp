@@ -12,7 +12,63 @@
 <main class="perfil-pagina">
     <div class="container">
         <div class="perfil-tarjeta">
-            <h1>Mi perfil</h1>
+            <h1 class="visually-hidden">Mi perfil</h1>
+
+            <div class="perfil-cabecera">
+                <div class="perfil-cabecera-avatar-wrap">
+                    <div class="perfil-cabecera-avatar">
+                        {% if request.user.perfil.foto_perfil %}
+                        <img src="{{ request.user.perfil.foto_perfil.url }}" alt="">
+                        {% else %}
+                        <span class="perfil-cabecera-avatar--inicial" aria-hidden="true">{{ request.user.username|first|upper }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="dropdown perfil-foto-menu">
+                        <button type="button" class="perfil-foto-lapiz" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Cambiar foto de perfil">
+                            <i class="bi bi-pencil-fill" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu perfil-foto-dropdown">
+                            <button type="button" class="dropdown-item" data-foto-cargar>Cargar una imagen</button>
+                            {% if request.user.perfil.foto_perfil %}
+                            <button type="button" class="dropdown-item text-danger" data-foto-quitar>Quitar foto</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="perfil-cabecera-info">
+                    <h2 class="perfil-cabecera-nombre">{{ request.user.get_full_name|default:request.user.username }}</h2>
+                    {% if request.user.get_full_name %}<p class="perfil-cabecera-username">@{{ request.user.username }}</p>{% endif %}
+                    <p class="perfil-cabecera-miembro">Miembro desde {{ request.user.date_joined|date:"F Y" }}</p>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="perfil-fila-edicion perfil-foto-form"
+                  data-campo="foto_perfil" {% if campo_en_edicion != 'foto_perfil' %}hidden{% endif %}>
+                {% csrf_token %}
+                <input type="hidden" name="accion" value="foto_perfil">
+                <input type="file" name="foto_perfil" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" data-foto-input hidden>
+                <button type="submit" name="quitar_foto" value="1" data-foto-quitar-submit hidden aria-hidden="true" tabindex="-1"></button>
+                <div class="perfil-foto-editor-mini">
+                    <div class="perfil-foto-preview-wrap">
+                        <img class="perfil-foto-preview" data-foto-preview
+                             src="{% if request.user.perfil.foto_perfil %}{{ request.user.perfil.foto_perfil.url }}{% endif %}"
+                             data-avatar-original="{% if request.user.perfil.foto_perfil %}{{ request.user.perfil.foto_perfil.url }}{% endif %}"
+                             {% if not request.user.perfil.foto_perfil %}hidden{% endif %} alt="">
+                        <span class="perfil-foto-preview--inicial" data-foto-inicial
+                              {% if request.user.perfil.foto_perfil %}hidden{% endif %}>{{ request.user.username|first|upper }}</span>
+                    </div>
+                    <div class="perfil-foto-editor-mini__texto">
+                        <p class="perfil-fila-label">JPG, PNG o WebP, máx. 5 MB</p>
+                        {% if form_foto.foto_perfil.errors %}
+                        <div class="perfil-error" role="alert">{{ form_foto.foto_perfil.errors.0 }}</div>
+                        {% endif %}
+                        <div class="perfil-fila-acciones">
+                            <button type="submit" class="btn perfil-guardar-btn">Guardar</button>
+                            <button type="button" class="perfil-cancelar-btn" data-cancelar="foto_perfil">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
             {% include "accounts/includes/tabs_cuenta.html" with activo="perfil" %}
 

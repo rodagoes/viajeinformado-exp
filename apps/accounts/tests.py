@@ -1,5 +1,8 @@
+import os
 import re
+import tempfile
 from datetime import timedelta
+from io import BytesIO
 from unittest.mock import patch
 from urllib.parse import unquote
 
@@ -8,15 +11,38 @@ from allauth.socialaccount.models import SocialAccount, SocialLogin
 from allauth.socialaccount.providers.base import AuthProcess
 from django.contrib.auth.models import AnonymousUser, User
 from django.core import mail
-from django.test import RequestFactory, TestCase
+from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
+from PIL import Image
 
 from apps.establecimientos.models import CategoriaEstablecimiento, Establecimiento
 
 from .adapters import ViajeInformadoSocialAccountAdapter
 from .models import CodigoOTP, PerfilUsuario
 from .security import marcar_reauth
+
+
+def _imagen_valida(nombre='foto.png', formato='PNG', content_type='image/png'):
+    """Bytes de una imagen real y válida (Pillow debe poder abrirla) — a
+    diferencia de un archivo cualquiera con extensión falsa, necesario porque
+    foto_perfil es un ImageField (valida contenido real, no solo el nombre)."""
+    buffer = BytesIO()
+    Image.new('RGB', (10, 10), color='blue').save(buffer, format=formato)
+    return SimpleUploadedFile(nombre, buffer.getvalue(), content_type=content_type)
+
+
+def _imagen_grande(nombre='grande.png'):
+    """Imagen real >5MB: ruido aleatorio (sin patrón) para que PNG no la
+    comprima a un tamaño trivial, con compress_level=0 para no perder tiempo
+    comprimiendo algo que de todos modos no debe entrar."""
+    lado = 1500
+    pixeles = os.urandom(lado * lado * 3)
+    buffer = BytesIO()
+    Image.frombytes('RGB', (lado, lado), pixeles).save(buffer, format='PNG', compress_level=0)
+    return SimpleUploadedFile(nombre, buffer.getvalue(), content_type='image/png')
 
 DATOS_VALIDOS = {
     'nombres': 'Rodrigo',
@@ -307,6 +333,120 @@ class PerfilSocialTests(PerfilTestBase):
     def test_socialaccount_permanece_vinculado(self):
         self.client.post(reverse('accounts:perfil'), {'accion': 'username', 'username': 'social.nuevo'})
         self.assertTrue(SocialAccount.objects.filter(user=self.usuario_social, provider='google').exists())
+
+
+class FotoPerfilTests(PerfilTestBase):
+    def post_foto(self, **campos):
+        datos = {'accion': 'foto_perfil'}
+        datos.update(campos)
+        return self.client.post(reverse('accounts:perfil'), datos)
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_subida_valida_guarda_archivo(self):
+        response = self.post_foto(foto_perfil=_imagen_valida())
+        self.assertRedirects(response, reverse('accounts:perfil'))
+        perfil = PerfilUsuario.objects.get(user=self.usuario)
+        self.assertTrue(perfil.foto_perfil)
+        self.assertTrue(default_storage.exists(perfil.foto_perfil.name))
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_archivo_no_es_imagen_real_rechazado(self):
+        archivo = SimpleUploadedFile('falso.jpg', b'esto no es una imagen', content_type='image/jpeg')
+        response = self.post_foto(foto_perfil=archivo)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['campo_en_edicion'], 'foto_perfil')
+        perfil = PerfilUsuario.objects.filter(user=self.usuario).first()
+        self.assertFalse(perfil and perfil.foto_perfil)
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_formato_no_permitido_rechazado(self):
+        # BMP es una imagen real (Pillow la abre sin problema) pero no está
+        # en la allowlist de JPG/PNG/WebP.
+        archivo = _imagen_valida(nombre='foto.bmp', formato='BMP', content_type='image/bmp')
+        response = self.post_foto(foto_perfil=archivo)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['campo_en_edicion'], 'foto_perfil')
+        perfil = PerfilUsuario.objects.filter(user=self.usuario).first()
+        self.assertFalse(perfil and perfil.foto_perfil)
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_archivo_muy_grande_rechazado(self):
+        response = self.post_foto(foto_perfil=_imagen_grande())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['campo_en_edicion'], 'foto_perfil')
+        perfil = PerfilUsuario.objects.filter(user=self.usuario).first()
+        self.assertFalse(perfil and perfil.foto_perfil)
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_reemplazo_borra_archivo_anterior(self):
+        self.post_foto(foto_perfil=_imagen_valida(nombre='primera.png'))
+        nombre_anterior = PerfilUsuario.objects.get(user=self.usuario).foto_perfil.name
+        self.assertTrue(default_storage.exists(nombre_anterior))
+
+        self.post_foto(foto_perfil=_imagen_valida(nombre='segunda.png'))
+        perfil = PerfilUsuario.objects.get(user=self.usuario)
+        self.assertNotEqual(perfil.foto_perfil.name, nombre_anterior)
+        self.assertTrue(default_storage.exists(perfil.foto_perfil.name))
+        self.assertFalse(default_storage.exists(nombre_anterior))
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_quitar_foto_borra_archivo_y_limpia_campo(self):
+        self.post_foto(foto_perfil=_imagen_valida())
+        nombre_archivo = PerfilUsuario.objects.get(user=self.usuario).foto_perfil.name
+
+        response = self.post_foto(quitar_foto='1')
+        self.assertRedirects(response, reverse('accounts:perfil'))
+        perfil = PerfilUsuario.objects.get(user=self.usuario)
+        self.assertFalse(perfil.foto_perfil)
+        self.assertFalse(default_storage.exists(nombre_archivo))
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_avatar_visible_en_perfil_con_foto(self):
+        self.post_foto(foto_perfil=_imagen_valida())
+        perfil = PerfilUsuario.objects.get(user=self.usuario)
+        response = self.client.get(reverse('accounts:perfil'))
+        # El nombre del archivo real es único (Django lo desambigua) — buscar
+        # su URL es una verificación inequívoca, a diferencia de buscar "<img"
+        # a secas (el logo del header también es una <img>).
+        self.assertContains(response, perfil.foto_perfil.url)
+        self.assertNotContains(response, 'perfil-cabecera-avatar--inicial')
+
+    def test_fallback_inicial_en_perfil_sin_foto(self):
+        response = self.client.get(reverse('accounts:perfil'))
+        self.assertContains(response, 'perfil-cabecera-avatar--inicial')
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_avatar_visible_en_header_con_foto(self):
+        self.post_foto(foto_perfil=_imagen_valida())
+        perfil = PerfilUsuario.objects.get(user=self.usuario)
+        response = self.client.get(reverse('base:home'))
+        self.assertContains(response, perfil.foto_perfil.url)
+
+    def test_header_muestra_icono_fallback_sin_foto(self):
+        response = self.client.get(reverse('base:home'))
+        self.assertContains(response, 'vi-login-btn__icon')
+        self.assertContains(response, 'bi-person-fill')
+
+    def test_usuario_sin_perfilusuario_puede_subir_foto(self):
+        # Caso borde: un usuario sin PerfilUsuario (p. ej. creado con
+        # User.objects.create_user() directo, sin pasar por registro/social)
+        # no debe crashear al abrir Mi Perfil ni al subir una foto — el
+        # perfil se autocompleta recién al intentar guardar.
+        huerfano = User.objects.create_user(username='sin_perfil', password='Clave123!')
+        self.assertFalse(PerfilUsuario.objects.filter(user=huerfano).exists())
+        self.client.login(username='sin_perfil', password='Clave123!')
+
+        response = self.client.get(reverse('accounts:perfil'))
+        self.assertEqual(response.status_code, 200)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            with override_settings(MEDIA_ROOT=tmp):
+                response = self.client.post(
+                    reverse('accounts:perfil'),
+                    {'accion': 'foto_perfil', 'foto_perfil': _imagen_valida()},
+                )
+                self.assertRedirects(response, reverse('accounts:perfil'))
+                self.assertTrue(PerfilUsuario.objects.get(user=huerfano).foto_perfil)
 
 
 class CuentaTestBase(TestCase):
@@ -758,6 +898,40 @@ class EliminarCuentaTests(CuentaTestBase):
             response = self.client.post(reverse('accounts:eliminar_cuenta'), {'confirmacion': 'cuentaqa'})
         self.assertRedirects(response, reverse('accounts:cuenta_eliminada'))
         self.assertFalse(User.objects.filter(pk=usuario_pk).exists())
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_eliminar_cuenta_con_foto_borra_archivo_del_storage(self):
+        perfil = PerfilUsuario.objects.get(user=self.usuario)
+        perfil.foto_perfil = _imagen_valida()
+        perfil.save()
+        nombre_archivo = perfil.foto_perfil.name
+        self.assertTrue(default_storage.exists(nombre_archivo))
+
+        self.marcar_reauth_cliente()
+        response = self.client.post(reverse('accounts:eliminar_cuenta'), {'confirmacion': 'cuentaqa'})
+        self.assertRedirects(response, reverse('accounts:cuenta_eliminada'))
+
+        self.assertFalse(User.objects.filter(pk=self.usuario.pk).exists())
+        self.assertFalse(PerfilUsuario.objects.filter(user_id=self.usuario.pk).exists())
+        self.assertFalse(default_storage.exists(nombre_archivo))
+
+    @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+    def test_eliminar_cuenta_si_falla_borrado_de_foto_no_revierte_ni_500(self):
+        perfil = PerfilUsuario.objects.get(user=self.usuario)
+        perfil.foto_perfil = _imagen_valida()
+        perfil.save()
+
+        self.marcar_reauth_cliente()
+        with patch(
+            'django.core.files.storage.FileSystemStorage.delete',
+            side_effect=OSError('storage caído'),
+        ):
+            response = self.client.post(reverse('accounts:eliminar_cuenta'), {'confirmacion': 'cuentaqa'})
+        # _borrar_archivo_best_effort atrapa el fallo de storage.delete()
+        # internamente: la cuenta ya se eliminó antes de intentar limpiar el
+        # archivo, así que un fallo ahí no debe revertirla ni devolver 500.
+        self.assertRedirects(response, reverse('accounts:cuenta_eliminada'))
+        self.assertFalse(User.objects.filter(pk=self.usuario.pk).exists())
 
 
 def _request_con_sesion(usuario=None):

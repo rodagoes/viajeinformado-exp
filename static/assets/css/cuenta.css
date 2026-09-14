@@ -20,10 +20,10 @@
 .cuenta-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-size: 0.78rem;
-    font-weight: 600;
-    padding: 3px 10px;
+    font-weight: 700;
+    padding: 4px 12px;
     border-radius: 999px;
     background: #EEF3FB;
     color: #61708C;
@@ -52,23 +52,36 @@
 }
 
 .cuenta-provider-icono {
-    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1rem;
 }
 
 .cuenta-provider-icono--google {
+    background: rgba(234, 67, 53, 0.10);
     color: #EA4335;
 }
 
 .cuenta-provider-icono--facebook {
+    background: rgba(24, 119, 242, 0.10);
     color: #1877F2;
 }
 
-/* --- Zona de riesgo: borde sobrio, el rojo solo vive en el botón --------- */
+/* --- Zona de riesgo: fondo y borde muy tenues, el rojo saturado solo vive
+   en el botón e ícono ------------------------------------------------------ */
 
 .cuenta-zona-riesgo {
+    background: rgba(220, 38, 38, 0.04);
     border: 1px solid #f3d0d0;
-    border-radius: 12px;
-    padding: 16px 20px;
+}
+
+.cuenta-zona-riesgo__icon {
+    background: rgba(220, 38, 38, 0.10);
+    color: #dc2626;
 }
 
 .cuenta-lista-eliminar {

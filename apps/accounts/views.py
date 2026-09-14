@@ -18,8 +18,8 @@ from django.utils.http import url_has_allowed_host_and_scheme, urlencode
 from django.views.decorators.http import require_POST
 
 from .forms import (
-    ApellidoForm, CambiarEmailForm, EliminarCuentaForm, LoginForm, NombreForm,
-    OTPForm, ReauthPasswordForm, RegistroForm, UsernameForm,
+    ApellidoForm, CambiarEmailForm, EliminarCuentaForm, FotoPerfilForm, LoginForm,
+    NombreForm, OTPForm, ReauthPasswordForm, RegistroForm, UsernameForm,
 )
 from .models import CodigoOTP, PerfilUsuario
 from .security import marcar_reauth, tiene_reauth_reciente
@@ -62,6 +62,16 @@ def _notificar_best_effort(destino, asunto, cuerpo):
         send_mail(asunto, cuerpo, None, [destino])
     except Exception:
         logger.exception('No se pudo enviar una notificación de seguridad: %s', asunto)
+
+
+def _borrar_archivo_best_effort(storage, nombre):
+    """Limpieza de storage sin bloquear el flujo que la llama (reemplazo de
+    foto de perfil, eliminación de cuenta): un fallo acá nunca debe revertir
+    ni hacer fallar la operación principal ya confirmada."""
+    try:
+        storage.delete(nombre)
+    except Exception:
+        logger.exception('No se pudo borrar el archivo de storage: %s', nombre)
 
 
 def _reenviar_otp_generico(request, proposito, destino, asunto):
@@ -199,33 +209,69 @@ def perfil(request):
         clave: FormClass(instance=request.user)
         for clave, (_, FormClass) in CAMPOS_PERFIL.items()
     }
+    # getattr con default: PerfilUsuario.DoesNotExist hereda de AttributeError
+    # (ver ReverseOneToOneDescriptor de Django), así que esto no lanza excepción
+    # para el caso borde de un usuario sin perfil (p. ej. creado directo con
+    # User.objects.create_user() en vez del flujo de registro/login social).
+    perfil_usuario = getattr(request.user, 'perfil', None)
+    form_foto = FotoPerfilForm(instance=perfil_usuario)
 
     if request.method == 'POST':
         accion = request.POST.get('accion')
-        entrada = CAMPOS_PERFIL.get(accion)
-        if entrada is None:
-            return HttpResponseBadRequest('Acción no reconocida.')
-        _, FormClass = entrada
-        form = FormClass(request.POST, instance=request.user)
-        if form.is_valid():
-            username_anterior = User.objects.get(pk=request.user.pk).username
-            form.save()
-            if accion == 'username' and username_anterior != request.user.username:
-                PerfilUsuario.objects.filter(user=request.user).update(username_actualizado_en=timezone.now())
-            messages.success(request, 'Cambios guardados.')
-            return redirect('accounts:perfil')
-        # ModelForm._post_clean() ya escribió el intento inválido en
-        # request.user (misma instancia que form.instance) aunque is_valid()
-        # sea False. Sin este refresh, el header u otra parte de la página
-        # que lea request.user.<campo> directamente mostraría el valor
-        # inválido en vez del persistido. form.errors/form.data no se ven
-        # afectados por el refresh (el widget bound lee de form.data).
-        request.user.refresh_from_db()
-        forms_por_campo[accion] = form
-        campo_en_edicion = accion
+
+        if accion == 'foto_perfil':
+            if perfil_usuario is None:
+                # Se autocompleta solo al intentar escribir, no en cada GET.
+                perfil_usuario, _ = PerfilUsuario.objects.get_or_create(
+                    user=request.user,
+                    defaults={'nombres_apellidos': request.user.get_full_name() or request.user.username},
+                )
+
+            if 'quitar_foto' in request.POST:
+                perfil_usuario.foto_perfil.delete(save=True)
+                messages.success(request, 'Foto de perfil eliminada.')
+                return redirect('accounts:perfil')
+
+            foto_anterior_nombre = perfil_usuario.foto_perfil.name if perfil_usuario.foto_perfil else ''
+            foto_anterior_storage = perfil_usuario.foto_perfil.storage if foto_anterior_nombre else None
+
+            form_foto = FotoPerfilForm(request.POST, request.FILES, instance=perfil_usuario)
+            if form_foto.is_valid():
+                perfil_actualizado = form_foto.save()
+                nueva_foto_nombre = perfil_actualizado.foto_perfil.name
+                if foto_anterior_storage and foto_anterior_nombre != nueva_foto_nombre:
+                    # El archivo nuevo ya quedó guardado arriba: recién ahora es seguro
+                    # limpiar el anterior (nunca se borra antes de confirmar el reemplazo).
+                    _borrar_archivo_best_effort(foto_anterior_storage, foto_anterior_nombre)
+                messages.success(request, 'Foto de perfil actualizada.')
+                return redirect('accounts:perfil')
+            campo_en_edicion = 'foto_perfil'
+        else:
+            entrada = CAMPOS_PERFIL.get(accion)
+            if entrada is None:
+                return HttpResponseBadRequest('Acción no reconocida.')
+            _, FormClass = entrada
+            form = FormClass(request.POST, instance=request.user)
+            if form.is_valid():
+                username_anterior = User.objects.get(pk=request.user.pk).username
+                form.save()
+                if accion == 'username' and username_anterior != request.user.username:
+                    PerfilUsuario.objects.filter(user=request.user).update(username_actualizado_en=timezone.now())
+                messages.success(request, 'Cambios guardados.')
+                return redirect('accounts:perfil')
+            # ModelForm._post_clean() ya escribió el intento inválido en
+            # request.user (misma instancia que form.instance) aunque is_valid()
+            # sea False. Sin este refresh, el header u otra parte de la página
+            # que lea request.user.<campo> directamente mostraría el valor
+            # inválido en vez del persistido. form.errors/form.data no se ven
+            # afectados por el refresh (el widget bound lee de form.data).
+            request.user.refresh_from_db()
+            forms_por_campo[accion] = form
+            campo_en_edicion = accion
 
     return render(request, 'accounts/perfil.html', {
         'forms_por_campo': forms_por_campo,
+        'form_foto': form_foto,
         'campo_en_edicion': campo_en_edicion,
     })
 
@@ -425,8 +471,13 @@ def eliminar_cuenta(request):
         perfil_usuario = PerfilUsuario.objects.filter(user=usuario).first()
         email_anterior, username_anterior = usuario.email, usuario.username
         verificado_anterior = bool(perfil_usuario and perfil_usuario.verificado)
+        foto_nombre = perfil_usuario.foto_perfil.name if perfil_usuario and perfil_usuario.foto_perfil else ''
+        foto_storage = perfil_usuario.foto_perfil.storage if foto_nombre else None
         usuario.delete()  # CASCADE: PerfilUsuario, CodigoOTP, Favorito, Resena, SocialAccount, ...
         auth_logout(request)
+        if foto_storage:
+            # best-effort: la cuenta ya quedó eliminada: un fallo acá no la revive ni hace fallar la request.
+            _borrar_archivo_best_effort(foto_storage, foto_nombre)
         if email_anterior and verificado_anterior:
             _notificar_best_effort(
                 email_anterior, 'Tu cuenta fue eliminada - Viaje Informado',

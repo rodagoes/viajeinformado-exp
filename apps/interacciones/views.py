@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Avg, Count, Prefetch, Q
 from django.http import Http404, HttpResponseBadRequest, JsonResponse
@@ -13,6 +14,14 @@ from .services import TIPOS_RECURSO as TIPOS_FAVORITO
 from .services import _filtro_recurso, resolver_recurso
 
 FILTROS_VALIDOS = {"todos", "lugares", "restaurantes", "alojamientos"}
+FAVORITOS_POR_PAGINA = 6
+
+FILTRO_LABEL = {
+    "todos": ("favorito", "favoritos"),
+    "lugares": ("lugar turístico", "lugares turísticos"),
+    "restaurantes": ("restaurante", "restaurantes"),
+    "alojamientos": ("alojamiento", "alojamientos"),
+}
 
 RECURSO_ACTIVO = Q(establecimiento__isnull=True) | Q(establecimiento__activo=True)
 RECURSO_ACTIVO &= Q(lugar_turistico__isnull=True) | Q(lugar_turistico__activo=True)
@@ -61,7 +70,7 @@ def favoritos(request):
         .order_by("-es_principal", "id"),
     )
 
-    qs = (
+    qs_global = (
         Favorito.objects.filter(usuario=request.user)
         .filter(RECURSO_ACTIVO)
         .select_related(
@@ -73,13 +82,17 @@ def favoritos(request):
     )
 
     if tipo == "lugares":
-        qs = qs.filter(lugar_turistico__isnull=False)
+        qs_filtrado = qs_global.filter(lugar_turistico__isnull=False)
     elif tipo == "restaurantes":
-        qs = qs.filter(establecimiento__tipo="restaurante")
+        qs_filtrado = qs_global.filter(establecimiento__tipo="restaurante")
     elif tipo == "alojamientos":
-        qs = qs.filter(establecimiento__tipo="alojamiento")
+        qs_filtrado = qs_global.filter(establecimiento__tipo="alojamiento")
+    else:
+        qs_filtrado = qs_global
 
-    favoritos_list = list(qs)
+    paginator = Paginator(qs_filtrado, FAVORITOS_POR_PAGINA)
+    favoritos_page = paginator.get_page(request.GET.get("page"))
+    favoritos_list = list(favoritos_page)  # solo los ítems de la página actual
 
     est_ids = [f.establecimiento_id for f in favoritos_list if f.establecimiento_id]
     lugar_ids = [f.lugar_turistico_id for f in favoritos_list if f.lugar_turistico_id]
@@ -103,20 +116,23 @@ def favoritos(request):
         else:
             favorito.rating = ratings_lugar.get(favorito.lugar_turistico_id)
 
-    if favoritos_list:
-        tiene_favoritos_globales = True
-    elif tipo == "todos":
-        tiene_favoritos_globales = False
+    if paginator.count == 0:
+        tiene_favoritos_globales = qs_global.exists() if tipo != "todos" else False
     else:
-        tiene_favoritos_globales = Favorito.objects.filter(usuario=request.user).filter(RECURSO_ACTIVO).exists()
+        tiene_favoritos_globales = True
+
+    label_singular, label_plural = FILTRO_LABEL[tipo]
 
     return render(
         request,
         "interacciones/favoritos.html",
         {
             "favoritos": favoritos_list,
+            "favoritos_page": favoritos_page,
             "tipo": tipo,
             "tiene_favoritos_globales": tiene_favoritos_globales,
+            "filtro_label_singular": label_singular,
+            "filtro_label_plural": label_plural,
         },
     )
 

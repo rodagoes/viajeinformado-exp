@@ -4,8 +4,12 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
+from .models import PerfilUsuario
+
 USERNAME_RE = re.compile(r'^[A-Za-z0-9](?:[._-]?[A-Za-z0-9])+$')
 PASSWORD_SYMBOLS = r'!@#%&*?$.\-_+=,;:()\[\]{}/\\|~^<>\'"`'
+FOTO_PERFIL_TIPOS_VALIDOS = {'image/jpeg', 'image/png', 'image/webp'}
+FOTO_PERFIL_TAMANO_MAXIMO_MB = 5
 
 
 class RegistroForm(forms.Form):
@@ -89,7 +93,6 @@ class RegistroForm(forms.Form):
         return cleaned
 
     def save(self):
-        from .models import PerfilUsuario
         datos = self.cleaned_data
         user = User.objects.create_user(
             username=datos['username'],
@@ -174,6 +177,26 @@ class UsernameForm(forms.ModelForm):
         if User.objects.filter(username__iexact=username).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError('Este nombre de usuario ya está en uso. Elige otro.')
         return username
+
+
+class FotoPerfilForm(forms.ModelForm):
+    class Meta:
+        model = PerfilUsuario
+        fields = ['foto_perfil']
+
+    def clean_foto_perfil(self):
+        archivo = self.cleaned_data.get('foto_perfil')
+        if not archivo:
+            return archivo
+        # content_type ya no es el header enviado por el navegador: ImageField
+        # (django/forms/fields.py) abre el archivo con Pillow y lo sobrescribe
+        # con el formato realmente detectado — por eso esta verificación es
+        # confiable, no una confianza ciega en el cliente.
+        if archivo.content_type not in FOTO_PERFIL_TIPOS_VALIDOS:
+            raise forms.ValidationError('Solo se permiten imágenes JPG, PNG o WebP.')
+        if archivo.size > FOTO_PERFIL_TAMANO_MAXIMO_MB * 1024 * 1024:
+            raise forms.ValidationError(f'La imagen no debe superar los {FOTO_PERFIL_TAMANO_MAXIMO_MB} MB.')
+        return archivo
 
 
 class CambiarEmailForm(forms.Form):

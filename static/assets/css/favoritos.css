@@ -3,10 +3,26 @@
  * cards de establecimientos/lugares turísticos (radio, sombra, tipografía).
  */
 
+.favoritos-pagina .seccion-fondo-principal {
+    min-height: 100vh;
+    padding: 0 0 120px;
+}
+
 .favoritos-encabezado {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(180deg, #F7F9FD 0%, #EEF3FB 100%);
     padding: calc(var(--vi-header-height-desktop, 78px) + 40px) 0 32px;
     text-align: center;
+}
+
+.favoritos-encabezado__fondo {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 12% 20%, rgba(0, 127, 255, 0.10), transparent 42%),
+        radial-gradient(circle at 88% 75%, rgba(0, 45, 137, 0.08), transparent 45%);
 }
 
 @media (max-width: 1199px) {
@@ -15,24 +31,66 @@
     }
 }
 
+.favoritos-encabezado__icono {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 14px;
+    border-radius: 50%;
+    background: #002D89;
+    color: #ffffff;
+    font-size: 1.5rem;
+}
+
 .favoritos-encabezado h1 {
-    font-family: "Playfair Display", serif;
+    position: relative;
+    font-family: "Inter", sans-serif;
+    letter-spacing: 2px;
     color: #002D89;
     font-size: 2rem;
     margin-bottom: 8px;
 }
 
 .favoritos-encabezado p {
+    position: relative;
     color: #61708C;
     max-width: 560px;
     margin: 0 auto;
 }
 
+.favoritos-filtros-barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0 24px;
+}
+
 .favoritos-filtros {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 10px;
-    margin: 20px 0 24px;
+    min-width: 0;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.favoritos-filtros::-webkit-scrollbar {
+    display: none;
+}
+
+.favoritos-contador {
+    margin: 0;
+    color: #61708C;
+    font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .favoritos-filtro-chip {
@@ -44,7 +102,27 @@
     font-size: 0.88rem;
     font-weight: 500;
     text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Desktop: el contador queda fijo a la derecha en la misma fila que los
+   chips (en mobile, la barra sigue envolviendo: chips arriba, contador
+   abajo — ver @media max-width:576px). Los chips en sí ya scrollean en
+   una sola fila a cualquier ancho (regla base de .favoritos-filtros). */
+@media (min-width: 768px) {
+    .favoritos-filtros-barra {
+        flex-wrap: nowrap;
+    }
+
+    .favoritos-filtros {
+        flex: 1 1 auto;
+    }
+
+    .favoritos-contador {
+        flex-shrink: 0;
+    }
 }
 
 .favoritos-filtro-chip:hover {
@@ -63,30 +141,50 @@
     outline-offset: 2px;
 }
 
-/* --- Card ------------------------------------------------------------- */
+/* --- Listado (listones) ------------------------------------------------ */
 
-.favorito-tarjeta {
-    background: #ffffff;
-    border-radius: 18px;
-    overflow: hidden;
-    border: 1px solid #DFE7F3;
-    box-shadow: 0 10px 26px rgba(24, 32, 51, 0.08);
-    height: 100%;
+.favoritos-lista {
     display: flex;
     flex-direction: column;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    gap: 16px;
 }
 
-.favoritos-grilla .col.is-removing,
-.favoritos-grilla .favorito-tarjeta.is-removing {
+/* Card = listón horizontal en una sola columna. Grid con áreas nombradas
+   sobre la propia .favorito-tarjeta (imagen incluida): permite que "Ver
+   más" viva junto al tipo/corazón en desktop pero baje a una fila propia
+   de ancho completo (por debajo de la imagen) en mobile — sin depender del
+   orden del DOM ni anidar un grid dentro de otro. */
+.favorito-tarjeta {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #DFE7F3;
+    box-shadow: 0 8px 20px rgba(24, 32, 51, 0.07);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: grid;
+    padding: 14px;
+    column-gap: 14px;
+    row-gap: 4px;
+    grid-template-columns: 80px 1fr auto;
+    grid-template-areas:
+        "imagen tipo    corazon"
+        "imagen titulo  titulo"
+        "imagen ubicacion ubicacion"
+        "imagen rating  rating"
+        "vermas vermas  vermas";
+}
+
+.favoritos-lista .favorito-tarjeta.is-removing {
     opacity: 0;
     transform: scale(0.97);
 }
 
 .favorito-imagen-contenedor {
-    position: relative;
-    width: 100%;
-    height: 180px;
+    grid-area: imagen;
+    align-self: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
     background: #EEF3FB;
     overflow: hidden;
 }
@@ -105,40 +203,54 @@
     align-items: center;
     justify-content: center;
     color: #61708C;
-    font-size: 1.6rem;
-}
-
-.favorito-cuerpo {
-    padding: 16px 18px 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    font-size: 1.3rem;
 }
 
 .favorito-tipo {
+    grid-area: tipo;
+    align-self: center;
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: #007FFF;
-    margin-bottom: 4px;
+}
+
+/* El corazón compartido (.vi-heart-btn) está pensado para flotar sobre una
+   imagen (position:absolute); acá vive dentro del grid de la card. */
+.favorito-corazon.vi-heart-btn {
+    grid-area: corazon;
+    position: static;
+    width: 34px;
+    height: 34px;
+    box-shadow: none;
+    background-color: #ffffff;
+    border: 1px solid #DFE7F3;
+    color: #007FFF;
+}
+
+.favorito-corazon.vi-heart-btn.is-active {
+    color: #007FFF;
+    border-color: rgba(0, 127, 255, 0.25);
 }
 
 .favorito-titulo {
-    font-family: "Playfair Display", serif;
-    font-size: 1.15rem;
+    grid-area: titulo;
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
     color: #182033;
-    margin: 0 0 8px;
+    margin: 0;
     word-break: break-word;
 }
 
 .favorito-ubicacion {
+    grid-area: ubicacion;
     font-size: 0.85rem;
     color: #61708C;
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 8px;
 }
 
 .favorito-ubicacion span {
@@ -147,40 +259,72 @@
 }
 
 .favorito-rating {
+    grid-area: rating;
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.85rem;
     color: #182033;
-    margin-bottom: 14px;
 }
 
-.favorito-rating-estrella {
-    color: #ffa723;
+.favorito-rating .vi-rating-estatica {
+    font-size: 0.85rem;
+}
+
+.favorito-rating-texto {
+    color: #61708C;
 }
 
 .favorito-sin-rating {
     color: #61708C;
-    font-style: italic;
 }
 
 .favorito-ver-mas {
-    margin-top: auto;
-    align-self: flex-start;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #002D89;
-    text-decoration: none;
-}
-
-.favorito-ver-mas:hover {
+    grid-area: vermas;
+    justify-self: stretch;
+    text-align: center;
+    margin-top: 8px;
     color: #007FFF;
 }
 
-.favorito-ver-mas:focus-visible {
-    outline: 2px solid #007FFF;
-    outline-offset: 3px;
+.favorito-ver-mas:hover {
+    color: #002D89;
 }
 
-/* Empty states: markup ahora usa .vi-empty-state/.vi-btn-primary/
-   .vi-btn-secondary compartidos (ui-comun.css) — sin reglas propias aquí. */
+.favorito-ver-mas__icono {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* Empty states: markup usa .vi-empty-state/.vi-btn-primary/.vi-btn-secondary
+   compartidos (ui-comun.css) — sin reglas propias aquí. */
+
+@media (min-width: 768px) {
+    .favorito-tarjeta {
+        grid-template-columns: 120px 1fr auto auto;
+        column-gap: 18px;
+        padding: 16px 20px;
+        grid-template-areas:
+            "imagen tipo    vermas  corazon"
+            "imagen titulo  titulo  titulo"
+            "imagen ubicacion ubicacion ubicacion"
+            "imagen rating  rating  rating";
+    }
+
+    .favorito-imagen-contenedor {
+        width: 120px;
+        height: 96px;
+    }
+
+    .favorito-ver-mas {
+        justify-self: end;
+        margin-top: 0;
+        padding: 6px 14px;
+        min-height: 34px;
+        font-size: 0.82rem;
+    }
+}
 
 @media (max-width: 576px) {
     .favoritos-encabezado {
@@ -188,5 +332,10 @@
     }
     .favoritos-encabezado h1 {
         font-size: 1.6rem;
+    }
+    .favoritos-contador {
+        width: 100%;
+        text-align: left;
+        order: 2;
     }
 }

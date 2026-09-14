@@ -375,6 +375,101 @@ class FavoritosPageViewTests(InteraccionesTestBase):
 
         self.assertEqual(queries_con_uno, queries_con_seis)
 
+        for i in range(5, 12):
+            est = Establecimiento.objects.create(
+                tipo="restaurante", categoria_principal=categoria, nombre=f"Local {i}", slug=f"local-{i}",
+            )
+            Favorito.objects.create(usuario=self.usuario, establecimiento=est)
+
+        with CaptureQueriesContext(connection) as trece_queries:
+            self.client.get(self._url())
+        queries_con_trece = len(trece_queries.captured_queries)
+
+        self.assertEqual(queries_con_uno, queries_con_trece)
+
+    def _crear_n_favoritos_restaurante(self, cantidad):
+        categoria = CategoriaEstablecimiento.objects.create(nombre=f"Cat-{cantidad}", slug=f"cat-{cantidad}")
+        favoritos = []
+        for i in range(cantidad):
+            est = Establecimiento.objects.create(
+                tipo="restaurante", categoria_principal=categoria, nombre=f"Resto {i}", slug=f"resto-{cantidad}-{i}",
+            )
+            favoritos.append(Favorito.objects.create(usuario=self.usuario, establecimiento=est))
+        return favoritos
+
+    def test_pagina_1_muestra_6_favoritos(self):
+        self._crear_n_favoritos_restaurante(7)
+        response = self.client.get(self._url())
+        self.assertEqual(len(response.context["favoritos"]), 6)
+        self.assertEqual(response.context["favoritos_page"].paginator.count, 7)
+
+    def test_pagina_2_muestra_el_resto(self):
+        self._crear_n_favoritos_restaurante(7)
+        response = self.client.get(f"{reverse('interacciones:favoritos')}?page=2")
+        self.assertEqual(len(response.context["favoritos"]), 1)
+
+    def test_trece_favoritos_reparte_6_6_1(self):
+        self._crear_n_favoritos_restaurante(13)
+        url = reverse("interacciones:favoritos")
+        pagina1 = self.client.get(url)
+        pagina2 = self.client.get(f"{url}?page=2")
+        pagina3 = self.client.get(f"{url}?page=3")
+        self.assertEqual(len(pagina1.context["favoritos"]), 6)
+        self.assertEqual(len(pagina2.context["favoritos"]), 6)
+        self.assertEqual(len(pagina3.context["favoritos"]), 1)
+
+    def test_pagina_fuera_de_rango_no_causa_500(self):
+        self._crear_n_favoritos_restaurante(3)
+        response = self.client.get(f"{reverse('interacciones:favoritos')}?page=99")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["favoritos_page"].number, 1)
+
+    def test_pagina_no_numerica_no_causa_500(self):
+        self._crear_n_favoritos_restaurante(2)
+        response = self.client.get(f"{reverse('interacciones:favoritos')}?page=abc")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["favoritos_page"].number, 1)
+
+    def test_filtro_y_pagina_combinados(self):
+        self._crear_n_favoritos_restaurante(7)
+        Favorito.objects.create(usuario=self.usuario, lugar_turistico=self.lugar)
+        response = self.client.get(f"{reverse('interacciones:favoritos')}?tipo=restaurantes&page=2")
+        self.assertEqual(response.context["tipo"], "restaurantes")
+        self.assertEqual(len(response.context["favoritos"]), 1)
+        for favorito in response.context["favoritos"]:
+            self.assertIsNotNone(favorito.establecimiento)
+
+    def test_unfavorite_unico_de_pagina_2_reajusta_a_pagina_valida(self):
+        favoritos = self._crear_n_favoritos_restaurante(7)
+        url = reverse("interacciones:favoritos")
+        pagina2 = self.client.get(f"{url}?page=2")
+        self.assertEqual(len(pagina2.context["favoritos"]), 1)
+
+        # El único favorito de la página 2 es el primero creado (orden
+        # "más reciente primero" deja los últimos 6 en la página 1).
+        favoritos[0].delete()
+
+        pagina2_tras_quitar = self.client.get(f"{url}?page=2")
+        self.assertEqual(pagina2_tras_quitar.context["favoritos_page"].number, 1)
+        self.assertEqual(len(pagina2_tras_quitar.context["favoritos"]), 6)
+
+    def test_contador_pluraliza_segun_filtro(self):
+        self._crear_n_favoritos_restaurante(7)
+        response = self.client.get(f"{reverse('interacciones:favoritos')}?tipo=restaurantes")
+        self.assertContains(response, "Mostrando 1–6 de 7 restaurantes")
+
+    def test_ratings_calculados_solo_para_pagina_actual(self):
+        # Con 7 favoritos, la página 1 solo debe traer/anotar rating para los 6
+        # que realmente se muestran, no para los 7 del filtro completo.
+        favoritos = self._crear_n_favoritos_restaurante(7)
+        Resena.objects.create(usuario=self.otro_usuario, establecimiento=favoritos[-1].establecimiento, valoracion=4)
+        response = self.client.get(self._url())
+        pagina = response.context["favoritos"]
+        self.assertEqual(len(pagina), 6)
+        # El favorito con la reseña (el más reciente, creado último) es el
+        # primero en orden "más reciente primero" y sí debe traer rating.
+        self.assertEqual(pagina[0].rating, (4.0, 1))
+
 
 class ResenaFormTests(TestCase):
     def test_valoracion_es_obligatoria(self):

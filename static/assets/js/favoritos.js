@@ -97,14 +97,14 @@
                 if (paginaFavoritos && !data.es_favorito) {
                     var card = btn.closest('.favorito-tarjeta');
                     if (card) {
-                        var col = card.closest('.col');
-                        var contenedor = col ? col.parentElement : null;
-                        (col || card).classList.add('is-removing');
+                        // Con paginación (5 por página), quitar una card puede dejar el
+                        // contador/paginación desactualizados aunque queden otras
+                        // visibles. Se recarga siempre la URL actual (ya trae ?tipo= y
+                        // ?page=) para que el servidor recomponga la página — si quedó
+                        // fuera de rango, Paginator.get_page() la corrige solo.
+                        (card.closest('.col') || card).classList.add('is-removing');
                         setTimeout(function () {
-                            (col || card).remove();
-                            if (contenedor && !contenedor.querySelector('.favorito-tarjeta')) {
-                                window.location.reload();
-                            }
+                            window.location.reload();
                         }, 200);
                     }
                 }

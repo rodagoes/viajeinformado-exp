@@ -57,7 +57,11 @@
             <div class="vi-dropdown">
                 <button type="button" class="vi-user-btn" aria-haspopup="true" aria-expanded="false">
                     <span class="vi-login-btn__icon">
+                        {% if request.user.perfil.foto_perfil %}
+                        <img src="{{ request.user.perfil.foto_perfil.url }}" alt="" aria-hidden="true">
+                        {% else %}
                         <i class="bi bi-person-fill" aria-hidden="true"></i>
+                        {% endif %}
                     </span>
                     <span class="vi-login-btn__text">Hola, {{ user|header_display_name }}</span>
                     <i class="bi bi-chevron-down vi-dropdown__caret" aria-hidden="true"></i>
