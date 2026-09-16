@@ -240,7 +240,7 @@ def renderizar_evento(resultado):
 def renderizar_tarifas(resultado):
     lineas = [
         _unir(
-            f"{i['nombre']}{f' ({i['nombre_alternativo']})' if i.get('nombre_alternativo') else ''}: desde S/ {i['tarifa_minima_pen']}",
+            f"{i['nombre']}{' (' + i['nombre_alternativo'] + ')' if i.get('nombre_alternativo') else ''}: desde S/ {i['tarifa_minima_pen']}",
             f"aprox. USD {i['tarifa_minima_usd']}" if i.get("tarifa_minima_usd") else None,
             sep=" — ",
         )
