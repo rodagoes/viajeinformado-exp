@@ -1,0 +1,44 @@
+{% load static %}
+<div id="pcbot-root" class="pcbot" data-endpoint="{% url 'chatbot:enviar_mensaje' %}">
+    <button type="button" id="pcbot-fab" class="pcbot-fab" aria-haspopup="dialog" aria-expanded="false"
+        aria-controls="pcbot-panel" aria-label="Abrir chat con PillcoBot">
+        <img src="{% static 'assets/img/icons/pillcobot.webp' %}" alt="" class="pcbot-fab__img">
+    </button>
+
+    <div id="pcbot-backdrop" class="pcbot-backdrop" hidden></div>
+
+    <section id="pcbot-panel" class="pcbot-panel" role="dialog" aria-modal="true" aria-labelledby="pcbot-title"
+        hidden>
+        <div id="pcbot-draghandle" class="pcbot-draghandle" aria-hidden="true"></div>
+        <header class="pcbot-header">
+            <span class="pcbot-handle" aria-hidden="true"></span>
+            <div class="pcbot-header__identity">
+                <img src="{% static 'assets/img/icons/pillcobot.webp' %}" alt="" class="pcbot-header__avatar">
+                <div class="pcbot-header__text">
+                    <span id="pcbot-title" class="pcbot-header__name">PillcoBot</span>
+                    <span class="pcbot-header__status"><i class="pcbot-status-dot" aria-hidden="true"></i>En
+                        línea</span>
+                </div>
+            </div>
+            <div class="pcbot-header__actions">
+                <button type="button" id="pcbot-minimize" class="pcbot-iconbtn" aria-label="Minimizar chat">
+                    <i class="bi bi-dash-lg" aria-hidden="true"></i>
+                </button>
+                <button type="button" id="pcbot-close" class="pcbot-iconbtn" aria-label="Cerrar chat">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+        </header>
+
+        <div id="pcbot-messages" class="pcbot-messages" aria-live="polite" aria-busy="false"></div>
+
+        <form id="pcbot-form" class="pcbot-inputbar" autocomplete="off">
+            {% csrf_token %}
+            <input type="text" id="pcbot-input" class="pcbot-input" placeholder="Escribe tu consulta..."
+                maxlength="1000" aria-label="Escribe tu consulta para PillcoBot">
+            <button type="submit" id="pcbot-send" class="pcbot-send" aria-label="Enviar mensaje">
+                <i class="bi bi-send-fill" aria-hidden="true"></i>
+            </button>
+        </form>
+    </section>
+</div>

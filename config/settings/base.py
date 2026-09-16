@@ -37,6 +37,28 @@ CLIMA_HUANUCO_LONGITUD = env("CLIMA_HUANUCO_LONGITUD", default="")
 CLIMA_TINGO_MARIA_LATITUD = env("CLIMA_TINGO_MARIA_LATITUD", default="")
 CLIMA_TINGO_MARIA_LONGITUD = env("CLIMA_TINGO_MARIA_LONGITUD", default="")
 
+# Pillco Bot (apps.chatbot) - Google Gemini. La API key solo vive en el
+# entorno del servidor; con default vacío el sitio arranca sin chatbot.
+CHATBOT_AI_PROVIDER = env("CHATBOT_AI_PROVIDER", default="gemini")
+CHATBOT_AI_MODEL = env("CHATBOT_AI_MODEL", default="gemini-3.6-flash")
+CHATBOT_AI_API_KEY = env("CHATBOT_AI_API_KEY", default="")
+# Límite máximo por llamada HTTP al proveedor, no una espera artificial.
+CHATBOT_AI_TIMEOUT_MS = env.int("CHATBOT_AI_TIMEOUT_MS", default=60000)
+# minimal | low | medium | high. Pillco solo interpreta, elige tool y redacta.
+CHATBOT_AI_THINKING_LEVEL = env("CHATBOT_AI_THINKING_LEVEL", default="low")
+# Proveedor alternativo (CHATBOT_AI_PROVIDER=deepseek). Key independiente de Gemini;
+# sin key solo falla si DeepSeek es el proveedor seleccionado.
+CHATBOT_DEEPSEEK_API_KEY = env("CHATBOT_DEEPSEEK_API_KEY", default="")
+CHATBOT_DEEPSEEK_MODEL = env("CHATBOT_DEEPSEEK_MODEL", default="deepseek-v4-flash")
+# Fallback a fuentes oficiales (Gemini Grounding with Google Search). Desactivado
+# por defecto: consume cuota del proyecto Gemini. Independiente del proveedor
+# conversacional (CHATBOT_AI_PROVIDER).
+CHATBOT_EXTERNAL_SEARCH_ENABLED = env.bool("CHATBOT_EXTERNAL_SEARCH_ENABLED", default=False)
+CHATBOT_EXTERNAL_SEARCH_PROVIDER = env("CHATBOT_EXTERNAL_SEARCH_PROVIDER", default="gemini")
+# Rate limit simple de /chatbot/mensaje/ (ventana fija, django.core.cache).
+CHATBOT_RATE_LIMIT_REQUESTS = env.int("CHATBOT_RATE_LIMIT_REQUESTS", default=20)
+CHATBOT_RATE_LIMIT_WINDOW_SECONDS = env.int("CHATBOT_RATE_LIMIT_WINDOW_SECONDS", default=60)
+
 # Application definition
 
 INSTALLED_APPS = [

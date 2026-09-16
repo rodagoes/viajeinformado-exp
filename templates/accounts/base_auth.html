@@ -3,6 +3,8 @@
 
 {% block site_header %}{% endblock site_header %}
 {% block site_messages %}{% endblock site_messages %}
+{# PillcoBot no se muestra en login/registro/cuenta: distrae de una tarea puntual y no aporta contexto turístico #}
+{% block pillcobot_widget %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/auth.css' %}">

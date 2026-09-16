@@ -25,6 +25,7 @@ urlpatterns = [
     path('planifica/', include('apps.monedas.urls')),
     path('planifica/', include('apps.servicios_turista.urls')),
     path('ubicaciones/', include('apps.ubicaciones.urls')),
+    path('chatbot/', include('apps.chatbot.urls')),
 ]
 
 if settings.DEBUG:
