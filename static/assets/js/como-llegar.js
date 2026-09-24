@@ -112,8 +112,8 @@
 
                     if (label) {
                         label.textContent = isExpanded
-                            ? "Ver menos rutas"
-                            : "Ver todas las rutas";
+                            ? ViI18n("rutas_menos", "Ver menos rutas")
+                            : ViI18n("rutas_todas", "Ver todas las rutas");
                     }
                 });
             }

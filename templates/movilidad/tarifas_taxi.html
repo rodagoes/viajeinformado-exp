@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Viaje Informado • Huánuco{% endblock %}
+{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -21,11 +22,10 @@
                 <i class="bi bi-car-front-fill"></i>
             </span>
 
-            <h1 class="taxi-tarifas__hero-title">Transporte y tarifas</h1>
+            <h1 class="taxi-tarifas__hero-title">{% translate "Transporte y tarifas" %}</h1>
 
             <p class="taxi-tarifas__hero-desc">
-                Conozca los medios de transporte más utilizados en Huánuco y sus tarifas
-                para que planifique su viaje con confianza.
+                {% translate "Conozca los medios de transporte más utilizados en Huánuco y sus tarifas para que planifique su viaje con confianza." %}
             </p>
         </div>
     </section>
@@ -41,19 +41,17 @@
 
                 <div class="taxi-tarifas__section-copy">
                     <h2 class="taxi-tarifas__section-title">
-                        Medios de transporte
+                        {% translate "Medios de transporte" %}
                     </h2>
 
                     <p class="taxi-tarifas__section-intro">
-                        Si usted va a movilizarse por la ciudad de Huánuco, aquí le mostramos
-                        alternativas y tarifas para que pueda orientarse mejor durante
-                        su estadía.
+                        {% translate "Si usted va a movilizarse por la ciudad de Huánuco, aquí le mostramos alternativas y tarifas para que pueda orientarse mejor durante su estadía." %}
                     </p>
                 </div>
 
                 <aside
                     class="taxi-tarifas__reference-card"
-                    aria-label="Información sobre las tarifas">
+                    aria-label="{% translate "Información sobre las tarifas" %}">
 
                     <span
                         class="taxi-tarifas__reference-icon"
@@ -62,8 +60,8 @@
                     </span>
 
                     <span class="taxi-tarifas__reference-copy">
-                        <strong>Elija según su recorrido</strong>
-                        <small>Tarifas actualizadas para el visitante</small>
+                        <strong>{% translate "Elija según su recorrido" %}</strong>
+                        <small>{% translate "Tarifas actualizadas para el visitante" %}</small>
                     </span>
                 </aside>
             </header>
@@ -78,11 +76,11 @@
                     <div class="taxi-transporte-card__media">
                         <span class="taxi-transporte-card__tag">
                             {% if forloop.counter == 1 %}
-                                Trayectos cortos
+                                {% translate "Trayectos cortos" %}
                             {% elif forloop.counter == 2 %}
-                                Rutas urbanas
+                                {% translate "Rutas urbanas" %}
                             {% else %}
-                                Mayor cobertura
+                                {% translate "Mayor cobertura" %}
                             {% endif %}
                         </span>
 
@@ -114,11 +112,11 @@
 
                     <div class="taxi-transporte-card__tarifa">
                         <span class="taxi-transporte-card__tarifa-label">
-                            Tarifa referencial
+                            {% translate "Tarifa referencial" %}
                         </span>
 
                         <strong class="taxi-transporte-card__precio-pen">
-                            Desde S/. {{ t.precio_desde_txt }}
+                            {% translate "Desde" %} S/. {{ t.precio_desde_txt }}
                         </strong>
 
                         {% if t.precio_usd_txt %}
@@ -129,7 +127,7 @@
                         <span
                             class="taxi-transporte-card__precio-usd
                                    taxi-transporte-card__precio-usd--sin-datos">
-                            Conversión temporalmente no disponible
+                            {% translate "Conversión temporalmente no disponible" %}
                         </span>
                         {% endif %}
                     </div>
@@ -149,8 +147,7 @@
                 </span>
 
                 <span>
-                    Las tarifas son referenciales y pueden variar según la
-                    distancia y el horario.
+                    {% translate "Las tarifas son referenciales y pueden variar según la distancia y el horario." %}
                 </span>
             </p>
 
@@ -169,7 +166,7 @@
 
                     <span class="taxi-consejos__heading">
                         <h3 class="taxi-consejos__title">
-                            Recomendaciones útiles
+                            {% translate "Recomendaciones útiles" %}
                         </h3>
                     </span>
 

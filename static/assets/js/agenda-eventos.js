@@ -74,8 +74,8 @@
     // <a> ya renderizados por Django (mismo DOM, no se recrean) para no
     // perder la posición de scroll de la lista.
     const DIAS_VENTANA = 14;
-    const NOMBRES_DIA_SEMANA = ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"];
-    const NOMBRES_MES_ABREV = ["", "ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
+    const NOMBRES_DIA_SEMANA = ViI18n("dias_abrev", ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"]);
+    const NOMBRES_MES_ABREV = ViI18n("meses_abrev", ["", "ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"]);
 
     // Fechas civiles (YYYY-MM-DD) tratadas siempre en UTC epoch, nunca con
     // `new Date("YYYY-MM-DD")` ni getters locales: evita que un usuario en
@@ -150,7 +150,7 @@
                     anioDominante = anio;
                 }
             });
-            if (tituloEl) tituloEl.textContent = `Calendario - ${anioDominante}`;
+            if (tituloEl) tituloEl.textContent = ViI18n("calendario", "Calendario - %(anio)s").replace("%(anio)s", anioDominante);
         };
 
         selectorEl.querySelectorAll(".ev-selector-dias__flecha").forEach((flecha) => {
@@ -164,60 +164,436 @@
     document.addEventListener("DOMContentLoaded", () => {
         enfocarDiaActivo();
         inicializarSelectorDias();
+        inicializarRangoFechas();
     });
 
-    // "Elegir fecha" (B1.1): en iOS/iPadOS el picker nativo de <input
-    // type="date"> dispara `change` en cada ajuste de rueda (mes/año/día),
-    // no solo al confirmar — a diferencia de Android (diálogo modal real) y
-    // desktop, donde `change` sí se dispara únicamente al comprometer el
-    // valor final. Ahí, `change` seguía provocando un submit prematuro con
-    // un valor todavía provisional (incluso el auto-relleno con "hoy" que
-    // iOS aplica al abrir un campo vacío).
+    // ---- Rango de fechas ("Elegir fechas") ------------------------------------
+    // Tres capas separadas (ver agenda-eventos.html):
+    //   A) control visual de Flatpickr (input de texto SIN name),
+    //   B) hidden `desde` / `hasta` que consume el backend,
+    //   C) <input type="date"> nativos `desde` / `hasta` (fallback).
+    // Solo una de B/C participa a la vez (la otra queda `disabled`), así nunca se
+    // envían dos valores con el mismo name. El backend recibe siempre
+    // ?desde=YYYY-MM-DD&hasta=YYYY-MM-DD; el texto del picker es solo presentación.
     //
-    // En iOS/iPadOS, `change` pasa a solo marcar el cambio como pendiente;
-    // el envío real espera a que el input pierda el foco (`blur`), que es
-    // cuando el picker realmente se cierra — con o sin botón "Done"/check
-    // visible según la versión de iOS, nunca se depende de ese control
-    // nativo en sí. Sin timeouts, sin leer coordenadas ni el propio ✓.
-    // En el resto de plataformas se conserva cambiar+enviar de una sola vez
-    // (ahí `change` ya se comporta como el "commit" final).
-    const esIOSoIPadOS = () => (
-        /iPad|iPhone|iPod/.test(navigator.userAgent)
-        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
-    );
+    // Móvil (< 768 px): el calendario es una hoja inferior FIJA (`position: fixed`,
+    // ver agenda-eventos.css) con fondo (backdrop) y bloqueo real del scroll de iOS.
+    // Causa del parpadeo anterior: Flatpickr anima el calendario con `fpFadeInDown`
+    // (transform: translate3d) y esa animación pisaba el `translate(-50%, -50%)` con
+    // el que lo centrábamos, así que durante ~300 ms aparecía desplazado y luego
+    // "saltaba" a su sitio. Ahora la hoja no usa transform de centrado (usa
+    // left/right/bottom) y la animación de Flatpickr se anula (`animation: none`).
+    const inicializarRangoFechas = () => {
+        const form = document.getElementById("ev-rango-form");
+        if (!form) return;
 
-    const inputFecha = document.getElementById("ev-fecha-input");
-    if (inputFecha) {
-        let valorAlEnfocar = inputFecha.value;
-        let cambioPendiente = false;
-        let enviandoFecha = false;
+        const pickerWrap = form.querySelector("[data-rango-picker]");
+        const control = document.getElementById("ev-rango-input");
+        const textoEl = form.querySelector("[data-rango-texto]");
+        const nativo = form.querySelector("[data-rango-nativo]");
+        const hiddenDesde = form.querySelector('[data-rango-hidden="desde"]');
+        const hiddenHasta = form.querySelector('[data-rango-hidden="hasta"]');
+        const nativoDesde = form.querySelector('[data-rango-nativo-input="desde"]');
+        const nativoHasta = form.querySelector('[data-rango-nativo-input="hasta"]');
+        const botonesCambiar = document.querySelectorAll("[data-rango-cambiar]");
 
-        const enviarFecha = () => {
-            if (enviandoFecha) return;
-            enviandoFecha = true;
-            inputFecha.form.requestSubmit();
+        // Fallback (CDN caído / sin Flatpickr): los nativos siguen funcionando.
+        // "Cambiar fechas" simplemente lleva el foco al primer input nativo.
+        const activarFallback = () => {
+            botonesCambiar.forEach((boton) => {
+                boton.addEventListener("click", () => {
+                    if (nativoDesde) {
+                        nativoDesde.scrollIntoView({ block: "center" });
+                        nativoDesde.focus();
+                    }
+                });
+            });
         };
 
-        inputFecha.addEventListener("focus", () => {
-            valorAlEnfocar = inputFecha.value;
-            cambioPendiente = false;
+        if (!window.flatpickr || !control || !pickerWrap || !nativo || !hiddenDesde || !hiddenHasta) {
+            activarFallback();
+            return;
+        }
+
+        const idioma = form.dataset.idioma || "es";
+        const locale = idioma === "es" && window.flatpickr.l10ns && window.flatpickr.l10ns.es
+            ? window.flatpickr.l10ns.es
+            : "default";
+        const dosMeses = window.matchMedia("(min-width: 768px)");
+        const esHoja = () => !dosMeses.matches; // < 768 px: hoja inferior
+
+        // Fechas aplicadas (las que el servidor ya está filtrando).
+        const aplicadas = [hiddenDesde.value, hiddenHasta.value].filter(Boolean);
+        const rangoAplicado = aplicadas.length === 2;
+
+        // El calendario NO tiene minDate/maxDate: se puede elegir cualquier fecha que el backend
+        // acepte (el único límite es el de 366 días del rango). El selector de año móvil navega por
+        // décadas sin tope; data-anio-min/max (años con eventos) ya no limitan nada aquí.
+        const anioActual = new Date().getFullYear();
+
+        const textoInicial = textoEl ? textoEl.textContent : ""; // texto que pintó el servidor
+        const formatoTexto = (fecha) => fecha.toLocaleDateString(
+            idioma === "es" ? "es-PE" : "en-US", { day: "numeric", month: "short" },
+        );
+        const pintarTexto = (fechas) => {
+            if (!textoEl) return;
+            textoEl.textContent = fechas.length === 2
+                ? fechas.map(formatoTexto).join(" – ")
+                : ViI18n("cal_titulo", "Elegir fechas");
+        };
+
+        // --- Bloqueo de scroll (iOS): body fixed + restauración exacta de scrollY ---
+        const fondo = document.createElement("div");
+        fondo.className = "ev-cal-fondo";
+        fondo.hidden = true;
+        document.body.appendChild(fondo);
+
+        let bloqueado = false;
+        let scrollGuardado = 0;
+        const bloquearScroll = () => {
+            if (bloqueado) return;
+            bloqueado = true;
+            scrollGuardado = window.scrollY || window.pageYOffset || 0;
+            document.documentElement.classList.add("ev-cal-bloqueo");
+            document.body.style.position = "fixed";
+            document.body.style.top = `-${scrollGuardado}px`;
+            document.body.style.left = "0";
+            document.body.style.right = "0";
+            document.body.style.width = "100%";
+            fondo.hidden = false;
+        };
+        const desbloquearScroll = () => {
+            if (!bloqueado) return;
+            bloqueado = false;
+            document.documentElement.classList.remove("ev-cal-bloqueo");
+            ["position", "top", "left", "right", "width"].forEach((prop) => document.body.style.removeProperty(prop));
+            fondo.hidden = true;
+            window.scrollTo(0, scrollGuardado);
+        };
+        // Nunca dejar el body bloqueado (bfcache / volver atrás / cambio de página).
+        window.addEventListener("pageshow", desbloquearScroll);
+        window.addEventListener("pagehide", desbloquearScroll);
+
+        let calendario = null;
+        let confirmado = false;
+
+        // --- Selector de año por décadas (móvil) ---
+        // Sustituye al input numérico de Flatpickr (abría el teclado) y a cualquier lista fija de
+        // años: una vista "de años" dentro de la misma hoja, con botones reales, que navega de
+        // 10 en 10 sin tope. Elegir un año usa la API de Flatpickr (changeYear) y vuelve al mes.
+        const DECADA = 10;
+        const inicioDecada = (anio) => Math.floor(anio / DECADA) * DECADA;
+
+        const pintarDecada = (instancia, inicio) => {
+            const panel = instancia.calendarContainer.querySelector(".ev-cal-anios");
+            if (!panel) return;
+            panel.dataset.inicio = String(inicio);
+            panel.querySelector("[data-anios-rango]").textContent = `${inicio} – ${inicio + DECADA - 1}`;
+            panel.querySelectorAll("[data-anio]").forEach((boton, i) => {
+                const anio = inicio + i;
+                boton.dataset.anio = String(anio);
+                boton.textContent = String(anio);
+                if (anio === instancia.currentYear) boton.setAttribute("aria-current", "true");
+                else boton.removeAttribute("aria-current");
+                boton.classList.toggle("is-actual", anio === anioActual);
+            });
+        };
+
+        // Alterna mes <-> años. `conFoco`: mover el foco (al abrir, al año activo; al salir, al
+        // control del año). Al cerrar el calendario se llama sin foco para no robárselo a Flatpickr.
+        const alternarVistaAnios = (instancia, abrir, conFoco) => {
+            const contenedor = instancia.calendarContainer;
+            const control = contenedor.querySelector(".ev-cal-anio");
+            if (!control || contenedor.classList.contains("ev-cal--anios") === abrir) return;
+            if (abrir) pintarDecada(instancia, inicioDecada(instancia.currentYear));
+            contenedor.classList.toggle("ev-cal--anios", abrir);
+            control.setAttribute("aria-expanded", String(abrir));
+            if (!conFoco) return;
+            const destino = abrir
+                ? contenedor.querySelector('.ev-cal-anios [aria-current="true"]') || contenedor.querySelector("[data-anios-ant]")
+                : control;
+            destino.focus({ preventScroll: true });
+        };
+
+        const elegirAnio = (instancia, anio) => {
+            instancia.changeYear(anio);
+            sincronizarAnio(instancia); // changeYear no dispara onYearChange si el año no cambia
+            alternarVistaAnios(instancia, false, true);
+        };
+
+        const montarSelectorAnio = (instancia) => {
+            const contenedor = instancia.calendarContainer;
+            const wrapAnio = instancia.currentYearElement && instancia.currentYearElement.parentNode;
+            if (!wrapAnio || contenedor.querySelector(".ev-cal-anio")) return;
+
+            const control = document.createElement("button");
+            control.type = "button";
+            control.className = "ev-cal-anio";
+            control.setAttribute("aria-expanded", "false");
+            control.innerHTML = '<span data-anio-texto></span><i class="bi bi-chevron-down" aria-hidden="true"></i>';
+            control.addEventListener("click", () => {
+                alternarVistaAnios(instancia, !contenedor.classList.contains("ev-cal--anios"), true);
+            });
+            wrapAnio.parentNode.insertBefore(control, wrapAnio);
+            wrapAnio.classList.add("ev-cal-anio-oculto"); // el input numérico (teclado numérico) no se usa
+
+            const panel = document.createElement("div");
+            panel.className = "ev-cal-anios";
+            panel.setAttribute("role", "group");
+            panel.setAttribute("aria-label", ViI18n("cal_elegir_anio", "Elegir año"));
+            panel.innerHTML =
+                '<div class="ev-cal-anios__nav">' +
+                '<button type="button" class="ev-cal-anios__flecha" data-anios-ant><i class="bi bi-chevron-left" aria-hidden="true"></i></button>' +
+                '<span class="ev-cal-anios__rango" data-anios-rango aria-live="polite"></span>' +
+                '<button type="button" class="ev-cal-anios__flecha" data-anios-sig><i class="bi bi-chevron-right" aria-hidden="true"></i></button>' +
+                '</div><div class="ev-cal-anios__grid"></div>' +
+                '<button type="button" class="ev-cal-anios__hoy" data-anios-hoy></button>';
+            const anterior = panel.querySelector("[data-anios-ant]");
+            const siguiente = panel.querySelector("[data-anios-sig]");
+            const rejilla = panel.querySelector(".ev-cal-anios__grid");
+            const hoy = panel.querySelector("[data-anios-hoy]");
+            anterior.setAttribute("aria-label", ViI18n("cal_decada_ant", "Década anterior"));
+            siguiente.setAttribute("aria-label", ViI18n("cal_decada_sig", "Década siguiente"));
+            hoy.textContent = ViI18n("cal_anio_actual", "Año actual");
+
+            // Los 10 botones se crean una sola vez y se reescriben en cada década (así el foco no se pierde).
+            for (let i = 0; i < DECADA; i += 1) {
+                const boton = document.createElement("button");
+                boton.type = "button";
+                boton.className = "ev-cal-anios__anio";
+                boton.setAttribute("data-anio", "");
+                boton.addEventListener("click", () => elegirAnio(instancia, Number(boton.dataset.anio)));
+                rejilla.appendChild(boton);
+            }
+            const moverDecada = (delta) => pintarDecada(instancia, Number(panel.dataset.inicio) + delta * DECADA);
+            anterior.addEventListener("click", () => moverDecada(-1));
+            siguiente.addEventListener("click", () => moverDecada(1));
+            hoy.addEventListener("click", () => elegirAnio(instancia, anioActual));
+
+            // Teclado: Escape vuelve al mes (no cierra el calendario) y las teclas de Flatpickr
+            // (flechas = mover de día, Enter...) no deben actuar mientras se elige un año.
+            panel.addEventListener("keydown", (evento) => {
+                if (evento.key === "Escape") {
+                    evento.preventDefault();
+                    alternarVistaAnios(instancia, false, true);
+                }
+                if (evento.key !== "Tab") evento.stopPropagation();
+            });
+
+            contenedor.appendChild(panel); // montarCromo añade después el pie, así que queda entre el mes y el pie
+            sincronizarAnio(instancia);
+        };
+        const sincronizarAnio = (instancia) => {
+            const control = instancia.calendarContainer.querySelector(".ev-cal-anio");
+            if (!control) return;
+            const anio = instancia.currentYear;
+            control.querySelector("[data-anio-texto]").textContent = String(anio);
+            control.setAttribute("aria-label", `${ViI18n("cal_elegir_anio", "Elegir año")}: ${anio}`);
+        };
+
+        const actualizarPie = (instancia) => {
+            const pie = instancia.calendarContainer.querySelector(".ev-cal-pie");
+            if (!pie) return;
+            const n = instancia.selectedDates.length;
+            const listo = pie.querySelector("[data-cal-listo]");
+            const ayuda = pie.querySelector("[data-cal-ayuda]");
+            if (listo) listo.disabled = n === 1; // con una sola fecha aún no hay rango
+            if (ayuda) ayuda.textContent = n === 1 ? ViI18n("cal_fin", "Elige la fecha de fin") : "";
+        };
+
+        const confirmar = (instancia) => {
+            const fechas = instancia.selectedDates;
+            if (fechas.length === 1) return; // rango incompleto: se sigue eligiendo
+            confirmado = true;
+            if (fechas.length === 2) {
+                hiddenDesde.value = instancia.formatDate(fechas[0], "Y-m-d");
+                hiddenHasta.value = instancia.formatDate(fechas[1], "Y-m-d");
+                pintarTexto(fechas);
+                instancia.close();
+                form.requestSubmit();
+                return;
+            }
+            // Sin fechas ("Limpiar" + "Listo"): solo hay que enviar si había un rango aplicado.
+            instancia.close();
+            if (rangoAplicado) {
+                hiddenDesde.disabled = true;
+                hiddenHasta.disabled = true;
+                form.requestSubmit();
+            }
+        };
+
+        const montarCromo = (instancia) => {
+            const contenedor = instancia.calendarContainer;
+            if (contenedor.querySelector(".ev-cal-pie")) return;
+            contenedor.setAttribute("role", "dialog");
+            contenedor.setAttribute("aria-label", ViI18n("cal_titulo", "Elegir fechas"));
+
+            // Cabecera (solo visible en la hoja móvil): título + botón cerrar.
+            const cabecera = document.createElement("div");
+            cabecera.className = "ev-cal-cabecera";
+            const titulo = document.createElement("span");
+            titulo.className = "ev-cal-titulo";
+            titulo.textContent = ViI18n("cal_titulo", "Elegir fechas");
+            const cerrar = document.createElement("button");
+            cerrar.type = "button";
+            cerrar.className = "ev-cal-cerrar";
+            cerrar.setAttribute("aria-label", ViI18n("cal_cerrar", "Cerrar calendario"));
+            cerrar.innerHTML = '<i class="bi bi-x-lg" aria-hidden="true"></i>';
+            cerrar.addEventListener("click", () => instancia.close());
+            cabecera.append(titulo, cerrar);
+            contenedor.insertBefore(cabecera, contenedor.firstChild);
+
+            // Pie: [Limpiar] [Listo] (+ ayuda accesible cuando falta la fecha de fin).
+            const pie = document.createElement("div");
+            pie.className = "ev-cal-pie";
+            const ayuda = document.createElement("span");
+            ayuda.className = "ev-cal-ayuda";
+            ayuda.setAttribute("data-cal-ayuda", "");
+            ayuda.setAttribute("aria-live", "polite");
+            const limpiar = document.createElement("button");
+            limpiar.type = "button";
+            limpiar.className = "ev-cal-btn ev-cal-btn--sec";
+            limpiar.textContent = ViI18n("cal_limpiar", "Limpiar");
+            limpiar.addEventListener("click", () => {
+                hiddenDesde.value = "";
+                hiddenHasta.value = "";
+                // Vacía solo la selección (NO cierra ni envía). `toInitial = false`: Flatpickr, por
+                // defecto, además devolvía la vista al mes inicial; el turista sigue viendo el mes y
+                // año que estaba mirando (currentMonth/currentYear no se tocan).
+                instancia.clear(true, false);
+                pintarTexto([]);
+                actualizarPie(instancia);
+            });
+            const listo = document.createElement("button");
+            listo.type = "button";
+            listo.className = "ev-cal-btn ev-cal-btn--pri";
+            listo.setAttribute("data-cal-listo", "");
+            listo.textContent = ViI18n("cal_listo", "Listo");
+            listo.addEventListener("click", () => confirmar(instancia));
+            pie.append(ayuda, limpiar, listo);
+            contenedor.appendChild(pie);
+        };
+
+        // Desktop: si el popover de 2 meses se sale por la derecha (pantallas de ~1000 px,
+        // donde el pill queda lejos del borde izquierdo) se desplaza lo justo para caber.
+        const mantenerEnPantalla = (instancia) => {
+            const contenedor = instancia.calendarContainer;
+            const margen = 8;
+            const derecha = contenedor.getBoundingClientRect().right;
+            const limite = document.documentElement.clientWidth - margen;
+            if (derecha <= limite) return;
+            const izquierda = parseFloat(contenedor.style.left) || 0;
+            contenedor.style.left = `${Math.max(margen + window.scrollX, izquierda - (derecha - limite))}px`;
+        };
+
+        // Desktop/tablet (popover): con scroll real de la página el calendario se cierra en vez de
+        // quedar flotando desanclado (y acabar sobre la cabecera fija). No aplica a la hoja móvil.
+        // Un solo par de listeners a la vez (passive), quitados en onClose/onDestroy. Los scrolls
+        // internos del calendario no llegan a `window` (scroll no burbujea); el umbral ignora
+        // ajustes de un par de píxeles. Un cambio de ANCHO también lo cierra (Flatpickr solo
+        // reposiciona; así no queda desalineado respecto al pill).
+        const UMBRAL_SCROLL_PX = 8;
+        let cierrePorScroll = null;
+        const instalarCierrePorScroll = (instancia) => {
+            if (cierrePorScroll) return;
+            const scrollInicial = window.scrollY;
+            const anchoInicial = window.innerWidth;
+            cierrePorScroll = {
+                alScroll: () => {
+                    if (Math.abs(window.scrollY - scrollInicial) > UMBRAL_SCROLL_PX) instancia.close();
+                },
+                alRedimensionar: () => {
+                    if (window.innerWidth !== anchoInicial) instancia.close();
+                },
+            };
+            window.addEventListener("scroll", cierrePorScroll.alScroll, { passive: true });
+            window.addEventListener("resize", cierrePorScroll.alRedimensionar, { passive: true });
+        };
+        const quitarCierrePorScroll = () => {
+            if (!cierrePorScroll) return;
+            window.removeEventListener("scroll", cierrePorScroll.alScroll);
+            window.removeEventListener("resize", cierrePorScroll.alRedimensionar);
+            cierrePorScroll = null;
+        };
+
+        const crear = (fechasIniciales) => {
+            confirmado = false;
+            calendario = window.flatpickr(control, {
+                mode: "range",
+                dateFormat: "Y-m-d", // formato interno; el texto visible lo pinta pintarTexto()
+                locale,
+                showMonths: dosMeses.matches ? 2 : 1,
+                disableMobile: true, // el picker nativo del móvil no soporta rango
+                closeOnSelect: false, // no se cierra al elegir la 2.ª fecha: se confirma con "Listo"
+                defaultDate: fechasIniciales.length === 2 ? fechasIniciales : null,
+                onReady: (_fechas, _texto, instancia) => {
+                    if (!dosMeses.matches) montarSelectorAnio(instancia); // teléfonos/tablets: sin teclado numérico
+                    montarCromo(instancia);
+                    actualizarPie(instancia);
+                },
+                onOpen: (_fechas, _texto, instancia) => {
+                    confirmado = false;
+                    if (esHoja()) bloquearScroll();
+                    else {
+                        mantenerEnPantalla(instancia);
+                        instalarCierrePorScroll(instancia);
+                    }
+                    alternarVistaAnios(instancia, false, false); // siempre se abre en la vista mensual
+                    sincronizarAnio(instancia);
+                    actualizarPie(instancia);
+                },
+                onChange: (fechas, _texto, instancia) => actualizarPie(instancia),
+                onYearChange: (_fechas, _texto, instancia) => sincronizarAnio(instancia),
+                onMonthChange: (_fechas, _texto, instancia) => sincronizarAnio(instancia),
+                onClose: (_fechas, _texto, instancia) => {
+                    // Cierre por X / fondo / Escape / clic fuera / "Listo": siempre se libera el scroll.
+                    desbloquearScroll();
+                    quitarCierrePorScroll();
+                    alternarVistaAnios(instancia, false, false);
+                    if (!confirmado) {
+                        // Cerrado sin "Listo": se descartan los cambios y vuelve lo ya aplicado.
+                        instancia.setDate(aplicadas.length === 2 ? aplicadas : [], false);
+                        hiddenDesde.value = aplicadas[0] || "";
+                        hiddenHasta.value = aplicadas[1] || "";
+                        if (textoEl) textoEl.textContent = textoInicial;
+                    }
+                },
+                onDestroy: quitarCierrePorScroll,
+            });
+            control.value = ""; // el texto lo muestra el pill, no el input transparente
+        };
+
+        try {
+            crear(aplicadas);
+        } catch (error) {
+            activarFallback();
+            return;
+        }
+        fondo.addEventListener("click", () => calendario.close());
+
+        // Flatpickr listo: A + B participan, C se oculta y se deshabilita.
+        nativo.hidden = true;
+        [nativoDesde, nativoHasta].forEach((input) => { if (input) input.disabled = true; });
+        hiddenDesde.disabled = false;
+        hiddenHasta.disabled = false;
+        pickerWrap.hidden = false;
+
+        // Al cruzar el breakpoint (giro de pantalla) se reconstruye el calendario:
+        // 2 meses en desktop, 1 mes + selector de año en móvil.
+        dosMeses.addEventListener("change", () => {
+            const fechas = calendario.selectedDates.slice();
+            calendario.destroy();
+            desbloquearScroll();
+            crear(fechas);
         });
 
-        if (esIOSoIPadOS()) {
-            inputFecha.addEventListener("change", () => {
-                // Recalculado en cada ajuste (no solo el primero): si el
-                // usuario cambia y vuelve al valor original antes de cerrar
-                // el picker, el último `change` deja esto en `false` y el
-                // blur de abajo no envía nada (R17 del encargo).
-                cambioPendiente = inputFecha.value !== valorAlEnfocar;
+        botonesCambiar.forEach((boton) => {
+            boton.addEventListener("click", () => {
+                if (!esHoja()) pickerWrap.scrollIntoView({ block: "center" });
+                calendario.open();
             });
-            inputFecha.addEventListener("blur", () => {
-                if (cambioPendiente) enviarFecha();
-            });
-        } else {
-            inputFecha.addEventListener("change", enviarFecha);
-        }
-    }
+        });
+    };
 
     // CTA "Promociona tu evento" / "Reportar un problema": envío normal por
     // POST (sin fetch, ver R20/R21 — el navegador ya hace todo el trabajo,
@@ -229,7 +605,7 @@
             const boton = form.querySelector('button[type="submit"]');
             if (!boton) return;
             boton.disabled = true;
-            boton.textContent = "Enviando…";
+            boton.textContent = ViI18n("enviando", "Enviando…");
         });
     });
 
@@ -255,7 +631,7 @@
 
             const optTodos = document.createElement("option");
             optTodos.value = "";
-            optTodos.textContent = "Todos";
+            optTodos.textContent = ViI18n("todos", "Todos");
             selectDistrito.appendChild(optTodos);
 
             opciones.forEach((distrito) => {
@@ -341,7 +717,7 @@
         playBtn.classList.remove("is-paused");
         const icono = playBtn.querySelector("i");
         if (icono) icono.className = "bi bi-pause-fill";
-        playBtn.setAttribute("aria-label", "Pausar carrusel");
+        playBtn.setAttribute("aria-label", ViI18n("pausar_carrusel", "Pausar carrusel"));
     };
 
     const marcarPausado = () => {
@@ -349,7 +725,7 @@
         playBtn.classList.add("is-paused");
         const icono = playBtn.querySelector("i");
         if (icono) icono.className = "bi bi-play-fill";
-        playBtn.setAttribute("aria-label", "Reanudar carrusel");
+        playBtn.setAttribute("aria-label", ViI18n("reanudar_carrusel", "Reanudar carrusel"));
     };
 
     const iniciarProgreso = (swiper, transcurridoPrevio) => {
@@ -528,10 +904,10 @@
 
     const construirEnlacesContacto = (evento) => {
         const enlaces = [];
-        if (evento.telefono) enlaces.push({ tipo: "telefono", url: "tel:" + evento.telefono, label: "Llamar" });
+        if (evento.telefono) enlaces.push({ tipo: "telefono", url: "tel:" + evento.telefono, label: ViI18n("llamar", "Llamar") });
         if (evento.whatsapp) enlaces.push({ tipo: "whatsapp", url: "https://wa.me/" + soloDigitos(evento.whatsapp), label: "WhatsApp" });
-        if (evento.correo) enlaces.push({ tipo: "correo", url: "mailto:" + evento.correo, label: "Correo" });
-        if (evento.sitio_web) enlaces.push({ tipo: "sitio_web", url: evento.sitio_web, label: "Sitio web" });
+        if (evento.correo) enlaces.push({ tipo: "correo", url: "mailto:" + evento.correo, label: ViI18n("correo", "Correo") });
+        if (evento.sitio_web) enlaces.push({ tipo: "sitio_web", url: evento.sitio_web, label: ViI18n("sitio_web", "Sitio web") });
         if (evento.facebook) enlaces.push({ tipo: "facebook", url: evento.facebook, label: "Facebook" });
         if (evento.instagram) enlaces.push({ tipo: "instagram", url: evento.instagram, label: "Instagram" });
         return enlaces;
@@ -728,6 +1104,7 @@
             if (imagen.lazy) img.loading = "lazy";
             slide.appendChild(img);
             wrapper.appendChild(slide);
+            if (window.ViSkeleton) window.ViSkeleton.watch(img, slide);
         });
 
         // Contador (R74, sección 8): con una sola imagen, sin dos+ imágenes no
@@ -780,9 +1157,9 @@
             speed: prefiereReducirMovimiento ? 0 : 400,
             keyboard: { enabled: true },
             a11y: {
-                prevSlideMessage: "Imagen anterior",
-                nextSlideMessage: "Imagen siguiente",
-                paginationBulletMessage: "Ir a la imagen {{index}}",
+                prevSlideMessage: ViI18n("img_anterior", "Imagen anterior"),
+                nextSlideMessage: ViI18n("img_siguiente", "Imagen siguiente"),
+                paginationBulletMessage: ViI18n("img_ir", "Ir a la imagen {{index}}"),
             },
             // Siempre se configuran (nunca `undefined`): Swiper espera un objeto
             // real para estos módulos y falla al destruirse si se le pasa

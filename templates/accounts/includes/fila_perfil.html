@@ -1,3 +1,4 @@
+{% load i18n %}
 {% comment %}
 Fila de perfil con edición progresiva. Contexto esperado:
   campo         -> clave en CAMPOS_PERFIL ("nombres"/"apellidos"/"username")
@@ -11,7 +12,7 @@ Fila de perfil con edición progresiva. Contexto esperado:
     <div class="perfil-fila-lectura"{% if campo_en_edicion == campo %} hidden{% endif %}>
         <div class="perfil-fila-texto">
             <span class="perfil-fila-label">{{ label }}</span>
-            <span class="perfil-fila-valor">{{ valor_actual|default:"No especificado" }}</span>
+            <span class="perfil-fila-valor">{{ valor_actual|default:_("No especificado") }}</span>
             {% if ayuda %}<p class="perfil-fila-ayuda">{{ ayuda }}</p>{% endif %}
         </div>
         <button type="button" class="vi-btn-ghost-icon" aria-label="Editar {{ label|lower }}" data-abrir="{{ campo }}">
@@ -27,8 +28,8 @@ Fila de perfil con edición progresiva. Contexto esperado:
         {{ campo_form }}
         {% if campo_form.errors %}<div class="perfil-error" role="alert">{{ campo_form.errors.0 }}</div>{% endif %}
         <div class="perfil-fila-acciones">
-            <button type="submit" class="btn perfil-guardar-btn">Guardar</button>
-            <button type="button" class="perfil-cancelar-btn" data-cancelar="{{ campo }}">Cancelar</button>
+            <button type="submit" class="btn perfil-guardar-btn">{% translate "Guardar" %}</button>
+            <button type="button" class="perfil-cancelar-btn" data-cancelar="{{ campo }}">{% translate "Cancelar" %}</button>
         </div>
     </form>
 </div>

@@ -40,6 +40,11 @@ node_modules/
 # Archivos locales de importación
 data/
 
+# Permitir únicamente el catálogo versionado de traducciones EN
+!/apps/base/data/
+/apps/base/data/*
+!/apps/base/data/traducciones_en.json
+
 # Backups locales
 backups_detalle/
 

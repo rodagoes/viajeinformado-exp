@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from django.utils.translation import gettext
 
 numero_tel_validator = RegexValidator(
     regex=r"^\+?\d+$",
@@ -115,7 +116,7 @@ class ContactoEmergencia(models.Model):
     @property
     def horario_texto(self):
         if self.es_24_horas:
-            return "Atención 24/7"
+            return gettext("Atención 24/7")
         return self.horario
 
 

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Viaje Informado • Huánuco{% endblock %}
+{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
@@ -28,12 +29,12 @@
                 <div class="detalle-hero-info">
 
                     <!-- Breadcrumb escritorio -->
-                    <nav class="detalle-breadcrumb" aria-label="Ruta de navegación">
+                    <nav class="detalle-breadcrumb" aria-label="{% translate "Ruta de navegación" %}">
                         <a href="{% url volver_url_name %}">
                             {% if es_restaurante %}
-                            Restaurantes
+                            {% translate "Restaurantes" %}
                             {% else %}
-                            Alojamientos
+                            {% translate "Alojamientos" %}
                             {% endif %}
                         </a>
 
@@ -55,10 +56,10 @@
                         <div class="detalle-meta-item detalle-meta-rating-preview">
                             {% if resumen_resenas.total %}
                             <i class="bi bi-star-fill"></i>
-                            <span>{{ resumen_resenas.promedio|floatformat:1 }} · {{ resumen_resenas.total }} valoraci{{ resumen_resenas.total|pluralize:"ón,ones" }}</span>
+                            <span>{{ resumen_resenas.promedio|floatformat:1 }} · {% blocktranslate count counter=resumen_resenas.total %}{{ counter }} valoración{% plural %}{{ counter }} valoraciones{% endblocktranslate %}</span>
                             {% else %}
                             <i class="bi bi-chat-square-heart"></i>
-                            <span>Aún sin valoraciones</span>
+                            <span>{% translate "Aún sin valoraciones" %}</span>
                             {% endif %}
                         </div>
 
@@ -69,11 +70,11 @@
 
                                 <span>
                                     {% if establecimiento.precio_desde and establecimiento.precio_hasta %}
-                                    Precios desde S/. {{ establecimiento.precio_desde|floatformat:0 }} hasta S/. {{ establecimiento.precio_hasta|floatformat:0 }}
+                                    {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 hasta=establecimiento.precio_hasta|floatformat:0 %}Precios desde S/. {{ desde }} hasta S/. {{ hasta }}{% endblocktranslate %}
                                     {% elif establecimiento.precio_desde %}
-                                    Precios desde S/. {{ establecimiento.precio_desde|floatformat:0 }}
+                                    {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 %}Precios desde S/. {{ desde }}{% endblocktranslate %}
                                     {% elif establecimiento.precio_hasta %}
-                                    Precios hasta S/. {{ establecimiento.precio_hasta|floatformat:0 }}
+                                    {% blocktranslate trimmed with hasta=establecimiento.precio_hasta|floatformat:0 %}Precios hasta S/. {{ hasta }}{% endblocktranslate %}
                                     {% endif %}
                                 </span>
                             </div>
@@ -107,19 +108,19 @@
                         <div class="swiper-wrapper">
                             {% for item in media_items %}
                             <div class="swiper-slide detalle-swiper-slide">
-                                <img src="{{ item.url }}" alt="{{ item.alt }}">
+                                <img src="{{ item.url }}" alt="{{ item.alt }}"{% if not forloop.first %} loading="lazy"{% endif %} decoding="async">
                             </div>
                             {% endfor %}
                         </div>
 
                         <button type="button" class="detalle-gallery-expand" data-bs-toggle="modal"
                             data-bs-target="#detalleGaleriaModal" data-detalle-gallery-open
-                            aria-label="Ampliar galería de imágenes">
+                            aria-label="{% translate "Ampliar galería de imágenes" %}">
                             <i class="bi bi-arrows-angle-expand"></i>
                         </button>
 
                         <div class="detalle-swiper-controls">
-                            <button type="button" class="detalle-swiper-play" aria-label="Pausar carrusel">
+                            <button type="button" class="detalle-swiper-play" aria-label="{% translate "Pausar carrusel" %}">
                                 <i class="bi bi-pause-fill"></i>
                             </button>
 
@@ -128,12 +129,12 @@
 
                         <div class="detalle-swiper-arrows">
                             <button type="button" class="detalle-swiper-arrow detalle-swiper-prev"
-                                aria-label="Imagen anterior">
+                                aria-label="{% translate "Imagen anterior" %}">
                                 <i class="bi bi-arrow-left"></i>
                             </button>
 
                             <button type="button" class="detalle-swiper-arrow detalle-swiper-next"
-                                aria-label="Imagen siguiente">
+                                aria-label="{% translate "Imagen siguiente" %}">
                                 <i class="bi bi-arrow-right"></i>
                             </button>
                         </div>
@@ -142,10 +143,10 @@
                     {% else %}
                     {% for item in media_items %}
                     <div class="detalle-imagen-estatica">
-                        <img src="{{ item.url }}" alt="{{ item.alt }}">
+                        <img src="{{ item.url }}" alt="{{ item.alt }}"{% if not forloop.first %} loading="lazy"{% endif %} decoding="async">
 
                         <button type="button" class="detalle-gallery-expand" data-bs-toggle="modal"
-                            data-bs-target="#detalleGaleriaModal" data-detalle-gallery-open aria-label="Ampliar imagen">
+                            data-bs-target="#detalleGaleriaModal" data-detalle-gallery-open aria-label="{% translate "Ampliar imagen" %}">
                             <i class="bi bi-arrows-angle-expand"></i>
                         </button>
                     </div>
@@ -175,7 +176,7 @@
                 <button type="button" class="detalle-accion-boton" data-action="compartir-establecimiento"
                     data-compartir-nombre="{{ establecimiento.nombre }}">
                     <i class="bi bi-share" aria-hidden="true"></i>
-                    <span>Compartir</span>
+                    <span>{% translate "Compartir" %}</span>
                 </button>
 
             </div>
@@ -193,12 +194,12 @@
     <section class="detalle-mobile-hero">
 
         <div class="detalle-mobile-wrap">
-            <nav class="detalle-mobile-breadcrumb" aria-label="Ruta de navegación móvil">
+            <nav class="detalle-mobile-breadcrumb" aria-label="{% translate "Ruta de navegación móvil" %}">
                 <a href="{% url volver_url_name %}">
                     {% if es_restaurante %}
-                    Restaurantes
+                    {% translate "Restaurantes" %}
                     {% else %}
-                    Alojamientos
+                    {% translate "Alojamientos" %}
                     {% endif %}
                 </a>
                 <span>›</span>
@@ -213,14 +214,14 @@
                     <div class="swiper-wrapper">
                         {% for item in media_items %}
                         <div class="swiper-slide detalle-mobile-slide">
-                            <img src="{{ item.url }}" alt="{{ item.alt }}">
+                            <img src="{{ item.url }}" alt="{{ item.alt }}"{% if not forloop.first %} loading="lazy"{% endif %} decoding="async">
                         </div>
                         {% endfor %}
                     </div>
 
                     <button type="button" class="detalle-mobile-gallery-expand" data-bs-toggle="modal"
                         data-bs-target="#detalleGaleriaModal" data-detalle-gallery-open
-                        aria-label="Ampliar galería de imágenes">
+                        aria-label="{% translate "Ampliar galería de imágenes" %}">
                         <i class="bi bi-arrows-angle-expand"></i>
                     </button>
 
@@ -230,7 +231,7 @@
                     </div>
 
                     <div class="detalle-mobile-swiper-controls">
-                        <button type="button" class="detalle-mobile-swiper-play" aria-label="Pausar carrusel">
+                        <button type="button" class="detalle-mobile-swiper-play" aria-label="{% translate "Pausar carrusel" %}">
                             <i class="bi bi-pause-fill"></i>
                         </button>
 
@@ -264,10 +265,10 @@
                     <div class="detalle-mobile-rating-preview">
                         {% if resumen_resenas.total %}
                         <i class="bi bi-star-fill"></i>
-                        <span>{{ resumen_resenas.promedio|floatformat:1 }} · {{ resumen_resenas.total }} valoraci{{ resumen_resenas.total|pluralize:"ón,ones" }}</span>
+                        <span>{{ resumen_resenas.promedio|floatformat:1 }} · {% blocktranslate count counter=resumen_resenas.total %}{{ counter }} valoración{% plural %}{{ counter }} valoraciones{% endblocktranslate %}</span>
                         {% else %}
                         <i class="bi bi-chat-square-heart"></i>
-                        <span>Aún sin valoraciones</span>
+                        <span>{% translate "Aún sin valoraciones" %}</span>
                         {% endif %}
                     </div>
 
@@ -276,11 +277,11 @@
                         <i class="bi bi-tag"></i>
                         <span>
                             {% if establecimiento.precio_desde and establecimiento.precio_hasta %}
-                            Precios desde S/. {{ establecimiento.precio_desde|floatformat:0 }} hasta S/. {{ establecimiento.precio_hasta|floatformat:0 }}
+                            {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 hasta=establecimiento.precio_hasta|floatformat:0 %}Precios desde S/. {{ desde }} hasta S/. {{ hasta }}{% endblocktranslate %}
                             {% elif establecimiento.precio_desde %}
-                            Precios desde S/. {{ establecimiento.precio_desde|floatformat:0 }}
+                            {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 %}Precios desde S/. {{ desde }}{% endblocktranslate %}
                             {% elif establecimiento.precio_hasta %}
-                            Precios hasta S/. {{ establecimiento.precio_hasta|floatformat:0 }}
+                            {% blocktranslate trimmed with hasta=establecimiento.precio_hasta|floatformat:0 %}Precios hasta S/. {{ hasta }}{% endblocktranslate %}
                             {% endif %}
                         </span>
                     </div>
@@ -304,7 +305,7 @@
                 <a href="https://wa.me/{{ contacto_whatsapp }}" target="_blank" rel="noopener"
                     class="detalle-mobile-whatsapp">
                     <i class="bi bi-whatsapp"></i>
-                    Contactar por WhatsApp
+                    {% translate "Contactar por WhatsApp" %}
                 </a>
                 {% endif %}
 
@@ -312,12 +313,12 @@
                     {% if contacto_telefono %}
                     <a href="tel:{{ contacto_telefono }}">
                         <i class="bi bi-telephone"></i>
-                        <span>Llamar</span>
+                        <span>{% translate "Llamar" %}</span>
                     </a>
                     {% else %}
                     <button type="button">
                         <i class="bi bi-telephone"></i>
-                        <span>Llamar</span>
+                        <span>{% translate "Llamar" %}</span>
                     </button>
                     {% endif %}
 
@@ -325,18 +326,18 @@
                     <a href="{{ sucursal_mapa_principal.route_url }}"
                         target="_blank" rel="noopener">
                         <i class="bi bi-send"></i>
-                        <span>Cómo llegar</span>
+                        <span>{% translate "Cómo llegar" %}</span>
                     </a>
                     {% elif direccion_mapa %}
                     <a href="https://www.google.com/maps/dir/?api=1&destination={{ direccion_mapa|urlencode }}"
                         target="_blank" rel="noopener">
                         <i class="bi bi-send"></i>
-                        <span>Cómo llegar</span>
+                        <span>{% translate "Cómo llegar" %}</span>
                     </a>
                     {% else %}
                     <button type="button">
                         <i class="bi bi-send"></i>
-                        <span>Cómo llegar</span>
+                        <span>{% translate "Cómo llegar" %}</span>
                     </button>
                     {% endif %}
 
@@ -344,17 +345,17 @@
                 </div>
 
                 <div class="detalle-mobile-tabs">
-                    <a href="#detalle-sobre">Establecimiento</a>
+                    <a href="#detalle-sobre">{% translate "Establecimiento" %}</a>
 
                     {% if es_alojamiento %}
-                    <a href="#detalle-servicios">Amenidades</a>
+                    <a href="#detalle-servicios">{% translate "Amenidades" %}</a>
                     {% else %}
-                    <a href="#detalle-servicios">Servicios</a>
+                    <a href="#detalle-servicios">{% translate "Servicios" %}</a>
                     {% endif %}
 
-                    <a href="#detalle-tarifas">Tarifas</a>
-                    <a href="#detalle-ubicacion">Ubicación</a>
-                    <a href="#resenas">Valoraciones</a>
+                    <a href="#detalle-tarifas">{% translate "Tarifas" %}</a>
+                    <a href="#detalle-ubicacion">{% translate "Ubicación" %}</a>
+                    <a href="#resenas">{% translate "Valoraciones" %}</a>
                 </div>
             </div>
         </div>
@@ -373,27 +374,27 @@
                             <div>
                                 <span>
                                     {% if es_restaurante %}
-                                    Propuesta gastronómica
+                                    {% translate "Propuesta gastronómica" %}
                                     {% else %}
-                                    Sobre el establecimiento
+                                    {% translate "Sobre el establecimiento" %}
                                     {% endif %}
                                 </span>
 
-                                <h2>Sobre el establecimiento</h2>
+                                <h2>{% translate "Sobre el establecimiento" %}</h2>
                             </div>
 
                             {% if es_restaurante %}
                             {% if carta_publica_url %}
                             <a href="{{ carta_publica_url }}" target="_blank" rel="noopener"
-                                class="detalle-sobre-carta-btn" aria-label="Ver carta del establecimiento">
+                                class="detalle-sobre-carta-btn" aria-label="{% translate "Ver carta del establecimiento" %}">
                                 <i class="bi bi-eye"></i>
-                                <span>Ver carta</span>
+                                <span>{% translate "Ver carta" %}</span>
                             </a>
                             {% else %}
                             <button type="button" class="detalle-sobre-carta-btn detalle-sobre-carta-btn--disabled"
-                                disabled aria-label="Carta disponible próximamente">
+                                disabled aria-label="{% translate "Carta disponible próximamente" %}">
                                 <i class="bi bi-clock-history"></i>
-                                <span>Carta próximamente</span>
+                                <span>{% translate "Carta próximamente" %}</span>
                             </button>
                             {% endif %}
                             {% endif %}
@@ -408,15 +409,15 @@
                         {% if recomendaciones %}
                         {% if es_restaurante %}
                         <article class="detalle-recomendaciones-card detalle-recomendaciones-restaurante"
-                            aria-label="Recomendaciones gastronómicas del establecimiento">
+                            aria-label="{% translate "Recomendaciones gastronómicas del establecimiento" %}">
                             <div class="detalle-recomendaciones-header">
                                 <div class="detalle-recomendaciones-icono">
                                     <i class="bi bi-award"></i>
                                 </div>
 
                                 <div>
-                                    <span>Recomendaciones</span>
-                                    <p>Platos exquisitos consumidos por nuestros comensales.</p>
+                                    <span>{% translate "Recomendaciones" %}</span>
+                                    <p>{% translate "Platos exquisitos consumidos por nuestros comensales." %}</p>
                                 </div>
                             </div>
 
@@ -436,7 +437,7 @@
                                     {% else %}
                                     <div class="detalle-recomendacion-thumb detalle-recomendacion-thumb--empty">
                                         <i class="bi bi-image"></i>
-                                        <small>Imagen próximamente</small>
+                                        <small>{% translate "Imagen próximamente" %}</small>
                                     </div>
                                     {% endif %}
 
@@ -447,15 +448,15 @@
                         </article>
                         {% else %}
                         <article class="detalle-recomendaciones-card detalle-recomendaciones-alojamiento"
-                            aria-label="Recomendaciones de alojamiento">
+                            aria-label="{% translate "Recomendaciones de alojamiento" %}">
                             <div class="detalle-recomendaciones-header">
                                 <div class="detalle-recomendaciones-icono">
                                     <i class="bi bi-star"></i>
                                 </div>
 
                                 <div>
-                                    <span>Recomendaciones</span>
-                                    <p>Habitaciones más reservadas por nuestros visitantes durante su estadía.</p>
+                                    <span>{% translate "Recomendaciones" %}</span>
+                                    <p>{% translate "Habitaciones más reservadas por nuestros visitantes durante su estadía." %}</p>
                                 </div>
                             </div>
 
@@ -489,17 +490,17 @@
                         <div class="detalle-bloque-encabezado detalle-servicios-encabezado">
                             <span>
                                 {% if es_restaurante %}
-                                Servicios
+                                {% translate "Servicios" %}
                                 {% else %}
-                                Amenidades y servicios
+                                {% translate "Amenidades y servicios" %}
                                 {% endif %}
                             </span>
 
                             <h2>
                                 {% if es_restaurante %}
-                                Servicios
+                                {% translate "Servicios" %}
                                 {% else %}
-                                Amenidades y servicios
+                                {% translate "Amenidades y servicios" %}
                                 {% endif %}
                             </h2>
                         </div>
@@ -530,24 +531,24 @@
                             <div class="detalle-tarifas-heading">
                                 <span class="detalle-tarifas-eyebrow">
                                     {% if es_restaurante %}
-                                    Rango de precios
+                                    {% translate "Rango de precios" %}
                                     {% else %}
-                                    Tarifas referenciales
+                                    {% translate "Tarifas referenciales" %}
                                     {% endif %}
                                 </span>
 
                                 <h2>
                                     {% if es_restaurante %}
-                                    Precios de referencia
+                                    {% translate "Precios de referencia" %}
                                     {% else %}
-                                    Tarifas de alojamiento
+                                    {% translate "Tarifas de alojamiento" %}
                                     {% endif %}
                                 </h2>
                             </div>
 
-                            <div class="detalle-tarifas-moneda" aria-label="Moneda principal: soles peruanos">
+                            <div class="detalle-tarifas-moneda" aria-label="{% translate "Moneda principal: soles peruanos" %}">
                                 <span class="detalle-tarifas-moneda-icon" aria-hidden="true">S/</span>
-                                <span>Moneda: PEN</span>
+                                <span>{% translate "Moneda: PEN" %}</span>
                             </div>
                         </div>
 
@@ -578,9 +579,9 @@
 
                                     <span class="detalle-tarifas-card-label">
                                         {% if es_restaurante %}
-                                        Consumo aproximado por plato
+                                        {% translate "Consumo aproximado por plato" %}
                                         {% else %}
-                                        Rango aproximado por noche
+                                        {% translate "Rango aproximado por noche" %}
                                         {% endif %}
                                     </span>
                                 </div>
@@ -591,9 +592,9 @@
                                         <strong>S/. {{ establecimiento.precio_desde|floatformat:0 }}</strong>
                                         <small>
                                             {% if es_restaurante %}
-                                            Precio desde
+                                            {% translate "Precio desde" %}
                                             {% else %}
-                                            Tarifa desde
+                                            {% translate "Tarifa desde" %}
                                             {% endif %}
                                         </small>
                                     </div>
@@ -604,9 +605,9 @@
                                         <strong>S/. {{ establecimiento.precio_hasta|floatformat:0 }}</strong>
                                         <small>
                                             {% if es_restaurante %}
-                                            Precio hasta
+                                            {% translate "Precio hasta" %}
                                             {% else %}
-                                            Tarifa hasta
+                                            {% translate "Tarifa hasta" %}
                                             {% endif %}
                                         </small>
                                     </div>
@@ -615,9 +616,9 @@
                                         <strong>S/. {{ establecimiento.precio_desde|floatformat:0 }}</strong>
                                         <small>
                                             {% if es_restaurante %}
-                                            Precio desde
+                                            {% translate "Precio desde" %}
                                             {% else %}
-                                            Tarifa desde
+                                            {% translate "Tarifa desde" %}
                                             {% endif %}
                                         </small>
                                     </div>
@@ -626,9 +627,9 @@
                                         <strong>S/. {{ establecimiento.precio_hasta|floatformat:0 }}</strong>
                                         <small>
                                             {% if es_restaurante %}
-                                            Precio hasta
+                                            {% translate "Precio hasta" %}
                                             {% else %}
-                                            Tarifa hasta
+                                            {% translate "Tarifa hasta" %}
                                             {% endif %}
                                         </small>
                                     </div>
@@ -637,9 +638,9 @@
 
                                 <p>
                                     {% if es_restaurante %}
-                                    Precios referenciales en soles peruanos (PEN)
+                                    {% translate "Precios referenciales en soles peruanos (PEN)" %}
                                     {% else %}
-                                    Tarifas referenciales en soles peruanos (PEN)
+                                    {% translate "Tarifas referenciales en soles peruanos (PEN)" %}
                                     {% endif %}
                                 </p>
                             </article>
@@ -649,7 +650,7 @@
                                     <div class="detalle-tarifas-usd-icon" aria-hidden="true">$</div>
 
                                     <span class="detalle-tarifas-card-label">
-                                        Conversión referencial a USD
+                                        {% translate "Conversión referencial a USD" %}
                                     </span>
                                 </div>
 
@@ -675,17 +676,17 @@
                                         <div class="detalle-tarifas-usd-labels">
                                             <small>
                                                 {% if es_restaurante %}
-                                                Precio desde
+                                                {% translate "Precio desde" %}
                                                 {% else %}
-                                                Tarifa desde
+                                                {% translate "Tarifa desde" %}
                                                 {% endif %}
                                             </small>
 
                                             <small>
                                                 {% if es_restaurante %}
-                                                Precio hasta
+                                                {% translate "Precio hasta" %}
                                                 {% else %}
-                                                Tarifa hasta
+                                                {% translate "Tarifa hasta" %}
                                                 {% endif %}
                                             </small>
                                         </div>
@@ -693,9 +694,9 @@
                                         <div class="detalle-tarifas-usd-labels detalle-tarifas-usd-labels--single">
                                             <small>
                                                 {% if es_restaurante %}
-                                                Precio desde
+                                                {% translate "Precio desde" %}
                                                 {% else %}
-                                                Tarifa desde
+                                                {% translate "Tarifa desde" %}
                                                 {% endif %}
                                             </small>
                                         </div>
@@ -703,9 +704,9 @@
                                         <div class="detalle-tarifas-usd-labels detalle-tarifas-usd-labels--single">
                                             <small>
                                                 {% if es_restaurante %}
-                                                Precio hasta
+                                                {% translate "Precio hasta" %}
                                                 {% else %}
-                                                Tarifa hasta
+                                                {% translate "Tarifa hasta" %}
                                                 {% endif %}
                                             </small>
                                         </div>
@@ -713,34 +714,33 @@
                                     </div>
 
                                     <p>
-                                        Calculado al tipo de cambio:
+                                        {% translate "Calculado al tipo de cambio:" %}
                                         <span class="detalle-tarifas-tc-value">S/. {{ tipo_cambio_venta_txt }}</span>
                                     </p>
 
                                     <div class="detalle-tarifas-api-pill detalle-tarifas-api-pill--ok">
                                         <i class="bi bi-check-circle"></i>
                                         <span>
-                                            Tipo de cambio actualizado a:
+                                            {% translate "Tipo de cambio actualizado a:" %}
                                             {% if fecha_tipo_cambio_txt %}
                                             {{ fecha_tipo_cambio_txt }}
                                             {% elif tipo_cambio_vigente.fecha %}
                                             {{ tipo_cambio_vigente.fecha|date:"d-m-Y" }}
                                             {% else %}
-                                            fecha no disponible
+                                            {% translate "fecha no disponible" %}
                                             {% endif %}
                                         </span>
                                     </div>
                                     {% else %}
-                                    <strong>Próximamente</strong>
+                                    <strong>{% translate "Próximamente" %}</strong>
 
                                     <p>
-                                        Aquí se mostrará la conversión referencial en dólares cuando se conecte la API
-                                        de tipo de cambio actualizado.
+                                        {% translate "Aquí se mostrará la conversión referencial en dólares cuando se conecte la API de tipo de cambio actualizado." %}
                                     </p>
 
                                     <div class="detalle-tarifas-api-pill">
                                         <i class="bi bi-clock-history"></i>
-                                        <span>Pendiente de API</span>
+                                        <span>{% translate "Pendiente de API" %}</span>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -755,17 +755,17 @@
                             <div>
                                 <strong>
                                     {% if es_restaurante %}
-                                    Precios referenciales
+                                    {% translate "Precios referenciales" %}
                                     {% else %}
-                                    Tarifas referenciales
+                                    {% translate "Tarifas referenciales" %}
                                     {% endif %}
                                 </strong>
 
                                 <p>
                                     {% if es_restaurante %}
-                                    Los precios pueden variar según temporada, disponibilidad, presentación del plato y promociones del establecimiento.
+                                    {% translate "Los precios pueden variar según temporada, disponibilidad, presentación del plato y promociones del establecimiento." %}
                                     {% else %}
-                                    Las tarifas pueden variar según temporada, disponibilidad, categoría de habitación y condiciones de reserva.
+                                    {% translate "Las tarifas pueden variar según temporada, disponibilidad, categoría de habitación y condiciones de reserva." %}
                                     {% endif %}
                                 </p>
                             </div>
@@ -790,29 +790,29 @@
                             <div>
                                 <div class="du-kicker">
                                     {% if sucursales_mapa|length > 1 %}
-                                    {{ sucursales_mapa|length }} sucursales en Huánuco
+                                    {% blocktranslate count counter=sucursales_mapa|length %}{{ counter }} sucursal en Huánuco{% plural %}{{ counter }} sucursales en Huánuco{% endblocktranslate %}
                                     {% else %}
-                                    Cómo llegar
+                                    {% translate "Cómo llegar" %}
                                     {% endif %}
                                 </div>
 
                                 <h2 class="du-title">
                                     {% if sucursales_mapa|length > 1 %}
-                                    Ubicaciones
+                                    {% translate "Ubicaciones" %}
                                     {% else %}
-                                    Ubicación
+                                    {% translate "Ubicación" %}
                                     {% endif %}
                                 </h2>
                             </div>
 
                             {% if sucursal_mapa_principal.es_principal %}
-                            <span class="du-pill-solid">Sucursal Principal</span>
+                            <span class="du-pill-solid">{% translate "Sucursal Principal" %}</span>
                             {% endif %}
                         </div>
 
                         <!-- Tabs de sucursales -->
                         {% if sucursales_mapa|length > 1 %}
-                        <div class="du-branch-tabs" aria-label="Sucursales disponibles">
+                        <div class="du-branch-tabs" aria-label="{% translate "Sucursales disponibles" %}">
                             {% for sucursal in sucursales_mapa %}
                             <button type="button" class="du-branch-tab {% if forloop.first %}is-active{% endif %}"
                                 data-sucursal data-lat="{{ sucursal.latitud }}" data-lng="{{ sucursal.longitud }}"
@@ -831,7 +831,7 @@
                                 <span>{{ sucursal.nombre|default:sucursal.label }}</span>
 
                                 {% if sucursal.es_principal %}
-                                <small class="du-tab-badge">Principal</small>
+                                <small class="du-tab-badge">{% translate "Principal" %}</small>
                                 {% endif %}
                             </button>
                             {% endfor %}
@@ -853,7 +853,7 @@
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
                                 </svg>
-                                <span>Cómo llegar</span>
+                                <span>{% translate "Cómo llegar" %}</span>
                             </button>
 
                             <a href="{{ sucursal_mapa_principal.open_url }}" target="_blank" rel="noopener" class="du-action"
@@ -863,33 +863,33 @@
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
                                 </svg>
-                                <span>Abrir mapa</span>
+                                <span>{% translate "Abrir mapa" %}</span>
                             </a>
                         </div>
 
                         <!-- Desplegable de "como llegar", dentro del mismo card -->
                         <div class="du-directions" data-directions hidden>
                             <div class="du-directions-hd">
-                                <h5>Cómo llegar</h5>
-                                <button type="button" class="du-directions-close" data-hide-dir aria-label="Cerrar">×</button>
+                                <h5>{% translate "Cómo llegar" %}</h5>
+                                <button type="button" class="du-directions-close" data-hide-dir aria-label="{% translate "Cerrar" %}">×</button>
                             </div>
 
-                            <div class="du-directions-label">Desde</div>
+                            <div class="du-directions-label">{% translate "Desde" %}</div>
                             <input class="du-direction-input" type="text" value="Mi ubicación actual" readonly>
 
-                            <div class="du-directions-label">Hasta</div>
+                            <div class="du-directions-label">{% translate "Hasta" %}</div>
                             <input class="du-direction-input" type="text" value="{{ sucursal_mapa_principal.direccion|default:'' }}"
                                 data-destino readonly>
 
-                            <div class="du-direction-modes" aria-label="Modo de traslado">
+                            <div class="du-direction-modes" aria-label="{% translate "Modo de traslado" %}">
                                 <button type="button" class="du-mode is-active" data-modo="walking">
                                     <i class="bi bi-person-walking"></i>
-                                    <span>A pie</span>
+                                    <span>{% translate "A pie" %}</span>
                                 </button>
 
                                 <button type="button" class="du-mode" data-modo="driving">
                                     <i class="bi bi-car-front"></i>
-                                    <span>En auto</span>
+                                    <span>{% translate "En auto" %}</span>
                                 </button>
                             </div>
 
@@ -899,7 +899,7 @@
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
                                 </svg>
-                                <span>Iniciar ruta en Google Maps</span>
+                                <span>{% translate "Iniciar ruta en Google Maps" %}</span>
                             </a>
                         </div>
 
@@ -907,11 +907,11 @@
                         <div class="du-branch">
                             <div class="du-branch-hd">
                                 <h3 class="du-branch-name" data-branch-nombre>
-                                    {{ sucursal_mapa_principal.nombre|default:"Local principal" }}
+                                    {{ sucursal_mapa_principal.nombre|default:_("Local principal") }}
                                 </h3>
 
                                 <span class="du-pill-solid" data-branch-pill {% if not sucursal_mapa_principal.es_principal %}hidden{% endif %}>
-                                    Sucursal Principal
+                                    {% translate "Sucursal Principal" %}
                                 </span>
                             </div>
 
@@ -920,7 +920,7 @@
                                     <i class="bi bi-geo-alt"></i>
                                 </span>
                                 <strong data-branch-direccion>
-                                    {{ sucursal_mapa_principal.direccion|default:"Dirección no registrada" }}
+                                    {{ sucursal_mapa_principal.direccion|default:_("Dirección no registrada") }}
                                 </strong>
                             </div>
 
@@ -954,13 +954,13 @@
                 <aside class="detalle-lateral">
                     <div class="detalle-panel-contacto">
 
-                        <span class="detalle-panel-small">Contacto directo</span>
+                        <span class="detalle-panel-small">{% translate "Contacto directo" %}</span>
 
                         <h2>
                             {% if es_restaurante %}
-                            Haz tu pedido
+                            {% translate "Haz tu pedido" %}
                             {% else %}
-                            Reserva tu estancia
+                            {% translate "Reserva tu estancia" %}
                             {% endif %}
                         </h2>
 
@@ -968,7 +968,7 @@
 
                             {% if contacto_whatsapp %}
                             <a href="https://wa.me/{{ contacto_whatsapp }}" target="_blank" rel="noopener"
-                                class="dpc-btn dpc-whatsapp" aria-label="Contactar por WhatsApp">
+                                class="dpc-btn dpc-whatsapp" aria-label="{% translate "Contactar por WhatsApp" %}">
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-whatsapp"></i>
                                 </span>
@@ -978,7 +978,7 @@
 
                             {% if contacto_facebook %}
                             <a href="{{ contacto_facebook }}" target="_blank" rel="noopener"
-                                class="dpc-btn dpc-facebook" aria-label="Ver Facebook">
+                                class="dpc-btn dpc-facebook" aria-label="{% translate "Ver Facebook" %}">
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-facebook"></i>
                                 </span>
@@ -988,7 +988,7 @@
 
                             {% if contacto_instagram %}
                             <a href="{{ contacto_instagram }}" target="_blank" rel="noopener"
-                                class="dpc-btn dpc-instagram" aria-label="Ver Instagram">
+                                class="dpc-btn dpc-instagram" aria-label="{% translate "Ver Instagram" %}">
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-instagram"></i>
                                 </span>
@@ -998,31 +998,31 @@
 
                             {% if contacto_sitio_web %}
                             <a href="{{ contacto_sitio_web }}" target="_blank" rel="noopener"
-                                class="dpc-btn dpc-web" aria-label="Visitar sitio web">
+                                class="dpc-btn dpc-web" aria-label="{% translate "Visitar sitio web" %}">
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-globe2"></i>
                                 </span>
-                                <span class="dpc-btn-txt">Sitio web</span>
+                                <span class="dpc-btn-txt">{% translate "Sitio web" %}</span>
                             </a>
                             {% endif %}
 
                             {% if contacto_telefono %}
                             <a href="tel:{{ contacto_telefono }}"
-                                class="dpc-btn dpc-telefono" aria-label="Llamar">
+                                class="dpc-btn dpc-telefono" aria-label="{% translate "Llamar" %}">
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-telephone-fill"></i>
                                 </span>
-                                <span class="dpc-btn-txt">Llamar al celular</span>
+                                <span class="dpc-btn-txt">{% translate "Llamar al celular" %}</span>
                             </a>
                             {% endif %}
 
                             {% if contacto_correo %}
                             <a href="mailto:{{ contacto_correo }}"
-                                class="dpc-btn dpc-correo" aria-label="Enviar correo">
+                                class="dpc-btn dpc-correo" aria-label="{% translate "Enviar correo" %}">
                                 <span class="dpc-btn-ico">
                                     <i class="bi bi-envelope-fill"></i>
                                 </span>
-                                <span class="dpc-btn-txt">Correo electrónico</span>
+                                <span class="dpc-btn-txt">{% translate "Correo electrónico" %}</span>
                             </a>
                             {% endif %}
 
@@ -1044,11 +1044,11 @@
         <div class="modal-content detalle-gallery-content">
             <div class="detalle-gallery-header">
                 <div>
-                    <span id="detalleGaleriaModalLabel">Galería de imágenes</span>
+                    <span id="detalleGaleriaModalLabel">{% translate "Galería de imágenes" %}</span>
                     <strong>{{ establecimiento.nombre }}</strong>
                 </div>
 
-                <button type="button" class="detalle-gallery-close" data-bs-dismiss="modal" aria-label="Cerrar galería">
+                <button type="button" class="detalle-gallery-close" data-bs-dismiss="modal" aria-label="{% translate "Cerrar galería" %}">
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
@@ -1058,17 +1058,17 @@
                     <div class="swiper-wrapper">
                         {% for item in media_items %}
                         <div class="swiper-slide detalle-gallery-slide">
-                            <img src="{{ item.url }}" alt="{{ item.alt }}">
+                            <img src="{{ item.url }}" alt="{{ item.alt }}"{% if not forloop.first %} loading="lazy"{% endif %} decoding="async">
                         </div>
                         {% endfor %}
                     </div>
 
-                    <button type="button" class="detalle-gallery-nav detalle-gallery-prev" aria-label="Imagen anterior">
+                    <button type="button" class="detalle-gallery-nav detalle-gallery-prev" aria-label="{% translate "Imagen anterior" %}">
                         <i class="bi bi-arrow-left"></i>
                     </button>
 
                     <button type="button" class="detalle-gallery-nav detalle-gallery-next"
-                        aria-label="Imagen siguiente">
+                        aria-label="{% translate "Imagen siguiente" %}">
                         <i class="bi bi-arrow-right"></i>
                     </button>
 

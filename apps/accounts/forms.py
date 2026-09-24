@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
 from .models import PerfilUsuario
+from django.utils.translation import gettext_lazy
 
 USERNAME_RE = re.compile(r'^[A-Za-z0-9](?:[._-]?[A-Za-z0-9])+$')
 PASSWORD_SYMBOLS = r'!@#%&*?$.\-_+=,;:()\[\]{}/\\|~^<>\'"`'
@@ -14,72 +15,74 @@ FOTO_PERFIL_TAMANO_MAXIMO_MB = 5
 
 class RegistroForm(forms.Form):
     nombres = forms.CharField(
-        label='Nombres', max_length=100,
-        widget=forms.TextInput(attrs={'placeholder': 'Ej. Rodrigo', 'autocomplete': 'given-name'}),
+        label=gettext_lazy('Nombres'), max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': gettext_lazy('Ej. Rodrigo'), 'autocomplete': 'given-name'}),
     )
     apellidos = forms.CharField(
-        label='Apellidos', max_length=100,
-        widget=forms.TextInput(attrs={'placeholder': 'Ej. Acuña Gonzales', 'autocomplete': 'family-name'}),
+        label=gettext_lazy('Apellidos'), max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': gettext_lazy('Ej. Acuña Gonzales'), 'autocomplete': 'family-name'}),
     )
     username = forms.CharField(
-        label='Nombre de usuario', min_length=4, max_length=30,
-        widget=forms.TextInput(attrs={'placeholder': 'Ej. rodrigo.acuna', 'autocomplete': 'username'}),
+        label=gettext_lazy('Nombre de usuario'), min_length=4, max_length=30,
+        widget=forms.TextInput(attrs={'placeholder': gettext_lazy('Ej. rodrigo.acuna'), 'autocomplete': 'username'}),
     )
     email = forms.EmailField(
-        label='Correo electrónico',
+        label=gettext_lazy('Correo electrónico'),
         widget=forms.EmailInput(attrs={'placeholder': 'tucorreo@ejemplo.com', 'autocomplete': 'email', 'inputmode': 'email'}),
     )
     password1 = forms.CharField(
-        label='Contraseña',
-        widget=forms.PasswordInput(attrs={'placeholder': 'Mínimo 8 caracteres', 'autocomplete': 'new-password'}),
+        label=gettext_lazy('Contraseña'),
+        widget=forms.PasswordInput(attrs={'placeholder': gettext_lazy('Mínimo 8 caracteres'), 'autocomplete': 'new-password'}),
     )
     password2 = forms.CharField(
-        label='Confirmar contraseña',
-        widget=forms.PasswordInput(attrs={'placeholder': 'Repite tu contraseña', 'autocomplete': 'new-password'}),
+        label=gettext_lazy('Confirmar contraseña'),
+        widget=forms.PasswordInput(attrs={'placeholder': gettext_lazy('Repite tu contraseña'), 'autocomplete': 'new-password'}),
     )
 
     def _limpiar_solo_letras(self, valor, etiqueta):
         texto = re.sub(r'\s+', ' ', valor.strip())
         if not texto or not all(c.isalpha() or c == ' ' for c in texto):
-            raise forms.ValidationError(f'El {etiqueta} solo debe contener letras y espacios.')
+            raise forms.ValidationError(gettext_lazy('El %(etiqueta)s solo debe contener letras y espacios.') % {'etiqueta': etiqueta})
         return texto
 
     def clean_nombres(self):
-        return self._limpiar_solo_letras(self.cleaned_data['nombres'], 'nombre')
+        return self._limpiar_solo_letras(self.cleaned_data['nombres'], gettext_lazy('nombre'))
 
     def clean_apellidos(self):
-        return self._limpiar_solo_letras(self.cleaned_data['apellidos'], 'apellido')
+        return self._limpiar_solo_letras(self.cleaned_data['apellidos'], gettext_lazy('apellido'))
 
     def clean_username(self):
         username = self.cleaned_data['username'].strip()
         if not USERNAME_RE.fullmatch(username):
             raise forms.ValidationError(
-                'El nombre de usuario solo puede contener letras, números, punto, guion o guion bajo. '
-                'No puede empezar ni terminar con punto, guion o guion bajo.'
+                gettext_lazy(
+                    'El nombre de usuario solo puede contener letras, números, punto, guion o guion bajo. '
+                    'No puede empezar ni terminar con punto, guion o guion bajo.'
+                )
             )
         if User.objects.filter(username__iexact=username).exists():
-            raise forms.ValidationError('Este nombre de usuario ya está en uso. Elige otro.')
+            raise forms.ValidationError(gettext_lazy('Este nombre de usuario ya está en uso. Elige otro.'))
         return username
 
     def clean_email(self):
         email = self.cleaned_data['email'].strip().lower()
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError('Ya existe una cuenta registrada con este correo.')
+            raise forms.ValidationError(gettext_lazy('Ya existe una cuenta registrada con este correo.'))
         return email
 
     def clean_password1(self):
         password = self.cleaned_data['password1']
         errores = []
         if len(password) < 8:
-            errores.append('Tu contraseña debe tener al menos 8 caracteres.')
+            errores.append(gettext_lazy('Tu contraseña debe tener al menos 8 caracteres.'))
         if not re.search(r'[A-ZÁÉÍÓÚÑ]', password):
-            errores.append('Debe incluir una letra mayúscula.')
+            errores.append(gettext_lazy('Debe incluir una letra mayúscula.'))
         if not re.search(r'[a-záéíóúñ]', password):
-            errores.append('Debe incluir una letra minúscula.')
+            errores.append(gettext_lazy('Debe incluir una letra minúscula.'))
         if not re.search(r'\d', password):
-            errores.append('Debe incluir al menos un número.')
+            errores.append(gettext_lazy('Debe incluir al menos un número.'))
         if not re.search(f'[{PASSWORD_SYMBOLS}]', password):
-            errores.append('Debe incluir al menos un símbolo (! @ # % & * ? $ . -).')
+            errores.append(gettext_lazy('Debe incluir al menos un símbolo (! @ # % & * ? $ . -).'))
         if errores:
             raise forms.ValidationError(errores)
         validate_password(password)
@@ -89,7 +92,7 @@ class RegistroForm(forms.Form):
         cleaned = super().clean()
         p1, p2 = cleaned.get('password1'), cleaned.get('password2')
         if p1 and p2 and p1 != p2:
-            self.add_error('password2', 'Ambas contraseñas deben coincidir.')
+            self.add_error('password2', gettext_lazy('Ambas contraseñas deben coincidir.'))
         return cleaned
 
     def save(self):
@@ -110,12 +113,12 @@ class RegistroForm(forms.Form):
 
 class LoginForm(forms.Form):
     identificador = forms.CharField(
-        label='Usuario o correo',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingresa tu usuario o correo', 'autocomplete': 'username'}),
+        label=gettext_lazy('Usuario o correo'),
+        widget=forms.TextInput(attrs={'placeholder': gettext_lazy('Ingresa tu usuario o correo'), 'autocomplete': 'username'}),
     )
     password = forms.CharField(
-        label='Contraseña',
-        widget=forms.PasswordInput(attrs={'placeholder': 'Ingresa tu contraseña', 'autocomplete': 'current-password'}),
+        label=gettext_lazy('Contraseña'),
+        widget=forms.PasswordInput(attrs={'placeholder': gettext_lazy('Ingresa tu contraseña'), 'autocomplete': 'current-password'}),
     )
 
 
@@ -135,8 +138,10 @@ def limpiar_nombre_persona(valor, etiqueta):
     )
     if not valido:
         raise forms.ValidationError(
-            f'El {etiqueta} debe contener solo letras, espacios, guiones o apóstrofes, '
-            'y empezar y terminar con una letra.'
+            gettext_lazy(
+                'El %(etiqueta)s debe contener solo letras, espacios, guiones o apóstrofes, '
+                'y empezar y terminar con una letra.'
+            ) % {'etiqueta': etiqueta}
         )
     return texto
 
@@ -148,7 +153,7 @@ class NombreForm(forms.ModelForm):
         widgets = {'first_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'given-name'})}
 
     def clean_first_name(self):
-        return limpiar_nombre_persona(self.cleaned_data['first_name'], 'nombre')
+        return limpiar_nombre_persona(self.cleaned_data['first_name'], gettext_lazy('nombre'))
 
 
 class ApellidoForm(forms.ModelForm):
@@ -158,7 +163,7 @@ class ApellidoForm(forms.ModelForm):
         widgets = {'last_name': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'family-name'})}
 
     def clean_last_name(self):
-        return limpiar_nombre_persona(self.cleaned_data['last_name'], 'apellido')
+        return limpiar_nombre_persona(self.cleaned_data['last_name'], gettext_lazy('apellido'))
 
 
 class UsernameForm(forms.ModelForm):
@@ -171,11 +176,13 @@ class UsernameForm(forms.ModelForm):
         username = self.cleaned_data['username'].strip()
         if not USERNAME_RE.fullmatch(username):
             raise forms.ValidationError(
-                'El nombre de usuario solo puede contener letras, números, punto, guion o guion bajo. '
-                'No puede empezar ni terminar con punto, guion o guion bajo.'
+                gettext_lazy(
+                    'El nombre de usuario solo puede contener letras, números, punto, guion o guion bajo. '
+                    'No puede empezar ni terminar con punto, guion o guion bajo.'
+                )
             )
         if User.objects.filter(username__iexact=username).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError('Este nombre de usuario ya está en uso. Elige otro.')
+            raise forms.ValidationError(gettext_lazy('Este nombre de usuario ya está en uso. Elige otro.'))
         return username
 
 
@@ -193,15 +200,15 @@ class FotoPerfilForm(forms.ModelForm):
         # con el formato realmente detectado — por eso esta verificación es
         # confiable, no una confianza ciega en el cliente.
         if archivo.content_type not in FOTO_PERFIL_TIPOS_VALIDOS:
-            raise forms.ValidationError('Solo se permiten imágenes JPG, PNG o WebP.')
+            raise forms.ValidationError(gettext_lazy('Solo se permiten imágenes JPG, PNG o WebP.'))
         if archivo.size > FOTO_PERFIL_TAMANO_MAXIMO_MB * 1024 * 1024:
-            raise forms.ValidationError(f'La imagen no debe superar los {FOTO_PERFIL_TAMANO_MAXIMO_MB} MB.')
+            raise forms.ValidationError(gettext_lazy('La imagen no debe superar los %(mb)s MB.') % {'mb': FOTO_PERFIL_TAMANO_MAXIMO_MB})
         return archivo
 
 
 class CambiarEmailForm(forms.Form):
     nuevo_email = forms.EmailField(
-        label='Nuevo correo electrónico',
+        label=gettext_lazy('Nuevo correo electrónico'),
         widget=forms.EmailInput(attrs={'class': 'form-control', 'autocomplete': 'email', 'inputmode': 'email'}),
     )
 
@@ -212,22 +219,22 @@ class CambiarEmailForm(forms.Form):
     def clean_nuevo_email(self):
         email = self.cleaned_data['nuevo_email'].strip().lower()
         if email == (self.usuario_actual.email or '').lower():
-            raise forms.ValidationError('Este ya es tu correo electrónico actual.')
+            raise forms.ValidationError(gettext_lazy('Este ya es tu correo electrónico actual.'))
         if User.objects.filter(email__iexact=email).exclude(pk=self.usuario_actual.pk).exists():
-            raise forms.ValidationError('Ya existe una cuenta registrada con este correo.')
+            raise forms.ValidationError(gettext_lazy('Ya existe una cuenta registrada con este correo.'))
         return email
 
 
 class ReauthPasswordForm(forms.Form):
     password = forms.CharField(
-        label='Contraseña actual',
+        label=gettext_lazy('Contraseña actual'),
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'current-password'}),
     )
 
 
 class EliminarCuentaForm(forms.Form):
     confirmacion = forms.CharField(
-        label='Escribe tu nombre de usuario para confirmar',
+        label=gettext_lazy('Escribe tu nombre de usuario para confirmar'),
         widget=forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off'}),
     )
 
@@ -238,13 +245,13 @@ class EliminarCuentaForm(forms.Form):
     def clean_confirmacion(self):
         valor = self.cleaned_data['confirmacion'].strip()
         if valor != self.usuario.username:
-            raise forms.ValidationError('El nombre de usuario no coincide.')
+            raise forms.ValidationError(gettext_lazy('El nombre de usuario no coincide.'))
         return valor
 
 
 class OTPForm(forms.Form):
     codigo = forms.CharField(
-        label='Código de verificación', min_length=4, max_length=4,
+        label=gettext_lazy('Código de verificación'), min_length=4, max_length=4,
         widget=forms.TextInput(attrs={
             'placeholder': '••••', 'inputmode': 'numeric', 'pattern': '[0-9]*',
             'autocomplete': 'one-time-code', 'maxlength': '4',
@@ -254,5 +261,5 @@ class OTPForm(forms.Form):
     def clean_codigo(self):
         codigo = self.cleaned_data['codigo'].strip()
         if not codigo.isdigit():
-            raise forms.ValidationError('El código debe tener 4 dígitos.')
+            raise forms.ValidationError(gettext_lazy('El código debe tener 4 dígitos.'))
         return codigo

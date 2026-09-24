@@ -1,0 +1,5502 @@
+# English translation for Viaje Informado.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Viaje Informado\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-18 20:55-0500\n"
+"PO-Revision-Date: 2026-09-18 16:00-0500\n"
+"Last-Translator: Viaje Informado team\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\apps\accounts\forms.py:18 .\templates\accounts\perfil.html:82
+msgid "Nombres"
+msgstr "First name(s)"
+
+#: .\apps\accounts\forms.py:19
+msgid "Ej. Rodrigo"
+msgstr "e.g. Rodrigo"
+
+#: .\apps\accounts\forms.py:22 .\templates\accounts\perfil.html:84
+msgid "Apellidos"
+msgstr "Last name(s)"
+
+#: .\apps\accounts\forms.py:23
+msgid "Ej. Acuña Gonzales"
+msgstr "e.g. Acuña Gonzales"
+
+#: .\apps\accounts\forms.py:26 .\templates\accounts\perfil.html:93
+msgid "Nombre de usuario"
+msgstr "Username"
+
+#: .\apps\accounts\forms.py:27
+msgid "Ej. rodrigo.acuna"
+msgstr "e.g. rodrigo.acuna"
+
+#: .\apps\accounts\forms.py:30 .\templates\accounts\cuenta.html:29
+#: .\templates\establecimientos\detalle_establecimiento.html:1025
+msgid "Correo electrónico"
+msgstr "Email address"
+
+#: .\apps\accounts\forms.py:34 .\apps\accounts\forms.py:120
+#: .\templates\accounts\cuenta.html:44 .\templates\base\login_visual.html:30
+msgid "Contraseña"
+msgstr "Password"
+
+#: .\apps\accounts\forms.py:35 .\templates\accounts\registro.html:40
+msgid "Mínimo 8 caracteres"
+msgstr "At least 8 characters"
+
+#: .\apps\accounts\forms.py:38
+msgid "Confirmar contraseña"
+msgstr "Confirm password"
+
+#: .\apps\accounts\forms.py:39
+msgid "Repite tu contraseña"
+msgstr "Repeat your password"
+
+#: .\apps\accounts\forms.py:45
+#, python-format
+msgid "El %(etiqueta)s solo debe contener letras y espacios."
+msgstr "The %(etiqueta)s must contain only letters and spaces."
+
+#: .\apps\accounts\forms.py:49 .\apps\accounts\forms.py:156
+msgid "nombre"
+msgstr "first name"
+
+#: .\apps\accounts\forms.py:52 .\apps\accounts\forms.py:166
+msgid "apellido"
+msgstr "last name"
+
+#: .\apps\accounts\forms.py:59 .\apps\accounts\forms.py:180
+msgid ""
+"El nombre de usuario solo puede contener letras, números, punto, guion o "
+"guion bajo. No puede empezar ni terminar con punto, guion o guion bajo."
+msgstr "The username can only contain letters, numbers, periods, hyphens or underscores. It cannot start or end with a period, hyphen or underscore."
+
+#: .\apps\accounts\forms.py:64 .\apps\accounts\forms.py:185
+msgid "Este nombre de usuario ya está en uso. Elige otro."
+msgstr "This username is already taken. Please choose another one."
+
+#: .\apps\accounts\forms.py:70 .\apps\accounts\forms.py:224
+msgid "Ya existe una cuenta registrada con este correo."
+msgstr "An account with this email address already exists."
+
+#: .\apps\accounts\forms.py:77
+msgid "Tu contraseña debe tener al menos 8 caracteres."
+msgstr "Your password must be at least 8 characters long."
+
+#: .\apps\accounts\forms.py:79
+msgid "Debe incluir una letra mayúscula."
+msgstr "It must include an uppercase letter."
+
+#: .\apps\accounts\forms.py:81
+msgid "Debe incluir una letra minúscula."
+msgstr "It must include a lowercase letter."
+
+#: .\apps\accounts\forms.py:83
+msgid "Debe incluir al menos un número."
+msgstr "It must include at least one number."
+
+#: .\apps\accounts\forms.py:85
+msgid "Debe incluir al menos un símbolo (! @ # % & * ? $ . -)."
+msgstr "It must include at least one symbol (! @ # % & * ? $ . -)."
+
+#: .\apps\accounts\forms.py:95
+msgid "Ambas contraseñas deben coincidir."
+msgstr "Both passwords must match."
+
+#: .\apps\accounts\forms.py:116
+msgid "Usuario o correo"
+msgstr "Username or email"
+
+#: .\apps\accounts\forms.py:117
+msgid "Ingresa tu usuario o correo"
+msgstr "Enter your username or email"
+
+#: .\apps\accounts\forms.py:121
+msgid "Ingresa tu contraseña"
+msgstr "Enter your password"
+
+#: .\apps\accounts\forms.py:142
+#, python-format
+msgid ""
+"El %(etiqueta)s debe contener solo letras, espacios, guiones o apóstrofes, y "
+"empezar y terminar con una letra."
+msgstr "The %(etiqueta)s must contain only letters, spaces, hyphens or apostrophes, and must start and end with a letter."
+
+#: .\apps\accounts\forms.py:203
+msgid "Solo se permiten imágenes JPG, PNG o WebP."
+msgstr "Only JPG, PNG or WebP images are allowed."
+
+#: .\apps\accounts\forms.py:205
+#, python-format
+msgid "La imagen no debe superar los %(mb)s MB."
+msgstr "The image must not exceed %(mb)s MB."
+
+#: .\apps\accounts\forms.py:211 .\templates\accounts\cambiar_email.html:24
+msgid "Nuevo correo electrónico"
+msgstr "New email address"
+
+#: .\apps\accounts\forms.py:222
+msgid "Este ya es tu correo electrónico actual."
+msgstr "This is already your current email address."
+
+#: .\apps\accounts\forms.py:230 .\templates\accounts\reauth.html:25
+msgid "Contraseña actual"
+msgstr "Current password"
+
+#: .\apps\accounts\forms.py:237
+msgid "Escribe tu nombre de usuario para confirmar"
+msgstr "Type your username to confirm"
+
+#: .\apps\accounts\forms.py:248
+msgid "El nombre de usuario no coincide."
+msgstr "The username does not match."
+
+#: .\apps\accounts\forms.py:254 .\templates\accounts\reauth.html:37
+#: .\templates\accounts\verificar_nuevo_email.html:24
+#: .\templates\accounts\verificar_otp.html:28
+msgid "Código de verificación"
+msgstr "Verification code"
+
+#: .\apps\accounts\forms.py:264
+msgid "El código debe tener 4 dígitos."
+msgstr "The code must have 4 digits."
+
+#: .\apps\accounts\views.py:50
+msgid "Tu código de verificación - Viaje Informado"
+msgstr "Your verification code - Viaje Informado"
+
+#: .\apps\accounts\views.py:51 .\apps\accounts\views.py:485
+#, python-format
+msgid "Hola %(nombre)s,"
+msgstr "Hello %(nombre)s,"
+
+#: .\apps\accounts\views.py:52
+#, python-format
+msgid "Tu código de verificación es: %(codigo)s"
+msgstr "Your verification code is: %(codigo)s"
+
+#: .\apps\accounts\views.py:53
+#, python-format
+msgid "Este código expira en %(minutos)s minutos."
+msgstr "This code expires in %(minutos)s minutes."
+
+#: .\apps\accounts\views.py:54
+msgid "Si no solicitaste este código, ignora este correo."
+msgstr "If you did not request this code, please ignore this email."
+
+#: .\apps\accounts\views.py:55 .\apps\accounts\views.py:487
+msgid "Equipo de Viaje Informado"
+msgstr "The Viaje Informado team"
+
+#: .\apps\accounts\views.py:83 .\apps\accounts\views.py:198
+#, python-format
+msgid "Debes esperar %(segundos)s segundos antes de solicitar otro código."
+msgstr "Please wait %(segundos)s seconds before requesting another code."
+
+#: .\apps\accounts\views.py:87 .\apps\accounts\views.py:202
+msgid "Código reenviado correctamente."
+msgstr "Code resent successfully."
+
+#: .\apps\accounts\views.py:119
+msgid ""
+"Te enviamos un código de verificación a tu correo. Revisa también tu bandeja "
+"de spam o correo no deseado."
+msgstr "We sent a verification code to your email. Please also check your spam or junk folder."
+
+#: .\apps\accounts\views.py:137
+msgid "Usuario o contraseña incorrectos."
+msgstr "Incorrect username or password."
+
+#: .\apps\accounts\views.py:142
+msgid ""
+"Tu cuenta aún no está verificada. Revisa tu correo o solicita un nuevo "
+"código."
+msgstr "Your account has not been verified yet. Check your email or request a new code."
+
+#: .\apps\accounts\views.py:154
+msgid "Cerraste sesión correctamente."
+msgstr "You have been signed out successfully."
+
+#: .\apps\accounts\views.py:161 .\apps\accounts\views.py:192
+msgid "No hay ninguna verificación pendiente. Inicia sesión o regístrate."
+msgstr "There is no pending verification. Sign in or sign up."
+
+#: .\apps\accounts\views.py:233
+msgid "Foto de perfil eliminada."
+msgstr "Profile photo removed."
+
+#: .\apps\accounts\views.py:247
+msgid "Foto de perfil actualizada."
+msgstr "Profile photo updated."
+
+#: .\apps\accounts\views.py:253
+msgid "Acción no reconocida."
+msgstr "Unrecognized action."
+
+#: .\apps\accounts\views.py:261
+msgid "Cambios guardados."
+msgstr "Changes saved."
+
+#: .\apps\accounts\views.py:306 .\apps\accounts\views.py:370
+msgid "Confirma tu nuevo correo - Viaje Informado"
+msgstr "Confirm your new email - Viaje Informado"
+
+#: .\apps\accounts\views.py:315 .\apps\accounts\views.py:363
+msgid "No hay un cambio de correo pendiente."
+msgstr "There is no pending email change."
+
+#: .\apps\accounts\views.py:324 .\apps\accounts\views.py:367
+msgid "Tu verificación expiró por seguridad. Vuelve a intentarlo."
+msgstr "Your verification expired for security reasons. Please try again."
+
+#: .\apps\accounts\views.py:328
+msgid "Ese correo ya pertenece a otra cuenta. Intenta con otro."
+msgstr "That email address already belongs to another account. Try a different one."
+
+#: .\apps\accounts\views.py:343
+msgid "Tu correo fue actualizado - Viaje Informado"
+msgstr "Your email was updated - Viaje Informado"
+
+#: .\apps\accounts\views.py:344
+msgid "El correo electrónico de tu cuenta de Viaje Informado fue cambiado."
+msgstr "The email address of your Viaje Informado account was changed."
+
+#: .\apps\accounts\views.py:345 .\apps\accounts\views.py:389
+msgid "Si no fuiste tú, contáctanos de inmediato."
+msgstr "If this wasn't you, please contact us right away."
+
+#: .\apps\accounts\views.py:347
+msgid "Correo actualizado."
+msgstr "Email updated."
+
+#: .\apps\accounts\views.py:387
+msgid "Tu contraseña fue actualizada - Viaje Informado"
+msgstr "Your password was updated - Viaje Informado"
+
+#: .\apps\accounts\views.py:388
+msgid "La contraseña de tu cuenta de Viaje Informado fue actualizada."
+msgstr "The password of your Viaje Informado account was updated."
+
+#: .\apps\accounts\views.py:391
+msgid "Contraseña creada."
+msgstr "Password created."
+
+#: .\apps\accounts\views.py:391
+msgid "Contraseña actualizada."
+msgstr "Password updated."
+
+#: .\apps\accounts\views.py:405
+msgid "No tienes esa cuenta conectada."
+msgstr "You do not have that account connected."
+
+#: .\apps\accounts\views.py:411
+msgid "No puedes desconectar tu único método de acceso."
+msgstr "You cannot disconnect your only sign-in method."
+
+#: .\apps\accounts\views.py:428
+msgid "Contraseña incorrecta."
+msgstr "Incorrect password."
+
+#: .\apps\accounts\views.py:435
+msgid ""
+"No podemos confirmar tu identidad de forma segura en este momento. "
+"Contáctanos para continuar."
+msgstr "We cannot securely confirm your identity right now. Contact us to continue."
+
+#: .\apps\accounts\views.py:446 .\apps\accounts\views.py:458
+msgid "Confirma tu identidad - Viaje Informado"
+msgstr "Confirm your identity - Viaje Informado"
+
+#: .\apps\accounts\views.py:484
+msgid "Tu cuenta fue eliminada - Viaje Informado"
+msgstr "Your account was deleted - Viaje Informado"
+
+#: .\apps\accounts\views.py:486
+msgid "Tu cuenta de Viaje Informado fue eliminada correctamente."
+msgstr "Your Viaje Informado account was deleted successfully."
+
+#: .\apps\base\context_processors.py:45
+msgid "Enviando…"
+msgstr "Sending…"
+
+#: .\apps\base\context_processors.py:46
+#: .\templates\eventos\agenda-eventos.html:187
+#: .\templates\gastronomia\platos_tipicos.html:24
+#: .\templates\interacciones\favoritos.html:32
+msgid "Todos"
+msgstr "All"
+
+#: .\apps\base\context_processors.py:47
+#: .\templates\establecimientos\detalle_establecimiento.html:123
+#: .\templates\establecimientos\detalle_establecimiento.html:234
+#: .\templates\eventos\agenda-eventos.html:486
+msgid "Pausar carrusel"
+msgstr "Pause carousel"
+
+#: .\apps\base\context_processors.py:48
+msgid "Reanudar carrusel"
+msgstr "Resume carousel"
+
+#: .\apps\base\context_processors.py:49
+#: .\templates\emergencias\emergencias.html:131
+#: .\templates\emergencias\emergencias.html:237
+#: .\templates\establecimientos\detalle_establecimiento.html:316
+#: .\templates\establecimientos\detalle_establecimiento.html:321
+#: .\templates\establecimientos\detalle_establecimiento.html:1011
+msgid "Llamar"
+msgstr "Call"
+
+#: .\apps\base\context_processors.py:50
+msgid "Correo"
+msgstr "Email"
+
+#: .\apps\base\context_processors.py:51
+#: .\templates\establecimientos\detalle_establecimiento.html:1005
+msgid "Sitio web"
+msgstr "Website"
+
+#: .\apps\base\context_processors.py:52
+#: .\apps\chatbot\services\quick_actions.py:32
+#: .\templates\clima\clima_temporadas.html:6
+#: .\templates\clima\clima_temporadas.html:28
+msgid "Clima en Huánuco"
+msgstr "Weather in Huánuco"
+
+#: .\apps\base\context_processors.py:53
+#: .\apps\chatbot\services\quick_actions.py:33
+#: .\templates\clima\clima_temporadas.html:6
+#: .\templates\clima\clima_temporadas.html:22
+msgid "Clima en Tingo María"
+msgstr "Weather in Tingo María"
+
+#: .\apps\base\context_processors.py:54
+#: .\apps\chatbot\services\presenters.py:243
+#: .\apps\chatbot\services\quick_actions.py:34
+msgid "Eventos próximos"
+msgstr "Upcoming events"
+
+#: .\apps\base\context_processors.py:55 .\apps\base\navegacion.py:65
+#: .\apps\chatbot\services\quick_actions.py:35
+msgid "Platos típicos"
+msgstr "Traditional dishes"
+
+#: .\apps\base\context_processors.py:56
+#: .\apps\chatbot\services\quick_actions.py:36
+msgid "Lugares destacados"
+msgstr "Featured places"
+
+#: .\apps\base\context_processors.py:57
+#: .\apps\chatbot\services\quick_actions.py:43
+msgid "Tarifas de movilidad"
+msgstr "Transport fares"
+
+#: .\apps\base\context_processors.py:58 .\apps\base\navegacion.py:108
+#: .\apps\chatbot\services\quick_actions.py:45
+msgid "Tipo de cambio"
+msgstr "Exchange rate"
+
+#: .\apps\base\context_processors.py:59 .\apps\base\navegacion.py:122
+#: .\apps\chatbot\services\quick_actions.py:48
+msgid "Emergencias"
+msgstr "Emergencies"
+
+#: .\apps\base\context_processors.py:60
+msgid ""
+"PillcoBot no está disponible temporalmente. Inténtalo nuevamente en unos "
+"momentos."
+msgstr "PillcoBot is temporarily unavailable. Please try again in a few moments."
+
+#: .\apps\base\context_processors.py:61
+msgid "No pude responder en este momento. Vuelve a intentarlo, por favor."
+msgstr "I could not answer right now. Please try again."
+
+#: .\apps\base\context_processors.py:62
+msgid "Tu mensaje es demasiado largo. Intenta resumirlo un poco."
+msgstr "Your message is too long. Please try to shorten it a little."
+
+#: .\apps\base\context_processors.py:63
+msgid ""
+"Has enviado varios mensajes en poco tiempo. Inténtalo nuevamente en un "
+"momento."
+msgstr "You have sent several messages in a short time. Please try again in a moment."
+
+#: .\apps\base\context_processors.py:64
+msgid "Fuentes oficiales"
+msgstr "Official sources"
+
+#: .\apps\base\context_processors.py:65
+#: .\apps\chatbot\services\presenters.py:78
+msgid "También te puede interesar"
+msgstr "You may also be interested in"
+
+#: .\apps\base\context_processors.py:66
+#: .\apps\chatbot\services\presenters.py:80
+#: .\apps\chatbot\services\response_renderers.py:77
+#: .\apps\chatbot\services\response_renderers.py:138
+#: .\templates\interacciones\favoritos.html:92
+msgid "Ver más"
+msgstr "See more"
+
+#: .\apps\base\context_processors.py:67
+msgid "Dato de respaldo, puede no estar actualizado."
+msgstr "Backup data; it may not be up to date."
+
+#: .\apps\base\context_processors.py:69
+#, python-format
+msgid "Clima actual en %s"
+msgstr "Current weather in %s"
+
+#: .\apps\base\context_processors.py:70
+#, python-format
+msgid "Conoce las temporadas de %s"
+msgstr "Explore the seasons of %s"
+
+#: .\apps\base\context_processors.py:71
+#: .\templates\clima\clima_temporadas.html:90
+msgid "Sensación térmica"
+msgstr "Feels like"
+
+#: .\apps\base\context_processors.py:72
+#: .\templates\clima\clima_temporadas.html:111
+msgid "Humedad"
+msgstr "Humidity"
+
+#: .\apps\base\context_processors.py:73
+#: .\templates\clima\clima_temporadas.html:121
+msgid "Viento"
+msgstr "Wind"
+
+#: .\apps\base\context_processors.py:74
+#: .\templates\clima\clima_temporadas.html:100
+msgid "Prob. de lluvia"
+msgstr "Chance of rain"
+
+#: .\apps\base\context_processors.py:75
+#: .\apps\chatbot\services\presenters.py:237
+#: .\apps\chatbot\services\presenters.py:528
+#: .\apps\chatbot\services\response_renderers.py:249
+msgid "Ver evento"
+msgstr "View event"
+
+#: .\apps\base\context_processors.py:76
+#: .\apps\chatbot\services\presenters.py:274
+#: .\apps\chatbot\services\presenters.py:439
+#: .\apps\chatbot\services\response_renderers.py:155
+#: .\apps\chatbot\services\response_renderers.py:182
+msgid "Ver dónde comer"
+msgstr "See where to eat"
+
+#: .\apps\base\context_processors.py:77
+#: .\apps\chatbot\services\presenters.py:314
+#: .\apps\chatbot\services\presenters.py:456
+#: .\apps\chatbot\services\presenters.py:527
+#: .\apps\chatbot\services\response_renderers.py:97
+#: .\apps\chatbot\services\response_renderers.py:118
+msgid "Ver lugar"
+msgstr "View place"
+
+#: .\apps\base\context_processors.py:78
+#: .\apps\chatbot\services\presenters.py:425
+#: .\apps\chatbot\services\presenters.py:457
+#: .\apps\chatbot\services\presenters.py:600
+#: .\apps\chatbot\services\response_renderers.py:148
+#: .\apps\chatbot\services\response_renderers.py:161
+msgid "Ver alojamiento"
+msgstr "View accommodation"
+
+#: .\apps\base\context_processors.py:79
+#, python-format
+msgid "Especialidades: %s"
+msgstr "Specialties: %s"
+
+#: .\apps\base\context_processors.py:80
+msgid "(puede superar tu presupuesto)"
+msgstr "(may exceed your budget)"
+
+#: .\apps\base\context_processors.py:81
+#, python-format
+msgid "Horario registrado: %s"
+msgstr "Registered hours: %s"
+
+#: .\apps\base\context_processors.py:82
+#, python-format
+msgid "Desde S/ %s"
+msgstr "From S/ %s"
+
+#: .\apps\base\context_processors.py:83
+#, python-format
+msgid "Aprox. US$ %s"
+msgstr "Approx. US$ %s"
+
+#: .\apps\base\context_processors.py:84
+msgid "¿Quieres algunos consejos para movilizarte?"
+msgstr "Would you like some tips for getting around?"
+
+#: .\apps\base\context_processors.py:85
+#: .\templates\establecimientos\detalle_establecimiento.html:419
+#: .\templates\establecimientos\detalle_establecimiento.html:458
+#: .\templates\eventos\agenda-eventos.html:552
+msgid "Recomendaciones"
+msgstr "Recommendations"
+
+#: .\apps\base\context_processors.py:86
+#, python-format
+msgid "Itinerario propuesto · %s"
+msgstr "Proposed itinerary · %s"
+
+#: .\apps\base\context_processors.py:87
+#, python-format
+msgid "Presupuesto: %s"
+msgstr "Budget: %s"
+
+#: .\apps\base\context_processors.py:88
+#, python-format
+msgid "Prioricé tus favoritos: %s"
+msgstr "I prioritized your favorites: %s"
+
+#: .\apps\base\context_processors.py:89
+#, python-format
+msgid "Alojamiento base: %s"
+msgstr "Base accommodation: %s"
+
+#: .\apps\base\context_processors.py:90
+msgid "(supera tu presupuesto para toda la estadía)"
+msgstr "(exceeds your budget for the whole stay)"
+
+#: .\apps\base\context_processors.py:91
+msgid "Sin actividades registradas para este día."
+msgstr "No activities registered for this day."
+
+#: .\apps\base\context_processors.py:92
+#, python-format
+msgid "Prueba también: %s."
+msgstr "Also try: %s."
+
+#: .\apps\base\context_processors.py:94
+msgid ""
+"¡Hola! Soy PillcoBot, tu guía virtual de Viaje Informado.\n"
+"\n"
+"Estoy aquí para ayudarte a descubrir Huánuco: lugares turísticos, "
+"gastronomía, eventos, clima, transporte y consejos útiles para tu viaje.\n"
+"\n"
+"¿Qué te gustaría conocer hoy?"
+msgstr "Hi! I'm PillcoBot, your virtual guide from Viaje Informado.\n\nI'm here to help you discover Huánuco: tourist attractions, food, events, weather, transportation and useful tips for your trip.\n\nWhat would you like to explore today?"
+
+#: .\apps\base\context_processors.py:98
+msgid "¡Gracias! Tu reporte fue enviado."
+msgstr "Thank you! Your report was sent."
+
+#: .\apps\base\context_processors.py:99
+msgid "No se pudo enviar el reporte. Revisa los campos e intenta de nuevo."
+msgstr "The report could not be sent. Check the fields and try again."
+
+#: .\apps\base\context_processors.py:100
+msgid "No se pudo enviar el reporte. Intenta de nuevo más tarde."
+msgstr "The report could not be sent. Please try again later."
+
+#: .\apps\base\context_processors.py:101 .\templates\partials\messages.html:8
+msgid "Cerrar mensaje"
+msgstr "Close message"
+
+#: .\apps\base\context_processors.py:102
+#: .\templates\interacciones\includes\corazon.html:9
+#, python-format
+msgid "Quitar %(nombre)s de favoritos"
+msgstr "Remove %(nombre)s from favorites"
+
+#: .\apps\base\context_processors.py:103
+#: .\templates\interacciones\includes\corazon.html:9
+#, python-format
+msgid "Agregar %(nombre)s a favoritos"
+msgstr "Add %(nombre)s to favorites"
+
+#: .\apps\base\context_processors.py:104
+#: .\templates\interacciones\includes\corazon.html:11
+msgid "Guardado"
+msgstr "Saved"
+
+#: .\apps\base\context_processors.py:105
+#: .\templates\accounts\gestionar_password.html:34
+#: .\templates\accounts\includes\fila_perfil.html:31
+#: .\templates\accounts\perfil.html:67
+#: .\templates\interacciones\includes\corazon.html:11
+#: .\templates\interacciones\includes\corazon.html:20
+msgid "Guardar"
+msgstr "Save"
+
+#: .\apps\base\context_processors.py:106
+msgid "Inicia sesión para guardar en favoritos"
+msgstr "Sign in to save to favorites"
+
+#: .\apps\base\context_processors.py:107
+msgid "m s. n. m."
+msgstr "m a.s.l."
+
+#: .\apps\base\context_processors.py:108
+msgid "Capital"
+msgstr "Capital"
+
+#: .\apps\base\context_processors.py:109
+msgid "Superficie"
+msgstr "Area"
+
+#: .\apps\base\context_processors.py:110
+msgid "Altitud"
+msgstr "Elevation"
+
+#: .\apps\base\context_processors.py:111
+msgid "Distritos"
+msgstr "Districts"
+
+#: .\apps\base\context_processors.py:112
+msgid "No se pudo cargar la información de esta provincia."
+msgstr "The information for this province could not be loaded."
+
+#: .\apps\base\context_processors.py:113
+#: .\templates\eventos\agenda-eventos.html:88
+#: .\templates\eventos\agenda-eventos.html:91
+msgid "Elegir fechas"
+msgstr "Choose dates"
+
+#: .\apps\base\context_processors.py:114
+msgid "Año"
+msgstr "Year"
+
+msgid "Elegir año"
+msgstr "Choose year"
+
+msgid "Año actual"
+msgstr "Current year"
+
+msgid "Década anterior"
+msgstr "Previous decade"
+
+msgid "Década siguiente"
+msgstr "Next decade"
+
+#: .\apps\base\context_processors.py:115
+msgid "Elige la fecha de fin"
+msgstr "Choose the end date"
+
+#: .\apps\base\context_processors.py:116
+msgid "Cerrar calendario"
+msgstr "Close calendar"
+
+#: .\apps\base\context_processors.py:117
+#: .\templates\eventos\agenda-eventos.html:150
+msgid "Limpiar"
+msgstr "Clear"
+
+#: .\apps\base\context_processors.py:118
+msgid "Listo"
+msgstr "Done"
+
+#: .\apps\base\context_processors.py:119
+#: .\templates\establecimientos\detalle_establecimiento.html:132
+#: .\templates\establecimientos\detalle_establecimiento.html:1066
+#: .\templates\eventos\agenda-eventos.html:492
+#: .\templates\eventos\agenda-eventos.html:579
+#: .\templates\turismo\detalle-lugar-turistico.html:590
+msgid "Imagen anterior"
+msgstr "Previous image"
+
+#: .\apps\base\context_processors.py:120
+#: .\templates\establecimientos\detalle_establecimiento.html:137
+#: .\templates\establecimientos\detalle_establecimiento.html:1071
+#: .\templates\eventos\agenda-eventos.html:495
+#: .\templates\eventos\agenda-eventos.html:583
+#: .\templates\turismo\detalle-lugar-turistico.html:598
+msgid "Imagen siguiente"
+msgstr "Next image"
+
+#: .\apps\base\context_processors.py:121
+msgid "Ir a la imagen {{index}}"
+msgstr "Go to image {{index}}"
+
+#: .\apps\base\context_processors.py:122
+#, python-format
+msgid "Ir al slide %s"
+msgstr "Go to slide %s"
+
+#: .\apps\base\context_processors.py:123
+#, python-format
+msgid "Imagen %s"
+msgstr "Image %s"
+
+#: .\apps\base\context_processors.py:124
+msgid "Ver menos rutas"
+msgstr "Show fewer routes"
+
+#: .\apps\base\context_processors.py:125
+#: .\templates\movilidad\como_llegar.html:195
+msgid "Ver todas las rutas"
+msgstr "View all routes"
+
+#: .\apps\base\context_processors.py:126
+msgid "Enlace copiado"
+msgstr "Link copied"
+
+#: .\apps\base\context_processors.py:127
+msgid "Enlace copiado al portapapeles"
+msgstr "Link copied to clipboard"
+
+#: .\apps\base\context_processors.py:128
+msgid "No se pudo compartir el enlace."
+msgstr "The link could not be shared."
+
+#: .\apps\base\context_processors.py:129
+msgid "No se pudo compartir el enlace"
+msgstr "The link could not be shared"
+
+#: .\apps\base\context_processors.py:130
+msgid "Mira este lugar en Viaje Informado"
+msgstr "Check out this place on Viaje Informado"
+
+#: .\apps\base\context_processors.py:131 .\apps\establecimientos\views.py:430
+#: .\apps\establecimientos\views.py:431 .\apps\establecimientos\views.py:432
+#: .\templates\establecimientos\detalle_establecimiento.html:910
+msgid "Local principal"
+msgstr "Main location"
+
+#: .\apps\base\context_processors.py:132
+msgid "Número copiado"
+msgstr "Number copied"
+
+#: .\apps\base\context_processors.py:133
+#: .\templates\emergencias\emergencias.html:141
+#: .\templates\emergencias\emergencias.html:231
+msgid "Copiar número"
+msgstr "Copy number"
+
+#: .\apps\base\context_processors.py:134
+msgid "No se pudo copiar el número"
+msgstr "The number could not be copied"
+
+#: .\apps\base\context_processors.py:135
+msgid "Agregado a tus favoritos."
+msgstr "Added to your favorites."
+
+#: .\apps\base\context_processors.py:136
+msgid "Eliminado de tus favoritos."
+msgstr "Removed from your favorites."
+
+#: .\apps\base\context_processors.py:137
+msgid "No pudimos actualizar tus favoritos. Inténtalo nuevamente."
+msgstr "We couldn't update your favorites. Please try again."
+
+#: .\apps\base\context_processors.py:138
+msgid "Inicia sesión para guardar este lugar en tus favoritos."
+msgstr "Sign in to save this place to your favorites."
+
+#: .\apps\base\context_processors.py:139 .\templates\partials\header.html:94
+#: .\templates\partials\header.html:98
+msgid "Iniciar sesión"
+msgstr "Sign in"
+
+#: .\apps\base\context_processors.py:140 .\templates\accounts\registro.html:52
+msgid "Crear cuenta"
+msgstr "Create account"
+
+#: .\apps\base\context_processors.py:141 .\templates\base\home.html:73
+msgid "Pausar presentación"
+msgstr "Pause slideshow"
+
+#: .\apps\base\context_processors.py:142
+msgid "Reanudar presentación"
+msgstr "Resume slideshow"
+
+#: .\apps\base\context_processors.py:143
+msgid "¿Quitar tu foto de perfil?"
+msgstr "Remove your profile photo?"
+
+#: .\apps\base\context_processors.py:144
+msgid "Sucursal principal"
+msgstr "Main branch"
+
+#: .\apps\base\context_processors.py:145 .\apps\establecimientos\views.py:431
+msgid "Sucursal"
+msgstr "Branch"
+
+#: .\apps\base\context_processors.py:146
+#: .\templates\establecimientos\detalle_establecimiento.html:923
+msgid "Dirección no registrada"
+msgstr "Address not registered"
+
+#: .\apps\base\context_processors.py:148 .\apps\eventos\views.py:850
+#, python-format
+msgid "Calendario - %(anio)s"
+msgstr "Calendar - %(anio)s"
+
+#: .\apps\base\i18n_choices.py:12
+msgid "No aplica"
+msgstr "Not applicable"
+
+#: .\apps\base\i18n_choices.py:13 .\apps\base\test_i18n.py:386
+#: .\apps\turismo\views.py:109
+msgid "Fácil"
+msgstr "Easy"
+
+#: .\apps\base\i18n_choices.py:14 .\apps\turismo\views.py:110
+msgid "Moderada"
+msgstr "Moderate"
+
+#: .\apps\base\i18n_choices.py:15 .\apps\base\test_i18n.py:387
+#: .\apps\base\test_i18n.py:390 .\apps\turismo\views.py:111
+msgid "Difícil"
+msgstr "Difficult"
+
+#: .\apps\base\i18n_choices.py:17 .\apps\base\test_i18n.py:388
+msgid "Económico"
+msgstr "Budget"
+
+#: .\apps\base\i18n_choices.py:18
+msgid "Moderado"
+msgstr "Moderate"
+
+#: .\apps\base\i18n_choices.py:19
+msgid "Alto"
+msgstr "High-end"
+
+#: .\apps\base\i18n_choices.py:20 .\apps\eventos\views.py:532
+#: .\apps\eventos\views.py:534 .\apps\turismo\views.py:118
+#: .\templates\establecimientos\listado_establecimientos.html:185
+#: .\templates\turismo\detalle-lugar-turistico.html:509
+#: .\templates\turismo\detalle-lugar-turistico.html:528
+msgid "Consultar"
+msgstr "Ask for details"
+
+#: .\apps\base\i18n_choices.py:22
+msgid "Policía"
+msgstr "Police"
+
+#: .\apps\base\i18n_choices.py:23
+msgid "Bomberos"
+msgstr "Fire department"
+
+#: .\apps\base\i18n_choices.py:24
+msgid "Salud"
+msgstr "Health"
+
+#: .\apps\base\i18n_choices.py:25
+msgid "Policía de Turismo"
+msgstr "Tourist Police"
+
+#: .\apps\base\i18n_choices.py:26
+msgid "Serenazgo"
+msgstr "Municipal security patrol (Serenazgo)"
+
+#: .\apps\base\i18n_choices.py:27
+msgid "Municipal"
+msgstr "Municipal"
+
+#: .\apps\base\i18n_choices.py:28 .\apps\eventos\forms.py:27
+#: .\templates\eventos\agenda-eventos.html:394
+msgid "Otro"
+msgstr "Other"
+
+#: .\apps\base\i18n_choices.py:30
+msgid "Presencial"
+msgstr "In person"
+
+#: .\apps\base\i18n_choices.py:31
+msgid "Telefónica"
+msgstr "By phone"
+
+#: .\apps\base\i18n_choices.py:32
+msgid "Virtual"
+msgstr "Online"
+
+#: .\apps\base\i18n_choices.py:33
+msgid "Mixta"
+msgstr "Mixed"
+
+#: .\apps\base\i18n_choices.py:34
+msgid "Horario específico"
+msgstr "Specific hours"
+
+#: .\apps\base\i18n_choices.py:35
+msgid "24 horas"
+msgstr "24 hours"
+
+#: .\apps\base\i18n_choices.py:36
+msgid "Emergencia"
+msgstr "Emergency"
+
+#: .\apps\base\navegacion.py:24 .\templates\partials\footer.html:53
+msgid "Inicio"
+msgstr "Home"
+
+#: .\apps\base\navegacion.py:30 .\apps\base\navegacion.py:32
+#: .\templates\partials\footer.html:54
+msgid "Explorar"
+msgstr "Explore"
+
+#: .\apps\base\navegacion.py:36 .\templates\eventos\agenda-eventos.html:282
+#: .\templates\interacciones\favoritos.html:33
+#: .\templates\turismo\detalle-lugar-turistico.html:39
+msgid "Lugares turísticos"
+msgstr "Tourist attractions"
+
+#: .\apps\base\navegacion.py:39
+msgid "Atractivos naturales, arqueológicos y culturales."
+msgstr "Natural, archaeological and cultural attractions."
+
+#: .\apps\base\navegacion.py:43
+#: .\templates\turismo\detalle-lugar-turistico.html:173
+msgid "Historia"
+msgstr "History"
+
+#: .\apps\base\navegacion.py:46
+msgid "El pasado histórico de Huánuco."
+msgstr "The historical past of Huánuco."
+
+#: .\apps\base\navegacion.py:52 .\apps\base\navegacion.py:54
+#: .\templates\partials\footer.html:55
+msgid "Gastronomía y alojamiento"
+msgstr "Food and lodging"
+
+#: .\apps\base\navegacion.py:58 .\templates\base\home.html:138
+#: .\templates\establecimientos\detalle_establecimiento.html:35
+#: .\templates\establecimientos\detalle_establecimiento.html:200
+#: .\templates\establecimientos\listado_establecimientos.html:57
+#: .\templates\interacciones\favoritos.html:34
+msgid "Restaurantes"
+msgstr "Restaurants"
+
+#: .\apps\base\navegacion.py:61
+msgid "Restaurantes recomendados en la ciudad."
+msgstr "Recommended restaurants in the city."
+
+#: .\apps\base\navegacion.py:68
+msgid "Sabores tradicionales de Huánuco."
+msgstr "Traditional flavors of Huánuco."
+
+#: .\apps\base\navegacion.py:72 .\templates\base\home.html:148
+#: .\templates\establecimientos\detalle_establecimiento.html:37
+#: .\templates\establecimientos\detalle_establecimiento.html:202
+#: .\templates\establecimientos\listado_establecimientos.html:65
+#: .\templates\eventos\agenda-eventos.html:284
+#: .\templates\interacciones\favoritos.html:35
+msgid "Alojamientos"
+msgstr "Accommodation"
+
+#: .\apps\base\navegacion.py:75
+msgid "Hoteles y hospedajes para tu estadía."
+msgstr "Hotels and guesthouses for your stay."
+
+#: .\apps\base\navegacion.py:81 .\templates\partials\footer.html:57
+msgid "Planifica"
+msgstr "Plan"
+
+#: .\apps\base\navegacion.py:83
+msgid "Planifica tu viaje"
+msgstr "Plan your trip"
+
+#: .\apps\base\navegacion.py:87 .\apps\chatbot\services\presenters.py:345
+#: .\templates\movilidad\tarifas_taxi.html:25
+msgid "Transporte y tarifas"
+msgstr "Transport and fares"
+
+#: .\apps\base\navegacion.py:90
+msgid "Medios de transporte locales y tarifas referenciales."
+msgstr "Local transport options and reference fares."
+
+#: .\apps\base\navegacion.py:94
+#: .\templates\establecimientos\detalle_establecimiento.html:329
+#: .\templates\establecimientos\detalle_establecimiento.html:335
+#: .\templates\establecimientos\detalle_establecimiento.html:340
+#: .\templates\establecimientos\detalle_establecimiento.html:795
+#: .\templates\establecimientos\detalle_establecimiento.html:856
+#: .\templates\establecimientos\detalle_establecimiento.html:873
+#: .\templates\servicios_turista\servicios_utiles.html:161
+#: .\templates\servicios_turista\servicios_utiles.html:342
+#: .\templates\servicios_turista\servicios_utiles.html:355
+#: .\templates\turismo\detalle-lugar-turistico.html:183
+#: .\templates\turismo\detalle-lugar-turistico.html:234
+#: .\templates\turismo\detalle-lugar-turistico.html:256
+msgid "Cómo llegar"
+msgstr "How to get there"
+
+#: .\apps\base\navegacion.py:97
+msgid "Rutas, tiempos y medios de transporte para su llegada."
+msgstr "Routes, travel times and transport options for your arrival."
+
+#: .\apps\base\navegacion.py:101
+msgid "Clima y temporadas"
+msgstr "Weather and seasons"
+
+#: .\apps\base\navegacion.py:104
+msgid "Clima actual, temporadas y recomendaciones."
+msgstr "Current weather, seasons and recommendations."
+
+#: .\apps\base\navegacion.py:111
+msgid "Convierte soles y dólares con la tasa referencial vigente."
+msgstr "Convert soles and dollars using the current reference rate."
+
+#: .\apps\base\navegacion.py:115 .\templates\base\home.html:188
+msgid "Servicios útiles"
+msgstr "Useful services"
+
+#: .\apps\base\navegacion.py:118
+msgid "Salud, seguridad, bancos, transporte e información turística."
+msgstr "Health, safety, banks, transport and tourist information."
+
+#: .\apps\base\navegacion.py:125
+msgid "Contactos nacionales y locales para tu seguridad."
+msgstr "National and local contacts for your safety."
+
+#: .\apps\base\navegacion.py:131 .\templates\base\home.html:168
+#: .\templates\partials\footer.html:56
+msgid "Eventos"
+msgstr "Events"
+
+#: .\apps\chatbot\services\chatbot_service.py:274
+#: .\apps\chatbot\services\providers\itinerario.py:303
+#: .\apps\interacciones\views.py:23
+msgid "lugares turísticos"
+msgstr "tourist attractions"
+
+#: .\apps\chatbot\services\chatbot_service.py:275
+#: .\apps\chatbot\services\presenters.py:452
+#: .\apps\chatbot\services\providers\favoritos.py:28
+#: .\apps\chatbot\services\providers\itinerario.py:303
+#: .\apps\interacciones\views.py:24
+msgid "restaurantes"
+msgstr "restaurants"
+
+#: .\apps\chatbot\services\chatbot_service.py:276
+#: .\apps\chatbot\services\presenters.py:453
+#: .\apps\chatbot\services\providers\favoritos.py:29
+#: .\apps\chatbot\services\providers\itinerario.py:304
+#: .\apps\interacciones\views.py:25
+msgid "alojamientos"
+msgstr "accommodations"
+
+#: .\apps\chatbot\services\chatbot_service.py:277
+msgid "restaurantes que sirvan ese plato"
+msgstr "restaurants that serve that dish"
+
+#: .\apps\chatbot\services\chatbot_service.py:278
+msgid "platos típicos"
+msgstr "traditional dishes"
+
+#: .\apps\chatbot\services\chatbot_service.py:279
+msgid "eventos"
+msgstr "events"
+
+#: .\apps\chatbot\services\chatbot_service.py:280
+msgid "ubicaciones"
+msgstr "locations"
+
+#: .\apps\chatbot\services\chatbot_service.py:281
+msgid "servicios útiles"
+msgstr "useful services"
+
+#: .\apps\chatbot\services\chatbot_service.py:282
+msgid "contactos de emergencia"
+msgstr "emergency contacts"
+
+#: .\apps\chatbot\services\chatbot_service.py:283
+msgid "rutas"
+msgstr "routes"
+
+#: .\apps\chatbot\services\chatbot_service.py:284
+#: .\apps\interacciones\views.py:22
+msgid "favoritos"
+msgstr "favorites"
+
+#: .\apps\chatbot\services\chatbot_service.py:302
+msgid "resultados"
+msgstr "results"
+
+#: .\apps\chatbot\services\chatbot_service.py:306
+#, python-format
+msgid "No encontré %(dominios)s registrados para esa búsqueda."
+msgstr "I couldn't find any registered %(dominios)s for that search."
+
+#: .\apps\chatbot\services\chatbot_service.py:306
+msgid " ni "
+msgstr " or "
+
+#: .\apps\chatbot\services\chatbot_service.py:516
+msgid ""
+"PillcoBot está enfocado en información turística de Huánuco. Puedo contarte "
+"sobre los ingredientes o la preparación de un plato, pero no evaluar si es "
+"seguro para una alergia o condición de salud. Para eso, consulta a un "
+"profesional de salud."
+msgstr "PillcoBot is focused on tourist information about Huánuco. I can tell you about the ingredients or preparation of a dish, but I can't assess whether it is safe for an allergy or health condition. For that, please consult a health professional."
+
+#: .\apps\chatbot\services\external_search.py:24
+msgid ""
+"No tengo información suficiente y verificable para confirmarte ese dato en "
+"este momento."
+msgstr "I don't have enough verifiable information to confirm that for you right now."
+
+#: .\apps\chatbot\services\external_search.py:26
+msgid "No pude verificar ese dato en fuentes oficiales en este momento."
+msgstr "I couldn't verify that in official sources right now."
+
+#: .\apps\chatbot\services\external_search.py:139
+msgid "Fuentes oficiales:"
+msgstr "Official sources:"
+
+#: .\apps\chatbot\services\presenters.py:79
+#, python-format
+msgid "Conoce las temporadas de %(ciudad)s"
+msgstr "Explore the seasons of %(ciudad)s"
+
+#: .\apps\chatbot\services\presenters.py:104
+#, python-format
+msgid "Emergencias en %(zona)s"
+msgstr "Emergencies in %(zona)s"
+
+#: .\apps\chatbot\services\presenters.py:125
+#: .\apps\chatbot\services\presenters.py:161 .\apps\emergencias\models.py:119
+msgid "Atención 24/7"
+msgstr "Open 24/7"
+
+#: .\apps\chatbot\services\presenters.py:145
+msgid "Contactos de emergencia"
+msgstr "Emergency contacts"
+
+#: .\apps\chatbot\services\presenters.py:148
+msgid ""
+"Si me indicas dónde te encuentras, puedo mostrarte los contactos de "
+"emergencia de esa zona."
+msgstr "If you tell me where you are, I can show you the emergency contacts for that area."
+
+#: .\apps\chatbot\services\presenters.py:159
+#, python-format
+msgid "No encontré contactos locales registrados para %(zona)s"
+msgstr "I couldn't find any registered local contacts for %(zona)s"
+
+#: .\apps\chatbot\services\presenters.py:167
+#, python-format
+msgid "No encontré contactos locales registrados para %(zona)s."
+msgstr "I couldn't find any registered local contacts for %(zona)s."
+
+#: .\apps\chatbot\services\presenters.py:169
+#, python-format
+msgid "Contactos en %(zona)s"
+msgstr "Contacts in %(zona)s"
+
+#: .\apps\chatbot\services\presenters.py:169
+msgid "Contactos de emergencia locales"
+msgstr "Local emergency contacts"
+
+#: .\apps\chatbot\services\presenters.py:188
+msgid "Por confirmar"
+msgstr "To be confirmed"
+
+#: .\apps\chatbot\services\presenters.py:205 .\apps\turismo\views.py:116
+msgid "Gratis"
+msgstr "Free"
+
+#: .\apps\chatbot\services\presenters.py:207
+#: .\apps\chatbot\services\presenters.py:214
+#: .\templates\turismo\listado-lugares-turisticos.html:212
+msgid "Consultar precio"
+msgstr "Ask for price"
+
+#: .\apps\chatbot\services\presenters.py:213
+#: .\apps\chatbot\services\presenters.py:297
+#: .\apps\chatbot\services\presenters.py:358
+#, python-format
+msgid "Desde S/ %(monto)s"
+msgstr "From S/ %(monto)s"
+
+#: .\apps\chatbot\services\presenters.py:218 .\apps\eventos\views.py:84
+msgid "Cancelado"
+msgstr "Cancelled"
+
+#: .\apps\chatbot\services\presenters.py:218 .\apps\eventos\views.py:85
+msgid "Reprogramado"
+msgstr "Rescheduled"
+
+#: .\apps\chatbot\services\presenters.py:226
+msgid "No hay eventos con fecha confirmada para los próximos días."
+msgstr "There are no events with a confirmed date in the coming days."
+
+#: .\apps\chatbot\services\presenters.py:227
+#, python-format
+msgid "Ver agenda de eventos: %(url)s"
+msgstr "View events calendar: %(url)s"
+
+#: .\apps\chatbot\services\presenters.py:255
+#, python-format
+msgid ""
+"Según la información registrada en Viaje Informado, %(nombre)s lleva como "
+"ingredientes clave: %(ingredientes)s."
+msgstr "According to the information registered on Viaje Informado, %(nombre)s has these key ingredients: %(ingredientes)s."
+
+#: .\apps\chatbot\services\presenters.py:263
+#, python-format
+msgid "Ver dónde comer: %(url)s"
+msgstr "See where to eat: %(url)s"
+
+#: .\apps\chatbot\services\presenters.py:278
+msgid "Platos típicos de Huánuco"
+msgstr "Traditional dishes of Huánuco"
+
+#: .\apps\chatbot\services\presenters.py:289
+msgid "Entrada libre"
+msgstr "Free entry"
+
+#: .\apps\chatbot\services\presenters.py:291
+#: .\apps\chatbot\services\presenters.py:298
+msgid "Consultar entrada"
+msgstr "Ask about admission"
+
+#: .\apps\chatbot\services\presenters.py:360
+#, python-format
+msgid "Hasta S/ %(monto)s"
+msgstr "Up to S/ %(monto)s"
+
+#: .\apps\chatbot\services\presenters.py:372
+#: .\apps\chatbot\services\presenters.py:554
+#, python-format
+msgid ""
+"US$ %(original)s ≈ S/ %(pen)s (tipo de cambio venta %(tc)s del %(fecha)s)"
+msgstr "US$ %(original)s ≈ S/ %(pen)s (selling exchange rate %(tc)s on %(fecha)s)"
+
+#: .\apps\chatbot\services\presenters.py:379
+msgid ""
+"Algunas opciones pueden superar tu presupuesto: revisa el rango de cada una."
+msgstr "Some options may exceed your budget: check the price range of each one."
+
+#: .\apps\chatbot\services\presenters.py:381
+#, python-format
+msgid ""
+"Presupuesto máximo considerado: %(origen)s. Se muestran opciones cuyo precio "
+"mínimo registrado no lo supera."
+msgstr "Maximum budget considered: %(origen)s. Options whose lowest registered price does not exceed it are shown."
+
+#: .\apps\chatbot\services\presenters.py:425
+msgid "Alojamientos registrados en Viaje Informado"
+msgstr "Accommodations registered on Viaje Informado"
+
+#: .\apps\chatbot\services\presenters.py:431
+msgid "Restaurantes registrados en Viaje Informado"
+msgstr "Restaurants registered on Viaje Informado"
+
+#: .\apps\chatbot\services\presenters.py:431
+#: .\apps\chatbot\services\presenters.py:456
+#: .\apps\chatbot\services\presenters.py:527
+#: .\apps\chatbot\services\response_renderers.py:143
+#: .\apps\chatbot\services\response_renderers.py:161
+#: .\apps\chatbot\services\response_renderers.py:201
+msgid "Ver restaurante"
+msgstr "View restaurant"
+
+#: .\apps\chatbot\services\presenters.py:439
+#, python-format
+msgid "Restaurantes donde sirven %(plato)s"
+msgstr "Restaurants that serve %(plato)s"
+
+#: .\apps\chatbot\services\presenters.py:439
+#: .\apps\chatbot\services\response_renderers.py:154
+msgid "ese plato"
+msgstr "that dish"
+
+#: .\apps\chatbot\services\presenters.py:445
+msgid "Para consultar tus favoritos necesitas iniciar sesión."
+msgstr "You need to sign in to view your favorites."
+
+#: .\apps\chatbot\services\presenters.py:447
+msgid ""
+"Aún no tienes favoritos guardados. Si quieres, puedo ayudarte a descubrir "
+"lugares, restaurantes o alojamientos."
+msgstr "You don't have any saved favorites yet. If you like, I can help you discover places, restaurants or accommodations."
+
+#: .\apps\chatbot\services\presenters.py:450
+msgid "Opciones que pueden interesarte"
+msgstr "Options you might like"
+
+#: .\apps\chatbot\services\presenters.py:452
+#: .\apps\chatbot\services\providers\favoritos.py:27
+msgid "lugares"
+msgstr "places"
+
+#: .\apps\chatbot\services\presenters.py:481
+#, python-format
+msgid "Iniciar sesión: %(url)s"
+msgstr "Sign in: %(url)s"
+
+#: .\apps\chatbot\services\presenters.py:486
+#, python-format
+msgid "No tienes %(plural)s guardados en favoritos."
+msgstr "You don't have any %(plural)s saved in favorites."
+
+#: .\apps\chatbot\services\presenters.py:495
+#: .\templates\accounts\eliminar_cuenta.html:21
+#: .\templates\interacciones\favoritos.html:22
+msgid "Tus favoritos"
+msgstr "Your favorites"
+
+#: .\apps\chatbot\services\presenters.py:509 .\apps\eventos\views.py:336
+msgid "j \\d\\e F \\d\\e Y"
+msgstr "F j, Y"
+
+#: .\apps\chatbot\services\presenters.py:560
+#, python-format
+msgid "US$ %(monto)s (sin conversión verificable)"
+msgstr "US$ %(monto)s (no verifiable conversion)"
+
+#: .\apps\chatbot\services\presenters.py:565
+#, python-format
+msgid "Costos registrados: desde S/ %(monto)s"
+msgstr "Registered costs: from S/ %(monto)s"
+
+#: .\apps\chatbot\services\presenters.py:566
+#: .\apps\chatbot\services\response_renderers.py:65
+#, python-format
+msgid "hasta S/ %(monto)s"
+msgstr "up to S/ %(monto)s"
+
+#: .\apps\chatbot\services\presenters.py:567
+msgid "Sin costos registrados verificables para este plan"
+msgstr "No verifiable registered costs for this plan"
+
+#: .\apps\chatbot\services\presenters.py:571
+#, python-format
+msgid "Margen aproximado sobre los costos mínimos registrados: S/ %(monto)s"
+msgstr "Approximate margin over the lowest registered costs: S/ %(monto)s"
+
+#: .\apps\chatbot\services\presenters.py:575
+#, python-format
+msgid ""
+"Con los precios registrados, el presupuesto no alcanza para esta combinación "
+"(faltan S/ %(monto)s)."
+msgstr "With the registered prices, the budget is not enough for this combination (S/ %(monto)s short)."
+
+#: .\apps\chatbot\services\presenters.py:576
+msgid ""
+"Puedo ajustarlo reduciendo costos o mostrando alternativas más económicas."
+msgstr "I can adjust it by reducing costs or showing more affordable alternatives."
+
+#: .\apps\chatbot\services\presenters.py:582
+#, python-format
+msgid "Para acercarme a tu presupuesto retiré: %(lista)s."
+msgstr "To get closer to your budget I removed: %(lista)s."
+
+#: .\apps\chatbot\services\presenters.py:583
+#, python-format
+msgid "No incluye: %(lista)s."
+msgstr "Not included: %(lista)s."
+
+#: .\apps\chatbot\services\presenters.py:591
+#, python-format
+msgid ""
+"No tengo suficiente información registrada sobre %(destino)s para proponerte "
+"un itinerario: no encontré %(lista)s."
+msgstr "I don't have enough registered information about %(destino)s to suggest an itinerary: I couldn't find %(lista)s."
+
+#: .\apps\chatbot\services\presenters.py:601
+#, python-format
+msgid "%(precio)s por noche"
+msgstr "%(precio)s per night"
+
+#: .\apps\chatbot\services\presenters.py:601
+msgid "Precio por consultar"
+msgstr "Price on request"
+
+#: .\apps\chatbot\services\presenters.py:620
+#, python-format
+msgid "Del %(inicio)s al %(fin)s"
+msgstr "From %(inicio)s to %(fin)s"
+
+#: .\apps\chatbot\services\presenters.py:637
+#, python-format
+msgid "Presupuesto: %(valor)s."
+msgstr "Budget: %(valor)s."
+
+#: .\apps\chatbot\services\presenters.py:639
+#, python-format
+msgid "Alojamiento base: %(nombre)s (%(precio)s)."
+msgstr "Base accommodation: %(nombre)s (%(precio)s)."
+
+#: .\apps\chatbot\services\presenters.py:641
+#, python-format
+msgid "Prioricé tus favoritos: %(lista)s."
+msgstr "I prioritized your favorites: %(lista)s."
+
+#: .\apps\chatbot\services\presenters.py:643
+#, python-format
+msgid "Prueba también: %(lista)s."
+msgstr "Also try: %(lista)s."
+
+#: .\apps\chatbot\services\presenters.py:645
+#, python-format
+msgid "No encontré registrados: %(lista)s."
+msgstr "I couldn't find any registered: %(lista)s."
+
+#: .\apps\chatbot\services\providers\favoritos.py:20
+#: .\templates\interacciones\favoritos.html:58
+msgid "Lugar turístico"
+msgstr "Tourist attraction"
+
+#: .\apps\chatbot\services\providers\favoritos.py:21
+#: .\templates\interacciones\favoritos.html:56
+msgid "Restaurante"
+msgstr "Restaurant"
+
+#: .\apps\chatbot\services\providers\favoritos.py:22
+#: .\templates\interacciones\favoritos.html:56
+msgid "Alojamiento"
+msgstr "Accommodation"
+
+#: .\apps\chatbot\services\providers\favoritos.py:79
+#, python-format
+msgid "Porque tienes guardados %(plural)s de la categoría %(categoria)s"
+msgstr "Because you have saved %(plural)s in the category %(categoria)s"
+
+#: .\apps\chatbot\services\providers\favoritos.py:92
+#, python-format
+msgid "Opción destacada de otra categoría, distinta a tus %(plural)s guardados"
+msgstr "A featured option from a different category than your saved %(plural)s"
+
+#: .\apps\chatbot\services\providers\favoritos.py:93
+#, python-format
+msgid "Opción de otra categoría, distinta a tus %(plural)s guardados"
+msgstr "An option from a different category than your saved %(plural)s"
+
+#: .\apps\chatbot\services\providers\itinerario.py:45
+msgid "traslado hacia/desde Huánuco"
+msgstr "transfer to/from Huánuco"
+
+#: .\apps\chatbot\services\providers\itinerario.py:46
+msgid "movilidad local"
+msgstr "local transportation"
+
+#: .\apps\chatbot\services\providers\itinerario.py:47
+msgid "otras comidas y gastos personales"
+msgstr "other meals and personal expenses"
+
+#: .\apps\chatbot\services\providers\itinerario.py:49
+msgid "Guardado en tus favoritos"
+msgstr "Saved in your favorites"
+
+#: .\apps\chatbot\services\providers\itinerario.py:87
+msgid ""
+"No hay tipo de cambio vigente registrado, así que no puedo verificar el "
+"ajuste del presupuesto en dólares. Si me lo indicas en soles, lo comparo con "
+"los costos registrados."
+msgstr "There is no current exchange rate registered, so I can't verify how your budget in dollars fits. If you give it to me in soles, I'll compare it with the registered costs."
+
+#: .\apps\chatbot\services\providers\itinerario.py:156
+#, python-format
+msgid "Día %(n)s"
+msgstr "Day %(n)s"
+
+#: .\apps\chatbot\services\providers\itinerario.py:158
+#: .\templates\movilidad\como_llegar.html:417
+msgid "Llegada"
+msgstr "Arrival"
+
+#: .\apps\chatbot\services\providers\itinerario.py:160
+#: .\templates\movilidad\como_llegar.html:385
+msgid "Salida"
+msgstr "Departure"
+
+#: .\apps\chatbot\services\providers\itinerario.py:172
+#, python-format
+msgid "%(concepto)s (sin precio registrado)"
+msgstr "%(concepto)s (no registered price)"
+
+#: .\apps\chatbot\services\providers\itinerario.py:179
+#, python-format
+msgid "Alojamiento: %(nombre)s (%(noches)s noche(s))"
+msgstr "Accommodation: %(nombre)s (%(noches)s night(s))"
+
+#: .\apps\chatbot\services\providers\itinerario.py:185
+#, python-format
+msgid "Entrada: %(nombre)s"
+msgstr "Admission: %(nombre)s"
+
+#: .\apps\chatbot\services\providers\itinerario.py:187
+#, python-format
+msgid "entrada a %(nombre)s (por consultar)"
+msgstr "admission to %(nombre)s (price on request)"
+
+#: .\apps\chatbot\services\providers\itinerario.py:190
+#, python-format
+msgid "Comida: %(nombre)s (precio mínimo registrado)"
+msgstr "Meal: %(nombre)s (lowest registered price)"
+
+#: .\apps\chatbot\services\providers\itinerario.py:192
+#, python-format
+msgid "comida en %(nombre)s (sin precio registrado)"
+msgstr "meal at %(nombre)s (no registered price)"
+
+#: .\apps\chatbot\services\providers\itinerario.py:195
+#, python-format
+msgid "Evento: %(nombre)s"
+msgstr "Event: %(nombre)s"
+
+#: .\apps\chatbot\services\providers\itinerario.py:197
+#, python-format
+msgid "evento %(nombre)s (por consultar)"
+msgstr "event %(nombre)s (price on request)"
+
+#: .\apps\chatbot\services\providers\itinerario.py:304
+msgid "eventos confirmados"
+msgstr "confirmed events"
+
+#: .\apps\chatbot\services\quick_actions.py:38
+msgid "Restaurantes destacados"
+msgstr "Featured restaurants"
+
+#: .\apps\chatbot\services\quick_actions.py:41
+msgid "Alojamientos destacados"
+msgstr "Featured accommodations"
+
+#: .\apps\chatbot\services\quick_actions.py:44
+msgid "Cómo llegar a Huánuco"
+msgstr "How to get to Huánuco"
+
+#: .\apps\chatbot\services\quick_actions.py:50
+msgid "Mis favoritos"
+msgstr "My favorites"
+
+#: .\apps\chatbot\services\response_renderers.py:17
+msgid "No encontré información registrada que confirme eso."
+msgstr "I couldn't find any registered information that confirms that."
+
+#: .\apps\chatbot\services\response_renderers.py:20
+msgid "entrada gratuita"
+msgstr "free admission"
+
+#: .\apps\chatbot\services\response_renderers.py:21
+msgid "no requiere entrada"
+msgstr "no admission required"
+
+#: .\apps\chatbot\services\response_renderers.py:22
+msgid "entrada pagada"
+msgstr "paid admission"
+
+#: .\apps\chatbot\services\response_renderers.py:23
+msgid "costo por consultar"
+msgstr "cost on request"
+
+#: .\apps\chatbot\services\response_renderers.py:24
+msgid "sin costo aplicable"
+msgstr "no applicable cost"
+
+#: .\apps\chatbot\services\response_renderers.py:27
+msgid "precio económico"
+msgstr "budget-friendly price"
+
+#: .\apps\chatbot\services\response_renderers.py:28
+msgid "precio moderado"
+msgstr "moderate price"
+
+#: .\apps\chatbot\services\response_renderers.py:29
+msgid "precio alto"
+msgstr "high price"
+
+#: .\apps\chatbot\services\response_renderers.py:30
+msgid "precio por consultar"
+msgstr "price on request"
+
+#: .\apps\chatbot\services\response_renderers.py:32
+msgid "REPROGRAMADO"
+msgstr "RESCHEDULED"
+
+#: .\apps\chatbot\services\response_renderers.py:32
+msgid "CANCELADO"
+msgstr "CANCELLED"
+
+#: .\apps\chatbot\services\response_renderers.py:61
+#, python-format
+msgid "S/ %(desde)s a S/ %(hasta)s"
+msgstr "S/ %(desde)s to S/ %(hasta)s"
+
+#: .\apps\chatbot\services\response_renderers.py:63
+#, python-format
+msgid "desde S/ %(monto)s"
+msgstr "from S/ %(monto)s"
+
+#: .\apps\chatbot\services\response_renderers.py:74
+#, python-format
+msgid "Horario registrado: %(valor)s"
+msgstr "Registered hours: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:102
+msgid "Lugares turísticos registrados:"
+msgstr "Registered tourist attractions:"
+
+#: .\apps\chatbot\services\response_renderers.py:110
+#: .\templates\eventos\agenda-eventos.html:515
+#: .\templates\eventos\partials\_card.html:52
+#: .\templates\servicios_turista\servicios_utiles.html:141
+msgid "Ubicación:"
+msgstr "Location:"
+
+#: .\apps\chatbot\services\response_renderers.py:111
+#: .\templates\eventos\agenda-eventos.html:519
+msgid "Costo:"
+msgstr "Cost:"
+
+#: .\apps\chatbot\services\response_renderers.py:113
+#, python-format
+msgid "Tiempo de visita estimado: %(valor)s"
+msgstr "Estimated visit time: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:114
+#, python-format
+msgid "Dificultad: %(valor)s"
+msgstr "Difficulty: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:115
+#: .\apps\chatbot\services\response_renderers.py:166
+#, python-format
+msgid "Servicios: %(valor)s"
+msgstr "Services: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:116
+#, python-format
+msgid "Cómo llegar: %(valor)s"
+msgstr "How to get there: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:117
+#: .\apps\chatbot\services\response_renderers.py:247
+#, python-format
+msgid "Recomendaciones: %(valor)s"
+msgstr "Recommendations: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:144
+msgid "Restaurantes registrados:"
+msgstr "Registered restaurants:"
+
+#: .\apps\chatbot\services\response_renderers.py:149
+msgid "Alojamientos registrados:"
+msgstr "Registered accommodations:"
+
+#: .\apps\chatbot\services\response_renderers.py:154
+#, python-format
+msgid "Restaurantes registrados donde sirven %(plato)s:"
+msgstr "Registered restaurants that serve %(plato)s:"
+
+#: .\apps\chatbot\services\response_renderers.py:167
+#, python-format
+msgid "Recomendaciones de la casa: %(valor)s"
+msgstr "House recommendations: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:168
+#: .\templates\servicios_turista\servicios_utiles.html:285
+msgid "Contacto:"
+msgstr "Contact:"
+
+#: .\apps\chatbot\services\response_renderers.py:171
+#, python-format
+msgid "Sucursal %(nombre)s:"
+msgstr "Branch %(nombre)s:"
+
+#: .\apps\chatbot\services\response_renderers.py:180
+msgid " (plato bandera)"
+msgstr " (signature dish)"
+
+#: .\apps\chatbot\services\response_renderers.py:187
+msgid "Platos típicos registrados:"
+msgstr "Registered traditional dishes:"
+
+#: .\apps\chatbot\services\response_renderers.py:194
+#, python-format
+msgid "Categoría: %(valor)s"
+msgstr "Category: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:195
+#, python-format
+msgid "Ingredientes clave: %(valor)s"
+msgstr "Key ingredients: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:200
+msgid "Restaurantes registrados donde se sirve:"
+msgstr "Registered restaurants where it is served:"
+
+#: .\apps\chatbot\services\response_renderers.py:211
+msgid "fecha por confirmar"
+msgstr "date to be confirmed"
+
+#: .\apps\chatbot\services\response_renderers.py:213
+#, python-format
+msgid "aproximadamente en %(mes)s de %(anio)s"
+msgstr "approximately in %(mes)s %(anio)s"
+
+#: .\apps\chatbot\services\response_renderers.py:217
+#, python-format
+msgid "del %(inicio)s al %(fin)s"
+msgstr "from %(inicio)s to %(fin)s"
+
+#: .\apps\chatbot\services\response_renderers.py:222
+#, python-format
+msgid "desde las %(hora)s"
+msgstr "from %(hora)s"
+
+#: .\apps\chatbot\services\response_renderers.py:238
+msgid "Eventos registrados:"
+msgstr "Registered events:"
+
+#: .\apps\chatbot\services\response_renderers.py:246
+#, python-format
+msgid "Contexto: %(valor)s"
+msgstr "Context: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:248
+#, python-format
+msgid "Organiza: %(valor)s"
+msgstr "Organized by: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:259
+#, python-format
+msgid "%(nombre)s: desde S/ %(monto)s"
+msgstr "%(nombre)s: from S/ %(monto)s"
+
+#: .\apps\chatbot\services\response_renderers.py:263
+#, python-format
+msgid "aprox. USD %(monto)s"
+msgstr "approx. USD %(monto)s"
+
+#: .\apps\chatbot\services\response_renderers.py:270
+msgid "Consejos:"
+msgstr "Tips:"
+
+#: .\apps\chatbot\services\response_renderers.py:271
+#: .\apps\chatbot\services\response_renderers.py:303
+#, python-format
+msgid "Ver más: %(url)s"
+msgstr "See more: %(url)s"
+
+#: .\apps\chatbot\services\response_renderers.py:274
+msgid "Tarifas mínimas referenciales de transporte urbano:"
+msgstr "Reference minimum fares for urban transport:"
+
+#: .\apps\chatbot\services\response_renderers.py:277
+msgid "terrestre"
+msgstr "land"
+
+#: .\apps\chatbot\services\response_renderers.py:277
+msgid "aerea"
+msgstr "air"
+
+#: .\apps\chatbot\services\response_renderers.py:286
+#, python-format
+msgid "[Vía %(via)s] %(nombre)s"
+msgstr "[%(via)s route] %(nombre)s"
+
+#: .\apps\chatbot\services\response_renderers.py:289
+#, python-format
+msgid "en bus: %(valor)s"
+msgstr "by bus: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:290
+#, python-format
+msgid "en auto: %(valor)s"
+msgstr "by car: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:291
+#, python-format
+msgid "duración: %(valor)s"
+msgstr "duration: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:295
+#, python-format
+msgid "Advertencias: %(valor)s"
+msgstr "Warnings: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:301
+#, python-format
+msgid "Consejos vía %(via)s:"
+msgstr "Tips for the %(via)s route:"
+
+#: .\apps\chatbot\services\response_renderers.py:304
+msgid "Rutas registradas para llegar a Huánuco:"
+msgstr "Registered routes to get to Huánuco:"
+
+#: .\apps\chatbot\services\response_renderers.py:322
+msgid "Servicios útiles registrados:"
+msgstr "Registered useful services:"
+
+#: .\apps\chatbot\services\response_renderers.py:333
+#, python-format
+msgid "zonas: %(valor)s"
+msgstr "areas: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:339
+msgid "Contactos de emergencia registrados:"
+msgstr "Registered emergency contacts:"
+
+#: .\apps\chatbot\services\response_renderers.py:352
+msgid "la ciudad"
+msgstr "the city"
+
+#: .\apps\chatbot\services\response_renderers.py:354
+#, python-format
+msgid "No pude obtener el clima actual de %(lugar)s en este momento."
+msgstr "I couldn't get the current weather for %(lugar)s right now."
+
+#: .\apps\chatbot\services\response_renderers.py:357
+#, python-format
+msgid "Sensación térmica: %(valor)s °C"
+msgstr "Feels like: %(valor)s °C"
+
+#: .\apps\chatbot\services\response_renderers.py:358
+#, python-format
+msgid "Humedad: %(valor)s%%"
+msgstr "Humidity: %(valor)s%%"
+
+#: .\apps\chatbot\services\response_renderers.py:359
+#, python-format
+msgid "Viento: %(valor)s km/h"
+msgstr "Wind: %(valor)s km/h"
+
+#: .\apps\chatbot\services\response_renderers.py:360
+#, python-format
+msgid "Probabilidad de lluvia: %(valor)s%%"
+msgstr "Chance of rain: %(valor)s%%"
+
+#: .\apps\chatbot\services\response_renderers.py:363
+#, python-format
+msgid "Clima actual en %(lugar)s"
+msgstr "Current weather in %(lugar)s"
+
+#: .\apps\chatbot\services\response_renderers.py:365
+msgid "(dato de respaldo, puede no estar actualizado)"
+msgstr "(backup data, may not be up to date)"
+
+#: .\apps\chatbot\services\response_renderers.py:373
+#, python-format
+msgid ""
+"Tipo de cambio %(origen)s/%(destino)s registrado al %(fecha)s: compra S/ "
+"%(compra)s, venta S/ %(venta)s."
+msgstr "Exchange rate %(origen)s/%(destino)s registered on %(fecha)s: buy S/ %(compra)s, sell S/ %(venta)s."
+
+#: .\apps\chatbot\services\response_renderers.py:377
+#, python-format
+msgid "Fuente: %(valor)s"
+msgstr "Source: %(valor)s"
+
+#: .\apps\chatbot\services\response_renderers.py:390
+msgid "Tus favoritos:"
+msgstr "Your favorites:"
+
+#: .\apps\chatbot\services\response_renderers.py:399
+msgid "mañana"
+msgstr "morning"
+
+#: .\apps\chatbot\services\response_renderers.py:399
+msgid "tarde"
+msgstr "afternoon"
+
+#: .\apps\chatbot\services\response_renderers.py:399
+msgid "noche"
+msgstr "evening"
+
+#: .\apps\chatbot\services\response_renderers.py:404
+#, python-format
+msgid "%(dias)s, %(noches)s"
+msgstr "%(dias)s, %(noches)s"
+
+#: .\apps\chatbot\services\response_renderers.py:405
+#, python-format
+msgid "%(n)s día"
+msgid_plural "%(n)s días"
+msgstr[0] "%(n)s day"
+msgstr[1] "%(n)s days"
+
+#: .\apps\chatbot\services\response_renderers.py:406
+#, python-format
+msgid "%(n)s noche"
+msgid_plural "%(n)s noches"
+msgstr[0] "%(n)s night"
+msgstr[1] "%(n)s nights"
+
+#: .\apps\chatbot\services\response_renderers.py:415
+#, python-format
+msgid ""
+"Itinerario propuesto para %(destino)s del %(inicio)s al %(fin)s "
+"(%(duracion)s)."
+msgstr "Proposed itinerary for %(destino)s from %(inicio)s to %(fin)s (%(duracion)s)."
+
+#: .\apps\chatbot\services\response_renderers.py:424
+msgid "sin actividades registradas"
+msgstr "no registered activities"
+
+#: .\apps\chatbot\services\response_renderers.py:461
+#, python-format
+msgid "No encontré restaurantes registrados que sirvan %(plato)s."
+msgstr "I couldn't find any registered restaurants that serve %(plato)s."
+
+#: .\apps\clima\services\clima_actual.py:46
+msgid "Despejado"
+msgstr "Clear"
+
+#: .\apps\clima\services\clima_actual.py:47
+msgid "Mayormente despejado"
+msgstr "Mostly clear"
+
+#: .\apps\clima\services\clima_actual.py:48
+msgid "Parcialmente nublado"
+msgstr "Partly cloudy"
+
+#: .\apps\clima\services\clima_actual.py:49
+msgid "Nublado"
+msgstr "Cloudy"
+
+#: .\apps\clima\services\clima_actual.py:50
+msgid "Neblina"
+msgstr "Mist"
+
+#: .\apps\clima\services\clima_actual.py:51
+msgid "Neblina con escarcha"
+msgstr "Freezing mist"
+
+#: .\apps\clima\services\clima_actual.py:52
+msgid "Llovizna ligera"
+msgstr "Light drizzle"
+
+#: .\apps\clima\services\clima_actual.py:53
+msgid "Llovizna moderada"
+msgstr "Moderate drizzle"
+
+#: .\apps\clima\services\clima_actual.py:54
+msgid "Llovizna intensa"
+msgstr "Heavy drizzle"
+
+#: .\apps\clima\services\clima_actual.py:55
+msgid "Llovizna helada ligera"
+msgstr "Light freezing drizzle"
+
+#: .\apps\clima\services\clima_actual.py:56
+msgid "Llovizna helada intensa"
+msgstr "Heavy freezing drizzle"
+
+#: .\apps\clima\services\clima_actual.py:57
+msgid "Lluvia ligera"
+msgstr "Light rain"
+
+#: .\apps\clima\services\clima_actual.py:58
+msgid "Lluvia moderada"
+msgstr "Moderate rain"
+
+#: .\apps\clima\services\clima_actual.py:59
+msgid "Lluvia intensa"
+msgstr "Heavy rain"
+
+#: .\apps\clima\services\clima_actual.py:60
+msgid "Lluvia helada ligera"
+msgstr "Light freezing rain"
+
+#: .\apps\clima\services\clima_actual.py:61
+msgid "Lluvia helada intensa"
+msgstr "Heavy freezing rain"
+
+#: .\apps\clima\services\clima_actual.py:62
+msgid "Nevada ligera"
+msgstr "Light snowfall"
+
+#: .\apps\clima\services\clima_actual.py:63
+msgid "Nevada moderada"
+msgstr "Moderate snowfall"
+
+#: .\apps\clima\services\clima_actual.py:64
+msgid "Nevada intensa"
+msgstr "Heavy snowfall"
+
+#: .\apps\clima\services\clima_actual.py:65
+msgid "Granos de nieve"
+msgstr "Snow grains"
+
+#: .\apps\clima\services\clima_actual.py:66
+msgid "Chubascos ligeros"
+msgstr "Light showers"
+
+#: .\apps\clima\services\clima_actual.py:67
+msgid "Chubascos moderados"
+msgstr "Moderate showers"
+
+#: .\apps\clima\services\clima_actual.py:68
+msgid "Chubascos intensos"
+msgstr "Heavy showers"
+
+#: .\apps\clima\services\clima_actual.py:69
+msgid "Chubascos de nieve ligeros"
+msgstr "Light snow showers"
+
+#: .\apps\clima\services\clima_actual.py:70
+msgid "Chubascos de nieve intensos"
+msgstr "Heavy snow showers"
+
+#: .\apps\clima\services\clima_actual.py:71
+msgid "Tormenta eléctrica"
+msgstr "Thunderstorm"
+
+#: .\apps\clima\services\clima_actual.py:72
+msgid "Tormenta con granizo ligero"
+msgstr "Thunderstorm with light hail"
+
+#: .\apps\clima\services\clima_actual.py:73
+msgid "Tormenta con granizo intenso"
+msgstr "Thunderstorm with heavy hail"
+
+#: .\apps\clima\services\clima_actual.py:75
+msgid "Condición variable"
+msgstr "Variable conditions"
+
+#: .\apps\clima\ubicaciones.py:20
+msgid "Huánuco (Ciudad)"
+msgstr "Huánuco (City)"
+
+#: .\apps\clima\ubicaciones.py:27
+msgid "Tingo María (Ciudad)"
+msgstr "Tingo María (City)"
+
+#: .\apps\emergencias\forms.py:6 .\apps\eventos\forms.py:41
+#: .\templates\emergencias\emergencias.html:408
+#: .\templates\eventos\agenda-eventos.html:441
+msgid "Nombre del problema"
+msgstr "Problem name"
+
+#: .\apps\emergencias\forms.py:7 .\templates\emergencias\emergencias.html:419
+msgid "Describa el problema"
+msgstr "Describe the problem"
+
+#: .\apps\emergencias\forms.py:14
+msgid "Spam detectado."
+msgstr "Spam detected."
+
+#: .\apps\establecimientos\views.py:164 .\apps\turismo\views.py:122
+msgid "Seleccione"
+msgstr "Select"
+
+#: .\apps\establecimientos\views.py:169
+msgid "Nombre Ascendente"
+msgstr "Name (A–Z)"
+
+#: .\apps\establecimientos\views.py:174
+msgid "Nombre Descendente"
+msgstr "Name (Z–A)"
+
+#: .\apps\establecimientos\views.py:179 .\apps\turismo\views.py:125
+msgid "Menor a Mayor Precio"
+msgstr "Price: low to high"
+
+#: .\apps\establecimientos\views.py:184 .\apps\turismo\views.py:126
+msgid "Mayor a Menor Precio"
+msgstr "Price: high to low"
+
+#: .\apps\establecimientos\views.py:227
+msgid "Descubre los mejores restaurantes de Huánuco"
+msgstr "Discover the best restaurants in Huánuco"
+
+#: .\apps\establecimientos\views.py:228
+msgid ""
+"Encuentra los lugares más deliciosos para disfrutar de la gastronomía local."
+msgstr "Find the most delicious places to enjoy the local cuisine."
+
+#: .\apps\establecimientos\views.py:237
+msgid "Descubre los mejores alojamientos de Huánuco"
+msgstr "Discover the best accommodation in Huánuco"
+
+#: .\apps\establecimientos\views.py:238
+msgid "Encuentra el lugar perfecto para descansar y disfrutar de tu estadía."
+msgstr "Find the perfect place to rest and enjoy your stay."
+
+#: .\apps\establecimientos\views.py:330
+msgid "Ya existe una reseña tuya para este establecimiento."
+msgstr "You have already posted a review for this establishment."
+
+#: .\apps\establecimientos\views.py:334 .\apps\turismo\views.py:223
+msgid "Tu reseña se ha actualizado correctamente."
+msgstr "Your review has been updated successfully."
+
+#: .\apps\establecimientos\views.py:334 .\apps\turismo\views.py:223
+msgid "Tu reseña se ha publicado correctamente."
+msgstr "Your review has been published successfully."
+
+#: .\apps\eventos\forms.py:12 .\templates\eventos\agenda-eventos.html:382
+msgid "Nombre del evento"
+msgstr "Event name"
+
+#: .\apps\eventos\forms.py:13 .\templates\eventos\agenda-eventos.html:388
+msgid "Tipo de evento"
+msgstr "Event type"
+
+#: .\apps\eventos\forms.py:15 .\templates\eventos\agenda-eventos.html:399
+msgid "Describe brevemente tu evento"
+msgstr "Briefly describe your event"
+
+#: .\apps\eventos\forms.py:17 .\templates\eventos\agenda-eventos.html:405
+msgid "Ingresa tu correo electrónico"
+msgstr "Enter your email address"
+
+#: .\apps\eventos\forms.py:25 .\templates\eventos\agenda-eventos.html:390
+msgid "Selecciona una opción"
+msgstr "Select an option"
+
+#: .\apps\eventos\forms.py:43 .\templates\eventos\agenda-eventos.html:447
+msgid "Describe el problema"
+msgstr "Describe the problem"
+
+#: .\apps\eventos\views.py:72
+msgid "primer"
+msgstr "first"
+
+#: .\apps\eventos\views.py:72
+msgid "segundo"
+msgstr "second"
+
+#: .\apps\eventos\views.py:73
+msgid "tercer"
+msgstr "third"
+
+#: .\apps\eventos\views.py:73
+msgid "cuarto"
+msgstr "fourth"
+
+#: .\apps\eventos\views.py:76
+msgid "Domingo de Ramos"
+msgstr "Palm Sunday"
+
+#: .\apps\eventos\views.py:77
+msgid "Jueves Santo"
+msgstr "Holy Thursday"
+
+#: .\apps\eventos\views.py:78
+msgid "Viernes Santo"
+msgstr "Good Friday"
+
+#: .\apps\eventos\views.py:79
+msgid "Domingo de Resurrección"
+msgstr "Easter Sunday"
+
+#: .\apps\eventos\views.py:86 .\apps\eventos\views.py:420
+#: .\apps\eventos\views.py:486
+msgid "Fecha por confirmar"
+msgstr "Date to be confirmed"
+
+#: .\apps\eventos\views.py:87 .\templates\eventos\agenda-eventos.html:57
+msgid "Hoy"
+msgstr "Today"
+
+#: .\apps\eventos\views.py:88
+msgid "En curso"
+msgstr "Ongoing"
+
+#: .\apps\eventos\views.py:223
+msgid "Selecciona una fecha de inicio y una de fin válidas."
+msgstr "Select a valid start date and end date."
+
+#: .\apps\eventos\views.py:225
+msgid "La fecha de fin no puede ser anterior a la de inicio."
+msgstr "The end date cannot be earlier than the start date."
+
+#: .\apps\eventos\views.py:227
+#, python-format
+msgid "Selecciona un rango de hasta %(dias)s días."
+msgstr "Select a range of up to %(dias)s days."
+
+#: .\apps\eventos\views.py:235
+msgid "j M. Y"
+msgstr "M. j, Y"
+
+#: .\apps\eventos\views.py:235
+msgid "j M."
+msgstr "M. j"
+
+#: .\apps\eventos\views.py:288
+#, python-format
+msgid "%(n)s día antes de tu llegada"
+msgid_plural "%(n)s días antes de tu llegada"
+msgstr[0] "%(n)s day before your arrival"
+msgstr[1] "%(n)s days before your arrival"
+
+#: .\apps\eventos\views.py:292
+#, python-format
+msgid "%(n)s día después de tu viaje"
+msgid_plural "%(n)s días después de tu viaje"
+msgstr[0] "%(n)s day after your trip"
+msgstr[1] "%(n)s days after your trip"
+
+#: .\apps\eventos\views.py:329
+msgid "j \\d\\e F"
+msgstr "F j"
+
+#: .\apps\eventos\views.py:348
+msgid "a. m."
+msgstr "AM"
+
+#: .\apps\eventos\views.py:348
+msgid "p. m."
+msgstr "PM"
+
+#: .\apps\eventos\views.py:362
+#, python-format
+msgid "%(orden)s %(dia)s después del %(ancla)s de %(mes)s"
+msgstr "%(orden)s %(dia)s after %(mes)s %(ancla)s"
+
+#: .\apps\eventos\views.py:364
+#, python-format
+msgid "%(orden)s %(dia)s de %(mes)s"
+msgstr "%(orden)s %(dia)s of %(mes)s"
+
+#: .\apps\eventos\views.py:394 .\apps\eventos\views.py:402
+msgid "Cada año"
+msgstr "Every year"
+
+#: .\apps\eventos\views.py:412
+msgid "Fecha móvil"
+msgstr "Movable date"
+
+#: .\apps\eventos\views.py:418
+msgid "Fecha exacta por confirmar"
+msgstr "Exact date to be confirmed"
+
+#: .\apps\eventos\views.py:445
+#, python-format
+msgid "%(dia_inicio)s – %(dia_fin)s de %(mes)s de %(anio)s"
+msgstr "%(mes)s %(dia_inicio)s – %(dia_fin)s, %(anio)s"
+
+#: .\apps\eventos\views.py:466 .\apps\eventos\views.py:472
+#: .\apps\eventos\views.py:477
+#, python-format
+msgid "Cada %(x)s"
+msgstr "Every %(x)s"
+
+#: .\apps\eventos\views.py:482
+#, python-format
+msgid "Durante %(mes)s de %(anio)s"
+msgstr "During %(mes)s %(anio)s"
+
+#: .\apps\eventos\views.py:497
+msgid "Todo el día"
+msgstr "All day"
+
+#: .\apps\eventos\views.py:499
+msgid "Horarios variables"
+msgstr "Variable schedule"
+
+#: .\apps\eventos\views.py:501
+msgid "Horario por confirmar"
+msgstr "Schedule to be confirmed"
+
+#: .\apps\eventos\views.py:511 .\apps\eventos\views.py:512
+msgid "Región Huánuco"
+msgstr "Huánuco Region"
+
+#: .\apps\eventos\views.py:520
+#, python-format
+msgid "Provincia de %(nombre)s"
+msgstr "%(nombre)s Province"
+
+#: .\apps\eventos\views.py:526
+msgid "Gratuito"
+msgstr "Free"
+
+#: .\apps\eventos\views.py:531
+#, python-format
+msgid "Desde S/ %(precio)s"
+msgstr "From S/ %(precio)s"
+
+#: .\apps\eventos\views.py:922
+#, python-format
+msgid "%(n)s evento durante tu viaje"
+msgid_plural "%(n)s eventos durante tu viaje"
+msgstr[0] "%(n)s event during your trip"
+msgstr[1] "%(n)s events during your trip"
+
+#: .\apps\eventos\views.py:926
+#, python-format
+msgid ""
+"No hay eventos programados exactamente entre el %(desde)s y el %(hasta)s."
+msgstr "There are no events scheduled exactly between %(desde)s and %(hasta)s."
+
+#: .\apps\eventos\views.py:1003
+msgid "No pudimos enviar tu propuesta: revisa los datos e inténtalo de nuevo."
+msgstr "We could not send your proposal: please check the details and try again."
+
+#: .\apps\eventos\views.py:1029 .\apps\eventos\views.py:1068
+msgid ""
+"No pudimos enviar tu solicitud en este momento. Inténtalo nuevamente en unos "
+"minutos."
+msgstr "We could not send your request right now. Please try again in a few minutes."
+
+#: .\apps\eventos\views.py:1032
+msgid ""
+"Gracias. Recibimos tu propuesta y será revisada por el equipo de Viaje "
+"Informado."
+msgstr "Thank you. We received your proposal and the Viaje Informado team will review it."
+
+#: .\apps\eventos\views.py:1046
+msgid "No pudimos enviar tu reporte: revisa los datos e inténtalo de nuevo."
+msgstr "We could not send your report: please check the details and try again."
+
+#: .\apps\eventos\views.py:1071
+msgid ""
+"Gracias por ayudarnos a mantener la información actualizada. Revisaremos tu "
+"reporte."
+msgstr "Thank you for helping us keep the information up to date. We will review your report."
+
+#: .\apps\gastronomia\views.py:40
+msgid "Sabores de Huánuco"
+msgstr "Flavors of Huánuco"
+
+#: .\apps\gastronomia\views.py:42
+msgid ""
+"Una fusión entre la sierra y la selva. Descubre la riqueza culinaria que "
+"forma parte de la identidad huanuqueña."
+msgstr "A fusion of the highlands and the jungle. Discover the culinary richness that is part of Huánuco's identity."
+
+#: .\apps\interacciones\forms.py:16
+msgid "Cuéntanos qué te pareció (opcional)"
+msgstr "Tell us what you thought (optional)"
+
+#: .\apps\interacciones\services.py:14
+msgid "Más recientes"
+msgstr "Most recent"
+
+#: .\apps\interacciones\services.py:15
+msgid "Más antiguas"
+msgstr "Oldest"
+
+#: .\apps\interacciones\services.py:16
+msgid "Mejor valoradas"
+msgstr "Highest rated"
+
+#: .\apps\interacciones\services.py:17
+msgid "Peor valoradas"
+msgstr "Lowest rated"
+
+#: .\apps\interacciones\views.py:22
+msgid "favorito"
+msgstr "favorite"
+
+#: .\apps\interacciones\views.py:23
+msgid "lugar turístico"
+msgstr "tourist attraction"
+
+#: .\apps\interacciones\views.py:24
+msgid "restaurante"
+msgstr "restaurant"
+
+#: .\apps\interacciones\views.py:25
+msgid "alojamiento"
+msgstr "accommodation"
+
+#: .\apps\interacciones\views.py:151
+msgid "Reseña eliminada."
+msgstr "Review deleted."
+
+#: .\apps\servicios_turista\services\zonas.py:20
+msgid "Todas las zonas"
+msgstr "All zones"
+
+#: .\apps\servicios_turista\views.py:26
+msgid "Sitio web oficial"
+msgstr "Official website"
+
+#: .\apps\servicios_turista\views.py:27
+msgid "Facebook oficial"
+msgstr "Official Facebook"
+
+#: .\apps\servicios_turista\views.py:28
+msgid "Instagram oficial"
+msgstr "Official Instagram"
+
+#: .\apps\servicios_turista\views.py:37
+msgid "Atención 24 h"
+msgstr "Open 24 hours"
+
+#: .\apps\turismo\views.py:108
+#: .\templates\turismo\detalle-lugar-turistico.html:461
+msgid "Dificultad"
+msgstr "Difficulty"
+
+#: .\apps\turismo\views.py:115
+msgid "Costo"
+msgstr "Cost"
+
+#: .\apps\turismo\views.py:117
+#: .\templates\turismo\listado-lugares-turisticos.html:209
+msgid "Pagado"
+msgstr "Paid"
+
+#: .\apps\turismo\views.py:123
+msgid "Nombre A–Z"
+msgstr "Name A–Z"
+
+#: .\apps\turismo\views.py:124
+msgid "Nombre Z–A"
+msgstr "Name Z–A"
+
+#: .\apps\turismo\views.py:131
+msgid "Lugares Turísticos de Huánuco"
+msgstr "Tourist Attractions in Huánuco"
+
+#: .\apps\turismo\views.py:132
+msgid ""
+"Descubre los mejores atractivos naturales, históricos y culturales de la "
+"región."
+msgstr "Discover the best natural, historical and cultural attractions of the region."
+
+#: .\apps\turismo\views.py:219
+msgid "Ya existe una reseña tuya para este lugar turístico."
+msgstr "You have already posted a review for this tourist attraction."
+
+#: .\apps\turismo\views.py:279
+#, python-format
+msgid "Imagen histórica de %(nombre)s"
+msgstr "Historical image of %(nombre)s"
+
+#: .\templates\accounts\base_auth.html:18
+#: .\templates\accounts\cuenta_eliminada.html:14
+msgid "Volver al inicio"
+msgstr "Back to home"
+
+#: .\templates\accounts\base_auth.html:27
+msgid "INICIO"
+msgstr "HOME"
+
+#: .\templates\accounts\base_auth.html:30 .\templates\partials\header.html:7
+msgid "Ir al inicio de Viaje Informado"
+msgstr "Go to the Viaje Informado home page"
+
+#: .\templates\accounts\cambiar_email.html:5
+msgid "Cambiar correo • Viaje Informado"
+msgstr "Change email • Viaje Informado"
+
+#: .\templates\accounts\cambiar_email.html:17
+msgid "Cambiar correo electrónico"
+msgstr "Change email address"
+
+#: .\templates\accounts\cambiar_email.html:19
+msgid ""
+"Te enviaremos un código de verificación al nuevo correo. Tu correo actual ("
+msgstr "We will send a verification code to your new email address. Your current email ("
+
+#: .\templates\accounts\cambiar_email.html:19
+msgid "sin correo registrado"
+msgstr "no email registered"
+
+#: .\templates\accounts\cambiar_email.html:19
+msgid ") se mantendrá hasta que confirmes el nuevo."
+msgstr ") will remain until you confirm the new one."
+
+#: .\templates\accounts\cambiar_email.html:29
+msgid "Continuar"
+msgstr "Continue"
+
+#: .\templates\accounts\cambiar_email.html:30
+#: .\templates\accounts\eliminar_cuenta.html:39
+#: .\templates\accounts\gestionar_password.html:35
+#: .\templates\accounts\includes\fila_perfil.html:32
+#: .\templates\accounts\perfil.html:68 .\templates\accounts\reauth.html:30
+#: .\templates\accounts\reauth.html:46
+#: .\templates\accounts\verificar_nuevo_email.html:33
+#: .\templates\emergencias\emergencias.html:433
+#: .\templates\eventos\agenda-eventos.html:419
+#: .\templates\eventos\agenda-eventos.html:453
+#: .\templates\interacciones\includes\resenas_seccion.html:86
+#: .\templates\interacciones\includes\resenas_seccion.html:170
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: .\templates\accounts\cuenta.html:5
+msgid "Cuenta • Viaje Informado"
+msgstr "Account • Viaje Informado"
+
+#: .\templates\accounts\cuenta.html:17 .\templates\accounts\perfil.html:16
+msgid "Mi perfil"
+msgstr "My profile"
+
+#: .\templates\accounts\cuenta.html:24
+msgid "Seguridad de la cuenta"
+msgstr "Account security"
+
+#: .\templates\accounts\cuenta.html:30
+#: .\templates\accounts\includes\fila_perfil.html:15
+msgid "No especificado"
+msgstr "Not specified"
+
+#: .\templates\accounts\cuenta.html:33
+msgid "Verificado"
+msgstr "Verified"
+
+#: .\templates\accounts\cuenta.html:35
+msgid "Pendiente de verificación"
+msgstr "Pending verification"
+
+#: .\templates\accounts\cuenta.html:39
+msgid "Cambiar correo"
+msgstr "Change email"
+
+#: .\templates\accounts\cuenta.html:46
+msgid "Contraseña configurada"
+msgstr "Password set"
+
+#: .\templates\accounts\cuenta.html:46
+msgid "Aún no has configurado una contraseña"
+msgstr "You have not set a password yet"
+
+#: .\templates\accounts\cuenta.html:50
+#: .\templates\accounts\gestionar_password.html:17
+msgid "Cambiar contraseña"
+msgstr "Change password"
+
+#: .\templates\accounts\cuenta.html:50
+#: .\templates\accounts\gestionar_password.html:17
+msgid "Crear contraseña"
+msgstr "Create password"
+
+#: .\templates\accounts\cuenta.html:58
+msgid "Métodos de acceso"
+msgstr "Sign-in methods"
+
+#: .\templates\accounts\cuenta.html:66 .\templates\accounts\cuenta.html:92
+msgid "Conectado"
+msgstr "Connected"
+
+#: .\templates\accounts\cuenta.html:69 .\templates\accounts\cuenta.html:95
+msgid "No conectado"
+msgstr "Not connected"
+
+#: .\templates\accounts\cuenta.html:76 .\templates\accounts\cuenta.html:102
+msgid "Desconectar"
+msgstr "Disconnect"
+
+#: .\templates\accounts\cuenta.html:80 .\templates\accounts\cuenta.html:82
+#: .\templates\accounts\cuenta.html:106 .\templates\accounts\cuenta.html:108
+msgid "Conectar"
+msgstr "Connect"
+
+#: .\templates\accounts\cuenta.html:117
+msgid "Zona de riesgo"
+msgstr "Danger zone"
+
+#: .\templates\accounts\cuenta.html:121 .\templates\accounts\cuenta.html:124
+#: .\templates\accounts\eliminar_cuenta.html:17
+#: .\templates\accounts\eliminar_cuenta.html:38
+msgid "Eliminar cuenta"
+msgstr "Delete account"
+
+#: .\templates\accounts\cuenta.html:122
+msgid "Elimina permanentemente tu cuenta y tus datos asociados."
+msgstr "Permanently delete your account and associated data."
+
+#: .\templates\accounts\cuenta_eliminada.html:4
+msgid "Cuenta eliminada - Viaje Informado"
+msgstr "Account deleted - Viaje Informado"
+
+#: .\templates\accounts\cuenta_eliminada.html:9
+msgid "Tu cuenta fue eliminada"
+msgstr "Your account was deleted"
+
+#: .\templates\accounts\cuenta_eliminada.html:11
+msgid ""
+"Tu cuenta de Viaje Informado y la información asociada fueron eliminadas "
+"correctamente."
+msgstr "Your Viaje Informado account and its associated information were deleted successfully."
+
+#: .\templates\accounts\eliminar_cuenta.html:5
+msgid "Eliminar cuenta • Viaje Informado"
+msgstr "Delete account • Viaje Informado"
+
+#: .\templates\accounts\eliminar_cuenta.html:18
+msgid "Esta acción eliminará permanentemente:"
+msgstr "This action will permanently delete:"
+
+#: .\templates\accounts\eliminar_cuenta.html:20
+msgid "Tu perfil"
+msgstr "Your profile"
+
+#: .\templates\accounts\eliminar_cuenta.html:22
+msgid "Tus valoraciones y reseñas"
+msgstr "Your ratings and reviews"
+
+#: .\templates\accounts\eliminar_cuenta.html:23
+msgid "Las conexiones de acceso asociadas a Viaje Informado"
+msgstr "The sign-in connections associated with Viaje Informado"
+
+#: .\templates\accounts\eliminar_cuenta.html:26
+msgid "Esta acción no eliminará tu cuenta personal de Google o Facebook."
+msgstr "This action will not delete your personal Google or Facebook account."
+
+#: .\templates\accounts\eliminar_cuenta.html:32
+msgid "Para confirmar, escribe tu nombre de usuario:"
+msgstr "To confirm, type your username:"
+
+#: .\templates\accounts\gestionar_password.html:5
+msgid "Contraseña • Viaje Informado"
+msgstr "Password • Viaje Informado"
+
+#: .\templates\accounts\gestionar_password.html:20
+msgid ""
+"Aún no has configurado una contraseña para Viaje Informado. Al crearla, tus "
+"métodos de acceso social seguirán funcionando igual que antes."
+msgstr "You have not set a password for Viaje Informado yet. Once you create one, your social sign-in methods will keep working as before."
+
+#: .\templates\accounts\includes\tabs_cuenta.html:4
+msgid "Secciones de Mi perfil"
+msgstr "My profile sections"
+
+#: .\templates\accounts\includes\tabs_cuenta.html:5
+msgid "Ajustes de cuenta"
+msgstr "Account settings"
+
+#: .\templates\accounts\includes\tabs_cuenta.html:6
+msgid "Cuenta"
+msgstr "Account"
+
+#: .\templates\accounts\login.html:5
+msgid "Iniciar sesión - Viaje Informado"
+msgstr "Sign in - Viaje Informado"
+
+#: .\templates\accounts\login.html:8
+msgid "Bienvenido"
+msgstr "Welcome"
+
+#: .\templates\accounts\login.html:9
+msgid "Inicia sesión para continuar explorando Huánuco."
+msgstr "Sign in to continue exploring Huánuco."
+
+#: .\templates\accounts\login.html:17 .\templates\base\login_visual.html:26
+msgid "Ingrese su usuario o correo"
+msgstr "Enter your username or email"
+
+#: .\templates\accounts\login.html:28 .\templates\accounts\registro.html:21
+#: .\templates\base\login_visual.html:31
+msgid "Ingrese su contraseña"
+msgstr "Enter your password"
+
+#: .\templates\accounts\login.html:30 .\templates\accounts\registro.html:24
+msgid "Mostrar u ocultar contraseña"
+msgstr "Show or hide password"
+
+#: .\templates\accounts\login.html:46 .\templates\base\login_visual.html:39
+msgid "Ingresar"
+msgstr "Sign in"
+
+#: .\templates\accounts\login.html:50 .\templates\base\login_visual.html:45
+msgid "O continúa con"
+msgstr "Or continue with"
+
+#: .\templates\accounts\login.html:55
+msgid "Continuar con Google"
+msgstr "Continue with Google"
+
+#: .\templates\accounts\login.html:59
+msgid "Continuar con Facebook"
+msgstr "Continue with Facebook"
+
+#: .\templates\accounts\login.html:64 .\templates\base\login_visual.html:59
+msgid "¿Aún no tienes cuenta?"
+msgstr "Don't have an account yet?"
+
+#: .\templates\accounts\login.html:64
+msgid "Regístrate"
+msgstr "Sign up"
+
+#: .\templates\accounts\perfil.html:5
+msgid "Mi perfil • Viaje Informado"
+msgstr "My profile • Viaje Informado"
+
+#: .\templates\accounts\perfil.html:28
+msgid "Cambiar foto de perfil"
+msgstr "Change profile photo"
+
+#: .\templates\accounts\perfil.html:32
+msgid "Cargar una imagen"
+msgstr "Upload an image"
+
+#: .\templates\accounts\perfil.html:34
+msgid "Quitar foto"
+msgstr "Remove photo"
+
+#: .\templates\accounts\perfil.html:42
+#, python-format
+msgid "Miembro desde %(fecha)s"
+msgstr "Member since %(fecha)s"
+
+#: .\templates\accounts\perfil.html:62
+msgid "JPG, PNG o WebP, máx. 5 MB"
+msgstr "JPG, PNG or WebP, max. 5 MB"
+
+#: .\templates\accounts\perfil.html:79
+msgid "Información personal"
+msgstr "Personal information"
+
+#: .\templates\accounts\perfil.html:90
+msgid "Información de cuenta"
+msgstr "Account information"
+
+#: .\templates\accounts\perfil.html:93
+msgid "Este nombre podrá mostrarse públicamente en tus reseñas."
+msgstr "This name may be shown publicly in your reviews."
+
+#: .\templates\accounts\perfil.html:97
+msgid "Registrado desde"
+msgstr "Registered since"
+
+#: .\templates\accounts\reauth.html:5
+msgid "Confirma tu identidad • Viaje Informado"
+msgstr "Confirm your identity • Viaje Informado"
+
+#: .\templates\accounts\reauth.html:17
+msgid "Confirma tu identidad"
+msgstr "Confirm your identity"
+
+#: .\templates\accounts\reauth.html:19
+msgid ""
+"Por tu seguridad, confirma que eres tú antes de continuar con esta acción."
+msgstr "For your security, confirm that it is you before continuing with this action."
+
+#: .\templates\accounts\reauth.html:29
+msgid "Confirmar"
+msgstr "Confirm"
+
+#: .\templates\accounts\reauth.html:34
+msgid "Ingresa el código de 4 dígitos que enviamos a tu correo."
+msgstr "Enter the 4-digit code we sent to your email."
+
+#: .\templates\accounts\reauth.html:45
+#: .\templates\accounts\verificar_nuevo_email.html:32
+#: .\templates\accounts\verificar_otp.html:37
+msgid "Verificar código"
+msgstr "Verify code"
+
+#: .\templates\accounts\reauth.html:54
+#: .\templates\accounts\verificar_nuevo_email.html:40
+#: .\templates\accounts\verificar_otp.html:44
+msgid "Reenviar código"
+msgstr "Resend code"
+
+#: .\templates\accounts\registro.html:4
+msgid "Crear cuenta - Viaje Informado"
+msgstr "Create account - Viaje Informado"
+
+#: .\templates\accounts\registro.html:9
+msgid "Crea tu cuenta"
+msgstr "Create your account"
+
+#: .\templates\accounts\registro.html:10
+msgid "Regístrese para poner conocer lo mejor de Huánuco."
+msgstr "Sign up to discover the best of Huánuco."
+
+#: .\templates\accounts\registro.html:21
+msgid "Confirme su contraseña"
+msgstr "Confirm your password"
+
+#: .\templates\accounts\registro.html:31
+msgid "Ingrese sus nombres"
+msgstr "Enter your first name(s)"
+
+#: .\templates\accounts\registro.html:31
+msgid "Ingrese sus apellidos"
+msgstr "Enter your last name(s)"
+
+#: .\templates\accounts\registro.html:31
+msgid "Ingrese su nombre de usuario"
+msgstr "Enter your username"
+
+#: .\templates\accounts\registro.html:31
+msgid "Ingrese su correo electrónico"
+msgstr "Enter your email address"
+
+#: .\templates\accounts\registro.html:41
+msgid "Una letra mayúscula"
+msgstr "One uppercase letter"
+
+#: .\templates\accounts\registro.html:42
+msgid "Una letra minúscula"
+msgstr "One lowercase letter"
+
+#: .\templates\accounts\registro.html:43
+msgid "Al menos un número"
+msgstr "At least one number"
+
+#: .\templates\accounts\registro.html:44
+#, python-format
+msgid "Al menos un símbolo (! @ # %% & * ? $ . -)"
+msgstr "At least one symbol (! @ # %% & * ? $ . -)"
+
+#: .\templates\accounts\registro.html:45
+msgid "Ambas contraseñas coinciden"
+msgstr "Both passwords match"
+
+#: .\templates\accounts\registro.html:57
+msgid "¿Ya tienes cuenta?"
+msgstr "Already have an account?"
+
+#: .\templates\accounts\registro.html:57
+msgid "Inicia sesión"
+msgstr "Sign in"
+
+#: .\templates\accounts\verificar_nuevo_email.html:5
+msgid "Verifica tu nuevo correo • Viaje Informado"
+msgstr "Verify your new email • Viaje Informado"
+
+#: .\templates\accounts\verificar_nuevo_email.html:17
+msgid "Verifica tu nuevo correo"
+msgstr "Verify your new email"
+
+#: .\templates\accounts\verificar_nuevo_email.html:19
+#: .\templates\accounts\verificar_otp.html:22
+msgid "Ingresa el código de 4 dígitos que enviamos a"
+msgstr "Enter the 4-digit code we sent to"
+
+#: .\templates\accounts\verificar_otp.html:4
+msgid "Verifica tu cuenta - Viaje Informado"
+msgstr "Verify your account - Viaje Informado"
+
+#: .\templates\accounts\verificar_otp.html:11
+msgid "¡Cuenta verificada!"
+msgstr "Account verified!"
+
+#: .\templates\accounts\verificar_otp.html:13
+msgid ""
+"Se ha creado tu cuenta correctamente. Se te está redirigiendo para que "
+"inicies sesión en"
+msgstr "Your account was created successfully. You are being redirected to sign in in"
+
+#: .\templates\accounts\verificar_otp.html:13
+msgid "segundos"
+msgstr "seconds"
+
+#: .\templates\accounts\verificar_otp.html:16
+msgid "Ir a iniciar sesión ahora"
+msgstr "Go to sign in now"
+
+#: .\templates\accounts\verificar_otp.html:20
+msgid "Verifica tu cuenta"
+msgstr "Verify your account"
+
+#: .\templates\base\contacto.html:4
+msgid "Contacto - Viaje Informado"
+msgstr "Contact - Viaje Informado"
+
+#: .\templates\base\contacto.html:11
+msgid "¡Hablemos!"
+msgstr "Let's talk!"
+
+#: .\templates\base\contacto.html:12
+msgid ""
+"Estamos aquí para ayudarte a planificar tu viaje a Huánuco o para colaborar "
+"con tu negocio."
+msgstr "We are here to help you plan your trip to Huánuco or to collaborate with your business."
+
+#: .\templates\base\contacto.html:19
+msgid "Información de contacto"
+msgstr "Contact information"
+
+#: .\templates\base\contacto.html:24
+msgid "Email"
+msgstr "Email"
+
+#: .\templates\base\contacto.html:32
+#: .\templates\establecimientos\detalle_establecimiento.html:357
+#: .\templates\establecimientos\detalle_establecimiento.html:803
+#: .\templates\servicios_turista\servicios_utiles.html:47
+#: .\templates\servicios_turista\servicios_utiles.html:305
+#: .\templates\turismo\detalle-lugar-turistico.html:133
+#: .\templates\turismo\detalle-lugar-turistico.html:184
+#: .\templates\turismo\detalle-lugar-turistico.html:453
+msgid "Ubicación"
+msgstr "Location"
+
+#: .\templates\base\contacto.html:33
+msgid "Huánuco, Perú"
+msgstr "Huánuco, Peru"
+
+#: .\templates\base\contacto.html:39
+msgid "¿Tienes un negocio?"
+msgstr "Do you have a business?"
+
+#: .\templates\base\contacto.html:41
+msgid ""
+"Si eres dueño de un restaurante, hotel, agencia de turismo o provees algún "
+"servicio turístico en Huánuco, nos encantaría trabajar contigo."
+msgstr "If you own a restaurant, hotel or travel agency, or provide any tourism service in Huánuco, we would love to work with you."
+
+#: .\templates\base\contacto.html:44
+msgid ""
+"Escríbenos directamente a nuestro correo electrónico para conocer cómo "
+"podemos promocionar tu negocio en nuestra plataforma."
+msgstr "Write to us directly by email to find out how we can promote your business on our platform."
+
+#: .\templates\base\contacto.html:47
+msgid "Enviar correo electrónico"
+msgstr "Send email"
+
+#: .\templates\base\historia.html:5
+msgid "Historia de Huánuco | Viaje Informado"
+msgstr "History of Huánuco | Viaje Informado"
+
+#: .\templates\base\historia.html:20 .\templates\base\historia.html:216
+#: .\templates\base\historia.html:220
+msgid "Escudo de Huánuco"
+msgstr "Coat of arms of Huánuco"
+
+#: .\templates\base\historia.html:21
+msgid "EXPLORAR"
+msgstr "EXPLORE"
+
+#: .\templates\base\historia.html:22
+msgid "Historia de Huánuco"
+msgstr "History of Huánuco"
+
+#: .\templates\base\historia.html:23
+msgid ""
+"Conoce los acontecimientos, símbolos y datos que forman parte de la "
+"identidad de Huánuco."
+msgstr "Discover the events, symbols and facts that are part of Huánuco's identity."
+
+#: .\templates\base\historia.html:34
+msgid "1 894 m s. n. m."
+msgstr "1,894 m a.s.l."
+
+#: .\templates\base\historia.html:35
+msgid "Altitud aproximada de la ciudad de Huánuco."
+msgstr "Approximate elevation of the city of Huánuco."
+
+#: .\templates\base\historia.html:39
+msgid "15 de agosto de 1539"
+msgstr "August 15, 1539"
+
+#: .\templates\base\historia.html:40
+msgid "Fecha de fundación española de Huánuco."
+msgstr "Date of the Spanish founding of Huánuco."
+
+#: .\templates\base\historia.html:44
+msgid "11 provincias"
+msgstr "11 provinces"
+
+#: .\templates\base\historia.html:45
+msgid "Provincias que conforman el departamento de Huánuco."
+msgstr "Provinces that make up the department of Huánuco."
+
+#: .\templates\base\historia.html:49
+msgid "84 distritos"
+msgstr "84 districts"
+
+#: .\templates\base\historia.html:50
+msgid "Distritos distribuidos dentro del departamento de Huánuco."
+msgstr "Districts spread across the department of Huánuco."
+
+#: .\templates\base\historia.html:54
+msgid "738.383 habitantes"
+msgstr "738,383 inhabitants"
+
+#: .\templates\base\historia.html:55
+msgid "Fuente: INEI, 2026. Población total estimada"
+msgstr "Source: INEI, 2026. Estimated total population"
+
+#: .\templates\base\historia.html:67
+msgid "Fundación de Huánuco"
+msgstr "Founding of Huánuco"
+
+#: .\templates\base\historia.html:69
+msgid ""
+"El 15 de agosto de 1539, el capitán español Gómez de Alvarado y Contreras "
+"fundó la ciudad bajo el nombre de «León de Huánuco de los Caballeros», "
+"dentro de la estrategia española para consolidar su dominio en el centro del "
+"virreinato."
+msgstr "On August 15, 1539, the Spanish captain Gómez de Alvarado y Contreras founded the city under the name \"León de Huánuco de los Caballeros\", as part of the Spanish strategy to consolidate its rule over the center of the viceroyalty."
+
+#: .\templates\base\historia.html:72
+msgid ""
+"La fundación se realizó primero en Huánuco Pampa, en la actual provincia de "
+"Dos de Mayo. El asedio de fuerzas incas obligó a trasladar la ciudad, en "
+"1540, al valle del río Huallaga, donde se ubica hasta hoy."
+msgstr "The city was first founded at Huánuco Pampa, in the present-day province of Dos de Mayo. Pressure from Inca forces led to the city being moved, in 1540, to the Huallaga River valley, where it stands to this day."
+
+#: .\templates\base\historia.html:75
+msgid ""
+"Desde entonces, Huánuco se consolidó como un punto de encuentro entre la "
+"sierra y la selva central, un rol que conserva en su identidad cultural."
+msgstr "Since then, Huánuco has established itself as a meeting point between the highlands and the central rainforest, a role it keeps in its cultural identity."
+
+#: .\templates\base\historia.html:86
+msgid "Huánuco y sus provincias"
+msgstr "Huánuco and its provinces"
+
+#: .\templates\base\historia.html:87
+msgid "Conoce las 11 provincias y los distritos que conforman nuestro región."
+msgstr "Discover the 11 provinces and the districts that make up our region."
+
+#: .\templates\base\historia.html:118
+msgid "Info"
+msgstr "Info"
+
+#: .\templates\base\historia.html:121
+msgid "Mapa del departamento de Huánuco por provincias"
+msgstr "Map of the department of Huánuco by province"
+
+#: .\templates\base\historia.html:171
+msgid "Volver al mapa"
+msgstr "Back to the map"
+
+#: .\templates\base\historia.html:174
+msgid "Cargando información…"
+msgstr "Loading information…"
+
+#: .\templates\base\historia.html:188
+msgid "Nuestros símbolos"
+msgstr "Our symbols"
+
+#: .\templates\base\historia.html:192
+msgid "Primera bandera"
+msgstr "First flag"
+
+#: .\templates\base\historia.html:196
+msgid "Primera bandera de Huánuco"
+msgstr "First flag of Huánuco"
+
+#: .\templates\base\historia.html:198
+msgid ""
+"Usada en marzo de 1812 durante la rebelión independentista liderada por Juan "
+"José Crespo y Castillo, y se enarboló en la entrada de Ambo. Representaba la "
+"unión y valentía de los pueblos indígenas y mestizos contra el dominio "
+"español"
+msgstr "Used in March 1812 during the independence rebellion led by Juan José Crespo y Castillo, and raised at the entrance of Ambo. It represented the unity and courage of the Indigenous and mestizo peoples against Spanish rule"
+
+#: .\templates\base\historia.html:204
+msgid "Bandera actual"
+msgstr "Current flag"
+
+#: .\templates\base\historia.html:208
+msgid "Bandera actual de Huánuco"
+msgstr "Current flag of Huánuco"
+
+#: .\templates\base\historia.html:210
+msgid ""
+"Sus orígenes se remontan a 1976, la bandera actual combina crema y verde "
+"nilo en diagonal. El verde representa la vegetación de la selva alta "
+"huanuqueña, mientras que el crema simboliza la fertilidad de los suelos de "
+"la región."
+msgstr "Its origins date back to 1976. The current flag combines cream and Nile green on the diagonal. The green represents the vegetation of Huánuco's high rainforest, while the cream symbolizes the fertility of the region's soils."
+
+#: .\templates\base\historia.html:222
+msgid ""
+"El escudo tiene su origen en 1543, cuando el gobernador Cristóbal Vaca de "
+"Castro concedió a la ciudad su blasón. Representa la unión entre la historia "
+"hispana y las raíces andinas de la región."
+msgstr "The coat of arms originated in 1543, when Governor Cristóbal Vaca de Castro granted the city its blazon. It represents the union between Hispanic history and the Andean roots of the region."
+
+#: .\templates\base\historia.html:231 .\templates\base\historia.html:252
+msgid "Himno de Huánuco"
+msgstr "Anthem of Huánuco"
+
+#: .\templates\base\historia.html:233
+msgid ""
+"Compuesto en 1969 para el centenario de la creación política del "
+"departamento, con letra de Augusto Rivera Vargas y música de Jaime Díaz "
+"Orihuela."
+msgstr "Composed in 1969 for the centennial of the department's political creation, with lyrics by Augusto Rivera Vargas and music by Jaime Díaz Orihuela."
+
+#: .\templates\base\historia.html:236
+msgid "Leer el himno"
+msgstr "Read the anthem"
+
+#: .\templates\base\historia.html:247
+#: .\templates\emergencias\emergencias.html:388
+#: .\templates\establecimientos\detalle_establecimiento.html:874
+#: .\templates\eventos\agenda-eventos.html:153
+#: .\templates\eventos\agenda-eventos.html:374
+#: .\templates\eventos\agenda-eventos.html:433
+#: .\templates\eventos\agenda-eventos.html:469
+#: .\templates\interacciones\includes\resenas_seccion.html:166
+#: .\templates\servicios_turista\servicios_utiles.html:253
+#: .\templates\servicios_turista\servicios_utiles.html:306
+#: .\templates\servicios_turista\servicios_utiles.html:356
+#: .\templates\turismo\detalle-lugar-turistico.html:257
+msgid "Cerrar"
+msgstr "Close"
+
+#: .\templates\base\historia.html:251
+msgid "Departamento de Huánuco"
+msgstr "Department of Huánuco"
+
+#: .\templates\base\historia.html:254
+msgid "Letra: Augusto Rivera Vargas — Música: Jaime Díaz Orihuela (1969)"
+msgstr "Lyrics: Augusto Rivera Vargas — Music: Jaime Díaz Orihuela (1969)"
+
+#: .\templates\base\historia.html:326
+msgid "¿Sabías que?"
+msgstr "Did you know?"
+
+#: .\templates\base\historia.html:331
+msgid ""
+"Uno de los términos que se les dio a los huanuqueños es el de “Pata "
+"amarilla” y está relacionado con el suelo arcilloso de la región."
+msgstr "One of the terms given to the people of Huánuco is \"Pata amarilla\" (\"yellow foot\"), which is related to the clay soil of the region."
+
+#: .\templates\base\historia.html:335
+msgid "Artista"
+msgstr "Artist"
+
+#: .\templates\base\historia.html:337
+msgid ""
+"Una de las melodías peruanas más famosas del mundo \"El Cóndor Pasa\" nació "
+"del compositor huanuqueño Daniel Alomía Robles en 1871."
+msgstr "One of the most famous Peruvian melodies in the world, \"El Cóndor Pasa\", came from the Huánuco-born composer Daniel Alomía Robles in 1871."
+
+#: .\templates\base\historia.html:341
+msgid "Rio huallaga"
+msgstr "Huallaga River"
+
+#: .\templates\base\historia.html:343
+msgid ""
+"La ciudad de Huánuco se encuentra sobre un valle que fue moldeado durante "
+"siglos por el río Huallaga."
+msgstr "The city of Huánuco sits in a valley that was shaped over centuries by the Huallaga River."
+
+#: .\templates\base\historia.html:353
+msgid "Continúa descubriendo Huánuco"
+msgstr "Keep discovering Huánuco"
+
+#: .\templates\base\historia.html:354
+msgid ""
+"Conoce los lugares turísticos, paisajes y atractivos que forman parte de "
+"nuestra historia."
+msgstr "Discover the tourist attractions, landscapes and sights that are part of our history."
+
+#: .\templates\base\historia.html:356
+msgid "Explorar lugares turísticos"
+msgstr "Explore tourist attractions"
+
+#: .\templates\base\home.html:60 .\templates\base\home.html:62
+#: .\templates\establecimientos\listado_establecimientos.html:262
+#: .\templates\gastronomia\platos_tipicos.html:103
+#: .\templates\interacciones\favoritos.html:107
+#: .\templates\interacciones\includes\resenas_seccion.html:186
+#: .\templates\servicios_turista\servicios_utiles.html:181
+#: .\templates\turismo\listado-lugares-turisticos.html:294
+msgid "Anterior"
+msgstr "Previous"
+
+#: .\templates\base\home.html:66 .\templates\base\home.html:68
+#: .\templates\establecimientos\listado_establecimientos.html:296
+#: .\templates\gastronomia\platos_tipicos.html:130
+#: .\templates\interacciones\favoritos.html:124
+#: .\templates\interacciones\includes\resenas_seccion.html:204
+#: .\templates\servicios_turista\servicios_utiles.html:206
+#: .\templates\turismo\listado-lugares-turisticos.html:328
+msgid "Siguiente"
+msgstr "Next"
+
+#: .\templates\base\home.html:72
+msgid "Controles de presentación"
+msgstr "Slideshow controls"
+
+#: .\templates\base\home.html:76
+msgid "Diapositivas"
+msgstr "Slides"
+
+#: .\templates\base\home.html:80
+#, python-format
+msgid "Diapositiva %(n)s"
+msgstr "Slide %(n)s"
+
+#: .\templates\base\home.html:105
+msgid "HISTORIA · CULTURA · NATURALEZA"
+msgstr "HISTORY · CULTURE · NATURE"
+
+#: .\templates\base\home.html:108
+msgid "Descubre lugares"
+msgstr "Discover places"
+
+#: .\templates\base\home.html:109
+msgid "con identidad"
+msgstr "with identity"
+
+#: .\templates\base\home.html:113
+msgid ""
+"Tu guía para descubrir Huánuco con información clara, destinos únicos y "
+"experiencias que conectan con nuestra identidad."
+msgstr "Your guide to discovering Huánuco with clear information, unique destinations and experiences that connect with our identity."
+
+#: .\templates\base\home.html:128
+msgid "¿De qué manera te ayudamos?"
+msgstr "How can we help you?"
+
+#: .\templates\base\home.html:130
+msgid ""
+"Te ayudamos a organizar tu experiencia en Huánuco y encontrar fácilmente qué "
+"visitar, dónde comer, dónde alojarte y cómo desplazarte."
+msgstr "We help you organize your experience in Huánuco and easily find what to visit, where to eat, where to stay and how to get around."
+
+#: .\templates\base\home.html:140
+msgid ""
+"Descubre platos típicos, comida local y restaurantes recomendados en Huánuco."
+msgstr "Discover traditional dishes, local food and recommended restaurants in Huánuco."
+
+#: .\templates\base\home.html:150
+msgid "Encuentra hoteles y hostales según tu presupuesto y ubicación."
+msgstr "Find hotels and hostels according to your budget and location."
+
+#: .\templates\base\home.html:158
+msgid "Sitios turísticos"
+msgstr "Tourist sites"
+
+#: .\templates\base\home.html:160
+msgid ""
+"Explora atractivos naturales, arqueológicos, culturales y lugares "
+"imperdibles."
+msgstr "Explore natural, archaeological and cultural attractions and must-see places."
+
+#: .\templates\base\home.html:170
+msgid ""
+"Consulta actividades culturales, festividades, ferias y eventos turísticos."
+msgstr "Browse cultural activities, festivals, fairs and tourist events."
+
+#: .\templates\base\home.html:178
+msgid "¿Cómo movilizarte?"
+msgstr "How to get around?"
+
+#: .\templates\base\home.html:180
+msgid "Tarifas referenciales de taxi y consejos para moverte por Huánuco."
+msgstr "Reference taxi fares and tips for getting around Huánuco."
+
+#: .\templates\base\home.html:190
+msgid "Encuentra farmacias, bancos, hospitales y servicios para turistas."
+msgstr "Find pharmacies, banks, hospitals and services for tourists."
+
+#: .\templates\base\home.html:202
+msgid "¿Qué puedes encontrar aquí?"
+msgstr "What can you find here?"
+
+#: .\templates\base\home.html:204
+msgid ""
+"Información pensada para que el turista tome mejores decisiones antes y "
+"durante su visita."
+msgstr "Information designed to help tourists make better decisions before and during their visit."
+
+#: .\templates\base\home.html:214
+msgid "Ubicación precisa"
+msgstr "Precise location"
+
+#: .\templates\base\home.html:216
+msgid ""
+"Mapas, referencias y direcciones para ubicar cada destino o establecimiento."
+msgstr "Maps, references and addresses to locate each destination or establishment."
+
+#: .\templates\base\home.html:226
+msgid "Información de precios"
+msgstr "Price information"
+
+#: .\templates\base\home.html:228
+msgid ""
+"Rangos de precios actualizados para hospedajes, restaurantes, movilidad y "
+"actividades."
+msgstr "Up-to-date price ranges for lodging, restaurants, transport and activities."
+
+#: .\templates\base\home.html:238
+#: .\templates\establecimientos\detalle_establecimiento.html:957
+msgid "Contacto directo"
+msgstr "Direct contact"
+
+#: .\templates\base\home.html:240
+msgid ""
+"Teléfonos, correos, WhatsApp y redes sociales de establecimientos "
+"registrados."
+msgstr "Phone numbers, emails, WhatsApp and social media of registered establishments."
+
+#: .\templates\base\home.html:250
+msgid "Reseñas y calificaciones"
+msgstr "Reviews and ratings"
+
+#: .\templates\base\home.html:252
+msgid ""
+"Opiniones y valoraciones que ayudarán al turista a tomar mejores decisiones."
+msgstr "Opinions and ratings that will help tourists make better decisions."
+
+#: .\templates\base\home.html:262
+msgid "Tipo de cambio referencial"
+msgstr "Reference exchange rate"
+
+#: .\templates\base\home.html:264
+msgid ""
+"Conversión aproximada de precios en soles a dólares para turistas "
+"extranjeros."
+msgstr "Approximate conversion of prices from soles to dollars for foreign tourists."
+
+#: .\templates\base\home.html:274
+msgid "Recomendaciones inteligentes"
+msgstr "Smart recommendations"
+
+#: .\templates\base\home.html:276
+msgid ""
+"Sugerencias según tiempo disponible, presupuesto, ubicación y tipo de "
+"viajero."
+msgstr "Suggestions based on available time, budget, location and type of traveler."
+
+#: .\templates\base\home.html:295
+msgid "ASISTENTE VIRTUAL"
+msgstr "VIRTUAL ASSISTANT"
+
+#: .\templates\base\home.html:299
+msgid "Tu guía virtual en tiempo real"
+msgstr "Your real-time virtual guide"
+
+#: .\templates\base\home.html:302
+msgid ""
+"Pillco Bot estará preparado para responder dudas turísticas sobre Huánuco: "
+"dónde comer, cómo llegar, cuánto gastar, qué visitar si llueve, qué eventos "
+"hay y cómo planificar mejor tu recorrido."
+msgstr "Pillco Bot will be ready to answer tourist questions about Huánuco: where to eat, how to get there, how much to spend, what to visit if it rains, what events are on and how to better plan your trip."
+
+#: .\templates\base\home.html:317 .\templates\includes\pillcobot.html:20
+msgid "En línea"
+msgstr "Online"
+
+#: .\templates\base\home.html:325
+msgid "Hola, soy extranjero y quiero conocer Huánuco, ¿qué me recomiendas?"
+msgstr "Hi, I'm a foreigner and I'd like to get to know Huánuco. What do you recommend?"
+
+#: .\templates\base\home.html:331
+msgid ""
+"¡Hola! Soy Pillco Bot y seré tu guía turístico virtual. Te recomiendo si "
+"estás por el centro visitar"
+msgstr "Hi! I'm Pillco Bot and I'll be your virtual tourist guide. If you're around the city center, I recommend visiting"
+
+#: .\templates\base\home.html:331
+msgid "La Catedral de Huánuco"
+msgstr "La Catedral de Huánuco"
+
+#: .\templates\base\home.html:331
+msgid ". Además visitar"
+msgstr ". You could also visit"
+
+#: .\templates\base\home.html:331
+msgid "El templo de las manos cruzadas de Kotosh"
+msgstr "El templo de las manos cruzadas de Kotosh"
+
+#: .\templates\base\home.html:331
+msgid ". ¿Te gustaría que te indique cómo llegar?"
+msgstr ". Would you like me to tell you how to get there?"
+
+#: .\templates\base\home.html:353
+msgid "¿Quieres promocionar tu negocio turístico?"
+msgstr "Do you want to promote your tourism business?"
+
+#: .\templates\base\home.html:356
+msgid ""
+"Si tienes un restaurante, hotel, evento o servicio turístico en Huánuco, "
+"puedes contactarte con el equipo de Viaje Informado para evaluar tu "
+"incorporación a la plataforma."
+msgstr "If you have a restaurant, hotel, event or tourism service in Huánuco, you can contact the Viaje Informado team to evaluate adding it to the platform."
+
+#: .\templates\base\login_visual.html:5
+msgid "Iniciar Sesión - Viaje Informado"
+msgstr "Sign In - Viaje Informado"
+
+#: .\templates\base\login_visual.html:15
+msgid "Bienvenidos a"
+msgstr "Welcome to"
+
+#: .\templates\base\login_visual.html:19
+msgid ""
+"Accede a tu plataforma para explorar, descubrir y gestionar tu experiencia "
+"de forma rápida, segura y desde cualquier dispositivo."
+msgstr "Access your platform to explore, discover and manage your experience quickly, securely and from any device."
+
+#: .\templates\base\login_visual.html:25
+msgid "Nombre de usuario o correo"
+msgstr "Username or email"
+
+#: .\templates\base\login_visual.html:35
+msgid "¿Olvidaste tu contraseña?"
+msgstr "Forgot your password?"
+
+#: .\templates\base\login_visual.html:51
+msgid "Iniciar sesión con Google"
+msgstr "Sign in with Google"
+
+#: .\templates\base\login_visual.html:55
+msgid "Iniciar sesión con Facebook"
+msgstr "Sign in with Facebook"
+
+#: .\templates\base\login_visual.html:60
+msgid "REGÍSTRATE"
+msgstr "SIGN UP"
+
+#: .\templates\base\login_visual.html:73
+msgid ""
+"Explora, descubre y administra tu experiencia con una identidad visual "
+"sólida, elegante y alineada a tu marca."
+msgstr "Explore, discover and manage your experience with a solid, elegant visual identity aligned with your brand."
+
+#: .\templates\base\privacidad.html:4
+msgid "Política de Privacidad - Viaje Informado"
+msgstr "Privacy Policy - Viaje Informado"
+
+#: .\templates\base\privacidad.html:10
+msgid "Política de Privacidad"
+msgstr "Privacy Policy"
+
+#: .\templates\base\privacidad.html:13
+msgid ""
+"En Viaje Informado respetamos su privacidad y estamos comprometidos a "
+"protegerla a través de nuestro cumplimiento con esta política."
+msgstr "At Viaje Informado we respect your privacy and are committed to protecting it by complying with this policy."
+
+#: .\templates\base\privacidad.html:15
+msgid "1. Información que recopilamos"
+msgstr "1. Information we collect"
+
+#: .\templates\base\privacidad.html:16
+msgid ""
+"Podemos recopilar información sobre usted cuando visita nuestro sitio web, "
+"como información básica de registro o uso de servicios."
+msgstr "We may collect information about you when you visit our website, such as basic registration information or service usage."
+
+#: .\templates\base\privacidad.html:18
+msgid "2. Uso de la información"
+msgstr "2. Use of information"
+
+#: .\templates\base\privacidad.html:19
+msgid ""
+"Utilizamos la información recopilada para mejorar nuestro servicio, "
+"personalizar su experiencia y comunicarnos con usted."
+msgstr "We use the information we collect to improve our service, personalize your experience and communicate with you."
+
+#: .\templates\base\privacidad.html:21
+msgid "3. Contacto"
+msgstr "3. Contact"
+
+#: .\templates\base\privacidad.html:22
+msgid ""
+"Si tiene alguna pregunta sobre esta política de privacidad, contáctenos en:"
+msgstr "If you have any questions about this privacy policy, contact us at:"
+
+#: .\templates\base\privacidad.html:24 .\templates\base\terminos.html:24
+msgid "Última actualización: Mayo 2026"
+msgstr "Last updated: May 2026"
+
+#: .\templates\base\terminos.html:4
+msgid "Términos y Condiciones - Viaje Informado"
+msgstr "Terms and Conditions - Viaje Informado"
+
+#: .\templates\base\terminos.html:10
+msgid "Términos y Condiciones"
+msgstr "Terms and Conditions"
+
+#: .\templates\base\terminos.html:13
+msgid ""
+"Bienvenido a Viaje Informado. Al acceder a este sitio web, usted acepta "
+"estar sujeto a estos Términos y Condiciones."
+msgstr "Welcome to Viaje Informado. By accessing this website, you agree to be bound by these Terms and Conditions."
+
+#: .\templates\base\terminos.html:15
+msgid "1. Uso del sitio"
+msgstr "1. Use of the site"
+
+#: .\templates\base\terminos.html:16
+msgid ""
+"Usted acepta utilizar este sitio solo con fines lícitos y de una manera que "
+"no infrinja los derechos de, ni restrinja o inhiba el uso y disfrute de este "
+"sitio por parte de cualquier tercero."
+msgstr "You agree to use this site only for lawful purposes and in a way that does not infringe the rights of, or restrict or inhibit the use and enjoyment of this site by, any third party."
+
+#: .\templates\base\terminos.html:18
+msgid "2. Propiedad intelectual"
+msgstr "2. Intellectual property"
+
+#: .\templates\base\terminos.html:19
+msgid ""
+"Todo el contenido incluido en este sitio es propiedad de Viaje Informado o "
+"de sus proveedores de contenido y está protegido por las leyes de derechos "
+"de autor."
+msgstr "All content on this site is the property of Viaje Informado or its content providers and is protected by copyright laws."
+
+#: .\templates\base\terminos.html:21
+msgid "3. Negocios"
+msgstr "3. Businesses"
+
+#: .\templates\base\terminos.html:22
+msgid ""
+"Si usted es un negocio y desea promocionarse, debe comunicarse "
+"exclusivamente a través de"
+msgstr "If you are a business and would like to promote yourself, you must contact us exclusively through"
+
+#: .\templates\clima\clima_temporadas.html:6
+msgid "• Viaje Informado"
+msgstr "• Viaje Informado"
+
+#: .\templates\clima\clima_temporadas.html:21
+msgid "Naturaleza y clima tropical"
+msgstr "Nature and tropical climate"
+
+#: .\templates\clima\clima_temporadas.html:24
+msgid ""
+"Información actual y recomendaciones para disfrutar la naturaleza y el clima "
+"tropical de la selva alta."
+msgstr "Current information and recommendations to enjoy the nature and tropical climate of the high jungle."
+
+#: .\templates\clima\clima_temporadas.html:27
+msgid "El mejor clima del mundo"
+msgstr "The best climate in the world"
+
+#: .\templates\clima\clima_temporadas.html:30
+msgid ""
+"Información actual y recomendaciones para que disfrutes tu viaje en "
+"cualquier época del año."
+msgstr "Current information and recommendations so you can enjoy your trip at any time of the year."
+
+#: .\templates\clima\clima_temporadas.html:35
+msgid "Seleccionar ciudad"
+msgstr "Select city"
+
+#: .\templates\clima\clima_temporadas.html:78
+#, python-format
+msgid "Actualizado hoy %(hora)s"
+msgstr "Updated today %(hora)s"
+
+#: .\templates\clima\clima_temporadas.html:104
+msgid "Ahora"
+msgstr "Now"
+
+#: .\templates\clima\clima_temporadas.html:132
+msgid "Mostrando la última información disponible."
+msgstr "Showing the latest available information."
+
+#: .\templates\clima\clima_temporadas.html:137
+msgid "Con datos de:"
+msgstr "Powered by:"
+
+#: .\templates\clima\clima_temporadas.html:145
+msgid "Información meteorológica temporalmente no disponible"
+msgstr "Weather information temporarily unavailable"
+
+#: .\templates\clima\clima_temporadas.html:149
+msgid "Intenta nuevamente más tarde."
+msgstr "Please try again later."
+
+#: .\templates\clima\clima_temporadas.html:164
+msgid "Temporadas en Tingo María"
+msgstr "Seasons in Tingo María"
+
+#: .\templates\clima\clima_temporadas.html:176
+#: .\templates\clima\clima_temporadas.html:304
+msgid "Temporada seca"
+msgstr "Dry season"
+
+#: .\templates\clima\clima_temporadas.html:177
+msgid "MAYO A SEPTIEMBRE"
+msgstr "MAY TO SEPTEMBER"
+
+#: .\templates\clima\clima_temporadas.html:181
+msgid "IDEAL PARA ACTIVIDADES AL AIRE LIBRE"
+msgstr "IDEAL FOR OUTDOOR ACTIVITIES"
+
+#: .\templates\clima\clima_temporadas.html:186
+msgid ""
+"Temporada con menor frecuencia de lluvias, brindando mejores condiciones "
+"para recorrer cataratas, miradores, cuevas y senderos y mejor visibilidad de "
+"la silueta de la Bella Durmiente."
+msgstr "A season with less frequent rain, offering better conditions for visiting waterfalls, viewpoints, caves and trails, and better visibility of the silhouette of the Bella Durmiente (Sleeping Beauty)."
+
+#: .\templates\clima\clima_temporadas.html:192
+#: .\templates\clima\clima_temporadas.html:221
+#: .\templates\clima\clima_temporadas.html:320
+#: .\templates\clima\clima_temporadas.html:349
+msgid "Recomendación:"
+msgstr "Recommendation:"
+
+#: .\templates\clima\clima_temporadas.html:193
+msgid ""
+"Lleva ropa ligera y transpirable, bloqueador solar, repelente, agua y casaca "
+"para las noches."
+msgstr "Bring light, breathable clothing, sunscreen, insect repellent, water and a jacket for the evenings."
+
+#: .\templates\clima\clima_temporadas.html:205
+#: .\templates\clima\clima_temporadas.html:333
+msgid "Temporada de lluvias"
+msgstr "Rainy season"
+
+#: .\templates\clima\clima_temporadas.html:206
+msgid "OCTUBRE A ABRIL"
+msgstr "OCTOBER TO APRIL"
+
+#: .\templates\clima\clima_temporadas.html:210
+msgid "PAISAJES MÁS VERDES Y CAUDALOSOS"
+msgstr "GREENER LANDSCAPES AND FULLER WATERFALLS"
+
+#: .\templates\clima\clima_temporadas.html:215
+msgid ""
+"Las lluvias son más frecuentes y la vegetación luce especialmente intensa. "
+"Las cataratas y quebradas pueden presentar mayor caudal, por lo que es "
+"importante revisar las condiciones antes de realizar recorridos."
+msgstr "Rain is more frequent and the vegetation looks especially lush. Waterfalls and streams may have a higher flow, so it is important to check conditions before setting out on any route."
+
+#: .\templates\clima\clima_temporadas.html:222
+msgid ""
+"Lleva prendas superiores impermeables, repelente, ropa de cambio y calzado "
+"antideslizante."
+msgstr "Bring a waterproof top layer, insect repellent, a change of clothes and non-slip footwear."
+
+#: .\templates\clima\clima_temporadas.html:235
+msgid "Nota:"
+msgstr "Note:"
+
+#: .\templates\clima\clima_temporadas.html:236
+msgid ""
+"El clima de Tingo María es más cálido y húmedo que el de la ciudad de "
+"Huánuco. Las lluvias pueden presentarse incluso durante los meses de menor "
+"precipitación."
+msgstr "The climate in Tingo María is warmer and more humid than in the city of Huánuco. Rain can occur even during the months with the least precipitation."
+
+#: .\templates\clima\clima_temporadas.html:243
+#: .\templates\clima\clima_temporadas.html:360
+msgid "Consejos"
+msgstr "Tips"
+
+#: .\templates\clima\clima_temporadas.html:249
+#: .\templates\clima\clima_temporadas.html:366
+msgid "Consulta el clima"
+msgstr "Check the weather"
+
+#: .\templates\clima\clima_temporadas.html:251
+msgid "Revisa el pronóstico antes de visitar cataratas, cuevas o senderos."
+msgstr "Check the forecast before visiting waterfalls, caves or trails."
+
+#: .\templates\clima\clima_temporadas.html:257
+msgid "Lleva repelente"
+msgstr "Bring insect repellent"
+
+#: .\templates\clima\clima_temporadas.html:259
+msgid ""
+"Utiliza repelente y ropa ligera que proteja la piel durante los recorridos."
+msgstr "Use insect repellent and light clothing that protects your skin during your outings."
+
+#: .\templates\clima\clima_temporadas.html:267
+#: .\templates\clima\clima_temporadas.html:382
+msgid "Calzado adecuado"
+msgstr "Proper footwear"
+
+#: .\templates\clima\clima_temporadas.html:269
+msgid ""
+"Elige calzado antideslizante para caminos húmedos y terrenos irregulares."
+msgstr "Choose non-slip footwear for wet paths and uneven terrain."
+
+#: .\templates\clima\clima_temporadas.html:277
+#: .\templates\clima\clima_temporadas.html:392
+msgid "Mantente hidratado"
+msgstr "Stay hydrated"
+
+#: .\templates\clima\clima_temporadas.html:279
+msgid "Lleva agua y protégete del calor y la humedad durante las caminatas."
+msgstr "Bring water and protect yourself from the heat and humidity during walks."
+
+#: .\templates\clima\clima_temporadas.html:292
+msgid "Temporadas en Huánuco"
+msgstr "Seasons in Huánuco"
+
+#: .\templates\clima\clima_temporadas.html:305
+msgid "Mayo a octubre"
+msgstr "May to October"
+
+#: .\templates\clima\clima_temporadas.html:309
+msgid "MEJOR ÉPOCA PARA VISITAR"
+msgstr "BEST TIME TO VISIT"
+
+#: .\templates\clima\clima_temporadas.html:314
+msgid ""
+"Días soleados y cielos despejados. Ideal para recorrer zonas arqueológicas, "
+"hacer senderismo y disfrutar de las festividades principales, como el "
+"aniversario de Huánuco en agosto."
+msgstr "Sunny days and clear skies. Ideal for visiting archaeological sites, hiking and enjoying the main festivals, such as the anniversary of Huánuco in August."
+
+#: .\templates\clima\clima_temporadas.html:321
+msgid "Lleva ropa ligera para el día, bloqueador solar y gorra."
+msgstr "Bring light clothing for the day, sunscreen and a cap."
+
+#: .\templates\clima\clima_temporadas.html:334
+msgid "Noviembre a abril"
+msgstr "November to April"
+
+#: .\templates\clima\clima_temporadas.html:338
+msgid "IDEAL POR SUS FESTIVIDADES"
+msgstr "IDEAL FOR ITS FESTIVALS"
+
+#: .\templates\clima\clima_temporadas.html:343
+msgid ""
+"El paisaje se torna intensamente verde. Las lluvias suelen ser fuertes, pero "
+"de corta duración, principalmente por las tardes. Es una temporada ideal "
+"para apreciar la naturaleza y disfrutar de festividades cercanas."
+msgstr "The landscape turns intensely green. Rains are usually heavy but short-lived, mainly in the afternoons. It is an ideal season to appreciate nature and enjoy nearby festivals."
+
+#: .\templates\clima\clima_temporadas.html:350
+msgid ""
+"Lleva casaca impermeable o poncho de lluvia, calzado antideslizante y "
+"repelente."
+msgstr "Bring a waterproof jacket or rain poncho, non-slip footwear and insect repellent."
+
+#: .\templates\clima\clima_temporadas.html:367
+msgid "Revisa el pronóstico antes de tu viaje."
+msgstr "Check the forecast before your trip."
+
+#: .\templates\clima\clima_temporadas.html:372
+msgid "Empaca versátil"
+msgstr "Pack versatile clothing"
+
+#: .\templates\clima\clima_temporadas.html:374
+msgid "Lleva ropa para el calor y el frío, además de una prenda impermeable."
+msgstr "Bring clothes for both warm and cold weather, plus a waterproof layer."
+
+#: .\templates\clima\clima_temporadas.html:384
+msgid "Elige calzado cómodo para caminatas y terrenos irregulares."
+msgstr "Choose comfortable footwear for walks and uneven terrain."
+
+#: .\templates\clima\clima_temporadas.html:394
+msgid "Bebe suficiente agua, especialmente durante recorridos en altura."
+msgstr "Drink enough water, especially during high-altitude outings."
+
+#: .\templates\emergencias\emergencias.html:5
+msgid "Emergencias • Viaje Informado"
+msgstr "Emergencies • Viaje Informado"
+
+#: .\templates\emergencias\emergencias.html:22
+#: .\templates\monedas\tipo_cambio.html:34
+#: .\templates\servicios_turista\servicios_utiles.html:21
+msgid "PLANIFICA TU VIAJE"
+msgstr "PLAN YOUR TRIP"
+
+#: .\templates\emergencias\emergencias.html:23
+msgid "Directorio de Emergencia"
+msgstr "Emergency Directory"
+
+#: .\templates\emergencias\emergencias.html:25
+msgid ""
+"Encuentra rápidamente contactos nacionales y locales según la zona en la que "
+"te encuentres."
+msgstr "Quickly find national and local contacts depending on the area where you are."
+
+#: .\templates\emergencias\emergencias.html:39
+#: .\templates\emergencias\emergencias.html:47
+msgid "Zona de atención"
+msgstr "Service area"
+
+#: .\templates\emergencias\emergencias.html:40
+msgid "¿Dónde te encuentras?"
+msgstr "Where are you?"
+
+#: .\templates\emergencias\emergencias.html:55
+msgid "Sin zonas configuradas todavía"
+msgstr "No zones configured yet"
+
+#: .\templates\emergencias\emergencias.html:72
+msgid "Ver contactos"
+msgstr "View contacts"
+
+#: .\templates\emergencias\emergencias.html:84
+msgid "Directorios nacionales"
+msgstr "National directories"
+
+#: .\templates\emergencias\emergencias.html:87
+msgid "Disponibles sin importar la zona seleccionada"
+msgstr "Available regardless of the selected zone"
+
+#: .\templates\emergencias\emergencias.html:121
+#, python-format
+msgid "Verificado en %(fecha)s"
+msgstr "Verified in %(fecha)s"
+
+#: .\templates\emergencias\emergencias.html:130
+#: .\templates\emergencias\emergencias.html:236
+#| msgid "Llamar al número de %(nombre)s, %(numero)s"
+msgid "Llamar a %(nombre)s, %(numero)s"
+msgstr "Call %(nombre)s, %(numero)s"
+
+#: .\templates\emergencias\emergencias.html:139
+#: .\templates\emergencias\emergencias.html:229
+#, python-format
+msgid "Copiar el número de %(nombre)s"
+msgstr "Copy the number of %(nombre)s"
+
+#: .\templates\emergencias\emergencias.html:151
+msgid "Los contactos nacionales verificados estarán disponibles próximamente."
+msgstr "Verified national contacts will be available soon."
+
+#: .\templates\emergencias\emergencias.html:162
+#, python-format
+msgid "Directorio local de %(zona)s"
+msgstr "Local directory for %(zona)s"
+
+#: .\templates\emergencias\emergencias.html:162
+msgid "Directorio local"
+msgstr "Local directory"
+
+#: .\templates\emergencias\emergencias.html:165
+msgid "Contactos correspondientes a la zona seleccionada"
+msgstr "Contacts for the selected zone"
+
+#: .\templates\emergencias\emergencias.html:192
+#, python-format
+msgid "Llamar al número %(etiqueta)s de %(nombre)s, %(numero)s"
+msgstr "Call the %(etiqueta)s number of %(nombre)s, %(numero)s"
+
+#: .\templates\emergencias\emergencias.html:192
+#, python-format
+msgid "Llamar al número de %(nombre)s, %(numero)s"
+msgstr "Call the number of %(nombre)s, %(numero)s"
+
+#: .\templates\emergencias\emergencias.html:218
+#, python-format
+msgid "Verificado el %(fecha)s"
+msgstr "Verified on %(fecha)s"
+
+#: .\templates\emergencias\emergencias.html:247
+msgid ""
+"Estamos verificando los contactos locales de esta zona. Mientras tanto, "
+"utiliza los números nacionales mostrados arriba."
+msgstr "We are verifying the local contacts for this zone. In the meantime, use the national numbers shown above."
+
+#: .\templates\emergencias\emergencias.html:253
+msgid "Las zonas de atención están siendo configuradas."
+msgstr "Service zones are being configured."
+
+#: .\templates\emergencias\emergencias.html:270
+msgid "¿Necesitas llamar desde tu celular?"
+msgstr "Need to call from your cell phone?"
+
+#: .\templates\emergencias\emergencias.html:272
+#, python-format
+msgid ""
+"Escanea el código QR para abrir esta página con la zona seleccionada "
+"(%(zona)s)."
+msgstr "Scan the QR code to open this page with the selected area (%(zona)s)."
+
+#: .\templates\emergencias\emergencias.html:281
+#, python-format
+msgid ""
+"Código QR hacia la página de Emergencias con la zona %(zona)s seleccionada"
+msgstr "QR code to the Emergencies page with the %(zona)s area selected"
+
+#: .\templates\emergencias\emergencias.html:319
+msgid "¡IMPORTANTE!"
+msgstr "IMPORTANT!"
+
+#: .\templates\emergencias\emergencias.html:326
+msgid "Indicar tu ubicación exacta"
+msgstr "State your exact location"
+
+#: .\templates\emergencias\emergencias.html:328
+msgid "Menciona una calle, distrito o punto de referencia cercano."
+msgstr "Mention a street, district or nearby landmark."
+
+#: .\templates\emergencias\emergencias.html:337
+msgid "Describir la emergencia con calma"
+msgstr "Describe the emergency calmly"
+
+#: .\templates\emergencias\emergencias.html:339
+msgid "Explica brevemente qué sucede para que puedan ayudarte mejor."
+msgstr "Briefly explain what is happening so they can help you better."
+
+#: .\templates\emergencias\emergencias.html:348
+msgid "Mantener tu celular con batería"
+msgstr "Keep your phone charged"
+
+#: .\templates\emergencias\emergencias.html:350
+msgid "Así podrás recibir información y mantenerte comunicado."
+msgstr "That way you can receive information and stay in touch."
+
+#: .\templates\emergencias\emergencias.html:364
+#, python-format
+msgid "Información verificada en %(fecha)s."
+msgstr "Information verified in %(fecha)s."
+
+#: .\templates\emergencias\emergencias.html:367
+msgid "Aún no hay contactos verificados registrados para esta página."
+msgstr "There are no verified contacts registered for this page yet."
+
+#: .\templates\emergencias\emergencias.html:373
+msgid "Reportar un número incorrecto"
+msgstr "Report an incorrect number"
+
+#: .\templates\emergencias\emergencias.html:392
+#: .\templates\eventos\agenda-eventos.html:432
+#: .\templates\eventos\partials\_cta_comunidad.html:22
+msgid "Reportar un problema"
+msgstr "Report a problem"
+
+#: .\templates\emergencias\emergencias.html:415
+#: .\templates\eventos\agenda-eventos.html:443
+msgid "Ejemplo: Información errónea"
+msgstr "Example: Incorrect information"
+
+#: .\templates\emergencias\emergencias.html:426
+msgid ""
+"Ejemplo: Los números de teléfono de Serenazgo Huánuco no son los correctos, "
+"actualizarlos."
+msgstr "Example: The phone numbers for Serenazgo Huánuco are not correct; please update them."
+
+#: .\templates\emergencias\emergencias.html:436
+#: .\templates\eventos\agenda-eventos.html:454
+msgid "Enviar reporte"
+msgstr "Send report"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:5
+#: .\templates\establecimientos\listado_establecimientos.html:5
+#: .\templates\movilidad\tarifas_taxi.html:5
+#: .\templates\turismo\detalle-lugar-turistico.html:5
+#: .\templates\turismo\listado-lugares-turisticos.html:5
+msgid "Viaje Informado • Huánuco"
+msgstr "Viaje Informado • Huánuco"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:32
+#: .\templates\turismo\detalle-lugar-turistico.html:36
+msgid "Ruta de navegación"
+msgstr "Breadcrumb"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:59
+#: .\templates\establecimientos\detalle_establecimiento.html:268
+#: .\templates\interacciones\includes\resenas_seccion.html:19
+#, python-format
+msgid "%(counter)s valoración"
+msgid_plural "%(counter)s valoraciones"
+msgstr[0] "%(counter)s rating"
+msgstr[1] "%(counter)s ratings"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:62
+#: .\templates\establecimientos\detalle_establecimiento.html:271
+msgid "Aún sin valoraciones"
+msgstr "No ratings yet"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:73
+#: .\templates\establecimientos\detalle_establecimiento.html:280
+#, python-format
+msgid "Precios desde S/. %(desde)s hasta S/. %(hasta)s"
+msgstr "Prices from S/. %(desde)s to S/. %(hasta)s"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:75
+#: .\templates\establecimientos\detalle_establecimiento.html:282
+#, python-format
+msgid "Precios desde S/. %(desde)s"
+msgstr "Prices from S/. %(desde)s"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:77
+#: .\templates\establecimientos\detalle_establecimiento.html:284
+#, python-format
+msgid "Precios hasta S/. %(hasta)s"
+msgstr "Prices up to S/. %(hasta)s"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:118
+#: .\templates\establecimientos\detalle_establecimiento.html:224
+msgid "Ampliar galería de imágenes"
+msgstr "Enlarge image gallery"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:149
+msgid "Ampliar imagen"
+msgstr "Enlarge image"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:179
+#: .\templates\turismo\detalle-lugar-turistico.html:142
+#: .\templates\turismo\detalle-lugar-turistico.html:146
+msgid "Compartir"
+msgstr "Share"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:197
+msgid "Ruta de navegación móvil"
+msgstr "Mobile breadcrumb"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:308
+#: .\templates\establecimientos\detalle_establecimiento.html:971
+msgid "Contactar por WhatsApp"
+msgstr "Contact via WhatsApp"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:348
+#: .\templates\establecimientos\listado_establecimientos.html:158
+msgid "Establecimiento"
+msgstr "Establishment"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:351
+msgid "Amenidades"
+msgstr "Amenities"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:353
+#: .\templates\establecimientos\detalle_establecimiento.html:493
+#: .\templates\establecimientos\detalle_establecimiento.html:501
+msgid "Servicios"
+msgstr "Services"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:356
+msgid "Tarifas"
+msgstr "Rates"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:358
+msgid "Valoraciones"
+msgstr "Ratings"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:377
+msgid "Propuesta gastronómica"
+msgstr "Food offering"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:379
+#: .\templates\establecimientos\detalle_establecimiento.html:383
+msgid "Sobre el establecimiento"
+msgstr "About the establishment"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:389
+msgid "Ver carta del establecimiento"
+msgstr "View the establishment's menu"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:391
+msgid "Ver carta"
+msgstr "View menu"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:395
+msgid "Carta disponible próximamente"
+msgstr "Menu available soon"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:397
+msgid "Carta próximamente"
+msgstr "Menu coming soon"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:412
+msgid "Recomendaciones gastronómicas del establecimiento"
+msgstr "Food recommendations from the establishment"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:420
+msgid "Platos exquisitos consumidos por nuestros comensales."
+msgstr "Exquisite dishes enjoyed by our diners."
+
+#: .\templates\establecimientos\detalle_establecimiento.html:440
+msgid "Imagen próximamente"
+msgstr "Image coming soon"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:451
+msgid "Recomendaciones de alojamiento"
+msgstr "Accommodation recommendations"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:459
+msgid "Habitaciones más reservadas por nuestros visitantes durante su estadía."
+msgstr "Rooms most booked by our guests during their stay."
+
+#: .\templates\establecimientos\detalle_establecimiento.html:495
+#: .\templates\establecimientos\detalle_establecimiento.html:503
+msgid "Amenidades y servicios"
+msgstr "Amenities and services"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:534
+msgid "Rango de precios"
+msgstr "Price range"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:536
+#: .\templates\establecimientos\detalle_establecimiento.html:760
+msgid "Tarifas referenciales"
+msgstr "Reference rates"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:542
+msgid "Precios de referencia"
+msgstr "Reference prices"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:544
+msgid "Tarifas de alojamiento"
+msgstr "Accommodation rates"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:549
+msgid "Moneda principal: soles peruanos"
+msgstr "Main currency: Peruvian soles"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:551
+msgid "Moneda: PEN"
+msgstr "Currency: PEN"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:582
+msgid "Consumo aproximado por plato"
+msgstr "Approximate cost per dish"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:584
+msgid "Rango aproximado por noche"
+msgstr "Approximate range per night"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:595
+#: .\templates\establecimientos\detalle_establecimiento.html:619
+#: .\templates\establecimientos\detalle_establecimiento.html:679
+#: .\templates\establecimientos\detalle_establecimiento.html:697
+msgid "Precio desde"
+msgstr "Price from"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:597
+#: .\templates\establecimientos\detalle_establecimiento.html:621
+#: .\templates\establecimientos\detalle_establecimiento.html:681
+#: .\templates\establecimientos\detalle_establecimiento.html:699
+msgid "Tarifa desde"
+msgstr "Rate from"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:608
+#: .\templates\establecimientos\detalle_establecimiento.html:630
+#: .\templates\establecimientos\detalle_establecimiento.html:687
+#: .\templates\establecimientos\detalle_establecimiento.html:707
+msgid "Precio hasta"
+msgstr "Price up to"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:610
+#: .\templates\establecimientos\detalle_establecimiento.html:632
+#: .\templates\establecimientos\detalle_establecimiento.html:689
+#: .\templates\establecimientos\detalle_establecimiento.html:709
+msgid "Tarifa hasta"
+msgstr "Rate up to"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:641
+msgid "Precios referenciales en soles peruanos (PEN)"
+msgstr "Reference prices in Peruvian soles (PEN)"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:643
+msgid "Tarifas referenciales en soles peruanos (PEN)"
+msgstr "Reference rates in Peruvian soles (PEN)"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:653
+msgid "Conversión referencial a USD"
+msgstr "Reference conversion to USD"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:717
+msgid "Calculado al tipo de cambio:"
+msgstr "Calculated at the exchange rate:"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:724
+msgid "Tipo de cambio actualizado a:"
+msgstr "Exchange rate updated to:"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:730
+msgid "fecha no disponible"
+msgstr "date not available"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:735
+msgid "Próximamente"
+msgstr "Coming soon"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:738
+msgid ""
+"Aquí se mostrará la conversión referencial en dólares cuando se conecte la "
+"API de tipo de cambio actualizado."
+msgstr "The reference conversion to dollars will be shown here once the updated exchange rate API is connected."
+
+#: .\templates\establecimientos\detalle_establecimiento.html:743
+msgid "Pendiente de API"
+msgstr "Pending API"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:758
+msgid "Precios referenciales"
+msgstr "Reference prices"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:766
+msgid ""
+"Los precios pueden variar según temporada, disponibilidad, presentación del "
+"plato y promociones del establecimiento."
+msgstr "Prices may vary depending on the season, availability, dish presentation and promotions of the establishment."
+
+#: .\templates\establecimientos\detalle_establecimiento.html:768
+msgid ""
+"Las tarifas pueden variar según temporada, disponibilidad, categoría de "
+"habitación y condiciones de reserva."
+msgstr "Rates may vary depending on the season, availability, room category and booking conditions."
+
+#: .\templates\establecimientos\detalle_establecimiento.html:793
+#, python-format
+msgid "%(counter)s sucursal en Huánuco"
+msgid_plural "%(counter)s sucursales en Huánuco"
+msgstr[0] "%(counter)s branch in Huánuco"
+msgstr[1] "%(counter)s branches in Huánuco"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:801
+msgid "Ubicaciones"
+msgstr "Locations"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:809
+#: .\templates\establecimientos\detalle_establecimiento.html:914
+msgid "Sucursal Principal"
+msgstr "Main Branch"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:815
+msgid "Sucursales disponibles"
+msgstr "Available branches"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:834
+msgid "Principal"
+msgstr "Main"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:866
+#: .\templates\servicios_turista\servicios_utiles.html:349
+#: .\templates\turismo\detalle-lugar-turistico.html:246
+msgid "Abrir mapa"
+msgstr "Open map"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:877
+#: .\templates\establecimientos\listado_establecimientos.html:179
+#: .\templates\eventos\agenda-eventos.html:97
+#: .\templates\movilidad\tarifas_taxi.html:119
+#: .\templates\servicios_turista\servicios_utiles.html:358
+#: .\templates\turismo\detalle-lugar-turistico.html:262
+#: .\templates\turismo\detalle-lugar-turistico.html:505
+#: .\templates\turismo\listado-lugares-turisticos.html:207
+msgid "Desde"
+msgstr "From"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:880
+#: .\templates\eventos\agenda-eventos.html:101
+#: .\templates\servicios_turista\servicios_utiles.html:361
+#: .\templates\turismo\detalle-lugar-turistico.html:265
+#: .\templates\turismo\detalle-lugar-turistico.html:507
+msgid "Hasta"
+msgstr "To"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:884
+#: .\templates\servicios_turista\servicios_utiles.html:364
+#: .\templates\turismo\detalle-lugar-turistico.html:268
+msgid "Modo de traslado"
+msgstr "Travel mode"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:887
+#: .\templates\servicios_turista\servicios_utiles.html:367
+#: .\templates\turismo\detalle-lugar-turistico.html:271
+msgid "A pie"
+msgstr "On foot"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:892
+#: .\templates\servicios_turista\servicios_utiles.html:371
+#: .\templates\turismo\detalle-lugar-turistico.html:275
+msgid "En auto"
+msgstr "By car"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:902
+#: .\templates\servicios_turista\servicios_utiles.html:380
+#: .\templates\turismo\detalle-lugar-turistico.html:289
+msgid "Iniciar ruta en Google Maps"
+msgstr "Start route in Google Maps"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:961
+msgid "Haz tu pedido"
+msgstr "Place your order"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:963
+msgid "Reserva tu estancia"
+msgstr "Book your stay"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:981
+msgid "Ver Facebook"
+msgstr "View Facebook"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:991
+msgid "Ver Instagram"
+msgstr "View Instagram"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:1001
+msgid "Visitar sitio web"
+msgstr "Visit website"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:1015
+msgid "Llamar al celular"
+msgstr "Call mobile phone"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:1021
+msgid "Enviar correo"
+msgstr "Send email"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:1047
+#: .\templates\turismo\detalle-lugar-turistico.html:574
+msgid "Galería de imágenes"
+msgstr "Image gallery"
+
+#: .\templates\establecimientos\detalle_establecimiento.html:1051
+msgid "Cerrar galería"
+msgstr "Close gallery"
+
+#: .\templates\establecimientos\listado_establecimientos.html:26
+msgid "Restaurantes donde puedes encontrar"
+msgstr "Restaurants where you can find"
+
+#: .\templates\establecimientos\listado_establecimientos.html:28
+#, python-format
+msgid "%(counter)s establecimiento encontrado"
+msgid_plural "%(counter)s establecimientos encontrados"
+msgstr[0] "%(counter)s establishment found"
+msgstr[1] "%(counter)s establishments found"
+
+#: .\templates\establecimientos\listado_establecimientos.html:48
+msgid "Cambiar apartado"
+msgstr "Change section"
+
+#: .\templates\establecimientos\listado_establecimientos.html:80
+#: .\templates\turismo\listado-lugares-turisticos.html:46
+msgid "Buscar por nombre..."
+msgstr "Search by name..."
+
+#: .\templates\establecimientos\listado_establecimientos.html:87
+#: .\templates\eventos\agenda-eventos.html:165
+#: .\templates\turismo\detalle-lugar-turistico.html:445
+#: .\templates\turismo\listado-lugares-turisticos.html:52
+msgid "Categoría"
+msgstr "Category"
+
+#: .\templates\establecimientos\listado_establecimientos.html:100
+#: .\templates\turismo\listado-lugares-turisticos.html:88
+msgid "Buscar"
+msgstr "Search"
+
+#: .\templates\establecimientos\listado_establecimientos.html:104
+#: .\templates\establecimientos\listado_establecimientos.html:236
+#: .\templates\eventos\agenda-eventos.html:221
+#: .\templates\turismo\listado-lugares-turisticos.html:92
+#: .\templates\turismo\listado-lugares-turisticos.html:267
+msgid "Limpiar filtros"
+msgstr "Clear filters"
+
+#: .\templates\establecimientos\listado_establecimientos.html:114
+#: .\templates\servicios_turista\servicios_utiles.html:106
+#: .\templates\turismo\listado-lugares-turisticos.html:102
+#, python-format
+msgid "%(counter)s coincidencia encontrada"
+msgid_plural "%(counter)s coincidencias encontradas"
+msgstr[0] "%(counter)s match found"
+msgstr[1] "%(counter)s matches found"
+
+#: .\templates\establecimientos\listado_establecimientos.html:118
+msgid "Ordenar por:"
+msgstr "Sort by:"
+
+#: .\templates\establecimientos\listado_establecimientos.html:175
+#: .\templates\establecimientos\listado_establecimientos.html:178
+#: .\templates\establecimientos\listado_establecimientos.html:181
+msgid "Rango de precios:"
+msgstr "Price range:"
+
+#: .\templates\establecimientos\listado_establecimientos.html:184
+msgid "Precio"
+msgstr "Price"
+
+#: .\templates\establecimientos\listado_establecimientos.html:195
+msgid "Ubicados en:"
+msgstr "Located in:"
+
+#: .\templates\establecimientos\listado_establecimientos.html:209
+#: .\templates\establecimientos\listado_establecimientos.html:213
+msgid "Ver Más &rarr;"
+msgstr "See More &rarr;"
+
+#: .\templates\establecimientos\listado_establecimientos.html:226
+msgid "Aún no tenemos restaurantes registrados que ofrezcan este plato"
+msgstr "We do not have any registered restaurants that offer this dish yet"
+
+#: .\templates\establecimientos\listado_establecimientos.html:227
+msgid "Prueba explorando el listado completo de restaurantes."
+msgstr "Try exploring the full list of restaurants."
+
+#: .\templates\establecimientos\listado_establecimientos.html:229
+msgid "Ver todos los restaurantes"
+msgstr "View all restaurants"
+
+#: .\templates\establecimientos\listado_establecimientos.html:233
+#: .\templates\turismo\listado-lugares-turisticos.html:262
+msgid "No se encontraron resultados"
+msgstr "No results found"
+
+#: .\templates\establecimientos\listado_establecimientos.html:234
+#: .\templates\turismo\listado-lugares-turisticos.html:264
+msgid "Intenta cambiar los filtros de búsqueda."
+msgstr "Try changing the search filters."
+
+#: .\templates\establecimientos\listado_establecimientos.html:247
+#: .\templates\gastronomia\platos_tipicos.html:96
+#: .\templates\interacciones\favoritos.html:100
+#: .\templates\servicios_turista\servicios_utiles.html:171
+#: .\templates\turismo\listado-lugares-turisticos.html:279
+msgid "Navegación de páginas"
+msgstr "Page navigation"
+
+#: .\templates\establecimientos\listado_establecimientos.html:254
+#: .\templates\interacciones\favoritos.html:104
+#: .\templates\servicios_turista\servicios_utiles.html:176
+#: .\templates\turismo\listado-lugares-turisticos.html:287
+msgid "Primera"
+msgstr "First"
+
+#: .\templates\establecimientos\listado_establecimientos.html:304
+#: .\templates\interacciones\favoritos.html:127
+#: .\templates\servicios_turista\servicios_utiles.html:211
+#: .\templates\turismo\listado-lugares-turisticos.html:335
+msgid "Última"
+msgstr "Last"
+
+#: .\templates\eventos\agenda-eventos.html:4
+#: .\templates\eventos\agenda-eventos.html:18
+msgid "Eventos en Huánuco"
+msgstr "Events in Huánuco"
+
+#: .\templates\eventos\agenda-eventos.html:17
+msgid "Agenda turística y cultural"
+msgstr "Tourist and cultural agenda"
+
+#: .\templates\eventos\agenda-eventos.html:20
+msgid ""
+"Descubre celebraciones, ferias, actividades culturales y experiencias que "
+"están ocurriendo durante tu visita."
+msgstr "Discover celebrations, fairs, cultural activities and experiences taking place during your visit."
+
+#: .\templates\eventos\agenda-eventos.html:28
+msgid "Explora por fecha"
+msgstr "Explore by date"
+
+#: .\templates\eventos\agenda-eventos.html:31
+msgid "Selector de fechas cercanas"
+msgstr "Nearby date selector"
+
+#: .\templates\eventos\agenda-eventos.html:37
+msgid "Día anterior"
+msgstr "Previous day"
+
+#: .\templates\eventos\agenda-eventos.html:51
+msgid "Día siguiente"
+msgstr "Next day"
+
+#: .\templates\eventos\agenda-eventos.html:54
+msgid "Filtros rápidos de fecha"
+msgstr "Quick date filters"
+
+#: .\templates\eventos\agenda-eventos.html:60
+msgid "Mañana"
+msgstr "Tomorrow"
+
+#: .\templates\eventos\agenda-eventos.html:63
+msgid "Este fin de semana"
+msgstr "This weekend"
+
+#: .\templates\eventos\agenda-eventos.html:66
+msgid "Esta semana"
+msgstr "This week"
+
+#: .\templates\eventos\agenda-eventos.html:104
+msgid "Aplicar"
+msgstr "Apply"
+
+msgid "Eliminar rango de fechas"
+msgstr "Remove date range"
+
+#: .\templates\eventos\agenda-eventos.html:110
+msgid "Quitar fechas"
+msgstr "Clear dates"
+
+#: .\templates\eventos\agenda-eventos.html:114
+msgid "Ver todos"
+msgstr "View all"
+
+#: .\templates\eventos\agenda-eventos.html:132
+#: .\templates\eventos\agenda-eventos.html:147
+msgid "Filtros"
+msgstr "Filters"
+
+#: .\templates\eventos\agenda-eventos.html:136
+msgid "Limpiar todos los filtros"
+msgstr "Clear all filters"
+
+#: .\templates\eventos\agenda-eventos.html:156
+msgid "Filtrar eventos"
+msgstr "Filter events"
+
+#: .\templates\eventos\agenda-eventos.html:167
+#: .\templates\eventos\agenda-eventos.html:177
+#: .\templates\servicios_turista\servicios_utiles.html:78
+msgid "Todas"
+msgstr "All"
+
+#: .\templates\eventos\agenda-eventos.html:175
+msgid "Provincia"
+msgstr "Province"
+
+#: .\templates\eventos\agenda-eventos.html:185
+msgid "Distrito"
+msgstr "District"
+
+#: .\templates\eventos\agenda-eventos.html:196
+msgid "Experiencia"
+msgstr "Experience"
+
+#: .\templates\eventos\agenda-eventos.html:224
+#: .\templates\eventos\agenda-eventos.html:229
+msgid "Aplicar filtros"
+msgstr "Apply filters"
+
+#: .\templates\eventos\agenda-eventos.html:240
+msgid "Eventos durante tu viaje"
+msgstr "Events during your trip"
+
+msgid "Eventos durante la(s) fecha(s) seleccionada"
+msgstr "Events during your selected dates"
+
+#: .\templates\eventos\agenda-eventos.html:243
+#: .\templates\eventos\agenda-eventos.html:294
+msgid "Cambiar fechas"
+msgstr "Change dates"
+
+#: .\templates\eventos\agenda-eventos.html:254
+msgid "Encontramos algunas celebraciones muy cerca de tus fechas."
+msgstr "We found some celebrations very close to your dates."
+
+#: .\templates\eventos\agenda-eventos.html:256
+msgid "No tenemos eventos registrados cerca de esas fechas."
+msgstr "We have no events registered near those dates."
+
+#: .\templates\eventos\agenda-eventos.html:262
+msgid "Justo antes de tu visita"
+msgstr "Just before your visit"
+
+#: .\templates\eventos\agenda-eventos.html:271
+msgid "Poco después de tu visita"
+msgstr "Shortly after your visit"
+
+#: .\templates\eventos\agenda-eventos.html:280
+msgid "Mientras estés en Huánuco, también puedes descubrir:"
+msgstr "While you are in Huánuco, you can also discover:"
+
+#: .\templates\eventos\agenda-eventos.html:283
+msgid "Gastronomía"
+msgstr "Gastronomy"
+
+#: .\templates\eventos\agenda-eventos.html:292
+msgid "Quitar filtros y ver de nuevo"
+msgstr "Remove filters and search again"
+
+#: .\templates\eventos\agenda-eventos.html:299
+msgid "No encontramos eventos para estos filtros."
+msgstr "We did not find events for these filters."
+
+#: .\templates\eventos\agenda-eventos.html:300
+msgid "Prueba otra fecha o ajusta los filtros."
+msgstr "Try another date or adjust the filters."
+
+#: .\templates\eventos\agenda-eventos.html:313
+msgid "Paginación de eventos"
+msgstr "Events pagination"
+
+#: .\templates\eventos\agenda-eventos.html:317
+#: .\templates\eventos\agenda-eventos.html:327
+msgid "Primera página"
+msgstr "First page"
+
+#: .\templates\eventos\agenda-eventos.html:322
+#: .\templates\eventos\agenda-eventos.html:328
+msgid "Página anterior"
+msgstr "Previous page"
+
+#: .\templates\eventos\agenda-eventos.html:345
+#: .\templates\eventos\agenda-eventos.html:355
+msgid "Página siguiente"
+msgstr "Next page"
+
+#: .\templates\eventos\agenda-eventos.html:350
+#: .\templates\eventos\agenda-eventos.html:356
+msgid "Última página"
+msgstr "Last page"
+
+#: .\templates\eventos\agenda-eventos.html:373
+#: .\templates\eventos\partials\_cta_comunidad.html:18
+msgid "Promociona tu evento"
+msgstr "Promote your event"
+
+#: .\templates\eventos\agenda-eventos.html:384
+msgid "Ejemplo: Festival Gastronómico de Amarilis"
+msgstr "Example: Amarilis Food Festival"
+
+#: .\templates\eventos\agenda-eventos.html:401
+msgid ""
+"Cuéntanos de qué trata, dónde se realizará, fecha aproximada y cualquier "
+"información importante."
+msgstr "Tell us what it is about, where it will take place, the approximate date and any important information."
+
+#: .\templates\eventos\agenda-eventos.html:411
+msgid ""
+"Toda la información será evaluada por el equipo de Viaje Informado. Si "
+"necesitamos ampliar algún dato o la propuesta continúa con el proceso de "
+"publicación, nos comunicaremos contigo al correo indicado."
+msgstr "All information will be reviewed by the Viaje Informado team. If we need more details or your proposal moves forward in the publication process, we will contact you at the email address provided."
+
+#: .\templates\eventos\agenda-eventos.html:420
+msgid "Enviar propuesta"
+msgstr "Send proposal"
+
+#: .\templates\eventos\agenda-eventos.html:449
+msgid "Ejemplo: La información del evento &quot;X&quot; no está actualizada."
+msgstr "Example: The information for the event &quot;X&quot; is out of date."
+
+#: .\templates\eventos\agenda-eventos.html:477
+msgid "Ver imagen en grande"
+msgstr "View larger image"
+
+#: .\templates\eventos\agenda-eventos.html:511
+msgid "Se celebra:"
+msgstr "Takes place:"
+
+#: .\templates\eventos\agenda-eventos.html:525
+msgid "Ideal para:"
+msgstr "Ideal for:"
+
+#: .\templates\eventos\agenda-eventos.html:534
+msgid "Sobre el evento"
+msgstr "About the event"
+
+#: .\templates\eventos\agenda-eventos.html:543
+msgid "¿Qué debes saber?"
+msgstr "What you should know"
+
+#: .\templates\eventos\agenda-eventos.html:561
+msgid "Organizador"
+msgstr "Organizer"
+
+#: .\templates\eventos\agenda-eventos.html:576
+msgid "Cerrar imagen"
+msgstr "Close image"
+
+#: .\templates\eventos\partials\_card.html:40
+msgid "Fecha:"
+msgstr "Date:"
+
+#: .\templates\eventos\partials\_card.html:71
+#: .\templates\turismo\detalle-lugar-turistico.html:92
+msgid "Conocer más"
+msgstr "Learn more"
+
+#: .\templates\eventos\partials\_cta_comunidad.html:13
+msgid "¿Tienes un evento para compartir?"
+msgstr "Do you have an event to share?"
+
+#: .\templates\eventos\partials\_cta_comunidad.html:14
+msgid "Ayúdanos a mantener la agenda de Huánuco activa y actualizada."
+msgstr "Help us keep Huánuco's agenda active and up to date."
+
+#: .\templates\gastronomia\platos_tipicos.html:5
+msgid "Platos típicos de Huánuco | Viaje Informado"
+msgstr "Traditional dishes of Huánuco | Viaje Informado"
+
+#: .\templates\gastronomia\platos_tipicos.html:17
+msgid "Gastronomía y alojamiento • Platos típicos"
+msgstr "Food and lodging • Traditional dishes"
+
+#: .\templates\gastronomia\platos_tipicos.html:21
+msgid "Filtrar por categoría"
+msgstr "Filter by category"
+
+#: .\templates\gastronomia\platos_tipicos.html:53
+msgid "Plato bandera"
+msgstr "Signature dish"
+
+#: .\templates\gastronomia\platos_tipicos.html:66
+msgid "Ingredientes clave"
+msgstr "Key ingredients"
+
+#: .\templates\gastronomia\platos_tipicos.html:78
+msgid "Dónde comer"
+msgstr "Where to eat"
+
+#: .\templates\gastronomia\platos_tipicos.html:87
+msgid "No hay platos disponibles en esta categoría"
+msgstr "There are no dishes available in this category"
+
+#: .\templates\gastronomia\platos_tipicos.html:88
+msgid "Prueba explorando otra categoría."
+msgstr "Try exploring another category."
+
+#: .\templates\includes\pillcobot.html:5
+msgid "Abrir chat con PillcoBot"
+msgstr "Open chat with PillcoBot"
+
+#: .\templates\includes\pillcobot.html:19
+msgid "PillcoBot"
+msgstr "PillcoBot"
+
+#: .\templates\includes\pillcobot.html:24
+msgid "Minimizar chat"
+msgstr "Minimize chat"
+
+#: .\templates\includes\pillcobot.html:27
+msgid "Cerrar chat"
+msgstr "Close chat"
+
+#: .\templates\includes\pillcobot.html:37
+msgid "Escribe tu consulta..."
+msgstr "Type your question..."
+
+#: .\templates\includes\pillcobot.html:38
+msgid "Escribe tu consulta para PillcoBot"
+msgstr "Type your question for PillcoBot"
+
+#: .\templates\includes\pillcobot.html:39
+msgid "Enviar mensaje"
+msgstr "Send message"
+
+#: .\templates\interacciones\favoritos.html:5
+msgid "Tus favoritos • Viaje Informado"
+msgstr "Your favorites • Viaje Informado"
+
+#: .\templates\interacciones\favoritos.html:23
+msgid ""
+"Guarda lugares, restaurantes y alojamientos que quieras tener a mano durante "
+"tu viaje."
+msgstr "Save places, restaurants and accommodations you want to have at hand during your trip."
+
+#: .\templates\interacciones\favoritos.html:31
+msgid "Filtrar favoritos por tipo"
+msgstr "Filter favorites by type"
+
+#: .\templates\interacciones\favoritos.html:38
+msgid "Mostrando"
+msgstr "Showing"
+
+#: .\templates\interacciones\favoritos.html:38
+msgid "de"
+msgstr "of"
+
+#: .\templates\interacciones\favoritos.html:84
+#, python-format
+msgid "%(counter)s reseña"
+msgid_plural "%(counter)s reseñas"
+msgstr[0] "%(counter)s review"
+msgstr[1] "%(counter)s reviews"
+
+#: .\templates\interacciones\favoritos.html:87
+msgid "Aún sin reseñas"
+msgstr "No reviews yet"
+
+#: .\templates\interacciones\favoritos.html:140
+msgid "Aún no tienes favoritos"
+msgstr "You have no favorites yet"
+
+#: .\templates\interacciones\favoritos.html:141
+msgid ""
+"Guarda los lugares, restaurantes y alojamientos que quieras visitar durante "
+"tu viaje."
+msgstr "Save the places, restaurants and accommodations you want to visit during your trip."
+
+#: .\templates\interacciones\favoritos.html:143
+msgid "Explorar Huánuco"
+msgstr "Explore Huánuco"
+
+#: .\templates\interacciones\favoritos.html:150
+msgid "Aún no tienes lugares turísticos guardados."
+msgstr "You have no saved tourist attractions yet."
+
+#: .\templates\interacciones\favoritos.html:151
+msgid "Aún no tienes restaurantes guardados."
+msgstr "You have no saved restaurants yet."
+
+#: .\templates\interacciones\favoritos.html:152
+msgid "Aún no tienes alojamientos guardados."
+msgstr "You have no saved accommodations yet."
+
+#: .\templates\interacciones\favoritos.html:155
+msgid "Prueba con otro filtro o revisa todos tus favoritos guardados."
+msgstr "Try another filter or check all your saved favorites."
+
+#: .\templates\interacciones\favoritos.html:157
+msgid "Ver todos tus favoritos"
+msgstr "View all your favorites"
+
+#: .\templates\interacciones\includes\corazon.html:16
+#, python-format
+msgid "Inicia sesión para agregar %(nombre)s a favoritos"
+msgstr "Sign in to add %(nombre)s to favorites"
+
+#: .\templates\interacciones\includes\estrellas_estaticas.html:6
+#, python-format
+msgid "%(valor)s de 5 estrellas"
+msgstr "%(valor)s out of 5 stars"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:7
+msgid "Valoraciones y comentarios"
+msgstr "Ratings and comments"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:22
+msgid "Aún no ha recibido valoraciones"
+msgstr "It has not received any ratings yet"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:43
+msgid "¿Visitaste este lugar? Comparte tu experiencia"
+msgstr "Did you visit this place? Share your experience"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:44
+msgid "Tu opinión ayuda a otros viajeros a descubrir lo mejor de Huánuco."
+msgstr "Your opinion helps other travelers discover the best of Huánuco."
+
+#: .\templates\interacciones\includes\resenas_seccion.html:49
+msgid "Tu reseña no está visible públicamente."
+msgstr "Your review is not publicly visible."
+
+#: .\templates\interacciones\includes\resenas_seccion.html:56
+msgid "Tu valoración"
+msgstr "Your rating"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:59
+#: .\templates\interacciones\includes\resenas_seccion.html:60
+#, python-format
+msgid "%(counter)s estrella"
+msgid_plural "%(counter)s estrellas"
+msgstr[0] "%(counter)s star"
+msgstr[1] "%(counter)s stars"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:65
+msgid "Quitar valoración"
+msgstr "Remove rating"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:72
+msgid "Comentario (opcional)"
+msgstr "Comment (optional)"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:83
+msgid "Guardar cambios"
+msgstr "Save changes"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:83
+msgid "Publicar reseña"
+msgstr "Post review"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:90
+msgid "Inicia sesión para dejar una reseña"
+msgstr "Sign in to leave a review"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:100
+msgid "Reseñas de viajeros"
+msgstr "Traveler reviews"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:114
+msgid "0 reseñas"
+msgstr "0 reviews"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:137
+msgid "Opciones de tu reseña"
+msgstr "Your review options"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:141
+msgid "Editar"
+msgstr "Edit"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:142
+msgid "Eliminar"
+msgstr "Delete"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:153
+msgid "Aún no hay comentarios."
+msgstr "There are no comments yet."
+
+#: .\templates\interacciones\includes\resenas_seccion.html:154
+msgid "Sé el primero en compartir tu experiencia."
+msgstr "Be the first to share your experience."
+
+#: .\templates\interacciones\includes\resenas_seccion.html:165
+msgid "¿Eliminar tu reseña?"
+msgstr "Delete your review?"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:168
+msgid "Esta acción no se puede deshacer."
+msgstr "This action cannot be undone."
+
+#: .\templates\interacciones\includes\resenas_seccion.html:173
+msgid "Eliminar reseña"
+msgstr "Delete review"
+
+#: .\templates\interacciones\includes\resenas_seccion.html:182
+msgid "Paginación de reseñas"
+msgstr "Reviews pagination"
+
+#: .\templates\monedas\tipo_cambio.html:5
+msgid "Tipo de Cambio • Viaje Informado"
+msgstr "Exchange Rate • Viaje Informado"
+
+#: .\templates\monedas\tipo_cambio.html:35
+msgid "Tipo de Cambio"
+msgstr "Exchange Rate"
+
+#: .\templates\monedas\tipo_cambio.html:37
+msgid ""
+"Convierte soles y dólares de forma rápida utilizando el tipo de cambio "
+"referencial vigente."
+msgstr "Quickly convert soles and dollars using the current reference exchange rate."
+
+#: .\templates\monedas\tipo_cambio.html:46
+msgid "Tasa referencial del dólar (USD)"
+msgstr "Reference dollar rate (USD)"
+
+#: .\templates\monedas\tipo_cambio.html:52
+msgid "Compra"
+msgstr "Buy"
+
+#: .\templates\monedas\tipo_cambio.html:54
+#: .\templates\monedas\tipo_cambio.html:62
+msgid "por USD 1"
+msgstr "per USD 1"
+
+#: .\templates\monedas\tipo_cambio.html:60
+msgid "Venta"
+msgstr "Sell"
+
+#: .\templates\monedas\tipo_cambio.html:73
+#, python-format
+msgid "Tipo de cambio actualizado al %(fecha)s"
+msgstr "Exchange rate updated on %(fecha)s"
+
+#: .\templates\monedas\tipo_cambio.html:81
+msgid "USD → PEN usa la tasa de compra."
+msgstr "USD → PEN uses the buy rate."
+
+#: .\templates\monedas\tipo_cambio.html:89
+msgid "PEN → USD usa la tasa de venta."
+msgstr "PEN → USD uses the sell rate."
+
+#: .\templates\monedas\tipo_cambio.html:99
+msgid "Tipo de cambio temporalmente no disponible"
+msgstr "Exchange rate temporarily unavailable"
+
+#: .\templates\monedas\tipo_cambio.html:102
+msgid ""
+"No pudimos obtener una tasa válida para realizar la conversión en este "
+"momento. Inténtalo nuevamente más tarde."
+msgstr "We could not get a valid rate to perform the conversion right now. Please try again later."
+
+#: .\templates\monedas\tipo_cambio.html:109
+msgid "Conversor de moneda"
+msgstr "Currency converter"
+
+#: .\templates\monedas\tipo_cambio.html:112
+msgid "Tú envías"
+msgstr "You send"
+
+#: .\templates\monedas\tipo_cambio.html:132
+msgid "Intercambiar monedas"
+msgstr "Swap currencies"
+
+#: .\templates\monedas\tipo_cambio.html:139
+msgid "Tú recibes"
+msgstr "You receive"
+
+#: .\templates\monedas\tipo_cambio.html:155
+msgid ""
+"Este cálculo es referencial. El monto final puede variar según la tasa "
+"aplicada por la casa de cambio, banco u operador."
+msgstr "This calculation is for reference. The final amount may vary depending on the rate applied by the exchange house, bank or operator."
+
+#: .\templates\monedas\tipo_cambio.html:168
+msgid "Consejo de seguridad"
+msgstr "Safety tip"
+
+#: .\templates\monedas\tipo_cambio.html:170
+msgid ""
+"Por tu seguridad, evita cambiar grandes cantidades de dinero en la vía "
+"pública. Prefiere casas de cambio formales o entidades financieras "
+"reconocidas."
+msgstr "For your safety, avoid exchanging large amounts of money on the street. Prefer formal exchange offices or recognized financial institutions."
+
+#: .\templates\monedas\tipo_cambio.html:176
+msgid "Información importante"
+msgstr "Important information"
+
+#: .\templates\monedas\tipo_cambio.html:183
+msgid "Tasas referenciales"
+msgstr "Reference rates"
+
+#: .\templates\monedas\tipo_cambio.html:185
+msgid "Las tasas mostradas son referenciales y pueden variar durante el día."
+msgstr "The rates shown are for reference and may vary during the day."
+
+#: .\templates\monedas\tipo_cambio.html:193
+msgid "Lugares seguros"
+msgstr "Safe places"
+
+#: .\templates\monedas\tipo_cambio.html:195
+msgid ""
+"Realiza tus operaciones en establecimientos formales o entidades financieras."
+msgstr "Carry out your transactions at formal establishments or financial institutions."
+
+#: .\templates\monedas\tipo_cambio.html:203
+msgid "Verifica siempre"
+msgstr "Always check"
+
+#: .\templates\monedas\tipo_cambio.html:205
+msgid "Consulta y compara la tasa antes de realizar una operación de cambio."
+msgstr "Check and compare the rate before making an exchange."
+
+#: .\templates\movilidad\como_llegar.html:5
+msgid "¿Cómo llegar a Huánuco? • Viaje Informado"
+msgstr "How to get to Huánuco? • Viaje Informado"
+
+#: .\templates\movilidad\como_llegar.html:25
+msgid "¿Cómo llegar a Huánuco?"
+msgstr "How to get to Huánuco?"
+
+#: .\templates\movilidad\como_llegar.html:29
+msgid ""
+"Conozca las rutas, tiempos y medios de transporte para planificar tu llegada."
+msgstr "Learn about the routes, travel times and transport options to plan your arrival."
+
+#: .\templates\movilidad\como_llegar.html:41
+msgid "Seleccionar vía de acceso a Huánuco"
+msgstr "Select access route to Huánuco"
+
+#: .\templates\movilidad\como_llegar.html:57
+msgid "Vía terrestre"
+msgstr "By land"
+
+#: .\templates\movilidad\como_llegar.html:75
+msgid "Vía aérea"
+msgstr "By air"
+
+#: .\templates\movilidad\como_llegar.html:95
+msgid "Rutas terrestres hacia Huánuco"
+msgstr "Land routes to Huánuco"
+
+#: .\templates\movilidad\como_llegar.html:102
+#, python-format
+msgid "Ruta número %(orden)s"
+msgstr "Route number %(orden)s"
+
+#: .\templates\movilidad\como_llegar.html:127
+msgid "Tiempos referenciales de la ruta"
+msgstr "Reference travel times for the route"
+
+#: .\templates\movilidad\como_llegar.html:140
+msgid "Bus"
+msgstr "Bus"
+
+#: .\templates\movilidad\como_llegar.html:160
+msgid "Carro"
+msgstr "Car"
+
+#: .\templates\movilidad\como_llegar.html:172
+msgid "Tiempos por confirmar"
+msgstr "Times to be confirmed"
+
+#: .\templates\movilidad\como_llegar.html:180
+msgid "Pronto publicaremos las rutas terrestres hacia Huánuco."
+msgstr "We will soon publish the land routes to Huánuco."
+
+#: .\templates\movilidad\como_llegar.html:211
+msgid "Mapa general de accesos a Huánuco"
+msgstr "General map of access routes to Huánuco"
+
+#: .\templates\movilidad\como_llegar.html:216
+msgid "Mapa general de las principales rutas terrestres de acceso a Huánuco"
+msgstr "General map of the main land routes to Huánuco"
+
+#: .\templates\movilidad\como_llegar.html:233
+msgid "Mapa de accesos en preparación"
+msgstr "Access map in preparation"
+
+#: .\templates\movilidad\como_llegar.html:246
+msgid ""
+"Los tiempos son referenciales y pueden variar según el clima, el tráfico o "
+"el estado de la carretera."
+msgstr "Travel times are approximate and may vary depending on the weather, traffic or road conditions."
+
+#: .\templates\movilidad\como_llegar.html:273
+#: .\templates\movilidad\como_llegar.html:478
+msgid "Consejos para su viaje"
+msgstr "Tips for your trip"
+
+#: .\templates\movilidad\como_llegar.html:339
+msgid "Lima"
+msgstr "Lima"
+
+#: .\templates\movilidad\como_llegar.html:368
+msgid "Huánuco"
+msgstr "Huánuco"
+
+#: .\templates\movilidad\como_llegar.html:401
+msgid "Tiempo estimado"
+msgstr "Estimated time"
+
+#: .\templates\movilidad\como_llegar.html:440
+msgid "Pronto publicaremos información sobre la vía aérea hacia Huánuco."
+msgstr "We will soon publish information about air travel to Huánuco."
+
+#: .\templates\movilidad\como_llegar.html:451
+msgid ""
+"El tiempo estimado de vuelo es referencial y puede variar según la aerolínea."
+msgstr "The estimated flight time is approximate and may vary depending on the airline."
+
+#: .\templates\movilidad\tarifas_taxi.html:28
+msgid ""
+"Conozca los medios de transporte más utilizados en Huánuco y sus tarifas "
+"para que planifique su viaje con confianza."
+msgstr "Learn about the most commonly used means of transport in Huánuco and their fares so you can plan your trip with confidence."
+
+#: .\templates\movilidad\tarifas_taxi.html:44
+msgid "Medios de transporte"
+msgstr "Means of transport"
+
+#: .\templates\movilidad\tarifas_taxi.html:48
+msgid ""
+"Si usted va a movilizarse por la ciudad de Huánuco, aquí le mostramos "
+"alternativas y tarifas para que pueda orientarse mejor durante su estadía."
+msgstr "If you are going to travel around the city of Huánuco, here we show you options and fares so you can find your way around better during your stay."
+
+#: .\templates\movilidad\tarifas_taxi.html:54
+msgid "Información sobre las tarifas"
+msgstr "Fare information"
+
+#: .\templates\movilidad\tarifas_taxi.html:63
+msgid "Elija según su recorrido"
+msgstr "Choose according to your route"
+
+#: .\templates\movilidad\tarifas_taxi.html:64
+msgid "Tarifas actualizadas para el visitante"
+msgstr "Updated fares for visitors"
+
+#: .\templates\movilidad\tarifas_taxi.html:79
+msgid "Trayectos cortos"
+msgstr "Short trips"
+
+#: .\templates\movilidad\tarifas_taxi.html:81
+msgid "Rutas urbanas"
+msgstr "Urban routes"
+
+#: .\templates\movilidad\tarifas_taxi.html:83
+msgid "Mayor cobertura"
+msgstr "Wider coverage"
+
+#: .\templates\movilidad\tarifas_taxi.html:115
+msgid "Tarifa referencial"
+msgstr "Reference fare"
+
+#: .\templates\movilidad\tarifas_taxi.html:130
+msgid "Conversión temporalmente no disponible"
+msgstr "Conversion temporarily unavailable"
+
+#: .\templates\movilidad\tarifas_taxi.html:150
+msgid ""
+"Las tarifas son referenciales y pueden variar según la distancia y el "
+"horario."
+msgstr "Fares are approximate and may vary depending on distance and time of day."
+
+#: .\templates\movilidad\tarifas_taxi.html:169
+msgid "Recomendaciones útiles"
+msgstr "Useful recommendations"
+
+#: .\templates\partials\footer.html:9
+msgid ""
+"Plataforma dedicada a promover el turismo en Huánuco. Conoce y explora la "
+"ciudad, su cultura y sus principales atractivos turísticos."
+msgstr "A platform dedicated to promoting tourism in Huánuco. Get to know and explore the city, its culture and its main tourist attractions."
+
+#: .\templates\partials\footer.html:14
+msgid "Logo Viaje Informado"
+msgstr "Viaje Informado logo"
+
+#: .\templates\partials\footer.html:18
+msgid "CONTACTO"
+msgstr "CONTACT"
+
+#: .\templates\partials\footer.html:48
+msgid "Política de privacidad"
+msgstr "Privacy policy"
+
+#: .\templates\partials\footer.html:49
+msgid "Términos y condiciones"
+msgstr "Terms and conditions"
+
+#: .\templates\partials\footer.html:62
+msgid "© 2026 Viaje Informado Huánuco. Todos los derechos reservados."
+msgstr "© 2026 Viaje Informado Huánuco. All rights reserved."
+
+#: .\templates\partials\header.html:14
+msgid "Navegación principal"
+msgstr "Main navigation"
+
+#: .\templates\partials\header.html:67
+#, python-format
+msgid "Hola, %(nombre)s"
+msgstr "Hello, %(nombre)s"
+
+#: .\templates\partials\header.html:75
+msgid "Favoritos"
+msgstr "Favorites"
+
+#: .\templates\partials\header.html:81
+msgid "Configuración de cuenta"
+msgstr "Account settings"
+
+#: .\templates\partials\header.html:87
+msgid "Cerrar sesión"
+msgstr "Sign out"
+
+#: .\templates\partials\header.html:106
+msgid "Abrir menú"
+msgstr "Open menu"
+
+#: .\templates\partials\lang_selector.html:5
+msgid "Idioma"
+msgstr "Language"
+
+#: .\templates\servicios_turista\servicios_utiles.html:5
+msgid "Servicios Útiles • Viaje Informado"
+msgstr "Useful Services • Viaje Informado"
+
+#: .\templates\servicios_turista\servicios_utiles.html:22
+msgid "Servicios Útiles"
+msgstr "Useful Services"
+
+#: .\templates\servicios_turista\servicios_utiles.html:24
+msgid "Encuentra lugares y servicios que pueden ayudarte durante tu visita."
+msgstr "Find places and services that can help you during your visit."
+
+#: .\templates\servicios_turista\servicios_utiles.html:36
+msgid "Aún no hay servicios registrados"
+msgstr "There are no registered services yet"
+
+#: .\templates\servicios_turista\servicios_utiles.html:38
+msgid "Estamos completando este directorio. Vuelve a consultarlo más adelante."
+msgstr "We are completing this directory. Please check back later."
+
+#: .\templates\servicios_turista\servicios_utiles.html:67
+msgid "Ver"
+msgstr "View"
+
+#: .\templates\servicios_turista\servicios_utiles.html:73
+msgid "Categorías de servicios"
+msgstr "Service categories"
+
+#: .\templates\servicios_turista\servicios_utiles.html:105
+msgid "Todos los servicios"
+msgstr "All services"
+
+#: .\templates\servicios_turista\servicios_utiles.html:115
+msgid ""
+"No encontramos servicios de esta categoría en la ubicación seleccionada."
+msgstr "We did not find services in this category in the selected location."
+
+#: .\templates\servicios_turista\servicios_utiles.html:117
+msgid "Prueba otra categoría o ubicación."
+msgstr "Try another category or location."
+
+#: .\templates\servicios_turista\servicios_utiles.html:136
+msgid "Categoría:"
+msgstr "Category:"
+
+#: .\templates\servicios_turista\servicios_utiles.html:152
+msgid "Ver información"
+msgstr "View information"
+
+#: .\templates\servicios_turista\servicios_utiles.html:231
+msgid "¿Tienes una emergencia?"
+msgstr "Is this an emergency?"
+
+#: .\templates\servicios_turista\servicios_utiles.html:233
+msgid ""
+"Si necesitas atención inmediata, consulta los números de emergencia "
+"disponibles para tu ubicación."
+msgstr "If you need immediate assistance, check the emergency numbers available for your location."
+
+#: .\templates\servicios_turista\servicios_utiles.html:236
+msgid "Números de emergencia"
+msgstr "Emergency numbers"
+
+#: .\templates\servicios_turista\servicios_utiles.html:267
+msgid "Descripción:"
+msgstr "Description:"
+
+#: .\templates\servicios_turista\servicios_utiles.html:273
+msgid "Dirección:"
+msgstr "Address:"
+
+#: .\templates\servicios_turista\servicios_utiles.html:279
+msgid "Horario:"
+msgstr "Hours:"
+
+#: .\templates\servicios_turista\servicios_utiles.html:289
+msgid "Canales"
+msgstr "Channels"
+
+#: .\templates\servicios_turista\servicios_utiles.html:334
+msgid "Mapa del servicio seleccionado"
+msgstr "Map of the selected service"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:70
+#: .\templates\turismo\listado-lugares-turisticos.html:149
+msgid "Destacado"
+msgstr "Featured"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:91
+msgid "Ver más información"
+msgstr "See more information"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:105
+msgid "Sobre el lugar"
+msgstr "About the place"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:117
+msgid "Acciones del lugar"
+msgstr "Place actions"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:121
+msgid "Favorito"
+msgstr "Favorite"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:128
+msgid "Ver ubicación en el mapa"
+msgstr "View location on the map"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:129
+msgid "Ver en mapa"
+msgstr "View on map"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:141
+msgid "Compartir este lugar"
+msgstr "Share this place"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:157
+#, python-format
+msgid "Información detallada de %(nombre)s"
+msgstr "Detailed information about %(nombre)s"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:172
+msgid "Memoria del lugar"
+msgstr "History of the place"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:191
+msgid "Dirección"
+msgstr "Address"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:201
+msgid "Referencia"
+msgstr "Reference"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:211
+#: .\templates\turismo\detalle-lugar-turistico.html:484
+msgid "Horario"
+msgstr "Hours"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:230
+#, python-format
+msgid "Cómo llegar a %(nombre)s en Google Maps"
+msgstr "Directions to %(nombre)s on Google Maps"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:241
+#, python-format
+msgid "Abrir %(nombre)s en Google Maps"
+msgstr "Open %(nombre)s in Google Maps"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:285
+#, python-format
+msgid "Iniciar ruta a %(nombre)s en Google Maps"
+msgstr "Start the route to %(nombre)s on Google Maps"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:321
+#, python-format
+msgid "Galería multimedia de %(nombre)s"
+msgstr "Media gallery of %(nombre)s"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:360
+msgid "Ver completo"
+msgstr "View full"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:375
+msgid "Multimedia anterior"
+msgstr "Previous media"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:380
+msgid "Navegar multimedia"
+msgstr "Browse media"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:381
+msgid "Multimedia siguiente"
+msgstr "Next media"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:392
+msgid "Sin multimedia"
+msgstr "No media"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:398
+msgid "Consejos útiles"
+msgstr "Useful tips"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:399
+msgid "Recomendaciones para el visitante"
+msgstr "Recommendations for visitors"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:401
+#, python-format
+msgid "Recomendaciones para visitar %(nombre)s"
+msgstr "Recommendations for visiting %(nombre)s"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:424
+msgid ""
+"Próximamente se agregarán recomendaciones específicas para visitar este "
+"lugar."
+msgstr "Specific recommendations for visiting this place will be added soon."
+
+#: .\templates\turismo\detalle-lugar-turistico.html:438
+msgid "Datos del lugar"
+msgstr "Place details"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:440
+#, python-format
+msgid "Ficha técnica de %(nombre)s"
+msgstr "Fact sheet of %(nombre)s"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:476
+msgid "Duración estimada"
+msgstr "Estimated duration"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:491
+msgid "Entrada"
+msgstr "Admission"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:494
+msgid "Acceso libre"
+msgstr "Free access"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:496
+msgid "Ingreso gratuito"
+msgstr "Free admission"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:525
+msgid "TC"
+msgstr "Rate"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:536
+msgid "Categorías adicionales"
+msgstr "Additional categories"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:537
+msgid "También en"
+msgstr "Also in"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:568
+#, python-format
+msgid "Galería de imágenes — %(nombre)s"
+msgstr "Image gallery — %(nombre)s"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:577
+msgid "Cerrar visor"
+msgstr "Close viewer"
+
+#: .\templates\turismo\detalle-lugar-turistico.html:609
+msgid "Navegar imágenes"
+msgstr "Browse images"
+
+#: .\templates\turismo\listado-lugares-turisticos.html:105
+msgid "Ordenar:"
+msgstr "Sort:"
+
+#: .\templates\turismo\listado-lugares-turisticos.html:202
+msgid "Entrada gratuita"
+msgstr "Free admission"
+
+#: .\templates\turismo\listado-lugares-turisticos.html:238
+msgid "más"
+msgstr "more"
+
+#: .\templates\turismo\listado-lugares-turisticos.html:248
+msgid "Explorar &rarr;"
+msgstr "Explore &rarr;"
+
+#~ msgid "Powered by:"
+#~ msgstr "Powered by:"
+
+#~ msgid "Tips"
+#~ msgstr "Tips"

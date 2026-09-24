@@ -3,34 +3,48 @@ Renderers deterministas: resultado estructurado de C3 → texto plano para el
 turista. Sin IA, sin HTML, sin ORM, sin request. Nunca completan datos
 ausentes ni deducen apertura a partir de horarios en texto libre.
 """
+from django.utils.dates import MONTHS
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
+
 from apps.emergencias.models import ContactoEmergencia
 from apps.servicios_turista.models import ServicioTurista
 from apps.turismo.models import DIFICULTAD_CHOICES
 
-SIN_RESULTADOS = "No encontré información registrada que confirme eso."
+# Todo texto visible se traduce al momento de la petición (gettext / lazy): el
+# idioma activo lo fija CookieLocaleMiddleware. Los nombres propios que llegan de
+# la BD (lugares, eventos, platos…) se muestran tal cual.
+SIN_RESULTADOS = gettext_lazy("No encontré información registrada que confirme eso.")
 
 TIPO_COSTO = {
-    "gratis": "entrada gratuita",
-    "no_requiere": "no requiere entrada",
-    "pagado": "entrada pagada",
-    "consultar": "costo por consultar",
-    "no_aplica": "sin costo aplicable",
+    "gratis": gettext_lazy("entrada gratuita"),
+    "no_requiere": gettext_lazy("no requiere entrada"),
+    "pagado": gettext_lazy("entrada pagada"),
+    "consultar": gettext_lazy("costo por consultar"),
+    "no_aplica": gettext_lazy("sin costo aplicable"),
 }
 RANGO_PRECIO = {
-    "economico": "precio económico",
-    "moderado": "precio moderado",
-    "alto": "precio alto",
-    "consultar": "precio por consultar",
+    "economico": gettext_lazy("precio económico"),
+    "moderado": gettext_lazy("precio moderado"),
+    "alto": gettext_lazy("precio alto"),
+    "consultar": gettext_lazy("precio por consultar"),
 }
-ESTADO_EVENTO = {"reprogramado": "REPROGRAMADO", "cancelado": "CANCELADO"}
-MESES = [
-    "", "enero", "febrero", "marzo", "abril", "mayo", "junio",
-    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
-]
+ESTADO_EVENTO = {"reprogramado": gettext_lazy("REPROGRAMADO"), "cancelado": gettext_lazy("CANCELADO")}
 DIFICULTAD = dict(DIFICULTAD_CHOICES)
 CATEGORIA_EMERGENCIA = dict(ContactoEmergencia.CATEGORIAS)
 DISPONIBILIDAD = dict(ServicioTurista.DISPONIBILIDAD_CHOICES)
 TIPO_ATENCION = dict(ServicioTurista.TIPO_ATENCION_CHOICES)
+
+
+def nombre_mes(numero):
+    """Nombre del mes en el idioma activo (minúsculas en es, capitalizado en en)."""
+    return str(MONTHS[int(numero)])
+
+
+def _traducir(clave, tabla, defecto=None):
+    """Etiqueta de un choice de modelo (se guardan en español) en el idioma activo."""
+    etiqueta = tabla.get(clave, defecto)
+    return _(etiqueta) if etiqueta else etiqueta
 
 
 def _unir(*partes, sep=" — "):
@@ -44,11 +58,11 @@ def _lista(titulo, lineas, pie=None):
 
 def _precio(desde, hasta):
     if desde and hasta:
-        return f"S/ {desde} a S/ {hasta}"
+        return _("S/ %(desde)s a S/ %(hasta)s") % {"desde": desde, "hasta": hasta}
     if desde:
-        return f"desde S/ {desde}"
+        return _("desde S/ %(monto)s") % {"monto": desde}
     if hasta:
-        return f"hasta S/ {hasta}"
+        return _("hasta S/ %(monto)s") % {"monto": hasta}
     return None
 
 
@@ -57,10 +71,10 @@ def _costo(item):
 
 
 def _horario(valor):
-    return f"Horario registrado: {valor}" if valor else None
+    return _("Horario registrado: %(valor)s") % {"valor": valor} if valor else None
 
 
-def _enlace(item, clave="url", etiqueta="Ver más"):
+def _enlace(item, clave="url", etiqueta=gettext_lazy("Ver más")):
     """
     "Etiqueta: <url>" — el frontend (pillcobot.js) reconoce cualquier línea
     con este patrón y la convierte en un botón con esa etiqueta; la ruta
@@ -80,12 +94,12 @@ def _lugar(item):
         f"{item['nombre']} ({_unir(item.get('categoria'), item.get('distrito'), sep=', ')})",
         _costo(item),
         _horario(item.get("horario_visita")),
-        _enlace(item, etiqueta="Ver lugar"),
+        _enlace(item, etiqueta=_("Ver lugar")),
     )
 
 
 def renderizar_lugares(resultado):
-    return _lista("Lugares turísticos registrados:", [_lugar(i) for i in resultado["items"]])
+    return _lista(_("Lugares turísticos registrados:"), [_lugar(i) for i in resultado["items"]])
 
 
 def renderizar_lugar(resultado):
@@ -93,15 +107,15 @@ def renderizar_lugar(resultado):
     lineas = [
         f"{item['nombre']} ({item.get('categoria')})",
         item.get("descripcion_corta"),
-        _unir("Ubicación:", _unir(item.get("direccion"), _ubicacion(item), sep=", "), sep=" "),
-        _unir("Costo:", _costo(item), sep=" "),
+        _unir(_("Ubicación:"), _unir(item.get("direccion"), _ubicacion(item), sep=", "), sep=" "),
+        _unir(_("Costo:"), _costo(item), sep=" "),
         _horario(item.get("horario_visita")),
-        f"Tiempo de visita estimado: {item['tiempo_visita_estimado']}" if item.get("tiempo_visita_estimado") else None,
-        f"Dificultad: {DIFICULTAD.get(item.get('dificultad'))}" if item.get("dificultad") not in (None, "no_aplica") else None,
-        f"Servicios: {', '.join(item['servicios'])}" if item.get("servicios") else None,
-        f"Cómo llegar: {item['como_llegar']}" if item.get("como_llegar") else None,
-        f"Recomendaciones: {item['recomendaciones']}" if item.get("recomendaciones") else None,
-        _enlace(item, etiqueta="Ver lugar"),
+        _("Tiempo de visita estimado: %(valor)s") % {"valor": item["tiempo_visita_estimado"]} if item.get("tiempo_visita_estimado") else None,
+        _("Dificultad: %(valor)s") % {"valor": _traducir(item.get("dificultad"), DIFICULTAD)} if item.get("dificultad") not in (None, "no_aplica") else None,
+        _("Servicios: %(valor)s") % {"valor": ", ".join(item["servicios"])} if item.get("servicios") else None,
+        _("Cómo llegar: %(valor)s") % {"valor": item["como_llegar"]} if item.get("como_llegar") else None,
+        _("Recomendaciones: %(valor)s") % {"valor": item["recomendaciones"]} if item.get("recomendaciones") else None,
+        _enlace(item, etiqueta=_("Ver lugar")),
     ]
     return _unir(*lineas, sep="\n")
 
@@ -114,47 +128,47 @@ def _sucursal_texto(sucursal):
     return _unir(sucursal.get("direccion"), _ubicacion(sucursal), sep=", ")
 
 
-def _establecimiento(item, etiqueta_cta="Ver más"):
+def _establecimiento(item, etiqueta_cta=None):
     sucursal = item.get("sucursal") or {}
     return _unir(
         f"{item['nombre']} ({item.get('categoria')})",
         _unir(RANGO_PRECIO.get(item.get("rango_precio")), _precio(item.get("precio_desde"), item.get("precio_hasta")), sep=", "),
         _sucursal_texto(sucursal),
         _horario(sucursal.get("horario_atencion")),
-        _enlace(item, etiqueta=etiqueta_cta),
+        _enlace(item, etiqueta=etiqueta_cta or _("Ver más")),
     )
 
 
 def renderizar_restaurantes(resultado):
-    lineas = [_establecimiento(i, "Ver restaurante") for i in resultado["items"]]
-    return _lista("Restaurantes registrados:", lineas)
+    lineas = [_establecimiento(i, _("Ver restaurante")) for i in resultado["items"]]
+    return _lista(_("Restaurantes registrados:"), lineas)
 
 
 def renderizar_alojamientos(resultado):
-    lineas = [_establecimiento(i, "Ver alojamiento") for i in resultado["items"]]
-    return _lista("Alojamientos registrados:", lineas)
+    lineas = [_establecimiento(i, _("Ver alojamiento")) for i in resultado["items"]]
+    return _lista(_("Alojamientos registrados:"), lineas)
 
 
 def renderizar_restaurantes_por_plato(resultado):
     plato = resultado.get("plato") or {}
-    titulo = f"Restaurantes registrados donde sirven {plato.get('nombre', 'ese plato')}:"
-    lineas = [_establecimiento(i, "Ver dónde comer") for i in resultado["items"]]
+    titulo = _("Restaurantes registrados donde sirven %(plato)s:") % {"plato": plato.get("nombre") or _("ese plato")}
+    lineas = [_establecimiento(i, _("Ver dónde comer")) for i in resultado["items"]]
     return _lista(titulo, lineas)
 
 
 def renderizar_establecimiento(resultado):
     item = resultado["item"]
-    etiqueta_cta = "Ver alojamiento" if item.get("tipo") == "alojamiento" else "Ver restaurante"
+    etiqueta_cta = _("Ver alojamiento") if item.get("tipo") == "alojamiento" else _("Ver restaurante")
     lineas = [
         f"{item['nombre']} ({item.get('categoria')})",
         item.get("descripcion_corta"),
         _unir(RANGO_PRECIO.get(item.get("rango_precio")), _precio(item.get("precio_desde"), item.get("precio_hasta")), sep=", "),
-        f"Servicios: {', '.join(item['servicios'])}" if item.get("servicios") else None,
-        f"Recomendaciones de la casa: {', '.join(r['nombre'] for r in item['recomendaciones'])}" if item.get("recomendaciones") else None,
-        _unir("Contacto:", _unir(item.get("telefono"), item.get("whatsapp"), item.get("correo"), sep=" / "), sep=" ") if any(item.get(k) for k in ("telefono", "whatsapp", "correo")) else None,
+        _("Servicios: %(valor)s") % {"valor": ", ".join(item["servicios"])} if item.get("servicios") else None,
+        _("Recomendaciones de la casa: %(valor)s") % {"valor": ", ".join(r["nombre"] for r in item["recomendaciones"])} if item.get("recomendaciones") else None,
+        _unir(_("Contacto:"), _unir(item.get("telefono"), item.get("whatsapp"), item.get("correo"), sep=" / "), sep=" ") if any(item.get(k) for k in ("telefono", "whatsapp", "correo")) else None,
     ]
     for sucursal in item.get("sucursales") or []:
-        lineas.append(_unir(f"Sucursal {sucursal['nombre']}:", _sucursal_texto(sucursal), _horario(sucursal.get("horario_atencion")), sep=" "))
+        lineas.append(_unir(_("Sucursal %(nombre)s:") % {"nombre": sucursal["nombre"]}, _sucursal_texto(sucursal), _horario(sucursal.get("horario_atencion")), sep=" "))
     lineas.append(_enlace(item, etiqueta=etiqueta_cta))
     return _unir(*lineas, sep="\n")
 
@@ -163,28 +177,28 @@ def renderizar_establecimiento(resultado):
 
 def _plato(item):
     return _unir(
-        f"{item['nombre']}{' (plato bandera)' if item.get('es_plato_bandera') else ''}",
+        f"{item['nombre']}{_(' (plato bandera)') if item.get('es_plato_bandera') else ''}",
         item.get("descripcion_corta"),
-        _enlace(item, clave="url_donde_comer", etiqueta="Ver dónde comer"),
+        _enlace(item, clave="url_donde_comer", etiqueta=_("Ver dónde comer")),
     )
 
 
 def renderizar_platos(resultado):
-    return _lista("Platos típicos registrados:", [_plato(i) for i in resultado["items"]])
+    return _lista(_("Platos típicos registrados:"), [_plato(i) for i in resultado["items"]])
 
 
 def renderizar_plato(resultado):
     item = resultado["item"]
     lineas = [
         _plato(item),
-        f"Categoría: {item.get('categoria')}" if item.get("categoria") else None,
-        f"Ingredientes clave: {', '.join(item['ingredientes'])}" if item.get("ingredientes") else None,
+        _("Categoría: %(valor)s") % {"valor": item.get("categoria")} if item.get("categoria") else None,
+        _("Ingredientes clave: %(valor)s") % {"valor": ", ".join(item["ingredientes"])} if item.get("ingredientes") else None,
     ]
     restaurantes = item.get("restaurantes") or []
     if restaurantes:
         lineas.append(_lista(
-            "Restaurantes registrados donde se sirve:",
-            [_unir(r["nombre"], _enlace(r, etiqueta="Ver restaurante")) for r in restaurantes],
+            _("Restaurantes registrados donde se sirve:"),
+            [_unir(r["nombre"], _enlace(r, etiqueta=_("Ver restaurante"))) for r in restaurantes],
         ))
     return _unir(*lineas, sep="\n")
 
@@ -194,16 +208,18 @@ def renderizar_plato(resultado):
 def _fechas_evento(item):
     tipo = item.get("tipo_fecha")
     if tipo == "por_confirmar":
-        fechas = "fecha por confirmar"
+        fechas = _("fecha por confirmar")
     elif tipo == "mes_aproximado" and item.get("mes_aproximado"):
-        fechas = f"aproximadamente en {MESES[item['mes_aproximado']]} de {item.get('anio_aproximado')}"
+        fechas = _("aproximadamente en %(mes)s de %(anio)s") % {
+            "mes": nombre_mes(item["mes_aproximado"]), "anio": item.get("anio_aproximado"),
+        }
     elif item.get("fecha_inicio") and item.get("fecha_fin") and item["fecha_inicio"] != item["fecha_fin"]:
-        fechas = f"del {item['fecha_inicio']} al {item['fecha_fin']}"
+        fechas = _("del %(inicio)s al %(fin)s") % {"inicio": item["fecha_inicio"], "fin": item["fecha_fin"]}
     elif item.get("fecha_inicio"):
         fechas = item["fecha_inicio"]
     else:
         fechas = None
-    hora = f"desde las {item['hora_inicio'][:5]}" if item.get("hora_inicio") else None
+    hora = _("desde las %(hora)s") % {"hora": item["hora_inicio"][:5]} if item.get("hora_inicio") else None
     return _unir(fechas, hora, sep=", ")
 
 
@@ -219,7 +235,7 @@ def _evento(item):
 
 def renderizar_eventos(resultado):
     pie = _enlace(resultado["items"][0], "url_listado") if resultado["items"] else None
-    return _lista("Eventos registrados:", [_evento(i) for i in resultado["items"]], pie)
+    return _lista(_("Eventos registrados:"), [_evento(i) for i in resultado["items"]], pie)
 
 
 def renderizar_evento(resultado):
@@ -227,10 +243,10 @@ def renderizar_evento(resultado):
     lineas = [
         _evento(item),
         item.get("descripcion_corta"),
-        f"Contexto: {item['contexto_cultural']}" if item.get("contexto_cultural") else None,
-        f"Recomendaciones: {item['recomendaciones']}" if item.get("recomendaciones") else None,
-        f"Organiza: {item['organizador']}" if item.get("organizador") else None,
-        _enlace(item, "url_listado", etiqueta="Ver evento"),
+        _("Contexto: %(valor)s") % {"valor": item["contexto_cultural"]} if item.get("contexto_cultural") else None,
+        _("Recomendaciones: %(valor)s") % {"valor": item["recomendaciones"]} if item.get("recomendaciones") else None,
+        _("Organiza: %(valor)s") % {"valor": item["organizador"]} if item.get("organizador") else None,
+        _enlace(item, "url_listado", etiqueta=_("Ver evento")),
     ]
     return _unir(*lineas, sep="\n")
 
@@ -240,42 +256,52 @@ def renderizar_evento(resultado):
 def renderizar_tarifas(resultado):
     lineas = [
         _unir(
-            f"{i['nombre']}{' (' + i['nombre_alternativo'] + ')' if i.get('nombre_alternativo') else ''}: desde S/ {i['tarifa_minima_pen']}",
-            f"aprox. USD {i['tarifa_minima_usd']}" if i.get("tarifa_minima_usd") else None,
+            _("%(nombre)s: desde S/ %(monto)s") % {
+                "nombre": f"{i['nombre']}{' (' + i['nombre_alternativo'] + ')' if i.get('nombre_alternativo') else ''}",
+                "monto": i["tarifa_minima_pen"],
+            },
+            _("aprox. USD %(monto)s") % {"monto": i["tarifa_minima_usd"]} if i.get("tarifa_minima_usd") else None,
             sep=" — ",
         )
         for i in resultado["items"]
     ]
     consejos = resultado.get("consejos") or []
     pie = _unir(
-        _lista("Consejos:", consejos) if consejos else None,
-        f"Ver más: {resultado['url']}" if resultado.get("url") else None,
+        _lista(_("Consejos:"), consejos) if consejos else None,
+        _("Ver más: %(url)s") % {"url": resultado["url"]} if resultado.get("url") else None,
         sep="\n",
     )
-    return _lista("Tarifas mínimas referenciales de transporte urbano:", lineas, pie)
+    return _lista(_("Tarifas mínimas referenciales de transporte urbano:"), lineas, pie)
+
+
+_VIAS = {"terrestre": gettext_lazy("terrestre"), "aerea": gettext_lazy("aerea")}
+
+
+def _via(clave):
+    return str(_VIAS.get(clave, clave))
 
 
 def _ruta(item):
     return _unir(
-        f"[Vía {item['via']}] {item['nombre']}",
+        _("[Vía %(via)s] %(nombre)s") % {"via": _via(item["via"]), "nombre": item["nombre"]},
         _unir(item.get("origen"), item.get("destino"), sep=" → ") if item.get("origen") or item.get("destino") else None,
         _unir(
-            f"en bus: {item['duracion_bus']}" if item.get("duracion_bus") else None,
-            f"en auto: {item['duracion_automovil']}" if item.get("duracion_automovil") else None,
-            f"duración: {item['duracion_estimada']}" if item.get("duracion_estimada") else None,
+            _("en bus: %(valor)s") % {"valor": item["duracion_bus"]} if item.get("duracion_bus") else None,
+            _("en auto: %(valor)s") % {"valor": item["duracion_automovil"]} if item.get("duracion_automovil") else None,
+            _("duración: %(valor)s") % {"valor": item["duracion_estimada"]} if item.get("duracion_estimada") else None,
             sep=", ",
         ),
         _costo(item),
-        f"Advertencias: {item['advertencias']}" if item.get("advertencias") else None,
+        _("Advertencias: %(valor)s") % {"valor": item["advertencias"]} if item.get("advertencias") else None,
     )
 
 
 def renderizar_como_llegar(resultado):
     consejos = resultado.get("consejos") or {}
-    pies = [_lista(f"Consejos vía {via}:", textos) for via, textos in consejos.items() if textos]
+    pies = [_lista(_("Consejos vía %(via)s:") % {"via": _via(via)}, textos) for via, textos in consejos.items() if textos]
     if resultado.get("url"):
-        pies.append(f"Ver más: {resultado['url']}")
-    return _lista("Rutas registradas para llegar a Huánuco:", [_ruta(i) for i in resultado["items"]], _unir(*pies, sep="\n"))
+        pies.append(_("Ver más: %(url)s") % {"url": resultado["url"]})
+    return _lista(_("Rutas registradas para llegar a Huánuco:"), [_ruta(i) for i in resultado["items"]], _unir(*pies, sep="\n"))
 
 
 # --- Servicios útiles y emergencias -----------------------------------------
@@ -285,7 +311,7 @@ def _servicio(item):
     return _unir(
         f"{item['nombre']} ({item.get('categoria')})",
         _unir(item.get("direccion"), item.get("zona") or item.get("distrito"), sep=", "),
-        DISPONIBILIDAD.get(item.get("disponibilidad")),
+        _traducir(item.get("disponibilidad"), DISPONIBILIDAD),
         _horario(item.get("horario_atencion")),
         _unir(item.get("telefono"), item.get("whatsapp"), contactos, sep=" / ") or None,
     )
@@ -293,7 +319,7 @@ def _servicio(item):
 
 def renderizar_servicios(resultado):
     pie = _enlace(resultado["items"][0]) if resultado["items"] else None
-    return _lista("Servicios útiles registrados:", [_servicio(i) for i in resultado["items"]], pie)
+    return _lista(_("Servicios útiles registrados:"), [_servicio(i) for i in resultado["items"]], pie)
 
 
 def _emergencia(item):
@@ -301,16 +327,16 @@ def _emergencia(item):
         _unir(n.get("etiqueta"), n["numero"], sep=" ") for n in item.get("numeros_adicionales") or []
     )
     return _unir(
-        f"{item['nombre']} ({CATEGORIA_EMERGENCIA.get(item.get('categoria'), item.get('categoria'))}): {item['numero']}",
+        f"{item['nombre']} ({_traducir(item.get('categoria'), CATEGORIA_EMERGENCIA, item.get('categoria'))}): {item['numero']}",
         adicionales or None,
         item.get("horario"),
-        f"zonas: {', '.join(item['zonas'])}" if item.get("zonas") else None,
+        _("zonas: %(valor)s") % {"valor": ", ".join(item["zonas"])} if item.get("zonas") else None,
     )
 
 
 def renderizar_emergencias(resultado):
     pie = _enlace(resultado["items"][0]) if resultado["items"] else None
-    return _lista("Contactos de emergencia registrados:", [_emergencia(i) for i in resultado["items"]], pie)
+    return _lista(_("Contactos de emergencia registrados:"), [_emergencia(i) for i in resultado["items"]], pie)
 
 
 # --- Clima y tipo de cambio -------------------------------------------------
@@ -323,20 +349,20 @@ def renderizar_clima(resultado):
     detectando la primera línea de este texto.
     """
     item = resultado["item"]
-    lugar = item.get("ubicacion") or item.get("ciudad_slug") or "la ciudad"
+    lugar = item.get("ubicacion") or item.get("ciudad_slug") or _("la ciudad")
     if not item.get("disponible"):
-        return f"No pude obtener el clima actual de {lugar} en este momento."
+        return _("No pude obtener el clima actual de %(lugar)s en este momento.") % {"lugar": lugar}
     resumen = _unir(item.get("estado_texto"), f"{item['temperatura_c']} °C" if item.get("temperatura_c") is not None else None, sep=" · ")
     detalles = [
-        f"Sensación térmica: {item['sensacion_c']} °C" if item.get("sensacion_c") is not None else None,
-        f"Humedad: {item['humedad_pct']}%" if item.get("humedad_pct") is not None else None,
-        f"Viento: {item['viento_kph']} km/h" if item.get("viento_kph") is not None else None,
-        f"Probabilidad de lluvia: {item['probabilidad_lluvia_pct']}%" if item.get("probabilidad_lluvia_pct") is not None else None,
+        _("Sensación térmica: %(valor)s °C") % {"valor": item["sensacion_c"]} if item.get("sensacion_c") is not None else None,
+        _("Humedad: %(valor)s%%") % {"valor": item["humedad_pct"]} if item.get("humedad_pct") is not None else None,
+        _("Viento: %(valor)s km/h") % {"valor": item["viento_kph"]} if item.get("viento_kph") is not None else None,
+        _("Probabilidad de lluvia: %(valor)s%%") % {"valor": item["probabilidad_lluvia_pct"]} if item.get("probabilidad_lluvia_pct") is not None else None,
     ]
     return _unir(
-        f"Clima actual en {lugar}",
+        _("Clima actual en %(lugar)s") % {"lugar": lugar},
         _unir(resumen, *[d for d in detalles if d], sep="\n"),
-        "(dato de respaldo, puede no estar actualizado)" if item.get("es_respaldo") else None,
+        _("(dato de respaldo, puede no estar actualizado)") if item.get("es_respaldo") else None,
         sep="\n\n",
     )
 
@@ -344,8 +370,11 @@ def renderizar_clima(resultado):
 def renderizar_tipo_cambio(resultado):
     item = resultado["item"]
     return _unir(
-        f"Tipo de cambio {item.get('moneda_origen')}/{item.get('moneda_destino')} registrado al {item.get('fecha')}: compra S/ {item.get('compra')}, venta S/ {item.get('venta')}.",
-        f"Fuente: {item['fuente']}" if item.get("fuente") else None,
+        _("Tipo de cambio %(origen)s/%(destino)s registrado al %(fecha)s: compra S/ %(compra)s, venta S/ %(venta)s.") % {
+            "origen": item.get("moneda_origen"), "destino": item.get("moneda_destino"),
+            "fecha": item.get("fecha"), "compra": item.get("compra"), "venta": item.get("venta"),
+        },
+        _("Fuente: %(valor)s") % {"valor": item["fuente"]} if item.get("fuente") else None,
         _enlace(item),
         sep="\n",
     )
@@ -358,7 +387,24 @@ def renderizar_favoritos(resultado):
         _lugar(item) if item["tipo"] == "lugar" else _establecimiento(item)
         for item in resultado["items"]
     ]
-    return _lista("Tus favoritos:", lineas)
+    return _lista(_("Tus favoritos:"), lineas)
+
+
+def nombre_momento(clave):
+    """Momento del día de una actividad del itinerario en el idioma activo."""
+    return str(_MOMENTOS.get(clave, clave)).capitalize()
+
+
+_MOMENTOS = {
+    "mañana": gettext_lazy("mañana"), "tarde": gettext_lazy("tarde"), "noche": gettext_lazy("noche"),
+}
+
+
+def texto_duracion(dias, noches):
+    return _("%(dias)s, %(noches)s") % {
+        "dias": ngettext("%(n)s día", "%(n)s días", dias) % {"n": dias},
+        "noches": ngettext("%(n)s noche", "%(n)s noches", noches) % {"n": noches},
+    }
 
 
 def renderizar_itinerario(resultado):
@@ -366,14 +412,16 @@ def renderizar_itinerario(resultado):
     y detalle. Nunca completa costos no registrados."""
     it = resultado["item"]
     partes = [
-        f"Itinerario propuesto para {it['destino']} del {it['fecha_inicio']} al {it['fecha_fin']} "
-        f"({it['dias']} días, {it['noches']} noches)."
+        _("Itinerario propuesto para %(destino)s del %(inicio)s al %(fin)s (%(duracion)s).") % {
+            "destino": it["destino"], "inicio": it["fecha_inicio"], "fin": it["fecha_fin"],
+            "duracion": texto_duracion(it["dias"], it["noches"]),
+        }
     ]
     for dia in it["dias_plan"]:
         lineas = [
-            _unir(act["momento"].capitalize(), act["item"]["nombre"], sep=": ")
+            _unir(nombre_momento(act["momento"]), act["item"]["nombre"], sep=": ")
             for act in dia["actividades"]
-        ] or ["sin actividades registradas"]
+        ] or [_("sin actividades registradas")]
         partes.append(_lista(f"{dia['titulo']} ({dia['fecha']})", lineas))
     return "\n\n".join(partes)
 
@@ -410,8 +458,8 @@ def renderizar(tool, resultado):
     if "items" in resultado and resultado.get("count", 0) == 0:
         plato = resultado.get("plato")
         if tool == "buscar_restaurantes_por_plato" and plato:
-            return f"No encontré restaurantes registrados que sirvan {plato['nombre']}."
-        return SIN_RESULTADOS
+            return _("No encontré restaurantes registrados que sirvan %(plato)s.") % {"plato": plato["nombre"]}
+        return str(SIN_RESULTADOS)
     if "item" in resultado and resultado["item"] is None:
-        return SIN_RESULTADOS
+        return str(SIN_RESULTADOS)
     return renderer(resultado)

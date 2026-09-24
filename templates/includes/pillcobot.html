@@ -1,7 +1,8 @@
+{% load i18n %}
 {% load static %}
 <div id="pcbot-root" class="pcbot" data-endpoint="{% url 'chatbot:enviar_mensaje' %}">
     <button type="button" id="pcbot-fab" class="pcbot-fab" aria-haspopup="dialog" aria-expanded="false"
-        aria-controls="pcbot-panel" aria-label="Abrir chat con PillcoBot">
+        aria-controls="pcbot-panel" aria-label="{% translate "Abrir chat con PillcoBot" %}">
         <img src="{% static 'assets/img/icons/pillcobot.webp' %}" alt="" class="pcbot-fab__img">
     </button>
 
@@ -15,16 +16,15 @@
             <div class="pcbot-header__identity">
                 <img src="{% static 'assets/img/icons/pillcobot.webp' %}" alt="" class="pcbot-header__avatar">
                 <div class="pcbot-header__text">
-                    <span id="pcbot-title" class="pcbot-header__name">PillcoBot</span>
-                    <span class="pcbot-header__status"><i class="pcbot-status-dot" aria-hidden="true"></i>En
-                        línea</span>
+                    <span id="pcbot-title" class="pcbot-header__name">{% translate "PillcoBot" %}</span>
+                    <span class="pcbot-header__status"><i class="pcbot-status-dot" aria-hidden="true"></i>{% translate "En línea" %}</span>
                 </div>
             </div>
             <div class="pcbot-header__actions">
-                <button type="button" id="pcbot-minimize" class="pcbot-iconbtn" aria-label="Minimizar chat">
+                <button type="button" id="pcbot-minimize" class="pcbot-iconbtn" aria-label="{% translate "Minimizar chat" %}">
                     <i class="bi bi-dash-lg" aria-hidden="true"></i>
                 </button>
-                <button type="button" id="pcbot-close" class="pcbot-iconbtn" aria-label="Cerrar chat">
+                <button type="button" id="pcbot-close" class="pcbot-iconbtn" aria-label="{% translate "Cerrar chat" %}">
                     <i class="bi bi-x-lg" aria-hidden="true"></i>
                 </button>
             </div>
@@ -34,9 +34,9 @@
 
         <form id="pcbot-form" class="pcbot-inputbar" autocomplete="off">
             {% csrf_token %}
-            <input type="text" id="pcbot-input" class="pcbot-input" placeholder="Escribe tu consulta..."
-                maxlength="1000" aria-label="Escribe tu consulta para PillcoBot">
-            <button type="submit" id="pcbot-send" class="pcbot-send" aria-label="Enviar mensaje">
+            <input type="text" id="pcbot-input" class="pcbot-input" placeholder="{% translate "Escribe tu consulta..." %}"
+                maxlength="1000" aria-label="{% translate "Escribe tu consulta para PillcoBot" %}">
+            <button type="submit" id="pcbot-send" class="pcbot-send" aria-label="{% translate "Enviar mensaje" %}">
                 <i class="bi bi-send-fill" aria-hidden="true"></i>
             </button>
         </form>

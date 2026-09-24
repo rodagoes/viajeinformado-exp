@@ -62,6 +62,8 @@ CHATBOT_RATE_LIMIT_WINDOW_SECONDS = env.int("CHATBOT_RATE_LIMIT_WINDOW_SECONDS",
 # Application definition
 
 INSTALLED_APPS = [
+    # Debe ir antes de django.contrib.admin (parchea el admin para los campos traducidos).
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -99,6 +101,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'apps.base.middleware.CookieLocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -119,10 +122,12 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.base.context_processors.header_nav_items',
                 'apps.base.context_processors.active_nav',
+                'apps.base.context_processors.js_i18n',
             ],
         },
     },
@@ -153,6 +158,21 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'es'
+
+# Solo español (original) e inglés. El idioma vive en la cookie de
+# django.views.i18n.set_language; sin i18n_patterns (las URLs no cambian, así
+# no se rompen los callbacks OAuth de allauth ni los fetch con rutas fijas).
+LANGUAGES = [
+    ('es', 'Español'),
+    ('en', 'English'),
+]
+LOCALE_PATHS = [BASE_DIR / 'locale']
+
+# Contenido dinámico (django-modeltranslation): columnas campo_es / campo_en.
+# Si un campo_en está vacío se muestra el español; nunca hay llamadas externas.
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'es'
+MODELTRANSLATION_LANGUAGES = ('es', 'en')
+MODELTRANSLATION_FALLBACK_LANGUAGES = ('es',)
 
 TIME_ZONE = 'America/Lima'
 

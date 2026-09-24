@@ -1,5 +1,6 @@
 import re
 from datetime import date, time, timedelta
+from html import unescape
 from decimal import Decimal
 from unittest.mock import patch
 
@@ -10,7 +11,7 @@ from django.db import connection
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
-from django.utils import timezone
+from django.utils import timezone, translation
 
 from apps.eventos.forms import PromocionarEventoForm, ReportarProblemaEventoForm
 from apps.eventos.models import (
@@ -767,9 +768,12 @@ class EventosVistaTests(EventosTestDataMixin, TestCase):
         )
         self.assertEqual(response.context["cantidad_filtros_activos"], 1)
 
-    def test_contador_filtros_activos_cuenta_fecha_y_cuando_como_un_solo_filtro(self):
-        response = self.client.get(reverse("eventos:listado_eventos"), {"cuando": "hoy"})
-        self.assertEqual(response.context["cantidad_filtros_activos"], 1)
+    def test_contador_filtros_activos_no_cuenta_fecha_ni_cuando(self):
+        """El badge de "Filtros" es solo del panel: la fecha tiene su propio control visible."""
+        for params in ({"cuando": "hoy"}, {"fecha": "2026-10-20"}, {"desde": "2026-10-20", "hasta": "2026-10-31"}):
+            response = self.client.get(reverse("eventos:listado_eventos"), params)
+            self.assertEqual(response.context["cantidad_filtros_activos"], 0, params)
+            self.assertFalse(response.context["hay_filtros_activos"], params)
 
     def test_categorias_secundarias_no_duplican_eventos(self):
         secundaria_1 = CategoriaEvento.objects.create(nombre="Gastronomía test", slug="gastronomia-test")
@@ -1647,12 +1651,19 @@ class EventosE5AccesibilidadYUxTests(EventosTestDataMixin, TestCase):
         self.assertContains(response, 'aria-haspopup="dialog"')
         self.assertContains(response, 'aria-controls="ev-modal-info"')
 
-    def test_fecha_manual_activa_se_muestra_formateada_y_marca_pill_activo(self):
-        """R2/sección 12: con ?fecha= activa, el pill de 'Elegir fecha' debe
-        mostrar la fecha elegida (dd/mm/aaaa) y quedar visualmente activo."""
+    def test_fecha_unica_activa_marca_el_dia_en_la_tira(self):
+        """?fecha= (día de la tira de 14 días) sigue funcionando: el día queda activo."""
         response = self.client.get(reverse("eventos:listado_eventos"), {"fecha": "2026-08-22"})
-        self.assertContains(response, "22/08/2026")
-        self.assertContains(response, 'class="ev-fecha-picker is-active"')
+        self.assertContains(response, 'data-date="2026-08-22"')
+        self.assertContains(response, 'aria-current="date"')
+        self.assertNotContains(response, "ev-rango__picker is-active")
+
+    def test_rango_activo_muestra_resumen_y_marca_pill_activo(self):
+        response = self.client.get(
+            reverse("eventos:listado_eventos"), {"desde": "2026-10-20", "hasta": "2026-10-31"}
+        )
+        self.assertContains(response, "ev-rango__picker is-active")
+        self.assertContains(response, "20 oct. – 31 oct.")
 
     def test_sin_fecha_activa_el_pill_dice_elegir_fecha(self):
         response = self.client.get(reverse("eventos:listado_eventos"))
@@ -2050,9 +2061,15 @@ class EventosBug1FechaPickerTests(EventosTestDataMixin, TestCase):
     'Elegir fecha'; con JS activo nunca debe existir un botón externo de
     confirmación (el mecanismo nativo del dispositivo es la única confirmación)."""
 
-    def test_input_date_nativo_presente(self):
+    def test_inputs_date_nativos_desde_hasta_presentes_como_fallback(self):
+        # El picker de fecha única (input date `fecha`) se reemplazó por un rango:
+        # los <input type="date"> nativos `desde`/`hasta` son el fallback (Flatpickr
+        # los deshabilita al inicializarse) y los hidden arrancan `disabled`.
         response = self.client.get(reverse("eventos:listado_eventos"))
-        self.assertContains(response, 'type="date" id="ev-fecha-input" name="fecha"')
+        self.assertContains(response, 'type="date" name="desde"')
+        self.assertContains(response, 'type="date" name="hasta"')
+        self.assertContains(response, 'name="desde" value="" data-rango-hidden="desde" disabled')
+        self.assertContains(response, 'name="hasta" value="" data-rango-hidden="hasta" disabled')
 
     def test_no_existe_boton_externo_de_aplicar_fecha_fuera_de_noscript(self):
         response = self.client.get(reverse("eventos:listado_eventos"))
@@ -2279,3 +2296,447 @@ class EventosBug4OcurrenciaContextualTests(EventosTestDataMixin, TestCase):
         response = self._get({"cuando": "esta_semana"}, hoy=date(2026, 4, 5))
         tarjetas = {t["evento"].id: t for t in response.context["tarjetas"]}
         self.assertEqual(tarjetas[evento.id]["fecha"]["principal"], "3 de abril")
+
+
+class EventosRangoFechasTests(EventosTestDataMixin, TestCase):
+    """Filtro por rango (?desde=&hasta=): solapamiento, validación explícita,
+    fallback estricto de ±14 días y separación antes/después del viaje."""
+
+    DESDE = date(2026, 10, 20)
+    HASTA = date(2026, 10, 31)
+
+    def setUp(self):
+        self.url = reverse("eventos:listado_eventos")
+
+    def crear(self, **overrides):
+        evento = self.evento_base(**overrides)
+        evento.full_clean()
+        evento.save()
+        return evento
+
+    def crear_rango(self, inicio, fin, **overrides):
+        return self.crear(tipo_fecha="rango", fecha_inicio=inicio, fecha_fin=fin, **overrides)
+
+    def crear_dia(self, dia, **overrides):
+        return self.crear(tipo_fecha="exacta", fecha_inicio=dia, **overrides)
+
+    def consultar(self, desde=None, hasta=None, **extra):
+        params = dict(extra)
+        if desde is not None:
+            params["desde"] = desde if isinstance(desde, str) else desde.isoformat()
+        if hasta is not None:
+            params["hasta"] = hasta if isinstance(hasta, str) else hasta.isoformat()
+        return self.client.get(self.url, params)
+
+    def consultar_viaje(self, **extra):
+        return self.consultar(self.DESDE, self.HASTA, **extra)
+
+    def ids_exactos(self, response):
+        return {t["evento"].id for t in response.context["tarjetas"]}
+
+    # ---- contrato y validación ----
+
+    def test_rango_valido_activa_el_filtro_y_resume_las_fechas(self):
+        self.crear_dia(date(2026, 10, 25))
+        response = self.consultar_viaje()
+        self.assertTrue(response.context["rango_activo"])
+        self.assertEqual(response.context["rango_error"], "")
+        self.assertEqual(response.context["rango_resumen"], "20 oct. – 31 oct.")
+        self.assertEqual(response.context["rango_titulo"], "1 evento durante tu viaje")
+        self.assertContains(response, "1 evento durante tu viaje")
+
+    def test_titulo_en_plural(self):
+        self.crear_dia(date(2026, 10, 25))
+        self.crear_dia(date(2026, 10, 26))
+        self.assertEqual(self.consultar_viaje().context["rango_titulo"], "2 eventos durante tu viaje")
+
+    def test_rango_tiene_prioridad_sobre_fecha_y_cuando(self):
+        dentro = self.crear_dia(date(2026, 10, 25))
+        response = self.consultar_viaje(fecha="2026-08-15", cuando="hoy")
+        self.assertIn(dentro, response.context["eventos"])
+        self.assertIsNone(response.context["fecha_activa"])
+        self.assertEqual(response.context["cuando_activo"], "")
+
+    def test_hasta_anterior_a_desde_muestra_error_y_conserva_valores(self):
+        self.crear_dia(date(2026, 10, 25))
+        response = self.consultar("2026-10-31", "2026-10-20")
+        self.assertFalse(response.context["rango_activo"])
+        self.assertEqual(response.context["rango_error"], "La fecha de fin no puede ser anterior a la de inicio.")
+        self.assertContains(response, 'role="alert"')
+        # No se intercambian en silencio: los valores escritos siguen en el formulario.
+        self.assertEqual(response.context["desde_valor"], "2026-10-31")
+        self.assertEqual(response.context["hasta_valor"], "2026-10-20")
+        self.assertContains(response, 'type="date" name="desde" value="2026-10-31"')
+
+    def test_rango_de_mas_de_366_dias_da_error_y_no_recorta(self):
+        response = self.consultar("2026-01-01", "2027-01-03")  # 367 días
+        self.assertFalse(response.context["rango_activo"])
+        self.assertEqual(response.context["rango_error"], "Selecciona un rango de hasta 366 días.")
+        self.assertEqual(response.context["desde_valor"], "2026-01-01")
+        self.assertEqual(response.context["hasta_valor"], "2027-01-03")
+        self.assertNotIn("desde=", response.context["querystring_paginacion"])
+
+    def test_rango_de_exactamente_366_dias_es_valido(self):
+        response = self.consultar("2026-01-01", "2027-01-02")  # 366 días
+        self.assertTrue(response.context["rango_activo"])
+        self.assertEqual(response.context["rango_error"], "")
+
+    def test_una_sola_fecha_da_error(self):
+        response = self.consultar(desde="2026-10-20")
+        self.assertFalse(response.context["rango_activo"])
+        self.assertEqual(
+            response.context["rango_error"], "Selecciona una fecha de inicio y una de fin válidas."
+        )
+        self.assertEqual(response.context["desde_valor"], "2026-10-20")
+
+    def test_fechas_basura_dan_error_sin_500(self):
+        response = self.consultar("abc", "xyz")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["rango_error"])
+        self.assertEqual(response.context["desde_valor"], "")
+
+    def test_un_dia_es_un_rango_valido(self):
+        dentro = self.crear_dia(date(2026, 10, 20))
+        response = self.consultar("2026-10-20", "2026-10-20")
+        self.assertIn(dentro, response.context["eventos"])
+
+    def test_inputs_hidden_conservan_los_valores_para_el_backend(self):
+        response = self.consultar_viaje()
+        self.assertContains(response, 'name="desde" value="2026-10-20" data-rango-hidden="desde"')
+        self.assertContains(response, 'name="hasta" value="2026-10-31" data-rango-hidden="hasta"')
+
+    # ---- solapamiento ----
+
+    def test_evento_totalmente_dentro(self):
+        e = self.crear_rango(date(2026, 10, 22), date(2026, 10, 24))
+        self.assertIn(e.id, self.ids_exactos(self.consultar_viaje()))
+
+    def test_evento_que_empieza_antes_y_termina_dentro(self):
+        e = self.crear_rango(date(2026, 10, 18), date(2026, 10, 24))
+        self.assertIn(e.id, self.ids_exactos(self.consultar_viaje()))
+
+    def test_evento_que_empieza_dentro_y_termina_despues(self):
+        e = self.crear_rango(date(2026, 10, 28), date(2026, 11, 3))
+        self.assertIn(e.id, self.ids_exactos(self.consultar_viaje()))
+
+    def test_evento_que_cubre_todo_el_rango(self):
+        e = self.crear_rango(date(2026, 10, 1), date(2026, 11, 30))
+        self.assertIn(e.id, self.ids_exactos(self.consultar_viaje()))
+
+    def test_evento_de_un_solo_dia_dentro(self):
+        e = self.crear_dia(date(2026, 10, 31))
+        self.assertIn(e.id, self.ids_exactos(self.consultar_viaje()))
+
+    def test_evento_completamente_fuera_no_es_exacto(self):
+        e = self.crear_rango(date(2026, 9, 1), date(2026, 9, 5))
+        self.assertNotIn(e.id, self.ids_exactos(self.consultar_viaje()))
+
+    def test_recurrente_anual_dentro_del_rango(self):
+        e = self.crear(tipo_fecha="anual_fija", fecha_inicio=None, dia_inicio_anual=25, mes_inicio_anual=10)
+        response = self.consultar_viaje()
+        self.assertIn(e.id, self.ids_exactos(response))
+        tarjeta = response.context["tarjetas"][0]
+        self.assertEqual(tarjeta["fecha"]["principal"], "25 de octubre")
+
+    def test_mes_aproximado_y_por_confirmar_quedan_fuera(self):
+        self.crear(tipo_fecha="mes_aproximado", fecha_inicio=None, mes_aproximado=10, anio_aproximado=2026)
+        self.crear(tipo_fecha="por_confirmar", fecha_inicio=None)
+        response = self.consultar_viaje()
+        self.assertEqual(self.ids_exactos(response), set())
+        self.assertFalse(response.context["hay_cercanos"])
+
+    # ---- cercanos ±14 días ----
+
+    def test_sin_exactos_muestra_evento_5_dias_antes(self):
+        e = self.crear_dia(date(2026, 10, 15))
+        response = self.consultar_viaje()
+        antes = response.context["cercanos_antes"]
+        self.assertEqual([t["evento"].id for t in antes], [e.id])
+        self.assertEqual(antes[0]["distancia_texto"], "5 días antes de tu llegada")
+        self.assertEqual(response.context["cercanos_despues"], [])
+        self.assertContains(response, "Justo antes de tu visita")
+        self.assertNotContains(response, "Poco después de tu visita")
+
+    def test_sin_exactos_muestra_evento_7_dias_despues(self):
+        e = self.crear_dia(date(2026, 11, 7))
+        response = self.consultar_viaje()
+        despues = response.context["cercanos_despues"]
+        self.assertEqual([t["evento"].id for t in despues], [e.id])
+        self.assertEqual(despues[0]["distancia_texto"], "7 días después de tu viaje")
+        self.assertContains(response, "Poco después de tu visita")
+
+    def test_distancia_de_un_dia_usa_singular(self):
+        self.crear_dia(date(2026, 10, 19))
+        self.crear_dia(date(2026, 11, 1))
+        response = self.consultar_viaje()
+        self.assertEqual(response.context["cercanos_antes"][0]["distancia_texto"], "1 día antes de tu llegada")
+        self.assertEqual(response.context["cercanos_despues"][0]["distancia_texto"], "1 día después de tu viaje")
+
+    def test_la_distancia_es_respecto_al_viaje_no_a_hoy(self):
+        # Mismo resultado sin importar la fecha real de hoy.
+        self.crear_dia(date(2026, 10, 15))
+        with patch("apps.eventos.views.timezone.localdate", return_value=date(2030, 1, 1)):
+            response = self.consultar_viaje()
+        self.assertEqual(response.context["cercanos_antes"][0]["distancia_texto"], "5 días antes de tu llegada")
+
+    def test_limite_estricto_de_14_dias(self):
+        dentro_antes = self.crear_dia(date(2026, 10, 6))     # 14 días antes: entra
+        fuera_antes = self.crear_dia(date(2026, 10, 5))      # 15 días antes: no
+        dentro_despues = self.crear_dia(date(2026, 11, 14))  # 14 días después: entra
+        fuera_despues = self.crear_dia(date(2026, 11, 15))   # 15 días después: no
+        response = self.consultar_viaje()
+        ids = {t["evento"].id for t in response.context["cercanos_antes"] + response.context["cercanos_despues"]}
+        self.assertEqual(ids, {dentro_antes.id, dentro_despues.id})
+        self.assertNotIn(fuera_antes.id, ids)
+        self.assertNotIn(fuera_despues.id, ids)
+
+    def test_evento_lejano_no_se_muestra_y_sale_el_empty_state_util(self):
+        self.crear_dia(date(2026, 12, 25))
+        response = self.consultar_viaje()
+        self.assertFalse(response.context["hay_cercanos"])
+        self.assertContains(response, "No tenemos eventos registrados cerca de esas fechas.")
+        self.assertContains(response, reverse("turismo:listado_lugares"))
+        self.assertContains(response, reverse("gastronomia:platos_tipicos"))
+        self.assertContains(response, reverse("establecimientos:listado_alojamientos"))
+        self.assertNotContains(response, "Justo antes de tu visita")
+
+    def test_cercanos_respetan_los_filtros_existentes(self):
+        otra = CategoriaEvento.objects.create(nombre="Ferias", slug="ferias")
+        propio = self.crear_dia(date(2026, 10, 15))
+        ajeno = self.crear_dia(date(2026, 10, 16), categoria_principal=otra)
+        response = self.consultar_viaje(categoria=self.categoria.slug)
+        ids = [t["evento"].id for t in response.context["cercanos_antes"]]
+        self.assertEqual(ids, [propio.id])
+        self.assertNotIn(ajeno.id, ids)
+
+    def test_orden_antes_mas_cercano_primero_y_despues_mas_proximo_primero(self):
+        lejano_antes = self.crear_dia(date(2026, 10, 10))
+        cercano_antes = self.crear_dia(date(2026, 10, 17))
+        lejano_despues = self.crear_dia(date(2026, 11, 10))
+        cercano_despues = self.crear_dia(date(2026, 11, 2))
+        response = self.consultar_viaje()
+        self.assertEqual(
+            [t["evento"].id for t in response.context["cercanos_antes"]], [cercano_antes.id, lejano_antes.id]
+        )
+        self.assertEqual(
+            [t["evento"].id for t in response.context["cercanos_despues"]], [cercano_despues.id, lejano_despues.id]
+        )
+
+    def test_maximo_3_cards_por_bloque(self):
+        for dia in (8, 10, 12, 14, 16):
+            self.crear_dia(date(2026, 10, dia))
+        response = self.consultar_viaje()
+        self.assertEqual(len(response.context["cercanos_antes"]), 3)
+        # Los 3 más cercanos al viaje.
+        dias = [t["evento"].fecha_inicio.day for t in response.context["cercanos_antes"]]
+        self.assertEqual(dias, [16, 14, 12])
+
+    def test_evento_recurrente_cercano_calcula_distancia_con_su_ocurrencia(self):
+        e = self.crear(tipo_fecha="anual_fija", fecha_inicio=None, dia_inicio_anual=15, mes_inicio_anual=10)
+        response = self.consultar_viaje()
+        antes = response.context["cercanos_antes"]
+        self.assertEqual([t["evento"].id for t in antes], [e.id])
+        self.assertEqual(antes[0]["distancia_texto"], "5 días antes de tu llegada")
+
+    def test_los_cercanos_alimentan_el_modal_unico(self):
+        e = self.crear_dia(date(2026, 10, 15))
+        response = self.consultar_viaje()
+        self.assertTrue(response.context["hay_modal"])
+        self.assertIn(e.id, [d["id"] for d in response.context["datos_modal"]])
+        self.assertContains(response, 'id="ev-modal-info"')
+
+    def test_boton_quitar_filtros_es_explicito_y_conserva_el_rango(self):
+        response = self.consultar_viaje(categoria=self.categoria.slug)
+        self.assertContains(response, "Quitar filtros y ver de nuevo")
+        qs = response.context["querystring_sin_filtros"]
+        self.assertIn("desde=2026-10-20", qs)
+        self.assertIn("hasta=2026-10-31", qs)
+        self.assertNotIn("categoria", qs)
+
+    def test_sin_filtros_no_aparece_quitar_filtros(self):
+        self.assertNotContains(self.consultar_viaje(), "Quitar filtros y ver de nuevo")
+
+    # ---- integración con el resto de filtros/paginación ----
+
+    def test_paginacion_conserva_el_rango(self):
+        for dia in range(1, 9):
+            self.crear_dia(date(2026, 10, 19 + dia))
+        response = self.consultar_viaje()
+        self.assertEqual(response.context["page_obj"].paginator.num_pages, 2)
+        self.assertIn("desde=2026-10-20", response.context["querystring_paginacion"])
+        self.assertIn("hasta=2026-10-31", response.context["querystring_paginacion"])
+        pagina2 = self.consultar_viaje(page=2)
+        self.assertEqual(pagina2.context["page_obj"].number, 2)
+
+    def test_quick_filters_y_dias_de_la_tira_limpian_el_rango(self):
+        response = self.consultar_viaje(categoria=self.categoria.slug)
+        for qs in response.context["querystrings_cuando"].values():
+            self.assertNotIn("desde", qs)
+            self.assertNotIn("hasta", qs)
+            self.assertIn("categoria=", qs)
+        for dia in response.context["dias_selector"]:
+            self.assertNotIn("desde", dia["querystring"])
+        self.assertNotIn("desde", response.context["querystring_todos"])
+
+    def test_el_rango_no_cuenta_en_el_badge_de_filtros(self):
+        self.assertEqual(self.consultar_viaje().context["cantidad_filtros_activos"], 0)
+        self.assertEqual(
+            self.consultar_viaje(categoria=self.categoria.slug).context["cantidad_filtros_activos"], 1
+        )
+
+    def test_limpiar_rango_vuelve_al_listado_general(self):
+        e = self.crear_dia(date(2099, 1, 1))
+        response = self.client.get(self.url + "?" + self.consultar_viaje().context["querystring_sin_rango"])
+        self.assertFalse(response.context["rango_activo"])
+        self.assertIn(e, response.context["eventos"])
+
+    def test_cambiar_el_rango_cambia_los_resultados(self):
+        e = self.crear_dia(date(2026, 12, 25))
+        self.assertNotIn(e.id, self.ids_exactos(self.consultar_viaje()))
+        self.assertIn(e.id, self.ids_exactos(self.consultar("2026-12-20", "2026-12-31")))
+
+    def test_selector_de_rango_no_rompe_sin_rango(self):
+        response = self.client.get(self.url)
+        self.assertFalse(response.context["rango_activo"])
+        self.assertEqual(response.context["cercanos_antes"], [])
+        self.assertContains(response, "Elegir fechas")
+
+    # ---- cambio de idioma conserva la planificación ----
+
+    def test_cambiar_de_idioma_conserva_rango_y_filtros(self):
+        ruta = (
+            f"{self.url}?desde=2026-10-20&hasta=2026-10-31&categoria={self.categoria.slug}"
+            f"&provincia={self.provincia.slug}&distrito={self.distrito.slug}&page=1"
+        )
+        pagina = self.client.get(ruta)
+        # El selector de idioma envía la URL completa como `next` (escapada en el HTML).
+        self.assertContains(pagina, 'name="next" value="' + ruta.replace("&", "&amp;") + '"')
+
+        respuesta = self.client.post(reverse("set_language"), {"language": "en", "next": ruta})
+        self.assertEqual(respuesta.status_code, 302)
+        self.assertEqual(respuesta["Location"], ruta)
+
+        en_ingles = self.client.get(respuesta["Location"])
+        self.assertContains(en_ingles, '<html lang="en">')
+        ctx = en_ingles.context
+        self.assertTrue(ctx["rango_activo"])
+        self.assertEqual(ctx["desde_valor"], "2026-10-20")
+        self.assertEqual(ctx["hasta_valor"], "2026-10-31")
+        self.assertEqual(ctx["filtros_activos"]["categoria"], self.categoria.slug)
+        self.assertEqual(ctx["filtros_activos"]["provincia"], self.provincia.slug)
+        self.assertEqual(ctx["filtros_activos"]["distrito"], self.distrito.slug)
+        self.assertEqual(ctx["page_obj"].number, 1)
+
+
+class EventosControlesFechaYFiltrosTests(EventosTestDataMixin, TestCase):
+    """Chip de fechas (X propia que quita solo el rango) y "Limpiar filtros" (solo filtros del
+    panel): la UI debe corresponder exactamente con lo que hace cada acción."""
+
+    RANGO = {"desde": "2026-10-20", "hasta": "2026-10-31"}
+
+    def setUp(self):
+        self.url = reverse("eventos:listado_eventos")
+        self.addCleanup(translation.activate, "es")
+
+    def pagina(self, idioma="es", **params):
+        self.client.post(reverse("set_language"), {"language": idioma, "next": "/"})
+        return self.client.get(self.url, params)
+
+    def hrefs(self, html, clase):
+        encontrados = re.findall(r'<a href="([^"]*)"[^>]*class="[^"]*\b' + clase + r'\b', html)
+        return [unescape(h) for h in encontrados]  # el HTML escapa & como &amp;
+
+    # ---- X del chip ----
+
+    def test_con_rango_hay_una_unica_x_especifica_dentro_del_chip(self):
+        html = self.pagina(**self.RANGO).content.decode()
+        self.assertEqual(html.count('class="ev-rango__quitar"'), 1)
+        chip = html[html.index("data-rango-picker"): html.index("ev-rango__nativo")]
+        self.assertIn("ev-rango__quitar", chip)  # la X forma parte del propio chip
+        self.assertIn('aria-label="Eliminar rango de fechas"', chip)
+        self.assertNotIn("Quitar fechas", html)
+        # Segunda X circular genérica de "limpiar todo": eliminada.
+        self.assertNotIn("ev-btn-limpiar-rapido", html)
+        self.assertNotIn("Limpiar todos los filtros", html)
+
+    def test_sin_rango_no_hay_x(self):
+        self.assertNotContains(self.pagina(), "ev-rango__quitar")
+        self.assertNotContains(self.pagina(cuando="hoy"), "ev-rango__quitar")
+
+    def test_la_x_no_abre_flatpickr_es_hermana_del_input_y_no_lo_envuelve(self):
+        html = self.pagina(**self.RANGO).content.decode()
+        chip = html[html.index("data-rango-picker"): html.index("ev-rango__nativo")]
+        cierre_input = chip.index(">", chip.index('id="ev-rango-input"'))
+        # El <a> de la X viene DESPUÉS de cerrarse el <input>: no lo contiene ni es su ancestro.
+        self.assertNotIn("<a ", chip[:cierre_input])
+        self.assertLess(cierre_input, chip.index("ev-rango__quitar"))
+        js = (settings.BASE_DIR / "static" / "assets" / "js" / "agenda-eventos.js").read_text(encoding="utf-8")
+        self.assertNotIn("ev-rango__quitar", js)  # sin handlers de JS que compitan con el enlace
+
+    def test_la_x_quita_solo_el_rango_y_conserva_los_demas_filtros(self):
+        respuesta = self.pagina(categoria=self.categoria.slug, provincia=self.provincia.slug, **self.RANGO)
+        href = self.hrefs(respuesta.content.decode(), "ev-rango__quitar")[0]
+        self.assertNotIn("desde", href)
+        self.assertNotIn("hasta", href)
+        self.assertIn("categoria=" + self.categoria.slug, href)
+        self.assertIn("provincia=" + self.provincia.slug, href)
+        destino = self.client.get(self.url + href)
+        self.assertFalse(destino.context["rango_activo"])
+        self.assertEqual(destino.context["filtros_activos"]["categoria"], self.categoria.slug)
+        self.assertEqual(destino.context["cantidad_filtros_activos"], 2)
+
+    # ---- badge y "Limpiar filtros" ----
+
+    def test_solo_fecha_activa_sin_badge_ni_limpiar_filtros(self):
+        for params in (self.RANGO, {"cuando": "hoy"}, {"fecha": "2026-10-20"}):
+            html = self.pagina(**params).content.decode()
+            self.assertNotIn("ev-btn-filtros__badge", html, params)
+            self.assertNotIn("ev-acciones-rapidas__limpiar", html, params)
+            self.assertNotIn("ev-filtros__pill--limpiar", html, params)  # desktop: misma semántica
+            self.assertNotIn("ev-filtros__limpiar", html, params)
+
+    def test_con_otros_filtros_el_badge_cuenta_solo_esos_y_aparece_limpiar_filtros(self):
+        respuesta = self.pagina(categoria=self.categoria.slug, provincia=self.provincia.slug, **self.RANGO)
+        html = respuesta.content.decode()
+        self.assertEqual(respuesta.context["cantidad_filtros_activos"], 2)  # categoría + provincia, sin la fecha
+        self.assertRegex(html, r'<span class="ev-btn-filtros__badge">2</span>')
+        self.assertIn("ev-acciones-rapidas__limpiar", html)
+        self.assertContains(respuesta, "Limpiar filtros")
+
+    def test_limpiar_filtros_quita_los_del_panel_y_conserva_la_fecha(self):
+        respuesta = self.pagina(categoria=self.categoria.slug, distrito=self.distrito.slug, **self.RANGO)
+        href = self.hrefs(respuesta.content.decode(), "ev-acciones-rapidas__limpiar")[0]
+        for filtro in ("categoria", "provincia", "distrito", "tags"):
+            self.assertNotIn(filtro, href)
+        self.assertIn("desde=2026-10-20", href)
+        self.assertIn("hasta=2026-10-31", href)
+        destino = self.client.get(self.url + href)
+        self.assertTrue(destino.context["rango_activo"])
+        self.assertEqual(destino.context["cantidad_filtros_activos"], 0)
+
+    def test_limpiar_filtros_conserva_tambien_cuando_y_fecha(self):
+        for temporal in ({"cuando": "hoy"}, {"fecha": "2026-10-20"}):
+            html = self.pagina(categoria=self.categoria.slug, **temporal).content.decode()
+            href = self.hrefs(html, "ev-acciones-rapidas__limpiar")[0]
+            clave, valor = next(iter(temporal.items()))
+            self.assertIn(f"{clave}={valor}", href)
+
+    def test_movil_y_desktop_comparten_la_semantica_de_limpiar(self):
+        html = self.pagina(categoria=self.categoria.slug, **self.RANGO).content.decode()
+        movil = self.hrefs(html, "ev-acciones-rapidas__limpiar")
+        cabecera = self.hrefs(html, "ev-filtros__limpiar")  # cabecera del offcanvas
+        desktop = self.hrefs(html, "ev-filtros__pill--limpiar")  # panel lateral
+        self.assertEqual((len(movil), len(cabecera), len(desktop)), (1, 1, 1))
+        self.assertEqual(set(movil + cabecera + desktop), set(movil))  # las tres acciones hacen exactamente lo mismo
+        self.assertIn("desde=2026-10-20", movil[0])
+
+    # ---- i18n ----
+
+    def test_textos_nuevos_es_y_en(self):
+        es = self.pagina(categoria=self.categoria.slug, **self.RANGO).content.decode()
+        self.assertIn("Eliminar rango de fechas", es)
+        self.assertIn(">Limpiar filtros<", es)
+        en = self.pagina("en", categoria=self.categoria.slug, **self.RANGO).content.decode()
+        self.assertIn('aria-label="Remove date range"', en)
+        self.assertIn(">Clear filters<", en)
+        self.assertNotIn("Eliminar rango de fechas", en)

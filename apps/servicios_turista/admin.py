@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 from .models import (
     CategoriaServicioTurista,
     ServicioTurista,
@@ -7,7 +8,7 @@ from .models import (
 )
 
 @admin.register(CategoriaServicioTurista)
-class CategoriaServicioTuristaAdmin(admin.ModelAdmin):
+class CategoriaServicioTuristaAdmin(TranslationAdmin):
     list_display = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
     search_fields = ["nombre", "descripcion", "icono_bootstrap"]
     list_filter = ["activo", "tipo_icono"]
@@ -28,20 +29,20 @@ class CategoriaServicioTuristaAdmin(admin.ModelAdmin):
     )
 
 
-class ContactoServicioTuristaInline(admin.TabularInline):
+class ContactoServicioTuristaInline(TranslationTabularInline):
     model = ContactoServicioTurista
     extra = 0
     fields = ["tipo_contacto", "etiqueta", "valor", "es_principal", "orden", "activo"]
 
 
-class ImagenServicioTuristaInline(admin.TabularInline):
+class ImagenServicioTuristaInline(TranslationTabularInline):
     model = ImagenServicioTurista
     extra = 0
     fields = ["imagen", "titulo", "texto_alt", "orden", "activo"]
 
 
 @admin.register(ServicioTurista)
-class ServicioTuristaAdmin(admin.ModelAdmin):
+class ServicioTuristaAdmin(TranslationAdmin):
     list_display = ["nombre", "categoria_principal", "distrito", "disponibilidad", "tipo_atencion", "telefono", "destacado", "activo"]
     search_fields = [
         "nombre", "descripcion_corta", "descripcion", "direccion", 
@@ -109,7 +110,7 @@ class ServicioTuristaAdmin(admin.ModelAdmin):
 
 
 @admin.register(ContactoServicioTurista)
-class ContactoServicioTuristaAdmin(admin.ModelAdmin):
+class ContactoServicioTuristaAdmin(TranslationAdmin):
     list_display = ["servicio", "tipo_contacto", "etiqueta", "valor", "es_principal", "orden", "activo"]
     search_fields = ["servicio__nombre", "etiqueta", "valor"]
     list_filter = ["activo", "es_principal", "tipo_contacto", "servicio__categoria_principal"]

@@ -13,6 +13,8 @@ import datetime
 from decimal import Decimal
 
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from apps.monedas.models import TipoCambio
 from apps.ubicaciones.models import Distrito, Provincia
@@ -40,11 +42,11 @@ MAX_RESTAURANTES = 10
 MAX_ALOJAMIENTOS = 10
 MOMENTOS = ("mañana", "tarde")
 NO_INCLUIDOS_SIEMPRE = [
-    "traslado hacia/desde Huánuco",
-    "movilidad local",
-    "otras comidas y gastos personales",
+    gettext_lazy("traslado hacia/desde Huánuco"),
+    gettext_lazy("movilidad local"),
+    gettext_lazy("otras comidas y gastos personales"),
 ]
-MOTIVO_FAVORITO = "Guardado en tus favoritos"
+MOTIVO_FAVORITO = gettext_lazy("Guardado en tus favoritos")
 
 
 def _destino(distrito, provincia):
@@ -81,7 +83,7 @@ def _presupuesto(presupuesto, moneda):
         return monto, monto, None, None
     tipo_cambio = TipoCambio.vigente()
     if tipo_cambio is None or not tipo_cambio.venta:
-        return monto, None, None, (
+        return monto, None, None, _(
             "No hay tipo de cambio vigente registrado, así que no puedo verificar el ajuste "
             "del presupuesto en dólares. Si me lo indicas en soles, lo comparo con los costos registrados."
         )
@@ -128,7 +130,7 @@ def _actividad(momento, tipo, resumen, favorito=False):
         "momento": momento,
         "tipo": tipo,
         "item": resumen,
-        "motivo": MOTIVO_FAVORITO if favorito else None,
+        "motivo": str(MOTIVO_FAVORITO) if favorito else None,
     }
 
 
@@ -151,11 +153,11 @@ def _armar_dias(inicio, dias, lugares, restaurantes, eventos, fav_lugares, fav_e
                 continue
             actividades.append(_actividad("evento", "evento", evento))
             colocados.add(evento["id"])
-        titulo = f"Día {n + 1}"
+        titulo = _("Día %(n)s") % {"n": n + 1}
         if n == 0:
-            titulo += " · Llegada"
+            titulo += " · " + _("Llegada")
         elif n == dias - 1 and dias > 1:
-            titulo += " · Salida"
+            titulo += " · " + _("Salida")
         plan.append({"numero": n + 1, "fecha": fecha.isoformat(), "titulo": titulo, "actividades": actividades})
     return plan
 
@@ -167,32 +169,32 @@ def _costos(alojamiento, noches, plan, presupuesto_pen):
         nonlocal minimo, maximo
         desde, hasta = _rango(obj, factor)
         if desde is None:
-            no_incluidos.append(f"{concepto} (sin precio registrado)")
+            no_incluidos.append(_("%(concepto)s (sin precio registrado)") % {"concepto": concepto})
             return
         minimo += desde
         maximo += hasta
         detalle.append({"concepto": concepto, "minimo": decimal_str(desde), "maximo": decimal_str(hasta)})
 
     if alojamiento is not None and noches:
-        sumar(f"Alojamiento: {alojamiento.nombre} ({noches} noche(s))", alojamiento, noches)
+        sumar(_("Alojamiento: %(nombre)s (%(noches)s noche(s))") % {"nombre": alojamiento.nombre, "noches": noches}, alojamiento, noches)
     for dia in plan:
         for act in dia["actividades"]:
             item, tipo = act["item"], act["tipo"]
             if tipo == "lugar":
                 if item["tipo_costo"] == "pagado" and item["precio_desde"]:
-                    sumar(f"Entrada: {item['nombre']}", _Precio(item))
+                    sumar(_("Entrada: %(nombre)s") % {"nombre": item["nombre"]}, _Precio(item))
                 elif item["tipo_costo"] in ("pagado", "consultar"):
-                    no_incluidos.append(f"entrada a {item['nombre']} (por consultar)")
+                    no_incluidos.append(_("entrada a %(nombre)s (por consultar)") % {"nombre": item["nombre"]})
             elif tipo == "restaurante":
                 if item["precio_desde"]:
-                    sumar(f"Comida: {item['nombre']} (precio mínimo registrado)", _Precio(item))
+                    sumar(_("Comida: %(nombre)s (precio mínimo registrado)") % {"nombre": item["nombre"]}, _Precio(item))
                 else:
-                    no_incluidos.append(f"comida en {item['nombre']} (sin precio registrado)")
+                    no_incluidos.append(_("comida en %(nombre)s (sin precio registrado)") % {"nombre": item["nombre"]})
             elif tipo == "evento":
                 if item["tipo_costo"] == "pagado" and item["precio_desde"]:
-                    sumar(f"Evento: {item['nombre']}", _Precio(item))
+                    sumar(_("Evento: %(nombre)s") % {"nombre": item["nombre"]}, _Precio(item))
                 elif item["tipo_costo"] in ("pagado", "consultar"):
-                    no_incluidos.append(f"evento {item['nombre']} (por consultar)")
+                    no_incluidos.append(_("evento %(nombre)s (por consultar)") % {"nombre": item["nombre"]})
     margen = None if presupuesto_pen is None else presupuesto_pen - minimo
     return {
         "conocido_minimo": decimal_str(minimo),
@@ -200,7 +202,7 @@ def _costos(alojamiento, noches, plan, presupuesto_pen):
         "margen": decimal_str(margen),
         "suficiente": None if margen is None else margen >= 0,
         "detalle": detalle,
-        "no_incluidos": no_incluidos + NO_INCLUIDOS_SIEMPRE,
+        "no_incluidos": no_incluidos + [str(t) for t in NO_INCLUIDOS_SIEMPRE],
     }
 
 
@@ -290,7 +292,7 @@ def planificar_itinerario(
         "alojamiento": None if alojamiento is None else {
             **prov_establecimientos._resumen(alojamiento),
             "cabe_en_presupuesto": cabe,
-            "motivo": MOTIVO_FAVORITO if alojamiento.pk in fav_establecimientos else None,
+            "motivo": str(MOTIVO_FAVORITO) if alojamiento.pk in fav_establecimientos else None,
         },
         "costos": costos,
         "ajustes_por_presupuesto": ajustes,
@@ -298,8 +300,8 @@ def planificar_itinerario(
         "favoritos_usados": favoritos_usados,
         "sin_datos": [
             nombre for nombre, datos in (
-                ("lugares turísticos", seleccion), ("restaurantes", restaurantes),
-                ("alojamientos", alojamiento), ("eventos confirmados", eventos),
+                (_("lugares turísticos"), seleccion), (_("restaurantes"), restaurantes),
+                (_("alojamientos"), alojamiento), (_("eventos confirmados"), eventos),
             ) if not datos
         ],
         "dias_plan": plan,

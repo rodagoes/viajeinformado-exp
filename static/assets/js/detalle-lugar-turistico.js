@@ -112,9 +112,9 @@
 
   function copiarConFeedback(url) {
     copiarAlPortapapeles(url).then(function () {
-      showToast('Enlace copiado al portapapeles');
+      showToast(ViI18n('enlace_copiado_portapapeles', 'Enlace copiado al portapapeles'));
     }).catch(function () {
-      showToast('No se pudo compartir el enlace');
+      showToast(ViI18n('enlace_error', 'No se pudo compartir el enlace'));
     });
   }
 

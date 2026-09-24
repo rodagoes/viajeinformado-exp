@@ -15,7 +15,9 @@ ZONA_PREDETERMINADA_SLUG = "huanuco"
 # Valor sentinela del <select> para "ver todas las zonas a la vez" (no
 # corresponde a ningún Distrito real, se maneja aparte en la vista).
 ZONA_TODAS_SLUG = "todas"
-NOMBRE_ZONA_TODAS = "Todas las zonas"
+from django.utils.translation import gettext_lazy
+
+NOMBRE_ZONA_TODAS = gettext_lazy("Todas las zonas")
 
 # Excepción explícita de nombre público por zona: el distrito oficial no
 # siempre es el nombre por el que el turista conoce el lugar (caso

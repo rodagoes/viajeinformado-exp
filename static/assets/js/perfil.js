@@ -115,7 +115,7 @@
         var quitarBtn = event.target.closest ? event.target.closest('[data-foto-quitar]') : null;
         if (quitarBtn) {
             cerrarDropdownFoto();
-            if (window.confirm('¿Quitar tu foto de perfil?')) {
+            if (window.confirm(ViI18n('perfil_quitar_foto', '¿Quitar tu foto de perfil?'))) {
                 var form = fila('foto_perfil');
                 var submitOculto = form ? form.querySelector('[data-foto-quitar-submit]') : null;
                 if (form && submitOculto) form.requestSubmit(submitOculto);

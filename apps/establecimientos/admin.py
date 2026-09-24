@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin, TranslationStackedInline, TranslationTabularInline
 from .models import (
     CategoriaEstablecimiento,
     ServicioEstablecimiento,
@@ -11,7 +12,7 @@ from .models import (
 from apps.gastronomia.models import PlatoEstablecimiento
 
 @admin.register(CategoriaEstablecimiento)
-class CategoriaEstablecimientoAdmin(admin.ModelAdmin):
+class CategoriaEstablecimientoAdmin(TranslationAdmin):
     list_display = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
     ordering = ("nombre",)
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
@@ -31,7 +32,7 @@ class CategoriaEstablecimientoAdmin(admin.ModelAdmin):
     )
 
 @admin.register(ServicioEstablecimiento)
-class ServicioEstablecimientoAdmin(admin.ModelAdmin):
+class ServicioEstablecimientoAdmin(TranslationAdmin):
     list_display = ("nombre", "aplica_a", "tipo_icono", "icono_bootstrap", "activo", "creado")
     ordering = ("nombre",)
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
@@ -50,7 +51,7 @@ class ServicioEstablecimientoAdmin(admin.ModelAdmin):
         }),
     )
 
-class SucursalEstablecimientoInline(admin.StackedInline):
+class SucursalEstablecimientoInline(TranslationStackedInline):
     model = SucursalEstablecimiento
     extra = 0
     prepopulated_fields = {"slug": ("nombre",)}
@@ -93,12 +94,12 @@ class SucursalEstablecimientoInline(admin.StackedInline):
         }),
     )
 
-class ImagenEstablecimientoInline(admin.TabularInline):
+class ImagenEstablecimientoInline(TranslationTabularInline):
     model = ImagenEstablecimiento
     extra = 1
     fields = ("imagen", "titulo", "texto_alt", "orden", "activo")
 
-class RecomendacionEstablecimientoInline(admin.TabularInline):
+class RecomendacionEstablecimientoInline(TranslationTabularInline):
     model = RecomendacionEstablecimiento
     extra = 1
     max_num = 3
@@ -117,13 +118,13 @@ class PlatoEstablecimientoInline(admin.TabularInline):
     verbose_name = "Plato típico disponible"
     verbose_name_plural = "PLATOS TÍPICOS DISPONIBLES"
 
-class ContactoSucursalEstablecimientoInline(admin.TabularInline):
+class ContactoSucursalEstablecimientoInline(TranslationTabularInline):
     model = ContactoSucursalEstablecimiento
     extra = 1
     fields = ("tipo_contacto", "etiqueta", "valor", "es_principal", "orden", "activo")
 
 @admin.register(Establecimiento)
-class EstablecimientoAdmin(admin.ModelAdmin):
+class EstablecimientoAdmin(TranslationAdmin):
     list_display = (
         "nombre", "tipo", "categoria_principal",
         "total_sucursales", "sucursal_principal",
@@ -211,7 +212,7 @@ class EstablecimientoAdmin(admin.ModelAdmin):
 
 
 @admin.register(SucursalEstablecimiento)
-class SucursalEstablecimientoAdmin(admin.ModelAdmin):
+class SucursalEstablecimientoAdmin(TranslationAdmin):
     list_display = (
         "establecimiento", "nombre", "distrito",
         "localidad", "es_principal", "activo"
@@ -262,7 +263,7 @@ class SucursalEstablecimientoAdmin(admin.ModelAdmin):
     )
 
 @admin.register(ImagenEstablecimiento)
-class ImagenEstablecimientoAdmin(admin.ModelAdmin):
+class ImagenEstablecimientoAdmin(TranslationAdmin):
     list_display = ("establecimiento", "titulo", "orden", "activo", "creado")
     # list_editable = ("orden", "activo")
     ordering = (
@@ -286,7 +287,7 @@ class ImagenEstablecimientoAdmin(admin.ModelAdmin):
 
 
 @admin.register(RecomendacionEstablecimiento)
-class RecomendacionEstablecimientoAdmin(admin.ModelAdmin):
+class RecomendacionEstablecimientoAdmin(TranslationAdmin):
     list_display = ("establecimiento", "orden", "nombre", "tiene_imagen", "tiene_icono", "activo", "creado")
     ordering = ("establecimiento__nombre", "orden", "id")
     search_fields = ("establecimiento__nombre", "nombre")
@@ -316,7 +317,7 @@ class RecomendacionEstablecimientoAdmin(admin.ModelAdmin):
     tiene_icono.short_description = "Ícono alojamiento"
 
 @admin.register(ContactoSucursalEstablecimiento)
-class ContactoSucursalEstablecimientoAdmin(admin.ModelAdmin):
+class ContactoSucursalEstablecimientoAdmin(TranslationAdmin):
     list_display = ("sucursal", "tipo_contacto", "etiqueta", "valor", "es_principal", "orden", "activo")
     # list_editable = ("es_principal", "orden", "activo")
     ordering = (

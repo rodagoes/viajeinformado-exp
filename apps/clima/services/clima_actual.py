@@ -16,6 +16,7 @@ from datetime import datetime
 
 import requests
 from django.core.cache import cache
+from django.utils.translation import gettext, gettext_noop
 
 from ..ubicaciones import ciudad_valida, obtener_ciudad
 
@@ -42,36 +43,36 @@ CAMPOS_ACTUALES = (
 # Código WMO -> (texto legible, estado interno usado por el CSS/ícono).
 # https://open-meteo.com/en/docs (tabla "WMO Weather interpretation codes")
 CODIGOS_WMO = {
-    0: ("Despejado", "soleado"),
-    1: ("Mayormente despejado", "mayormente-despejado"),
-    2: ("Parcialmente nublado", "parcialmente-nublado"),
-    3: ("Nublado", "nublado"),
-    45: ("Neblina", "neblina"),
-    48: ("Neblina con escarcha", "neblina"),
-    51: ("Llovizna ligera", "llovizna"),
-    53: ("Llovizna moderada", "llovizna"),
-    55: ("Llovizna intensa", "llovizna"),
-    56: ("Llovizna helada ligera", "llovizna"),
-    57: ("Llovizna helada intensa", "llovizna"),
-    61: ("Lluvia ligera", "lluvia"),
-    63: ("Lluvia moderada", "lluvia"),
-    65: ("Lluvia intensa", "lluvia-intensa"),
-    66: ("Lluvia helada ligera", "lluvia"),
-    67: ("Lluvia helada intensa", "lluvia-intensa"),
-    71: ("Nevada ligera", "nieve"),
-    73: ("Nevada moderada", "nieve"),
-    75: ("Nevada intensa", "nieve"),
-    77: ("Granos de nieve", "nieve"),
-    80: ("Chubascos ligeros", "lluvia"),
-    81: ("Chubascos moderados", "lluvia"),
-    82: ("Chubascos intensos", "lluvia-intensa"),
-    85: ("Chubascos de nieve ligeros", "nieve"),
-    86: ("Chubascos de nieve intensos", "nieve"),
-    95: ("Tormenta eléctrica", "tormenta"),
-    96: ("Tormenta con granizo ligero", "tormenta"),
-    99: ("Tormenta con granizo intenso", "tormenta"),
+    0: (gettext_noop("Despejado"), "soleado"),
+    1: (gettext_noop("Mayormente despejado"), "mayormente-despejado"),
+    2: (gettext_noop("Parcialmente nublado"), "parcialmente-nublado"),
+    3: (gettext_noop("Nublado"), "nublado"),
+    45: (gettext_noop("Neblina"), "neblina"),
+    48: (gettext_noop("Neblina con escarcha"), "neblina"),
+    51: (gettext_noop("Llovizna ligera"), "llovizna"),
+    53: (gettext_noop("Llovizna moderada"), "llovizna"),
+    55: (gettext_noop("Llovizna intensa"), "llovizna"),
+    56: (gettext_noop("Llovizna helada ligera"), "llovizna"),
+    57: (gettext_noop("Llovizna helada intensa"), "llovizna"),
+    61: (gettext_noop("Lluvia ligera"), "lluvia"),
+    63: (gettext_noop("Lluvia moderada"), "lluvia"),
+    65: (gettext_noop("Lluvia intensa"), "lluvia-intensa"),
+    66: (gettext_noop("Lluvia helada ligera"), "lluvia"),
+    67: (gettext_noop("Lluvia helada intensa"), "lluvia-intensa"),
+    71: (gettext_noop("Nevada ligera"), "nieve"),
+    73: (gettext_noop("Nevada moderada"), "nieve"),
+    75: (gettext_noop("Nevada intensa"), "nieve"),
+    77: (gettext_noop("Granos de nieve"), "nieve"),
+    80: (gettext_noop("Chubascos ligeros"), "lluvia"),
+    81: (gettext_noop("Chubascos moderados"), "lluvia"),
+    82: (gettext_noop("Chubascos intensos"), "lluvia-intensa"),
+    85: (gettext_noop("Chubascos de nieve ligeros"), "nieve"),
+    86: (gettext_noop("Chubascos de nieve intensos"), "nieve"),
+    95: (gettext_noop("Tormenta eléctrica"), "tormenta"),
+    96: (gettext_noop("Tormenta con granizo ligero"), "tormenta"),
+    99: (gettext_noop("Tormenta con granizo intenso"), "tormenta"),
 }
-ESTADO_DESCONOCIDO = ("Condición variable", "variable")
+ESTADO_DESCONOCIDO = (gettext_noop("Condición variable"), "variable")
 ESTADO_PREDETERMINADO = "variable"
 
 
@@ -209,7 +210,7 @@ def _consultar_open_meteo(ciudad):
     return _normalizar(payload, ciudad)
 
 
-def obtener_clima_actual(ciudad_slug=None):
+def _obtener_clima_actual(ciudad_slug=None):
     """
     Estructura normalizada del clima actual de la ciudad indicada
     ("huanuco" o "tingo-maria"; cualquier otro valor cae a "huanuco").
@@ -238,4 +239,15 @@ def obtener_clima_actual(ciudad_slug=None):
 
     cache.set(clave_reciente, datos, CACHE_TTL_RECIENTE)
     cache.set(clave_ultimo_valido, datos, CACHE_TTL_ULTIMO_VALIDO)
+    return datos
+
+
+def obtener_clima_actual(ciudad_slug=None):
+    """Igual que `_obtener_clima_actual`, pero con `estado_texto` en el idioma
+    activo. La caché guarda el texto base en español (clave estable del mapa
+    WMO) y se traduce aquí, al leer: así una entrada cacheada en un idioma
+    nunca se muestra en el otro."""
+    datos = _obtener_clima_actual(ciudad_slug)
+    if datos.get("estado_texto"):
+        datos = {**datos, "estado_texto": gettext(datos["estado_texto"])}
     return datos

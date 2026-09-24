@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Tus favoritos • Viaje Informado{% endblock %}
+{% block title %}{% translate "Tus favoritos • Viaje Informado" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
@@ -18,8 +19,8 @@
         <div class="favoritos-encabezado__fondo" aria-hidden="true"></div>
         <div class="container">
             <span class="favoritos-encabezado__icono" aria-hidden="true"><i class="bi bi-heart-fill"></i></span>
-            <h1>Tus favoritos</h1>
-            <p>Guarda lugares, restaurantes y alojamientos que quieras tener a mano durante tu viaje.</p>
+            <h1>{% translate "Tus favoritos" %}</h1>
+            <p>{% translate "Guarda lugares, restaurantes y alojamientos que quieras tener a mano durante tu viaje." %}</p>
         </div>
     </section>
 
@@ -27,14 +28,14 @@
         <div class="container">
 
             <div class="favoritos-filtros-barra">
-                <nav class="favoritos-filtros" aria-label="Filtrar favoritos por tipo">
-                    <a href="?tipo=todos" class="favoritos-filtro-chip{% if tipo == 'todos' %} is-active{% endif %}"{% if tipo == 'todos' %} aria-current="page"{% endif %}>Todos</a>
-                    <a href="?tipo=lugares" class="favoritos-filtro-chip{% if tipo == 'lugares' %} is-active{% endif %}"{% if tipo == 'lugares' %} aria-current="page"{% endif %}>Lugares turísticos</a>
-                    <a href="?tipo=restaurantes" class="favoritos-filtro-chip{% if tipo == 'restaurantes' %} is-active{% endif %}"{% if tipo == 'restaurantes' %} aria-current="page"{% endif %}>Restaurantes</a>
-                    <a href="?tipo=alojamientos" class="favoritos-filtro-chip{% if tipo == 'alojamientos' %} is-active{% endif %}"{% if tipo == 'alojamientos' %} aria-current="page"{% endif %}>Alojamientos</a>
+                <nav class="favoritos-filtros" aria-label="{% translate "Filtrar favoritos por tipo" %}">
+                    <a href="?tipo=todos" class="favoritos-filtro-chip{% if tipo == 'todos' %} is-active{% endif %}"{% if tipo == 'todos' %} aria-current="page"{% endif %}>{% translate "Todos" %}</a>
+                    <a href="?tipo=lugares" class="favoritos-filtro-chip{% if tipo == 'lugares' %} is-active{% endif %}"{% if tipo == 'lugares' %} aria-current="page"{% endif %}>{% translate "Lugares turísticos" %}</a>
+                    <a href="?tipo=restaurantes" class="favoritos-filtro-chip{% if tipo == 'restaurantes' %} is-active{% endif %}"{% if tipo == 'restaurantes' %} aria-current="page"{% endif %}>{% translate "Restaurantes" %}</a>
+                    <a href="?tipo=alojamientos" class="favoritos-filtro-chip{% if tipo == 'alojamientos' %} is-active{% endif %}"{% if tipo == 'alojamientos' %} aria-current="page"{% endif %}>{% translate "Alojamientos" %}</a>
                 </nav>
                 {% if favoritos_page.paginator.count %}
-                <p class="favoritos-contador">Mostrando {{ favoritos_page.start_index }}–{{ favoritos_page.end_index }} de {{ favoritos_page.paginator.count }} {% if favoritos_page.paginator.count == 1 %}{{ filtro_label_singular }}{% else %}{{ filtro_label_plural }}{% endif %}</p>
+                <p class="favoritos-contador">{% translate "Mostrando" %} {{ favoritos_page.start_index }}–{{ favoritos_page.end_index }} {% translate "de" %} {{ favoritos_page.paginator.count }} {% if favoritos_page.paginator.count == 1 %}{{ filtro_label_singular }}{% else %}{{ filtro_label_plural }}{% endif %}</p>
                 {% endif %}
             </div>
 
@@ -52,9 +53,9 @@
                     </div>
                     <span class="favorito-tipo">
                         {% if favorito.establecimiento %}
-                            {% if favorito.establecimiento.tipo == "restaurante" %}Restaurante{% else %}Alojamiento{% endif %}
+                            {% if favorito.establecimiento.tipo == "restaurante" %}{% translate "Restaurante" %}{% else %}{% translate "Alojamiento" %}{% endif %}
                         {% else %}
-                            Lugar turístico
+                            {% translate "Lugar turístico" %}
                         {% endif %}
                     </span>
                     {% if favorito.establecimiento %}
@@ -80,15 +81,15 @@
                         {% with promedio_redondeado=favorito.rating.0|floatformat:"0"|add:"0" %}
                         {% include "interacciones/includes/estrellas_estaticas.html" with valor=promedio_redondeado %}
                         {% endwith %}
-                        <span class="favorito-rating-texto">{{ favorito.rating.1 }} reseña{{ favorito.rating.1|pluralize }}</span>
+                        <span class="favorito-rating-texto">{% blocktranslate count counter=favorito.rating.1 %}{{ counter }} reseña{% plural %}{{ counter }} reseñas{% endblocktranslate %}</span>
                         {% else %}
                         {% include "interacciones/includes/estrellas_estaticas.html" with valor=0 %}
-                        <span class="favorito-rating-texto favorito-sin-rating">Aún sin reseñas</span>
+                        <span class="favorito-rating-texto favorito-sin-rating">{% translate "Aún sin reseñas" %}</span>
                         {% endif %}
                     </div>
                     <a href="{{ recurso.get_absolute_url }}" class="favorito-ver-mas vi-btn-secondary">
                         <img src="{% static 'assets/img/icons/vermas-fav.svg' %}" alt="" aria-hidden="true" class="favorito-ver-mas__icono">
-                        Ver más
+                        {% translate "Ver más" %}
                     </a>
                 </article>
                 {% endwith %}
@@ -96,14 +97,14 @@
             </div>
 
             {% if favoritos_page.paginator.num_pages > 1 %}
-            <nav aria-label="Navegación de páginas" class="d-flex justify-content-center vi-paginacion-contenedor">
+            <nav aria-label="{% translate "Navegación de páginas" %}" class="d-flex justify-content-center vi-paginacion-contenedor">
                 <ul class="pagination vi-paginacion">
                     {% if favoritos_page.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1&tipo={{ tipo }}" aria-label="Primera"><span aria-hidden="true">&laquo;</span></a>
+                        <a class="page-link" href="?page=1&tipo={{ tipo }}" aria-label="{% translate "Primera" %}"><span aria-hidden="true">&laquo;</span></a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ favoritos_page.previous_page_number }}&tipo={{ tipo }}" aria-label="Anterior"><span aria-hidden="true">&lsaquo;</span></a>
+                        <a class="page-link" href="?page={{ favoritos_page.previous_page_number }}&tipo={{ tipo }}" aria-label="{% translate "Anterior" %}"><span aria-hidden="true">&lsaquo;</span></a>
                     </li>
                     {% else %}
                     <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
@@ -120,10 +121,10 @@
 
                     {% if favoritos_page.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ favoritos_page.next_page_number }}&tipo={{ tipo }}" aria-label="Siguiente"><span aria-hidden="true">&rsaquo;</span></a>
+                        <a class="page-link" href="?page={{ favoritos_page.next_page_number }}&tipo={{ tipo }}" aria-label="{% translate "Siguiente" %}"><span aria-hidden="true">&rsaquo;</span></a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ favoritos_page.paginator.num_pages }}&tipo={{ tipo }}" aria-label="Última"><span aria-hidden="true">&raquo;</span></a>
+                        <a class="page-link" href="?page={{ favoritos_page.paginator.num_pages }}&tipo={{ tipo }}" aria-label="{% translate "Última" %}"><span aria-hidden="true">&raquo;</span></a>
                     </li>
                     {% else %}
                     <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
@@ -136,24 +137,24 @@
             {% elif not tiene_favoritos_globales %}
             <div class="vi-empty-state">
                 <div class="vi-empty-state__icon" aria-hidden="true"><i class="bi bi-heart"></i></div>
-                <h2 class="vi-empty-state__title">Aún no tienes favoritos</h2>
-                <p class="vi-empty-state__text">Guarda los lugares, restaurantes y alojamientos que quieras visitar durante tu viaje.</p>
+                <h2 class="vi-empty-state__title">{% translate "Aún no tienes favoritos" %}</h2>
+                <p class="vi-empty-state__text">{% translate "Guarda los lugares, restaurantes y alojamientos que quieras visitar durante tu viaje." %}</p>
                 <div class="vi-empty-state__actions">
-                    <a href="{% url 'turismo:listado_lugares' %}" class="vi-btn-primary">Explorar Huánuco</a>
+                    <a href="{% url 'turismo:listado_lugares' %}" class="vi-btn-primary">{% translate "Explorar Huánuco" %}</a>
                 </div>
             </div>
             {% else %}
             <div class="vi-empty-state">
                 <div class="vi-empty-state__icon" aria-hidden="true"><i class="bi bi-heart"></i></div>
                 <h2 class="vi-empty-state__title">
-                    {% if tipo == 'lugares' %}Aún no tienes lugares turísticos guardados.
-                    {% elif tipo == 'restaurantes' %}Aún no tienes restaurantes guardados.
-                    {% elif tipo == 'alojamientos' %}Aún no tienes alojamientos guardados.
+                    {% if tipo == 'lugares' %}{% translate "Aún no tienes lugares turísticos guardados." %}
+                    {% elif tipo == 'restaurantes' %}{% translate "Aún no tienes restaurantes guardados." %}
+                    {% elif tipo == 'alojamientos' %}{% translate "Aún no tienes alojamientos guardados." %}
                     {% endif %}
                 </h2>
-                <p class="vi-empty-state__text">Prueba con otro filtro o revisa todos tus favoritos guardados.</p>
+                <p class="vi-empty-state__text">{% translate "Prueba con otro filtro o revisa todos tus favoritos guardados." %}</p>
                 <div class="vi-empty-state__actions">
-                    <a href="?tipo=todos" class="vi-btn-secondary">Ver todos tus favoritos</a>
+                    <a href="?tipo=todos" class="vi-btn-secondary">{% translate "Ver todos tus favoritos" %}</a>
                 </div>
             </div>
             {% endif %}

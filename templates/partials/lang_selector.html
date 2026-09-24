@@ -1,0 +1,25 @@
+{% load i18n %}
+{# Selector ES/EN: POST a django.views.i18n.set_language; `next` conserva ruta + querystring completos. #}
+<div class="vi-dropdown vi-lang">
+    <button type="button" class="vi-lang-btn" aria-haspopup="true" aria-expanded="false"
+            aria-label="{% translate 'Idioma' %}">
+        <i class="bi bi-translate" aria-hidden="true"></i>
+        <span class="vi-lang-btn__code">{{ LANGUAGE_CODE|upper }}</span>
+        <i class="bi bi-chevron-down vi-dropdown__caret" aria-hidden="true"></i>
+    </button>
+    <div class="vi-dropdown__panel vi-dropdown__panel--right vi-lang__panel">
+        <form action="{% url 'set_language' %}" method="post" class="vi-dropdown__list">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            {% get_available_languages as LANGUAGES %}
+            {% for code, nombre in LANGUAGES %}
+            <button type="submit" name="language" value="{{ code }}"
+                    class="vi-dropdown__item vi-lang__item{% if code == LANGUAGE_CODE %} is-current{% endif %}"
+                    lang="{{ code }}"{% if code == LANGUAGE_CODE %} aria-current="true"{% endif %}>
+                <span class="vi-dropdown__icon vi-lang__code">{{ code|upper }}</span>
+                <span class="vi-dropdown__text"><span class="vi-dropdown__label">{{ nombre }}</span></span>
+            </button>
+            {% endfor %}
+        </form>
+    </div>
+</div>

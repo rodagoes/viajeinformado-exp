@@ -6,21 +6,23 @@ from django.db.models import Avg, Count, Prefetch, Q
 from django.http import Http404, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
+from django.utils.translation import gettext
 
 from apps.establecimientos.models import SucursalEstablecimiento
 
 from .models import Favorito, Resena
 from .services import TIPOS_RECURSO as TIPOS_FAVORITO
 from .services import _filtro_recurso, resolver_recurso
+from django.utils.translation import gettext_lazy
 
 FILTROS_VALIDOS = {"todos", "lugares", "restaurantes", "alojamientos"}
 FAVORITOS_POR_PAGINA = 6
 
 FILTRO_LABEL = {
-    "todos": ("favorito", "favoritos"),
-    "lugares": ("lugar turístico", "lugares turísticos"),
-    "restaurantes": ("restaurante", "restaurantes"),
-    "alojamientos": ("alojamiento", "alojamientos"),
+    "todos": (gettext_lazy("favorito"), gettext_lazy("favoritos")),
+    "lugares": (gettext_lazy("lugar turístico"), gettext_lazy("lugares turísticos")),
+    "restaurantes": (gettext_lazy("restaurante"), gettext_lazy("restaurantes")),
+    "alojamientos": (gettext_lazy("alojamiento"), gettext_lazy("alojamientos")),
 }
 
 RECURSO_ACTIVO = Q(establecimiento__isnull=True) | Q(establecimiento__activo=True)
@@ -146,5 +148,5 @@ def eliminar_resena(request, tipo, pk):
     if recurso is None:
         raise Http404
     Resena.objects.filter(usuario=request.user, **_filtro_recurso(tipo, recurso)).delete()
-    messages.success(request, "Reseña eliminada.")
+    messages.success(request, gettext("Reseña eliminada."))
     return redirect(f"{recurso.get_absolute_url()}#resenas")

@@ -1,26 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Política de Privacidad - Viaje Informado{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Política de Privacidad - Viaje Informado" %}{% endblock %}
 
 {% block content %}
 <div class="container vi-page">
     <div class="row justify-content-center">
         <div class="col-lg-8 vi-page-card">
-            <h1 class="fw-bold mb-4 text-center">Política de Privacidad</h1>
+            <h1 class="fw-bold mb-4 text-center">{% translate "Política de Privacidad" %}</h1>
             
             <div class="vi-text-muted">
-                <p>En Viaje Informado respetamos su privacidad y estamos comprometidos a protegerla a través de nuestro cumplimiento con esta política.</p>
+                <p>{% translate "En Viaje Informado respetamos su privacidad y estamos comprometidos a protegerla a través de nuestro cumplimiento con esta política." %}</p>
                 
-                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">1. Información que recopilamos</h3>
-                <p>Podemos recopilar información sobre usted cuando visita nuestro sitio web, como información básica de registro o uso de servicios.</p>
+                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">{% translate "1. Información que recopilamos" %}</h3>
+                <p>{% translate "Podemos recopilar información sobre usted cuando visita nuestro sitio web, como información básica de registro o uso de servicios." %}</p>
                 
-                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">2. Uso de la información</h3>
-                <p>Utilizamos la información recopilada para mejorar nuestro servicio, personalizar su experiencia y comunicarnos con usted.</p>
+                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">{% translate "2. Uso de la información" %}</h3>
+                <p>{% translate "Utilizamos la información recopilada para mejorar nuestro servicio, personalizar su experiencia y comunicarnos con usted." %}</p>
                 
-                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">3. Contacto</h3>
-                <p>Si tiene alguna pregunta sobre esta política de privacidad, contáctenos en: <a href="mailto:viajeinformadohuanuco@gmail.com" style="color: var(--vi-teal);">viajeinformadohuanuco@gmail.com</a></p>
+                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">{% translate "3. Contacto" %}</h3>
+                <p>{% translate "Si tiene alguna pregunta sobre esta política de privacidad, contáctenos en:" %} <a href="mailto:viajeinformadohuanuco@gmail.com" style="color: var(--vi-teal);">viajeinformadohuanuco@gmail.com</a></p>
                 
-                <p class="mt-5 small"><em>Última actualización: Mayo 2026</em></p>
+                <p class="mt-5 small"><em>{% translate "Última actualización: Mayo 2026" %}</em></p>
             </div>
         </div>
     </div>

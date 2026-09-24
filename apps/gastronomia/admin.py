@@ -1,10 +1,11 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin, TranslationStackedInline, TranslationTabularInline
 
 from .models import CategoriaPlatoTipico, PlatoTipico, IngredienteClavePlato, PlatoEstablecimiento
 
 
 @admin.register(CategoriaPlatoTipico)
-class CategoriaPlatoTipicoAdmin(admin.ModelAdmin):
+class CategoriaPlatoTipicoAdmin(TranslationAdmin):
     list_display = ("nombre", "orden", "activo", "creado")
     list_filter = ("activo",)
     search_fields = ("nombre",)
@@ -22,7 +23,7 @@ class CategoriaPlatoTipicoAdmin(admin.ModelAdmin):
     )
 
 
-class IngredienteClavePlatoInline(admin.TabularInline):
+class IngredienteClavePlatoInline(TranslationTabularInline):
     model = IngredienteClavePlato
     extra = 1
     fields = ("nombre", "orden", "activo")
@@ -40,7 +41,7 @@ class RestauranteDondeSeOfreceInline(admin.TabularInline):
 
 
 @admin.register(PlatoTipico)
-class PlatoTipicoAdmin(admin.ModelAdmin):
+class PlatoTipicoAdmin(TranslationAdmin):
     list_display = ("nombre", "categoria", "es_plato_bandera", "orden", "activo", "actualizado")
     list_filter = ("activo", "categoria", "es_plato_bandera")
     search_fields = ("nombre", "descripcion_corta")

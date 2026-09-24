@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
 from django.urls import reverse
+from django.utils.translation import gettext
 
 from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
 from apps.gastronomia.models import PlatoTipico
@@ -160,27 +161,27 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
     opciones_orden = [
         {
             "value": "",
-            "label": "Seleccione",
+            "label": gettext("Seleccione"),
             "selected": orden == "",
         },
         {
             "value": "nombre_asc",
-            "label": "Nombre Ascendente",
+            "label": gettext("Nombre Ascendente"),
             "selected": orden == "nombre_asc",
         },
         {
             "value": "nombre_desc",
-            "label": "Nombre Descendente",
+            "label": gettext("Nombre Descendente"),
             "selected": orden == "nombre_desc",
         },
         {
             "value": "precio_asc",
-            "label": "Menor a Mayor Precio",
+            "label": gettext("Menor a Mayor Precio"),
             "selected": orden == "precio_asc",
         },
         {
             "value": "precio_desc",
-            "label": "Mayor a Menor Precio",
+            "label": gettext("Mayor a Menor Precio"),
             "selected": orden == "precio_desc",
         },
     ]
@@ -223,8 +224,8 @@ def listado_restaurantes(request):
     context = get_listado_context(
         request,
         "restaurante",
-        "Descubre los mejores restaurantes de Huánuco",
-        "Encuentra los lugares más deliciosos para disfrutar de la gastronomía local."
+        gettext("Descubre los mejores restaurantes de Huánuco"),
+        gettext("Encuentra los lugares más deliciosos para disfrutar de la gastronomía local.")
     )
     return render(request, "establecimientos/listado_establecimientos.html", context)
 
@@ -233,8 +234,8 @@ def listado_alojamientos(request):
     context = get_listado_context(
         request,
         "alojamiento",
-        "Descubre los mejores alojamientos de Huánuco",
-        "Encuentra el lugar perfecto para descansar y disfrutar de tu estadía."
+        gettext("Descubre los mejores alojamientos de Huánuco"),
+        gettext("Encuentra el lugar perfecto para descansar y disfrutar de tu estadía.")
     )
     return render(request, "establecimientos/listado_establecimientos.html", context)
 
@@ -326,11 +327,11 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
                 with transaction.atomic():
                     resena.save()
             except IntegrityError:
-                messages.error(request, "Ya existe una reseña tuya para este establecimiento.")
+                messages.error(request, gettext("Ya existe una reseña tuya para este establecimiento."))
                 return redirect(f"{establecimiento.get_absolute_url()}#resenas")
             messages.success(
                 request,
-                "Tu reseña se ha actualizado correctamente." if mi_resena else "Tu reseña se ha publicado correctamente.",
+                gettext("Tu reseña se ha actualizado correctamente.") if mi_resena else gettext("Tu reseña se ha publicado correctamente."),
             )
             return redirect(f"{establecimiento.get_absolute_url()}#resenas")
         form_resena_invalido = form
@@ -426,9 +427,9 @@ def detalle_establecimiento(request, tipo_establecimiento, slug):
 
         return {
             "id":           sucursal.id,
-            "nombre":       sucursal.nombre or "Local principal",
-            "label":        "Local principal" if sucursal.es_principal else "Sucursal",
-            "tab_label":    "Local principal" if sucursal.es_principal else sucursal.nombre,
+            "nombre":       sucursal.nombre or gettext("Local principal"),
+            "label":        gettext("Local principal") if sucursal.es_principal else gettext("Sucursal"),
+            "tab_label":    gettext("Local principal") if sucursal.es_principal else sucursal.nombre,
             "direccion":    direccion,
             "referencia":   referencia,
             "horario":      horario,

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Confirma tu identidad • Viaje Informado{% endblock %}
+{% block title %}{% translate "Confirma tu identidad • Viaje Informado" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
@@ -13,27 +14,27 @@
 <main class="perfil-pagina">
     <div class="container">
         <div class="perfil-tarjeta perfil-tarjeta--angosta">
-            <h1>Confirma tu identidad</h1>
+            <h1>{% translate "Confirma tu identidad" %}</h1>
             <p class="cuenta-texto-ayuda">
-                Por tu seguridad, confirma que eres tú antes de continuar con esta acción.
+                {% translate "Por tu seguridad, confirma que eres tú antes de continuar con esta acción." %}
             </p>
 
             {% if metodo == 'password' %}
             <form method="post" class="cuenta-form" novalidate>
                 {% csrf_token %}
-                <label for="{{ form.password.id_for_label }}" class="perfil-fila-label">Contraseña actual</label>
+                <label for="{{ form.password.id_for_label }}" class="perfil-fila-label">{% translate "Contraseña actual" %}</label>
                 {{ form.password }}
                 {% if form.password.errors %}<div class="perfil-error" role="alert">{{ form.password.errors.0 }}</div>{% endif %}
                 <div class="perfil-fila-acciones">
-                    <button type="submit" class="vi-btn-primary">Confirmar</button>
-                    <a href="{% url 'accounts:cuenta' %}" class="perfil-cancelar-btn">Cancelar</a>
+                    <button type="submit" class="vi-btn-primary">{% translate "Confirmar" %}</button>
+                    <a href="{% url 'accounts:cuenta' %}" class="perfil-cancelar-btn">{% translate "Cancelar" %}</a>
                 </div>
             </form>
             {% else %}
-            <p class="cuenta-texto-ayuda">Ingresa el código de 4 dígitos que enviamos a tu correo.</p>
+            <p class="cuenta-texto-ayuda">{% translate "Ingresa el código de 4 dígitos que enviamos a tu correo." %}</p>
             <form method="post" class="cuenta-form" novalidate>
                 {% csrf_token %}
-                <label for="{{ form.codigo.id_for_label }}" class="visually-hidden">Código de verificación</label>
+                <label for="{{ form.codigo.id_for_label }}" class="visually-hidden">{% translate "Código de verificación" %}</label>
                 <input type="text" name="codigo" id="{{ form.codigo.id_for_label }}"
                        class="cuenta-otp-input" inputmode="numeric" pattern="[0-9]*"
                        maxlength="4" autocomplete="one-time-code" placeholder="••••" autofocus>
@@ -41,8 +42,8 @@
                 <div class="perfil-error text-center" role="alert">{{ error }}</div>
                 {% endfor %}
                 <div class="perfil-fila-acciones">
-                    <button type="submit" class="vi-btn-primary">Verificar código</button>
-                    <a href="{% url 'accounts:cuenta' %}" class="perfil-cancelar-btn">Cancelar</a>
+                    <button type="submit" class="vi-btn-primary">{% translate "Verificar código" %}</button>
+                    <a href="{% url 'accounts:cuenta' %}" class="perfil-cancelar-btn">{% translate "Cancelar" %}</a>
                 </div>
             </form>
 
@@ -50,8 +51,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
                 <button type="submit" class="perfil-cancelar-btn" id="btn-reenviar-cuenta"
-                        data-cooldown="{{ cooldown }}" {% if cooldown > 0 %}disabled{% endif %}>
-                    Reenviar código<span id="cooldown-label-cuenta"></span>
+                        data-cooldown="{{ cooldown }}" {% if cooldown > 0 %}disabled{% endif %}>{% translate "Reenviar código" %}<span id="cooldown-label-cuenta"></span>
                 </button>
             </form>
             {% endif %}

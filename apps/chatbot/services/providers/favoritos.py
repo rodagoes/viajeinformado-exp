@@ -6,6 +6,8 @@ conversación, que el backend ya ligó al request.user autenticado.
 """
 from collections import Counter
 
+from django.utils.translation import gettext, gettext_lazy, gettext_noop
+
 from apps.interacciones.models import Favorito
 
 from . import normalizar_limit, resultado_lista, validar_bool, validar_choice
@@ -15,12 +17,17 @@ from .turismo import _base as _base_lugares
 from .turismo import _resumen as _resumen_lugar
 
 TIPO_CHOICES = [
-    ("lugar", "Lugar turístico"),
-    ("restaurante", "Restaurante"),
-    ("alojamiento", "Alojamiento"),
+    ("lugar", gettext_noop("Lugar turístico")),
+    ("restaurante", gettext_noop("Restaurante")),
+    ("alojamiento", gettext_noop("Alojamiento")),
 ]
 TIPO_LABEL = dict(TIPO_CHOICES)
 MAX_SUGERENCIAS = 4
+_PLURAL = {
+    "lugar": gettext_lazy("lugares"),
+    "restaurante": gettext_lazy("restaurantes"),
+    "alojamiento": gettext_lazy("alojamientos"),
+}
 
 
 def ids_favoritos(usuario):
@@ -50,11 +57,12 @@ def _sugerencias(lugares, establecimientos, tipo):
     al turista en sus favoritos. Sin scoring ni perfil persistente."""
     sugerencias = []
     grupos = [
-        ("lugar", lugares, _base_lugares(), _resumen_lugar, "lugares"),
-        ("restaurante", [e for e in establecimientos if e.tipo == "restaurante"], _base_establecimientos("restaurante"), _resumen_establecimiento, "restaurantes"),
-        ("alojamiento", [e for e in establecimientos if e.tipo == "alojamiento"], _base_establecimientos("alojamiento"), _resumen_establecimiento, "alojamientos"),
+        ("lugar", lugares, _base_lugares(), _resumen_lugar),
+        ("restaurante", [e for e in establecimientos if e.tipo == "restaurante"], _base_establecimientos("restaurante"), _resumen_establecimiento),
+        ("alojamiento", [e for e in establecimientos if e.tipo == "alojamiento"], _base_establecimientos("alojamiento"), _resumen_establecimiento),
     ]
-    for tipo_grupo, favoritos, qs, resumen, plural in grupos:
+    for tipo_grupo, favoritos, qs, resumen in grupos:
+        plural = str(_PLURAL[tipo_grupo])
         if not favoritos or (tipo and tipo != tipo_grupo):
             continue
         excluidos = [f.pk for f in favoritos]
@@ -68,7 +76,7 @@ def _sugerencias(lugares, establecimientos, tipo):
             for obj in qs.filter(categoria_principal=categoria).exclude(pk__in=vistos).order_by("-destacado", "nombre", "id")[:cupo]:
                 afines.append({
                     **_item(tipo_grupo, resumen(obj)),
-                    "motivo": f"Porque tienes guardados {plural} de la categoría {categoria.nombre}",
+                    "motivo": gettext("Porque tienes guardados %(plural)s de la categoría %(categoria)s") % {"plural": plural, "categoria": categoria.nombre},
                 })
         sugerencias.extend(afines)
         distinto = (
@@ -80,7 +88,10 @@ def _sugerencias(lugares, establecimientos, tipo):
         if distinto is not None:
             sugerencias.append({
                 **_item(tipo_grupo, resumen(distinto)),
-                "motivo": f"Opción {'destacada ' if distinto.destacado else ''}de otra categoría, distinta a tus {plural} guardados",
+                "motivo": (
+                    gettext("Opción destacada de otra categoría, distinta a tus %(plural)s guardados")
+                    if distinto.destacado else gettext("Opción de otra categoría, distinta a tus %(plural)s guardados")
+                ) % {"plural": plural},
             })
     return sugerencias
 

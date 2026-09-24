@@ -1,3 +1,4 @@
+{% load i18n %}
 {% comment %}
 Partial reutilizable del CTA "¿Tienes un evento para compartir?" (E5,
 sección 26): se incluye dos veces desde agenda-eventos.html —una fija
@@ -9,16 +10,16 @@ Recibe `extra_class` (opcional) para controlar en qué breakpoint se
 muestra cada instancia.
 {% endcomment %}
 <div class="ev-cta-comunidad{% if extra_class %} {{ extra_class }}{% endif %}">
-    <p class="ev-cta-comunidad__titulo">¿Tienes un evento para compartir?</p>
-    <p class="ev-cta-comunidad__desc">Ayúdanos a mantener la agenda de Huánuco activa y actualizada.</p>
+    <p class="ev-cta-comunidad__titulo">{% translate "¿Tienes un evento para compartir?" %}</p>
+    <p class="ev-cta-comunidad__desc">{% translate "Ayúdanos a mantener la agenda de Huánuco activa y actualizada." %}</p>
     <div class="ev-cta-comunidad__acciones">
         <button type="button" class="ev-cta-comunidad__btn ev-cta-comunidad__btn--primario"
                 data-bs-toggle="modal" data-bs-target="#ev-modal-promocionar">
-            Promociona tu evento
+            {% translate "Promociona tu evento" %}
         </button>
         <button type="button" class="ev-cta-comunidad__btn ev-cta-comunidad__btn--secundario"
                 data-bs-toggle="modal" data-bs-target="#ev-modal-reportar">
-            Reportar un problema
+            {% translate "Reportar un problema" %}
         </button>
     </div>
 </div>

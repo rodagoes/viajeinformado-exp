@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from modeltranslation.admin import TranslationAdmin
 from .models import (
     CategoriaMovilidad,
     ServicioMovilidad,
@@ -11,7 +12,7 @@ from .models import (
 )
 
 @admin.register(CategoriaMovilidad)
-class CategoriaMovilidadAdmin(admin.ModelAdmin):
+class CategoriaMovilidadAdmin(TranslationAdmin):
     list_display = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
     search_fields = ["nombre", "descripcion", "icono_bootstrap"]
     list_filter = ["activo", "tipo_icono"]
@@ -106,7 +107,7 @@ class ImagenRutaMovilidadInline(admin.TabularInline):
 
 
 @admin.register(RutaMovilidad)
-class RutaMovilidadAdmin(admin.ModelAdmin):
+class RutaMovilidadAdmin(TranslationAdmin):
     list_display = [
         "nombre", "seccion", "categoria_principal", "origen_texto", "destino_texto",
         "duracion_estimada", "duracion_bus", "duracion_automovil", "tipo_costo",
@@ -195,7 +196,7 @@ class ImagenRutaMovilidadAdmin(admin.ModelAdmin):
 
 
 @admin.register(TransportePublico)
-class TransportePublicoAdmin(admin.ModelAdmin):
+class TransportePublicoAdmin(TranslationAdmin):
     list_display = [
         "miniatura",
         "nombre",
@@ -246,7 +247,7 @@ class TransportePublicoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ConsejoMovilidad)
-class ConsejoMovilidadAdmin(admin.ModelAdmin):
+class ConsejoMovilidadAdmin(TranslationAdmin):
     list_display = ["texto", "seccion", "orden", "activo"]
     list_editable = ["orden", "activo"]
     search_fields = ["texto"]

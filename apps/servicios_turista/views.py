@@ -20,10 +20,12 @@ TELEFONO_LIMPIO_RE = re.compile(r"[^\d+]")
 # Tipos de ContactoServicioTurista pensados para llamar/tel:. No se usa
 # para decidir qué mostrar (eso lo hace _es_telefonico según el valor),
 # solo queda documentado el catálogo real del modelo.
+from django.utils.translation import gettext, gettext_lazy
+
 ENLACES_OFICIALES_CONFIG = [
-    ("sitio_web", "Sitio web oficial", "bi-globe2"),
-    ("facebook", "Facebook oficial", "bi-facebook"),
-    ("instagram", "Instagram oficial", "bi-instagram"),
+    ("sitio_web", gettext_lazy("Sitio web oficial"), "bi-globe2"),
+    ("facebook", gettext_lazy("Facebook oficial"), "bi-facebook"),
+    ("instagram", gettext_lazy("Instagram oficial"), "bi-instagram"),
 ]
 
 
@@ -32,7 +34,7 @@ def _texto_disponibilidad(servicio):
     guardado. Nunca se calcula un estado ABIERTO/CERRADO en tiempo real:
     no hay horario estructurado suficiente para garantizarlo."""
     if servicio.disponibilidad == "veinticuatro_horas":
-        return "Atención 24 h"
+        return gettext("Atención 24 h")
     return servicio.horario_atencion or ""
 
 

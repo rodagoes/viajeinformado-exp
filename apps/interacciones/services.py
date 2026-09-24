@@ -6,14 +6,15 @@ from apps.turismo.models import LugarTuristico
 
 from .forms import ResenaForm
 from .models import Resena
+from django.utils.translation import gettext_lazy
 
 TIPOS_RECURSO = {"establecimiento": Establecimiento, "lugar": LugarTuristico}
 
 ORDEN_OPCIONES = {
-    "recientes": ("Más recientes", ("-creado",)),
-    "antiguas": ("Más antiguas", ("creado",)),
-    "mejor": ("Mejor valoradas", ("-valoracion", "-creado")),
-    "peor": ("Peor valoradas", ("valoracion", "-creado")),
+    "recientes": (gettext_lazy("Más recientes"), ("-creado",)),
+    "antiguas": (gettext_lazy("Más antiguas"), ("creado",)),
+    "mejor": (gettext_lazy("Mejor valoradas"), ("-valoracion", "-creado")),
+    "peor": (gettext_lazy("Peor valoradas"), ("valoracion", "-creado")),
 }
 ORDEN_DEFAULT = "recientes"
 

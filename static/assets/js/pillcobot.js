@@ -23,27 +23,34 @@
     var minimizeBtn = document.getElementById('pcbot-minimize');
     var dragHandle = document.getElementById('pcbot-draghandle');
 
-    var CTA_LINEA = /^(Ver[^:]+):\s*(\S+)$/;
+    // Etiquetas de CTA que produce el backend: "Ver ..." (es) / "View ..." / "See ..." (en).
+    var CTA_LINEA = /^((?:Ver|View|See)\b[^:]+):\s*(\S+)$/;
+    // "Clima actual en X" / "Current weather in X": el prefijo viene del catálogo activo.
+    var PREFIJO_CLIMA = ViI18n('pcb_clima_actual', 'Clima actual en %s').split('%s')[0];
+    // Sustituye el marcador %s de una cadena traducida.
+    function fmt(texto, valor) { return texto.replace('%s', valor); }
     // Nombres de ciudad tal como los produce response_renderers.renderizar_clima
     // ("Clima actual en <ubicacion>") — ver apps/clima/ubicaciones.py.
     var CIUDADES_CLIMA = {
         'huánuco (ciudad)': { slug: 'huanuco', nombre: 'Huánuco' },
+        'huánuco (city)': { slug: 'huanuco', nombre: 'Huánuco' },
         'tingo maría (ciudad)': { slug: 'tingo-maria', nombre: 'Tingo María' },
+        'tingo maría (city)': { slug: 'tingo-maria', nombre: 'Tingo María' },
     };
 
     var QUICK_ACTIONS = [
-        { id: 'clima_huanuco', label: 'Clima en Huánuco', icon: 'bi-cloud-sun' },
-        { id: 'clima_tingo_maria', label: 'Clima en Tingo María', icon: 'bi-cloud-sun' },
-        { id: 'eventos_proximos', label: 'Eventos próximos', icon: 'bi-calendar-event' },
-        { id: 'platos_tipicos', label: 'Platos típicos', icon: 'bi-egg-fried' },
-        { id: 'lugares_destacados', label: 'Lugares destacados', icon: 'bi-geo-alt' },
-        { id: 'tarifas_movilidad', label: 'Tarifas de movilidad', icon: 'bi-taxi-front-fill' },
-        { id: 'tipo_cambio', label: 'Tipo de cambio', icon: 'bi-currency-exchange' },
-        { id: 'emergencias', label: 'Emergencias', icon: 'bi-shield-exclamation' },
+        { id: 'clima_huanuco', label: ViI18n('pcb_clima_huanuco', 'Clima en Huánuco'), icon: 'bi-cloud-sun' },
+        { id: 'clima_tingo_maria', label: ViI18n('pcb_clima_tingo', 'Clima en Tingo María'), icon: 'bi-cloud-sun' },
+        { id: 'eventos_proximos', label: ViI18n('pcb_eventos', 'Eventos próximos'), icon: 'bi-calendar-event' },
+        { id: 'platos_tipicos', label: ViI18n('pcb_platos', 'Platos típicos'), icon: 'bi-egg-fried' },
+        { id: 'lugares_destacados', label: ViI18n('pcb_lugares', 'Lugares destacados'), icon: 'bi-geo-alt' },
+        { id: 'tarifas_movilidad', label: ViI18n('pcb_tarifas', 'Tarifas de movilidad'), icon: 'bi-taxi-front-fill' },
+        { id: 'tipo_cambio', label: ViI18n('pcb_cambio', 'Tipo de cambio'), icon: 'bi-currency-exchange' },
+        { id: 'emergencias', label: ViI18n('pcb_emergencias', 'Emergencias'), icon: 'bi-shield-exclamation' },
     ];
 
-    var MENSAJE_INDISPONIBLE = 'PillcoBot no está disponible temporalmente. Inténtalo nuevamente en unos momentos.';
-    var MENSAJE_ERROR_GENERICO = 'No pude responder en este momento. Vuelve a intentarlo, por favor.';
+    var MENSAJE_INDISPONIBLE = ViI18n('pcb_indisponible', 'PillcoBot no está disponible temporalmente. Inténtalo nuevamente en unos momentos.');
+    var MENSAJE_ERROR_GENERICO = ViI18n('pcb_error', 'No pude responder en este momento. Vuelve a intentarlo, por favor.');
     var ERRORES = {
         chatbot_no_disponible: MENSAJE_INDISPONIBLE,
         proveedor_ia_timeout: MENSAJE_INDISPONIBLE,
@@ -54,8 +61,8 @@
         accion_invalida: MENSAJE_ERROR_GENERICO,
         mensaje_invalido: MENSAJE_ERROR_GENERICO,
         mensaje_vacio: MENSAJE_ERROR_GENERICO,
-        mensaje_demasiado_largo: 'Tu mensaje es demasiado largo. Intenta resumirlo un poco.',
-        demasiadas_solicitudes: 'Has enviado varios mensajes en poco tiempo. Inténtalo nuevamente en un momento.',
+        mensaje_demasiado_largo: ViI18n('pcb_largo', 'Tu mensaje es demasiado largo. Intenta resumirlo un poco.'),
+        demasiadas_solicitudes: ViI18n('pcb_muchas', 'Has enviado varios mensajes en poco tiempo. Inténtalo nuevamente en un momento.'),
     };
 
     var estado = { abierto: false, iniciado: false, enviando: false };
@@ -102,12 +109,12 @@
     }
 
     function detectarSugerenciaClima(cuerpo) {
-        var primeraLinea = (cuerpo.split('\n')[0] || '').match(/^Clima actual en (.+)$/);
-        if (!primeraLinea) return null;
-        var ciudad = CIUDADES_CLIMA[primeraLinea[1].trim().toLowerCase()];
+        var linea = cuerpo.split('\n')[0] || '';
+        if (linea.indexOf(PREFIJO_CLIMA) !== 0) return null;
+        var ciudad = CIUDADES_CLIMA[linea.slice(PREFIJO_CLIMA.length).trim().toLowerCase()];
         if (!ciudad) return null;
         return {
-            texto: 'Conoce las temporadas de ' + ciudad.nombre,
+            texto: fmt(ViI18n('pcb_temporadas', 'Conoce las temporadas de %s'), ciudad.nombre),
             url: '/planifica/clima-temporadas/?ciudad=' + ciudad.slug,
         };
     }
@@ -125,7 +132,8 @@
     function analizarRespuesta(texto) {
         var resultado = { cuerpo: texto, fuentes: [], cards: null, tituloCards: null, cta: null, climaSugerencia: null };
         try {
-            var conFuentes = texto.match(/^([\s\S]*?)\n\nFuentes oficiales:\n([\s\S]+)$/);
+            var tituloFuentes = ViI18n('pcb_fuentes', 'Fuentes oficiales').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            var conFuentes = texto.match(new RegExp('^([\\s\\S]*?)\\n\\n(?:Fuentes oficiales|' + tituloFuentes + '):\\n([\\s\\S]+)$'));
             var cuerpo = texto;
             if (conFuentes) {
                 cuerpo = conFuentes[1];
@@ -184,7 +192,7 @@
         bloque.className = 'pcbot-sources';
         var titulo = document.createElement('span');
         titulo.className = 'pcbot-sources__title';
-        titulo.textContent = 'Fuentes oficiales';
+        titulo.textContent = ViI18n('pcb_fuentes', 'Fuentes oficiales');
         bloque.appendChild(titulo);
         fuentes.forEach(function (fuente) {
             var enlace = document.createElement('a');
@@ -218,13 +226,13 @@
         bloque.className = 'pcbot-suggestion';
         var label = document.createElement('span');
         label.className = 'pcbot-suggestion__label';
-        label.textContent = sugerencia.titulo || 'También te puede interesar';
+        label.textContent = sugerencia.titulo || ViI18n('pcb_interesar', 'También te puede interesar');
         var texto = document.createElement('span');
         texto.className = 'pcbot-suggestion__text';
         texto.textContent = sugerencia.texto;
         bloque.appendChild(label);
         bloque.appendChild(texto);
-        bloque.appendChild(crearCta(sugerencia.label || 'Ver más', sugerencia.url));
+        bloque.appendChild(crearCta(sugerencia.label || ViI18n('pcb_ver_mas', 'Ver más'), sugerencia.url));
         return bloque;
     }
 
@@ -244,7 +252,7 @@
 
         var titulo = document.createElement('div');
         titulo.className = 'pcbot-weather__titulo';
-        titulo.textContent = 'Clima actual en ' + p.ciudad;
+        titulo.textContent = fmt(ViI18n('pcb_clima_actual', 'Clima actual en %s'), p.ciudad);
         card.appendChild(titulo);
 
         var principal = document.createElement('div');
@@ -262,10 +270,10 @@
         card.appendChild(principal);
 
         var filas = [
-            ['Sensación térmica', p.sensacion != null ? p.sensacion + ' °C' : null],
-            ['Humedad', p.humedad != null ? p.humedad + ' %' : null],
-            ['Viento', p.viento != null ? p.viento + ' km/h' : null],
-            ['Prob. de lluvia', p.lluvia != null ? p.lluvia + ' %' : null],
+            [ViI18n('pcb_sensacion', 'Sensación térmica'), p.sensacion != null ? p.sensacion + ' °C' : null],
+            [ViI18n('pcb_humedad', 'Humedad'), p.humedad != null ? p.humedad + ' %' : null],
+            [ViI18n('pcb_viento', 'Viento'), p.viento != null ? p.viento + ' km/h' : null],
+            [ViI18n('pcb_lluvia', 'Prob. de lluvia'), p.lluvia != null ? p.lluvia + ' %' : null],
         ];
         var tabla = document.createElement('div');
         tabla.className = 'pcbot-weather__detalles';
@@ -285,7 +293,7 @@
         if (p.respaldo) {
             var nota = document.createElement('div');
             nota.className = 'pcbot-weather__nota';
-            nota.textContent = 'Dato de respaldo, puede no estar actualizado.';
+            nota.textContent = ViI18n('pcb_respaldo', 'Dato de respaldo, puede no estar actualizado.');
             card.appendChild(nota);
         }
         frag.appendChild(card);
@@ -319,7 +327,7 @@
         var llamar = document.createElement('a');
         llamar.className = 'pcbot-emg-card__llamar';
         llamar.href = telHref(contacto.numero_tel);
-        llamar.textContent = 'Llamar';
+        llamar.textContent = ViI18n('llamar', 'Llamar');
         card.appendChild(llamar);
         return card;
     }
@@ -406,7 +414,7 @@
                 meta.textContent = linea;
                 card.appendChild(meta);
             });
-            if (item.url) card.appendChild(crearCta(item.cta_label || 'Ver evento', item.url));
+            if (item.url) card.appendChild(crearCta(item.cta_label || ViI18n('pcb_ver_evento', 'Ver evento'), item.url));
             lista.appendChild(card);
         });
         frag.appendChild(lista);
@@ -428,7 +436,7 @@
             nombre.className = 'pcbot-plato-row__nombre';
             nombre.textContent = item.nombre;
             fila.appendChild(nombre);
-            if (item.url) fila.appendChild(crearCta(item.cta_label || 'Ver dónde comer', item.url));
+            if (item.url) fila.appendChild(crearCta(item.cta_label || ViI18n('pcb_ver_comer', 'Ver dónde comer'), item.url));
             lista.appendChild(fila);
         });
         frag.appendChild(lista);
@@ -466,7 +474,7 @@
                 meta.textContent = linea;
                 card.appendChild(meta);
             });
-            if (item.url) card.appendChild(crearCta(item.cta_label || 'Ver lugar', item.url));
+            if (item.url) card.appendChild(crearCta(item.cta_label || ViI18n('pcb_ver_lugar', 'Ver lugar'), item.url));
             lista.appendChild(card);
         });
         frag.appendChild(lista);
@@ -494,9 +502,9 @@
             var especialidades = (item.especialidades || []).join(', ');
             var lineas = [
                 [item.categoria, item.ubicacion].filter(Boolean).join(' · '),
-                especialidades ? 'Especialidades: ' + especialidades : '',
-                item.precio ? item.precio + (item.excede_presupuesto ? ' (puede superar tu presupuesto)' : '') : '',
-                item.horario ? 'Horario registrado: ' + item.horario : '',
+                especialidades ? fmt(ViI18n('pcb_especialidades', 'Especialidades: %s'), especialidades) : '',
+                item.precio ? item.precio + (item.excede_presupuesto ? ' ' + ViI18n('pcb_excede', '(puede superar tu presupuesto)') : '') : '',
+                item.horario ? fmt(ViI18n('pcb_horario', 'Horario registrado: %s'), item.horario) : '',
                 item.motivo || '',
             ];
             lineas.forEach(function (linea) {
@@ -506,7 +514,7 @@
                 meta.textContent = linea;
                 card.appendChild(meta);
             });
-            if (item.url) card.appendChild(crearCta(item.cta_label || 'Ver más', item.url));
+            if (item.url) card.appendChild(crearCta(item.cta_label || ViI18n('pcb_ver_mas', 'Ver más'), item.url));
             lista.appendChild(card);
         });
         frag.appendChild(lista);
@@ -542,12 +550,12 @@
             }
             var pen = document.createElement('div');
             pen.className = 'pcbot-mobility-card__pen';
-            pen.textContent = 'Desde S/ ' + item.pen;
+            pen.textContent = fmt(ViI18n('pcb_desde', 'Desde S/ %s'), item.pen);
             card.appendChild(pen);
             if (item.usd) {
                 var usd = document.createElement('div');
                 usd.className = 'pcbot-mobility-card__usd';
-                usd.textContent = 'Aprox. US$ ' + item.usd;
+                usd.textContent = fmt(ViI18n('pcb_aprox_usd', 'Aprox. US$ %s'), item.usd);
                 card.appendChild(usd);
             }
             lista.appendChild(card);
@@ -557,7 +565,7 @@
         if (p.recomendaciones && p.recomendaciones.length) {
             var pregunta = document.createElement('div');
             pregunta.className = 'pcbot-bubble';
-            pregunta.textContent = '¿Quieres algunos consejos para movilizarte?';
+            pregunta.textContent = ViI18n('pcb_consejos', '¿Quieres algunos consejos para movilizarte?');
             frag.appendChild(pregunta);
 
             var tips = document.createElement('div');
@@ -579,7 +587,7 @@
             var boton = document.createElement('button');
             boton.type = 'button';
             boton.className = 'pcbot-toggle';
-            boton.textContent = 'Recomendaciones';
+            boton.textContent = ViI18n('pcb_recomendaciones', 'Recomendaciones');
             boton.addEventListener('click', function () {
                 tips.hidden = !tips.hidden;
                 autoscroll();
@@ -621,14 +629,14 @@
         resumen.className = 'pcbot-place-card';
         var titulo = document.createElement('div');
         titulo.className = 'pcbot-card__title';
-        titulo.textContent = 'Itinerario propuesto · ' + r.destino;
+        titulo.textContent = fmt(ViI18n('pcb_itinerario', 'Itinerario propuesto · %s'), r.destino);
         resumen.appendChild(titulo);
         [
             r.fechas_texto,
-            r.presupuesto ? 'Presupuesto: ' + r.presupuesto : '',
+            r.presupuesto ? fmt(ViI18n('pcb_presupuesto', 'Presupuesto: %s'), r.presupuesto) : '',
             r.estimado,
             r.margen,
-            r.favoritos && r.favoritos.length ? 'Prioricé tus favoritos: ' + r.favoritos.join(', ') : '',
+            r.favoritos && r.favoritos.length ? fmt(ViI18n('pcb_priorice', 'Prioricé tus favoritos: %s'), r.favoritos.join(', ')) : '',
             r.nota_presupuesto,
         ].forEach(function (linea) { if (linea) resumen.appendChild(crearMeta(linea)); });
         frag.appendChild(resumen);
@@ -639,14 +647,14 @@
             aloj.className = 'pcbot-place-card';
             var at = document.createElement('div');
             at.className = 'pcbot-card__title';
-            at.textContent = 'Alojamiento base: ' + a.nombre;
+            at.textContent = fmt(ViI18n('pcb_aloj_base', 'Alojamiento base: %s'), a.nombre);
             aloj.appendChild(at);
             [
                 [a.categoria, a.ubicacion].filter(Boolean).join(' · '),
-                a.precio + (a.cabe_en_presupuesto === false ? ' (supera tu presupuesto para toda la estadía)' : ''),
+                a.precio + (a.cabe_en_presupuesto === false ? ' ' + ViI18n('pcb_excede_estadia', '(supera tu presupuesto para toda la estadía)') : ''),
                 a.motivo || '',
             ].forEach(function (linea) { if (linea) aloj.appendChild(crearMeta(linea)); });
-            if (a.url) aloj.appendChild(crearCta(a.cta_label || 'Ver alojamiento', a.url));
+            if (a.url) aloj.appendChild(crearCta(a.cta_label || ViI18n('pcb_ver_aloj', 'Ver alojamiento'), a.url));
             frag.appendChild(aloj);
         }
 
@@ -657,7 +665,7 @@
             frag.appendChild(cabecera);
             var card = document.createElement('div');
             card.className = 'pcbot-place-card';
-            if (!dia.actividades.length) card.appendChild(crearMeta('Sin actividades registradas para este día.'));
+            if (!dia.actividades.length) card.appendChild(crearMeta(ViI18n('pcb_sin_actividades', 'Sin actividades registradas para este día.')));
             dia.actividades.forEach(function (act) {
                 var fila = document.createElement('div');
                 fila.className = 'pcbot-itin-act';
@@ -671,7 +679,7 @@
                 fila.appendChild(nombre);
                 if (act.detalle) fila.appendChild(crearMeta(act.detalle));
                 if (act.motivo) fila.appendChild(crearMeta(act.motivo));
-                if (act.url) fila.appendChild(crearCta(act.cta_label || 'Ver más', act.url));
+                if (act.url) fila.appendChild(crearCta(act.cta_label || ViI18n('pcb_ver_mas', 'Ver más'), act.url));
                 card.appendChild(fila);
             });
             frag.appendChild(card);
@@ -680,7 +688,7 @@
         if (p.platos && p.platos.length) {
             var platos = document.createElement('div');
             platos.className = 'pcbot-bubble pcbot-emg-prompt';
-            platos.textContent = 'Prueba también: ' + p.platos.map(function (x) { return x.nombre; }).join(', ') + '.';
+            platos.textContent = fmt(ViI18n('pcb_prueba', 'Prueba también: %s.'), p.platos.map(function (x) { return x.nombre; }).join(', '));
             frag.appendChild(platos);
         }
         return frag;
@@ -901,9 +909,10 @@
         if (estado.iniciado) return;
         estado.iniciado = true;
         agregarMensajeBot(
-            '¡Hola! Soy PillcoBot, tu guía virtual de Viaje Informado.\n\n' +
-            'Estoy aquí para ayudarte a descubrir Huánuco: lugares turísticos, gastronomía, eventos, clima, ' +
-            'transporte y consejos útiles para tu viaje.\n\n¿Qué te gustaría conocer hoy?'
+            ViI18n('pcb_bienvenida',
+                '¡Hola! Soy PillcoBot, tu guía virtual de Viaje Informado.\n\n' +
+                'Estoy aquí para ayudarte a descubrir Huánuco: lugares turísticos, gastronomía, eventos, clima, ' +
+                'transporte y consejos útiles para tu viaje.\n\n¿Qué te gustaría conocer hoy?')
         );
         agregarQuickActions();
     }

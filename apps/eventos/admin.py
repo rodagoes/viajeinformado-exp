@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils import timezone
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 
 from .models import (
     MES_CHOICES, CategoriaEvento, Evento, ImagenEvento, RecomendacionEvento, TagExperiencia,
@@ -35,7 +36,7 @@ def _dia_mes_abreviado(dia, mes):
 
 
 @admin.register(CategoriaEvento)
-class CategoriaEventoAdmin(admin.ModelAdmin):
+class CategoriaEventoAdmin(TranslationAdmin):
     list_display = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
     search_fields = ["nombre", "descripcion", "icono_bootstrap"]
     list_filter = ["activo", "tipo_icono"]
@@ -57,7 +58,7 @@ class CategoriaEventoAdmin(admin.ModelAdmin):
 
 
 @admin.register(TagExperiencia)
-class TagExperienciaAdmin(admin.ModelAdmin):
+class TagExperienciaAdmin(TranslationAdmin):
     list_display = ["nombre", "icono_bootstrap", "activo"]
     search_fields = ["nombre"]
     list_filter = ["activo"]
@@ -66,13 +67,13 @@ class TagExperienciaAdmin(admin.ModelAdmin):
     ordering = ["nombre"]
 
 
-class ImagenEventoInline(admin.TabularInline):
+class ImagenEventoInline(TranslationTabularInline):
     model = ImagenEvento
     extra = 0
     fields = ["imagen", "titulo", "texto_alt", "orden", "activo"]
 
 
-class RecomendacionEventoInline(admin.TabularInline):
+class RecomendacionEventoInline(TranslationTabularInline):
     model = RecomendacionEvento
     extra = 0
     fields = ["orden", "titulo", "descripcion", "icono_archivo", "icono_bootstrap", "activo"]
@@ -80,7 +81,7 @@ class RecomendacionEventoInline(admin.TabularInline):
 
 
 @admin.register(Evento)
-class EventoAdmin(admin.ModelAdmin):
+class EventoAdmin(TranslationAdmin):
     list_display = [
         "nombre", "categoria_principal", "fecha_resumen",
         "modalidad", "distrito", "tipo_costo", "rango_precios_soles",
@@ -229,7 +230,7 @@ class EventoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ImagenEvento)
-class ImagenEventoAdmin(admin.ModelAdmin):
+class ImagenEventoAdmin(TranslationAdmin):
     list_display = ["evento", "titulo", "orden", "activo", "creado"]
     search_fields = ["evento__nombre", "titulo", "texto_alt"]
     list_filter = ["activo", "evento"]
@@ -239,7 +240,7 @@ class ImagenEventoAdmin(admin.ModelAdmin):
 
 
 @admin.register(RecomendacionEvento)
-class RecomendacionEventoAdmin(admin.ModelAdmin):
+class RecomendacionEventoAdmin(TranslationAdmin):
     list_display = ["evento", "titulo", "orden", "activo", "actualizado"]
     search_fields = ["evento__nombre", "titulo", "descripcion"]
     list_filter = ["activo", "evento"]

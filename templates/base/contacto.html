@@ -1,26 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Contacto - Viaje Informado{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Contacto - Viaje Informado" %}{% endblock %}
 
 {% block content %}
 <div class="container vi-page">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="vi-page__header">
-                <h1 class="vi-page__title">¡Hablemos!</h1>
-                <p class="vi-page__subtitle">Estamos aquí para ayudarte a planificar tu viaje a Huánuco o para colaborar con tu negocio.</p>
+                <h1 class="vi-page__title">{% translate "¡Hablemos!" %}</h1>
+                <p class="vi-page__subtitle">{% translate "Estamos aquí para ayudarte a planificar tu viaje a Huánuco o para colaborar con tu negocio." %}</p>
             </div>
             
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div class="row g-0">
                     <div class="col-md-5" style="background-color: var(--vi-teal); color: white;">
                         <div class="p-5 h-100 d-flex flex-column justify-content-center">
-                            <h3 class="fw-bold mb-4 text-white">Información de contacto</h3>
+                            <h3 class="fw-bold mb-4 text-white">{% translate "Información de contacto" %}</h3>
                             
                             <div class="d-flex align-items-center mb-4">
                                 <i class="bi bi-envelope-fill fs-4 me-3"></i>
                                 <div>
-                                    <h6 class="mb-0 text-white-50">Email</h6>
+                                    <h6 class="mb-0 text-white-50">{% translate "Email" %}</h6>
                                     <a href="mailto:viajeinformadohuanuco@gmail.com" class="text-white text-decoration-none">viajeinformadohuanuco@gmail.com</a>
                                 </div>
                             </div>
@@ -28,22 +29,22 @@
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-geo-alt-fill fs-4 me-3"></i>
                                 <div>
-                                    <h6 class="mb-0 text-white-50">Ubicación</h6>
-                                    <span>Huánuco, Perú</span>
+                                    <h6 class="mb-0 text-white-50">{% translate "Ubicación" %}</h6>
+                                    <span>{% translate "Huánuco, Perú" %}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-7 bg-white p-5">
-                        <h4 class="fw-bold mb-4" style="color: var(--vi-navy-deep);">¿Tienes un negocio?</h4>
+                        <h4 class="fw-bold mb-4" style="color: var(--vi-navy-deep);">{% translate "¿Tienes un negocio?" %}</h4>
                         <p class="vi-text-muted mb-4">
-                            Si eres dueño de un restaurante, hotel, agencia de turismo o provees algún servicio turístico en Huánuco, nos encantaría trabajar contigo.
+                            {% translate "Si eres dueño de un restaurante, hotel, agencia de turismo o provees algún servicio turístico en Huánuco, nos encantaría trabajar contigo." %}
                         </p>
                         <p class="vi-text-muted mb-4">
-                            Escríbenos directamente a nuestro correo electrónico para conocer cómo podemos promocionar tu negocio en nuestra plataforma.
+                            {% translate "Escríbenos directamente a nuestro correo electrónico para conocer cómo podemos promocionar tu negocio en nuestra plataforma." %}
                         </p>
                         <a href="mailto:viajeinformadohuanuco@gmail.com" class="btn btn-vi-primary w-100 py-3">
-                            <i class="bi bi-envelope me-2"></i> Enviar correo electrónico
+                            <i class="bi bi-envelope me-2"></i> {% translate "Enviar correo electrónico" %}
                         </a>
                     </div>
                 </div>

@@ -86,7 +86,7 @@
     slides.forEach(function (_, i) {
       var btn = document.createElement('button');
       btn.className = 'dot' + (i === 0 ? ' active' : '');
-      btn.setAttribute('aria-label', 'Ir al slide ' + (i + 1));
+      btn.setAttribute('aria-label', ViI18n('slide_ir', 'Ir al slide %s').replace('%s', i + 1));
       btn.addEventListener('click', function () { goTo(i); });
       dotsContainer.appendChild(btn);
     });
@@ -105,7 +105,7 @@
       var btn = document.createElement('button');
       btn.className = 'c3d-lb-dot' + (i === current ? ' active' : '');
       btn.setAttribute('role', 'tab');
-      btn.setAttribute('aria-label', 'Imagen ' + (i + 1));
+      btn.setAttribute('aria-label', ViI18n('imagen_n', 'Imagen %s').replace('%s', i + 1));
       btn.addEventListener('click', function () { lbGoTo(i); });
       lbDotsEl.appendChild(btn);
     });

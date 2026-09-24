@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Viaje Informado • Huánuco{% endblock %}
+{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/establecimientos.css' %}">
@@ -22,9 +23,9 @@
     <section class="establecimientos-encabezado">
         <div class="container">
             {% if plato_filtro %}
-                <p class="est-filtro-plato-etiqueta">Restaurantes donde puedes encontrar</p>
+                <p class="est-filtro-plato-etiqueta">{% translate "Restaurantes donde puedes encontrar" %}</p>
                 <h1>{{ plato_filtro.nombre }}</h1>
-                <p>{{ total_resultados }} establecimiento{% if total_resultados != 1 %}s{% endif %} encontrado{% if total_resultados != 1 %}s{% endif %}</p>
+                <p>{% blocktranslate count counter=total_resultados %}{{ counter }} establecimiento encontrado{% plural %}{{ counter }} establecimientos encontrados{% endblocktranslate %}</p>
                 <a href="{{ quitar_plato_url }}" class="est-chip-plato-activo">
                     {{ plato_filtro.nombre }} <i class="bi bi-x-lg" aria-hidden="true"></i>
                 </a>
@@ -44,7 +45,7 @@
                 <!-- Switch de apartados: Restaurantes / Alojamientos -->
                 <div class="tipo-conmutador-contenedor">
                     <div class="tipo-conmutador {% if es_alojamiento %}tipo-conmutador--derecha{% else %}tipo-conmutador--izquierda{% endif %}"
-                        aria-label="Cambiar apartado">
+                        aria-label="{% translate "Cambiar apartado" %}">
 
                         <span class="tipo-fondo-activo" aria-hidden="true"></span>
 
@@ -53,7 +54,7 @@
                             <span class="tipo-icono tipo-icono--archivo"
                                 style="--tipo-icono-url: url('{% static 'assets/img/icons/restaurante-iconvi.svg' %}');" aria-hidden="true">
                             </span>
-                            <span>Restaurantes</span>
+                            <span>{% translate "Restaurantes" %}</span>
                         </a>
 
                         <a href="/alojamientos/" data-tipo="derecha"
@@ -61,7 +62,7 @@
                             <span class="tipo-icono tipo-icono--archivo"
                                 style="--tipo-icono-url: url('{% static 'assets/img/icons/alojamientos-iconvi.svg' %}');" aria-hidden="true">
                             </span>
-                            <span>Alojamientos</span>
+                            <span>{% translate "Alojamientos" %}</span>
                         </a>
 
                     </div>
@@ -76,14 +77,14 @@
                                 <span class="input-group-text">
                                     <i class="bi bi-search"></i>
                                 </span>
-                                <input type="text" name="q" class="form-control" placeholder="Buscar por nombre..."
+                                <input type="text" name="q" class="form-control" placeholder="{% translate "Buscar por nombre..." %}"
                                     value="{{ q }}">
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-12">
                             <select name="categoria" class="form-select">
-                                <option value="">Categoría</option>
+                                <option value="">{% translate "Categoría" %}</option>
                                 {% for categoria in categorias_opciones %}
                                     <option value="{{ categoria.id }}" {% if categoria.selected %}selected{% endif %}>
                                         {{ categoria.nombre }}
@@ -96,11 +97,11 @@
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-dorado flex-grow-1">
                                     <i class="bi bi-funnel"></i>
-                                    Buscar
+                                    {% translate "Buscar" %}
                                 </button>
 
                                 <a href="{{ request.path }}" class="btn btn-contorno-dorado btn-limpiar-filtro"
-                                    title="Limpiar filtros">
+                                    title="{% translate "Limpiar filtros" %}">
                                     <i class="bi bi-eraser"></i>
                                 </a>
                             </div>
@@ -110,11 +111,11 @@
 
                     <div class="filtros-resumen">
                         <span class="contador-resultados">
-                            {{ total_resultados }} coincidencia{% if total_resultados != 1 %}s{% endif %} encontrada{% if total_resultados != 1 %}s{% endif %}
+                            {% blocktranslate count counter=total_resultados %}{{ counter }} coincidencia encontrada{% plural %}{{ counter }} coincidencias encontradas{% endblocktranslate %}
                         </span>
 
                         <div class="orden-caja">
-                            <label for="orden_select">Ordenar por:</label>
+                            <label for="orden_select">{% translate "Ordenar por:" %}</label>
                             <select name="orden" id="orden_select" class="form-select form-select-sm"
                                 onchange="this.form.submit()">
                                 {% for opcion in opciones_orden %}
@@ -139,7 +140,8 @@
                             <div class="est-imagen-contenedor">
                                 {% if est.imagen_principal %}
                                     <img src="{{ est.imagen_principal.url }}"
-                                        alt="{{ est.texto_alt_imagen|default:est.nombre }}">
+                                        alt="{{ est.texto_alt_imagen|default:est.nombre }}"
+                                        loading="lazy" decoding="async">
                                 {% else %}
                                     <div class="est-imagen-vacia">
                                         <i class="bi bi-image"></i>
@@ -153,7 +155,7 @@
                                     {% if est.categoria_principal %}
                                         {{ est.categoria_principal.nombre }}
                                     {% else %}
-                                        Establecimiento
+                                        {% translate "Establecimiento" %}
                                     {% endif %}
                                 </div>
 
@@ -170,17 +172,17 @@
                                     <span class="est-info-icono"><i class="bi bi-tag"></i></span>
                                     <span class="est-info-textos">
                                         {% if est.precio_desde and est.precio_hasta %}
-                                            <span class="est-info-label">Rango de precios:</span>
+                                            <span class="est-info-label">{% translate "Rango de precios:" %}</span>
                                             <span class="est-info-valor">S/ {{ est.precio_desde|floatformat:0 }} - S/ {{ est.precio_hasta|floatformat:0 }}</span>
                                         {% elif est.precio_desde %}
-                                            <span class="est-info-label">Rango de precios:</span>
-                                            <span class="est-info-valor">Desde S/ {{ est.precio_desde|floatformat:0 }}</span>
+                                            <span class="est-info-label">{% translate "Rango de precios:" %}</span>
+                                            <span class="est-info-valor">{% translate "Desde" %} S/ {{ est.precio_desde|floatformat:0 }}</span>
                                         {% elif est.rango_precio != 'consultar' %}
-                                            <span class="est-info-label">Rango de precios:</span>
-                                            <span class="est-info-valor">{{ est.get_rango_precio_display }}</span>
+                                            <span class="est-info-label">{% translate "Rango de precios:" %}</span>
+                                            <span class="est-info-valor">{% translate est.get_rango_precio_display %}</span>
                                         {% else %}
-                                            <span class="est-info-label">Precio</span>
-                                            <span class="est-info-valor">Consultar</span>
+                                            <span class="est-info-label">{% translate "Precio" %}</span>
+                                            <span class="est-info-valor">{% translate "Consultar" %}</span>
                                         {% endif %}
                                     </span>
                                 </div>
@@ -190,7 +192,7 @@
                                         <div class="est-info-item est-info-item--direccion">
                                             <span class="est-info-icono"><i class="bi bi-geo-alt"></i></span>
                                             <span class="est-info-textos">
-                                                <span class="est-info-label">Ubicados en:</span>
+                                                <span class="est-info-label">{% translate "Ubicados en:" %}</span>
                                                 <span class="est-info-valor est-info-valor--direccion">
                                                     {{ sucursal.direccion }}
                                                 </span>
@@ -204,11 +206,11 @@
                             <div class="est-accion">
                                 {% if est.tipo == 'restaurante' %}
                                     <a href="{% url 'establecimientos:detalle_restaurante' est.slug %}" class="btn btn-contorno-dorado text-uppercase">
-                                        Ver Más &rarr;
+                                        {% translate "Ver Más &rarr;" %}
                                     </a>
                                 {% else %}
                                     <a href="{% url 'establecimientos:detalle_alojamiento' est.slug %}" class="btn btn-contorno-dorado text-uppercase">
-                                        Ver Más &rarr;
+                                        {% translate "Ver Más &rarr;" %}
                                     </a>
                                 {% endif %}
                             </div>
@@ -221,17 +223,17 @@
                     <div class="col-12 text-center py-5 mt-5">
                         {% if plato_filtro %}
                             <i class="bi bi-egg-fried display-1 text-muted mb-3"></i>
-                            <h3 class="text-dark">Aún no tenemos restaurantes registrados que ofrezcan este plato</h3>
-                            <p class="text-muted">Prueba explorando el listado completo de restaurantes.</p>
+                            <h3 class="text-dark">{% translate "Aún no tenemos restaurantes registrados que ofrezcan este plato" %}</h3>
+                            <p class="text-muted">{% translate "Prueba explorando el listado completo de restaurantes." %}</p>
                             <a href="{% url 'establecimientos:listado_restaurantes' %}" class="btn btn-contorno-dorado mt-3">
-                                Ver todos los restaurantes
+                                {% translate "Ver todos los restaurantes" %}
                             </a>
                         {% else %}
                             <i class="bi bi-search display-1 text-muted mb-3"></i>
-                            <h3 class="text-dark">No se encontraron resultados</h3>
-                            <p class="text-muted">Intenta cambiar los filtros de búsqueda.</p>
+                            <h3 class="text-dark">{% translate "No se encontraron resultados" %}</h3>
+                            <p class="text-muted">{% translate "Intenta cambiar los filtros de búsqueda." %}</p>
                             <a href="{{ request.path }}" class="btn btn-contorno-dorado mt-3">
-                                Limpiar filtros
+                                {% translate "Limpiar filtros" %}
                             </a>
                         {% endif %}
                     </div>
@@ -242,14 +244,14 @@
 
             <!-- Paginación -->
             {% if page_obj.has_other_pages %}
-                <nav aria-label="Navegación de páginas" class="d-flex justify-content-center vi-paginacion-contenedor">
+                <nav aria-label="{% translate "Navegación de páginas" %}" class="d-flex justify-content-center vi-paginacion-contenedor">
                     <ul class="pagination vi-paginacion">
 
                         {% if page_obj.has_previous %}
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page=1{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
-                                    aria-label="Primera">
+                                    aria-label="{% translate "Primera" %}">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
@@ -257,7 +259,7 @@
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
-                                    aria-label="Anterior">
+                                    aria-label="{% translate "Anterior" %}">
                                     <span aria-hidden="true">&lsaquo;</span>
                                 </a>
                             </li>
@@ -291,7 +293,7 @@
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
-                                    aria-label="Siguiente">
+                                    aria-label="{% translate "Siguiente" %}">
                                     <span aria-hidden="true">&rsaquo;</span>
                                 </a>
                             </li>
@@ -299,7 +301,7 @@
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
-                                    aria-label="Última">
+                                    aria-label="{% translate "Última" %}">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>

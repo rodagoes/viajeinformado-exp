@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <footer class="vi-footer mt-auto">
     <div class="vi-footer__container">
@@ -5,17 +6,16 @@
             <div class="vi-footer__brand">
                 <h3>VIAJE INFORMADO</h3>
                 <p>
-                    Plataforma dedicada a promover el turismo en Huánuco. Conoce y explora
-                    la ciudad, su cultura y sus principales atractivos turísticos.
+                    {% translate "Plataforma dedicada a promover el turismo en Huánuco. Conoce y explora la ciudad, su cultura y sus principales atractivos turísticos." %}
                 </p>
             </div>
 
             <div class="vi-footer__logo">
-                <img src="{% static 'assets/img/logo/viaje-informado-logo.png' %}" alt="Logo Viaje Informado">
+                <img src="{% static 'assets/img/logo/viaje-informado-logo.png' %}" alt="{% translate "Logo Viaje Informado" %}">
             </div>
 
             <div class="vi-footer__contact">
-                <h3>CONTACTO</h3>
+                <h3>{% translate "CONTACTO" %}</h3>
 
                 <ul class="vi-social-icons">
                     <li class="vi-social-icons__item">
@@ -45,21 +45,21 @@
 
         <div class="vi-footer__middle">
             <div class="vi-footer__policies">
-                <a href="/privacidad/">Política de privacidad</a>
-                <a href="/terminos/">Términos y condiciones</a>
+                <a href="/privacidad/">{% translate "Política de privacidad" %}</a>
+                <a href="/terminos/">{% translate "Términos y condiciones" %}</a>
             </div>
 
             <nav class="vi-footer__nav">
-                <a href="/">Inicio</a>
-                <a href="#">Explorar</a>
-                <a href="#">Gastronomía y alojamiento</a>
-                <a href="#">Eventos</a>
-                <a href="#">Planifica</a>
+                <a href="/">{% translate "Inicio" %}</a>
+                <a href="#">{% translate "Explorar" %}</a>
+                <a href="#">{% translate "Gastronomía y alojamiento" %}</a>
+                <a href="#">{% translate "Eventos" %}</a>
+                <a href="#">{% translate "Planifica" %}</a>
             </nav>
         </div>
 
         <div class="vi-footer__bottom">
-            <p>© 2026 Viaje Informado Huánuco. Todos los derechos reservados.</p>
+            <p>{% translate "© 2026 Viaje Informado Huánuco. Todos los derechos reservados." %}</p>
         </div>
     </div>
 </footer>

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin, TranslationStackedInline, TranslationTabularInline
 from .models import (
     CategoriaLugarTuristico,
     ServicioLugarTuristico,
@@ -9,7 +10,7 @@ from .models import (
 
 
 @admin.register(CategoriaLugarTuristico)
-class CategoriaLugarTuristicoAdmin(admin.ModelAdmin):
+class CategoriaLugarTuristicoAdmin(TranslationAdmin):
     list_display = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
     list_filter = ("activo", "tipo_icono")
@@ -31,7 +32,7 @@ class CategoriaLugarTuristicoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ServicioLugarTuristico)
-class ServicioLugarTuristicoAdmin(admin.ModelAdmin):
+class ServicioLugarTuristicoAdmin(TranslationAdmin):
     list_display = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
     list_filter = ("activo", "tipo_icono")
@@ -52,7 +53,7 @@ class ServicioLugarTuristicoAdmin(admin.ModelAdmin):
     )
 
 
-class ImagenLugarTuristicoInline(admin.StackedInline):
+class ImagenLugarTuristicoInline(TranslationStackedInline):
     model = ImagenLugarTuristico
     extra = 0
     ordering = ("orden", "id")
@@ -71,7 +72,7 @@ class ImagenLugarTuristicoInline(admin.StackedInline):
     )
 
 
-class RecomendacionLugarTuristicoInline(admin.TabularInline):
+class RecomendacionLugarTuristicoInline(TranslationTabularInline):
     model = RecomendacionLugarTuristico
     extra = 0
     fields = ("titulo", "descripcion", "icono_bootstrap", "orden", "activo")
@@ -79,7 +80,7 @@ class RecomendacionLugarTuristicoInline(admin.TabularInline):
 
 
 @admin.register(LugarTuristico)
-class LugarTuristicoAdmin(admin.ModelAdmin):
+class LugarTuristicoAdmin(TranslationAdmin):
     list_display = (
         "nombre", "categoria_principal", "distrito", "localidad",
         "tipo_costo", "rango_precios_soles", "dificultad", "destacado", "activo"
@@ -152,7 +153,7 @@ class LugarTuristicoAdmin(admin.ModelAdmin):
 
 
 @admin.register(RecomendacionLugarTuristico)
-class RecomendacionLugarTuristicoAdmin(admin.ModelAdmin):
+class RecomendacionLugarTuristicoAdmin(TranslationAdmin):
     list_display = ("lugar", "titulo", "orden", "activo", "actualizado")
     search_fields = ("lugar__nombre", "titulo", "descripcion", "icono_bootstrap")
     list_filter = ("activo", "lugar")
@@ -167,7 +168,7 @@ class RecomendacionLugarTuristicoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ImagenLugarTuristico)
-class ImagenLugarTuristicoAdmin(admin.ModelAdmin):
+class ImagenLugarTuristicoAdmin(TranslationAdmin):
     list_display = ("lugar", "tipo_media", "titulo", "orden", "activo", "creado")
     search_fields = ("lugar__nombre", "titulo", "descripcion", "texto_alt", "video_url", "video_archivo")
     list_filter = ("activo", "tipo_media", "lugar")

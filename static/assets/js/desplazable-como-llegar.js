@@ -78,8 +78,8 @@
         var fb = construirUrls(query);
 
         return {
-            nombre:      texto(d.nombre) || 'Local principal',
-            label:       texto(d.label) || (d.esPrincipal === 'true' ? 'Sucursal principal' : 'Sucursal'),
+            nombre:      texto(d.nombre) || ViI18n('local_principal', 'Local principal'),
+            label:       texto(d.label) || (d.esPrincipal === 'true' ? ViI18n('sucursal_principal', 'Sucursal principal') : ViI18n('sucursal', 'Sucursal')),
             direccion:   direccion,
             referencia:  texto(d.referencia),
             horario:     texto(d.horario),
@@ -143,7 +143,7 @@
             el.textContent = datos.nombre;
         });
         qsa(root, '[data-branch-direccion]').forEach(function (el) {
-            el.textContent = datos.direccion || 'Dirección no registrada';
+            el.textContent = datos.direccion || ViI18n('sin_direccion', 'Dirección no registrada');
         });
         qsa(root, '[data-branch-referencia]').forEach(function (el) {
             el.textContent = datos.referencia;

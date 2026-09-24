@@ -1,0 +1,53 @@
+/* ============================================================
+   SKELETON — Viaje Informado
+   Componente global y reutilizable. Solo existe mientras hay una carga
+   REAL en vuelo (imagen, iframe, fetch): skeleton.js añade `.vi-skel` al
+   contenedor y lo retira en load / error / finally / pageshow. Nunca se
+   activa por temporizador.
+
+   El shimmer es el propio `background` del contenedor (no un pseudo
+   elemento): así no toca `position`/`z-index` del wrapper real y el
+   contenedor conserva su aspect-ratio => sin layout shift.
+   ============================================================ */
+
+:root {
+    --vi-skel-base: #EEF3FB;
+    --vi-skel-shine: #DFE7F3;
+}
+
+/* !important: el CSS de cada módulo suele fijar el `background` del
+   contenedor de la imagen; el skeleton debe verse por encima de eso. */
+.vi-skel,
+.vi-skel-line {
+    background: linear-gradient(
+        90deg,
+        var(--vi-skel-base) 0%,
+        var(--vi-skel-shine) 50%,
+        var(--vi-skel-base) 100%
+    ) 0 0 / 200% 100% !important;
+    animation: vi-skel-shimmer 1.4s linear infinite;
+}
+
+@keyframes vi-skel-shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+/* Líneas de texto (p. ej. el panel de Historia mientras llega el fetch). */
+.vi-skel-line {
+    display: block;
+    height: 0.95em;
+    margin: 0.6em 0;
+    border-radius: 6px;
+}
+
+.vi-skel-line--corta { width: 60%; }
+.vi-skel-line--titulo { height: 1.3em; width: 45%; }
+
+@media (prefers-reduced-motion: reduce) {
+    .vi-skel,
+    .vi-skel-line {
+        animation: none;
+        background: var(--vi-skel-base) !important;
+    }
+}

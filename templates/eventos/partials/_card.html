@@ -1,0 +1,74 @@
+{% load i18n %}
+{# Card de evento. Requiere `tarjeta` (ver views.tarjeta_para). `distancia_texto` solo aparece en los eventos cercanos al rango. #}
+<article class="ev-card" aria-labelledby="ev-evento-titulo-{{ tarjeta.evento.id }}">
+    <div class="ev-card__media">
+        {% if tarjeta.evento.imagen_principal %}
+        <img src="{{ tarjeta.evento.imagen_principal.url }}"
+             alt="{% if tarjeta.evento.texto_alt_imagen %}{{ tarjeta.evento.texto_alt_imagen }}{% else %}{{ tarjeta.evento.nombre }}{% endif %}"
+             loading="lazy" decoding="async">
+        {% else %}
+        <span class="ev-card__media-fallback" aria-hidden="true"><i class="bi bi-calendar-event"></i></span>
+        {% endif %}
+    </div>
+
+    <div class="ev-card__body">
+        <header class="ev-card__encabezado">
+            <div class="ev-card__eyebrow-row">
+                <p class="ev-card__categoria">{{ tarjeta.evento.categoria_principal.nombre }}</p>
+                {% if tarjeta.estado %}
+                <span class="ev-card__estado ev-card__estado--{{ tarjeta.estado_slug }}">
+                    <span class="ev-card__estado-punto" aria-hidden="true"></span>
+                    {{ tarjeta.estado }}
+                </span>
+                {% endif %}
+            </div>
+            <h3 class="ev-card__nombre" id="ev-evento-titulo-{{ tarjeta.evento.id }}">{{ tarjeta.evento.nombre }}</h3>
+            {% if tarjeta.distancia_texto %}
+            <p class="ev-card__distancia"><i class="bi bi-clock-history" aria-hidden="true"></i> {{ tarjeta.distancia_texto }}</p>
+            {% endif %}
+        </header>
+
+        <div class="ev-card__separador" aria-hidden="true"><span></span></div>
+
+        <div class="ev-card__meta">
+            {% if tarjeta.fecha.principal %}
+            <div class="ev-card__meta-item">
+                <span class="ev-card__meta-icono" aria-hidden="true">
+                    <i class="bi bi-calendar-event"></i>
+                </span>
+                <div class="ev-card__meta-contenido">
+                    <span class="ev-card__meta-etiqueta">{% translate "Fecha:" %}</span>
+                    <span class="ev-card__meta-valor">{{ tarjeta.fecha.principal }}</span>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if tarjeta.ubicacion %}
+            <div class="ev-card__meta-item">
+                <span class="ev-card__meta-icono" aria-hidden="true">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </span>
+                <div class="ev-card__meta-contenido">
+                    <span class="ev-card__meta-etiqueta">{% translate "Ubicación:" %}</span>
+                    <span class="ev-card__meta-valor ev-card__meta-valor--ubicacion">{{ tarjeta.ubicacion }}</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if tarjeta.evento.descripcion_corta %}
+        <div class="ev-card__teaser">
+            <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+            <p>{{ tarjeta.evento.descripcion_corta|truncatechars:100 }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="ev-card__acciones">
+        <button type="button" class="ev-card__cta" data-abrir-evento data-evento-id="{{ tarjeta.evento.id }}"
+                aria-haspopup="dialog" aria-controls="ev-modal-info">
+            <span class="ev-card__cta-icono" aria-hidden="true"><i class="bi bi-eye"></i></span>
+            <span>{% translate "Conocer más" %}</span>
+        </button>
+    </div>
+</article>

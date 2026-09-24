@@ -6,6 +6,7 @@ permitida y sus argumentos controlados, y ejecuta vía TOOL_REGISTRY.
 import datetime
 
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 DIAS_EVENTOS_PROXIMOS = 7
 
@@ -28,25 +29,25 @@ def _eventos_proximos():
 
 # id → (label humano persistido como mensaje del usuario, tool, argumentos)
 QUICK_ACTIONS = {
-    "clima_huanuco": ("Clima en Huánuco", "consultar_clima", {"ciudad": "huanuco"}),
-    "clima_tingo_maria": ("Clima en Tingo María", "consultar_clima", {"ciudad": "tingo-maria"}),
-    "eventos_proximos": ("Eventos próximos", "buscar_eventos", _eventos_proximos),
-    "platos_tipicos": ("Platos típicos", "buscar_platos", {"limit": 10}),
-    "lugares_destacados": ("Lugares destacados", "buscar_lugares", {"destacado": True, "limit": 10}),
+    "clima_huanuco": (_("Clima en Huánuco"), "consultar_clima", {"ciudad": "huanuco"}),
+    "clima_tingo_maria": (_("Clima en Tingo María"), "consultar_clima", {"ciudad": "tingo-maria"}),
+    "eventos_proximos": (_("Eventos próximos"), "buscar_eventos", _eventos_proximos),
+    "platos_tipicos": (_("Platos típicos"), "buscar_platos", {"limit": 10}),
+    "lugares_destacados": (_("Lugares destacados"), "buscar_lugares", {"destacado": True, "limit": 10}),
     "restaurantes_destacados": (
-        "Restaurantes destacados", "buscar_restaurantes", {"destacado": True, "limit": 10},
+        _("Restaurantes destacados"), "buscar_restaurantes", {"destacado": True, "limit": 10},
     ),
     "alojamientos_destacados": (
-        "Alojamientos destacados", "buscar_alojamientos", {"destacado": True, "limit": 10},
+        _("Alojamientos destacados"), "buscar_alojamientos", {"destacado": True, "limit": 10},
     ),
-    "tarifas_movilidad": ("Tarifas de movilidad", "consultar_tarifas_movilidad", {}),
-    "como_llegar": ("Cómo llegar a Huánuco", "consultar_como_llegar", {}),
-    "tipo_cambio": ("Tipo de cambio", "consultar_tipo_cambio", {}),
+    "tarifas_movilidad": (_("Tarifas de movilidad"), "consultar_tarifas_movilidad", {}),
+    "como_llegar": (_("Cómo llegar a Huánuco"), "consultar_como_llegar", {}),
+    "tipo_cambio": (_("Tipo de cambio"), "consultar_tipo_cambio", {}),
     # Nivel 1: solo los 3 contactos nacionales; el directorio local se pide
     # aparte indicando la zona (ver natural_quick_actions.detectar_emergencia_zona).
-    "emergencias": ("Emergencias", "consultar_emergencias", {"ambito": "nacional", "limit": 3}),
+    "emergencias": (_("Emergencias"), "consultar_emergencias", {"ambito": "nacional", "limit": 3}),
     # C8: la identidad la inyecta el backend (TOOLS_CON_USUARIO); sin botón en la UI.
-    "mis_favoritos": ("Mis favoritos", "consultar_favoritos", {"limit": 10}),
+    "mis_favoritos": (_("Mis favoritos"), "consultar_favoritos", {"limit": 10}),
 }
 
 
@@ -55,4 +56,4 @@ def resolver(accion_id):
     if not isinstance(accion_id, str) or accion_id not in QUICK_ACTIONS:
         raise AccionInvalida(accion_id)
     label, tool, argumentos = QUICK_ACTIONS[accion_id]
-    return label, tool, (argumentos() if callable(argumentos) else dict(argumentos))
+    return str(label), tool, (argumentos() if callable(argumentos) else dict(argumentos))

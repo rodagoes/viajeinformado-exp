@@ -1,6 +1,7 @@
 from django import forms
 
 from .models import Resena
+from django.utils.translation import gettext_lazy
 
 
 class ResenaForm(forms.ModelForm):
@@ -12,7 +13,7 @@ class ResenaForm(forms.ModelForm):
                 "maxlength": 500,
                 "rows": 4,
                 "class": "form-control",
-                "placeholder": "Cuéntanos qué te pareció (opcional)",
+                "placeholder": gettext_lazy("Cuéntanos qué te pareció (opcional)"),
             }),
         }
 

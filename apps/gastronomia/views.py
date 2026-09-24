@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.utils.translation import gettext
 from django.db.models import Prefetch
 from django.shortcuts import render
 
@@ -36,8 +37,8 @@ def platos_tipicos(request):
     ]
 
     context = {
-        "titulo": "Sabores de Huánuco",
-        "subtitulo": (
+        "titulo": gettext("Sabores de Huánuco"),
+        "subtitulo": gettext(
             "Una fusión entre la sierra y la selva. Descubre la riqueza culinaria "
             "que forma parte de la identidad huanuqueña."
         ),

@@ -6,20 +6,26 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Max, Min, Prefetch, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.dates import MONTHS, MONTHS_3, WEEKDAYS, WEEKDAYS_ABBR
+from django.utils.formats import date_format
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.text import slugify
+from django.utils.translation import get_language
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
 from django.views.decorators.http import require_POST
 
 from apps.ubicaciones.models import Distrito, Provincia
 
 from .forms import PromocionarEventoForm, ReportarProblemaEventoForm
 from .models import (
-    MES_CHOICES, CategoriaEvento, Evento, RecomendacionEvento, TagExperiencia,
+    CategoriaEvento, Evento, RecomendacionEvento, TagExperiencia,
     ocurrencia_anual_en_rango, ocurrencia_anual_relevante,
     ocurrencia_pascua_en_rango, ocurrencia_pascua_relevante,
     ocurrencia_relativa_en_rango, ocurrencia_relativa_relevante,
@@ -33,7 +39,17 @@ POR_PAGINA = 6
 # que quede corta/vacía apenas se libera el espacio de las flechas.
 DIAS_VENTANA_SELECTOR = 14
 CUANDO_VALORES = ("hoy", "manana", "fin_de_semana", "esta_semana")
-DIAS_SEMANA_ABREV = ["LUN", "MAR", "MIÉ", "JUE", "VIE", "SÁB", "DOM"]
+
+# Rango de fechas del turista (?desde=&hasta=).
+# 366 días: ocurrencia_*_en_rango prueba año-1/actual/+1; un rango mayor daría
+# falsos negativos. Se rechaza con un error visible (nunca se recorta).
+MAX_DIAS_RANGO = 366
+# Ventana de "eventos cercanos" cuando el rango exacto no tiene resultados.
+# Estricta: nunca se amplía (ni 30/60/90 días) para rellenar.
+DIAS_VENTANA_CERCANA = 14
+MAX_CERCANOS_POR_BLOQUE = 3
+# Año no bisiesto de referencia para dar formato a "día de mes" sin año.
+_ANIO_REF = 2001
 
 # Iconos propios por tag de Experiencia (R3): el modelo solo tiene
 # `icono_bootstrap` (fuente de iconos genérica para todo el admin), así que
@@ -50,14 +66,27 @@ ICONOS_EXPERIENCIA = {
     "vida-nocturna": "nocturna-iconovi.svg",
 }
 
-MESES_ABREV = {
-    1: "ene", 2: "feb", 3: "mar", 4: "abr", 5: "may", 6: "jun",
-    7: "jul", 8: "ago", 9: "sep", 10: "oct", 11: "nov", 12: "dic",
+# Nombres públicos traducibles (los `choices` del modelo se quedan en español
+# para el admin y no se tocan: envolverlos generaría migraciones espurias).
+ORDEN_SEMANA_NOMBRE = {
+    1: gettext_lazy("primer"), 2: gettext_lazy("segundo"),
+    3: gettext_lazy("tercer"), 4: gettext_lazy("cuarto"),
 }
-MESES_NOMBRE = dict(MES_CHOICES)
-ORDEN_SEMANA_NOMBRE = dict(Evento.ORDEN_SEMANA_CHOICES)
-DIA_SEMANA_NOMBRE = dict(Evento.DIA_SEMANA_CHOICES)
-PASCUA_NOMBRE = dict(Evento.PASCUA_OFFSET_CHOICES)
+PASCUA_NOMBRE = {
+    -7: gettext_lazy("Domingo de Ramos"),
+    -3: gettext_lazy("Jueves Santo"),
+    -2: gettext_lazy("Viernes Santo"),
+    0: gettext_lazy("Domingo de Resurrección"),
+}
+# Clave estable (español) -> etiqueta traducida. El CSS depende del slug de
+# la clave, no del texto mostrado.
+ESTADOS_NOMBRE = {
+    "Cancelado": gettext_lazy("Cancelado"),
+    "Reprogramado": gettext_lazy("Reprogramado"),
+    "Fecha por confirmar": gettext_lazy("Fecha por confirmar"),
+    "Hoy": gettext_lazy("Hoy"),
+    "En curso": gettext_lazy("En curso"),
+}
 
 
 def _parsear_fecha(valor):
@@ -169,6 +198,124 @@ def _construir_querystring(get_params, **cambios):
     return datos.urlencode()
 
 
+def _resolver_rango(get):
+    """Valida ?desde=&hasta= (YYYY-MM-DD, valores estables enviados por los
+    inputs del formulario — nunca el texto visual del picker).
+
+    Devuelve (rango, error, desde_valor, hasta_valor):
+    - rango: (desde, hasta) si es válido, si no None.
+    - error: mensaje visible para el usuario ("" si no hay error). Nunca se
+      recorta ni se intercambia nada en silencio: el usuario corrige.
+    - desde_valor/hasta_valor: las fechas parseables que envió, para
+      conservarlas en el formulario aunque haya error.
+    """
+    desde_raw = get.get("desde", "").strip()
+    hasta_raw = get.get("hasta", "").strip()
+    if not desde_raw and not hasta_raw:
+        return None, "", "", ""
+
+    desde = _parsear_fecha(desde_raw)
+    hasta = _parsear_fecha(hasta_raw)
+    desde_valor = desde.isoformat() if desde else ""
+    hasta_valor = hasta.isoformat() if hasta else ""
+
+    if not (desde and hasta):
+        error = _("Selecciona una fecha de inicio y una de fin válidas.")
+    elif hasta < desde:
+        error = _("La fecha de fin no puede ser anterior a la de inicio.")
+    elif (hasta - desde).days > MAX_DIAS_RANGO:
+        error = _("Selecciona un rango de hasta %(dias)s días.") % {"dias": MAX_DIAS_RANGO}
+    else:
+        return (desde, hasta), "", desde_valor, hasta_valor
+    return None, error, desde_valor, hasta_valor
+
+
+def _anios_con_eventos():
+    """(año mínimo, año máximo) con eventos publicados (fechas exactas/rango y año aproximado), o
+    (None, None). Solo orienta las opciones del selector de año del calendario: NO limita las
+    fechas que se pueden elegir (el backend acepta cualquiera; los recurrentes valen en cualquier año)."""
+    datos = Evento.objects.publicados().aggregate(
+        i_min=Min("fecha_inicio"), i_max=Max("fecha_inicio"), f_max=Max("fecha_fin"),
+        a_min=Min("anio_aproximado"), a_max=Max("anio_aproximado"),
+    )
+    anios = [
+        valor.year if hasattr(valor, "year") else valor
+        for valor in (datos["i_min"], datos["i_max"], datos["f_max"], datos["a_min"], datos["a_max"])
+        if valor
+    ]
+    return (min(anios), max(anios)) if anios else (None, None)
+
+
+def _fecha_corta(fecha, con_anio=False):
+    """'20 oct.' / 'Oct. 20' (con año si el rango cruza de año)."""
+    texto = date_format(fecha, _("j M. Y") if con_anio else _("j M."))
+    # El formato `M` de Django siempre capitaliza el mes; en español va en minúscula.
+    return texto.lower() if get_language() == "es" else texto
+
+
+def _rango_corto(desde, hasta):
+    if desde == hasta:
+        return _fecha_corta(desde)
+    con_anio = desde.year != hasta.year
+    return f"{_fecha_corta(desde, con_anio)} – {_fecha_corta(hasta, con_anio)}"
+
+
+def _inicio_fin(evento, hoy, rango):
+    """(inicio, fin) real del evento respecto a `rango`: la ocurrencia que
+    solapa en los recurrentes; fecha_inicio/fecha_fin en exacta/rango."""
+    contextual = _ocurrencia_contextual(evento, hoy, rango)
+    if contextual:
+        return contextual
+    return evento.fecha_inicio, evento.fecha_fin or evento.fecha_inicio
+
+
+def _eventos_cercanos(base, desde, hasta, hoy):
+    """Eventos justo antes / poco después de [desde, hasta], para cuando el
+    rango exacto no tiene resultados. Reutiliza `que_solapan` sobre el MISMO
+    `base` filtrado (categoría/provincia/distrito/tags), en una ventana de
+    ±DIAS_VENTANA_CERCANA días — estricta, nunca se amplía.
+
+    La distancia se mide contra el viaje (no contra hoy). Devuelve
+    (antes, despues, datos_modal): `antes`/`despues` son listas de tarjetas
+    (máx. MAX_CERCANOS_POR_BLOQUE) con `distancia_texto`.
+    """
+    ventana_antes = (desde - timedelta(days=DIAS_VENTANA_CERCANA), desde - timedelta(days=1))
+    ventana_despues = (hasta + timedelta(days=1), hasta + timedelta(days=DIAS_VENTANA_CERCANA))
+
+    def armar(ventana, antes):
+        filas = []
+        for evento in base.que_solapan(*ventana):
+            inicio, fin = _inicio_fin(evento, hoy, ventana)
+            dias = (desde - fin).days if antes else (inicio - hasta).days
+            if dias >= 1:
+                filas.append((inicio, fin, dias, evento))
+        if antes:
+            # Más cercano al viaje primero (fin más tardío), desempate por nombre.
+            filas.sort(key=lambda f: (-f[1].toordinal(), f[3].nombre))
+        else:
+            # Más próximo primero (inicio más temprano), desempate por nombre.
+            filas.sort(key=lambda f: (f[0].toordinal(), f[3].nombre))
+
+        tarjetas, modal = [], []
+        for _inicio, _fin, dias, evento in filas[:MAX_CERCANOS_POR_BLOQUE]:
+            tarjeta = tarjeta_para(evento, hoy, ventana)
+            if antes:
+                tarjeta["distancia_texto"] = ngettext(
+                    "%(n)s día antes de tu llegada", "%(n)s días antes de tu llegada", dias
+                ) % {"n": dias}
+            else:
+                tarjeta["distancia_texto"] = ngettext(
+                    "%(n)s día después de tu viaje", "%(n)s días después de tu viaje", dias
+                ) % {"n": dias}
+            tarjetas.append(tarjeta)
+            modal.append(datos_modal_para(evento, hoy, ventana))
+        return tarjetas, modal
+
+    antes, modal_antes = armar(ventana_antes, True)
+    despues, modal_despues = armar(ventana_despues, False)
+    return antes, despues, modal_antes + modal_despues
+
+
 def _ventana_paginas(pagina_actual, total_paginas, tamano):
     """Ventana centrada de como máximo `tamano` números de página alrededor
     de `pagina_actual` (paginador V2.1, sección 6). Con pocas páginas
@@ -192,16 +339,17 @@ def _ventana_paginas(pagina_actual, total_paginas, tamano):
 
 
 def _fecha_texto(dia, mes):
-    """'24 de diciembre': nunca incluye año (R28) — el usuario ya sabe a qué
-    año se refiere por el filtro que aplicó, mostrarlo solo genera confusión."""
-    return f"{dia} de {MESES_NOMBRE[mes].lower()}"
+    """'24 de diciembre' / 'December 24': nunca incluye año (R28) — el usuario
+    ya sabe a qué año se refiere por el filtro que aplicó, mostrarlo solo
+    genera confusión. El orden día/mes lo decide el msgid traducible."""
+    return date_format(datetime(_ANIO_REF, mes, dia), _("j \\d\\e F"))
 
 
 def _fecha_texto_con_anio(dia, mes, anio):
     """'12 de septiembre de 2026': variante con año, solo para 'Se celebra'
     en el modal (a diferencia de fecha_card/_fecha_texto, que nunca lo
     muestran — ahí sigue rigiendo R28)."""
-    return f"{dia} de {MESES_NOMBRE[mes].lower()} de {anio}"
+    return date_format(datetime(anio, mes, dia), _("j \\d\\e F \\d\\e Y"))
 
 
 def _rango_fecha_texto(dia_inicio, mes_inicio, dia_fin, mes_fin):
@@ -213,19 +361,25 @@ def _rango_fecha_texto(dia_inicio, mes_inicio, dia_fin, mes_fin):
 
 def _hora_texto(hora):
     horas12 = hora.hour % 12 or 12
-    sufijo = "a. m." if hora.hour < 12 else "p. m."
+    sufijo = _("a. m.") if hora.hour < 12 else _("p. m.")
     return f"{horas12}:{hora.minute:02d} {sufijo}"
 
 
 def _regla_relativa_texto(evento):
-    """'Segundo domingo de enero' / 'Primer viernes después del 15 de agosto'."""
-    orden = ORDEN_SEMANA_NOMBRE.get(evento.orden_semana_relativa, "").lower()
-    dia_semana = DIA_SEMANA_NOMBRE.get(evento.dia_semana_relativa, "").lower()
-    mes = MESES_NOMBRE.get(evento.mes_relativa, "").lower()
-    texto = f"{orden} {dia_semana}".strip().capitalize()
+    """'Segundo domingo de enero' / 'Primer viernes después del 15 de agosto'
+    (en inglés: 'Second Sunday of January' / 'First Friday after August 15')."""
+    datos = {
+        "orden": ORDEN_SEMANA_NOMBRE.get(evento.orden_semana_relativa, ""),
+        "dia": WEEKDAYS.get(evento.dia_semana_relativa, ""),
+        "mes": MONTHS.get(evento.mes_relativa, ""),
+        "ancla": evento.dia_ancla_relativa,
+    }
     if evento.dia_ancla_relativa:
-        return f"{texto} después del {evento.dia_ancla_relativa} de {mes}"
-    return f"{texto} de {mes}"
+        texto = _("%(orden)s %(dia)s después del %(ancla)s de %(mes)s") % datos
+    else:
+        texto = _("%(orden)s %(dia)s de %(mes)s") % datos
+    texto = texto.strip()
+    return texto[:1].upper() + texto[1:]
 
 
 def fecha_card(evento, hoy, rango=None):
@@ -253,27 +407,33 @@ def fecha_card(evento, hoy, rango=None):
             evento.dia_inicio_anual, evento.mes_inicio_anual,
             evento.dia_fin_anual, evento.mes_fin_anual,
         )
-        return {"principal": principal, "nota": "Cada año"}
+        return {"principal": principal, "nota": _("Cada año")}
 
     if evento.tipo_fecha == "anual_relativa":
         if not (evento.orden_semana_relativa and evento.dia_semana_relativa is not None and evento.mes_relativa):
             return {"principal": "", "nota": ""}
         inicio, _fin = _ocurrencia_contextual(evento, hoy, rango)
-        return {"principal": _fecha_texto(inicio.day, inicio.month), "nota": f"{_regla_relativa_texto(evento)} · Cada año"}
+        return {
+            "principal": _fecha_texto(inicio.day, inicio.month),
+            "nota": f"{_regla_relativa_texto(evento)} · {_('Cada año')}",
+        }
 
     if evento.tipo_fecha == "pascua_relativa":
         if evento.offset_dias_pascua is None:
             return {"principal": "", "nota": ""}
         inicio, _fin = _ocurrencia_contextual(evento, hoy, rango)
         nombre_dia = PASCUA_NOMBRE.get(evento.offset_dias_pascua, "")
-        return {"principal": _fecha_texto(inicio.day, inicio.month), "nota": f"{nombre_dia} · Fecha móvil"}
+        return {
+            "principal": _fecha_texto(inicio.day, inicio.month),
+            "nota": f"{nombre_dia} · {_('Fecha móvil')}",
+        }
 
     if evento.tipo_fecha == "mes_aproximado":
-        nombre_mes = MESES_NOMBRE.get(evento.mes_aproximado, "").upper()
+        nombre_mes = str(MONTHS.get(evento.mes_aproximado, "")).upper()
         anio = evento.anio_aproximado or ""
-        return {"principal": f"{nombre_mes} {anio}".strip(), "nota": "Fecha exacta por confirmar"}
+        return {"principal": f"{nombre_mes} {anio}".strip(), "nota": _("Fecha exacta por confirmar")}
 
-    return {"principal": "Fecha por confirmar", "nota": ""}
+    return {"principal": _("Fecha por confirmar"), "nota": ""}
 
 
 def celebracion_resumen(evento):
@@ -298,7 +458,10 @@ def celebracion_resumen(evento):
             return _fecha_texto_con_anio(inicio.day, inicio.month, inicio.year)
         if inicio.year == fin.year:
             if inicio.month == fin.month:
-                return f"{inicio.day} – {fin.day} de {MESES_NOMBRE[inicio.month].lower()} de {inicio.year}"
+                return _("%(dia_inicio)s – %(dia_fin)s de %(mes)s de %(anio)s") % {
+                    "dia_inicio": inicio.day, "dia_fin": fin.day,
+                    "mes": MONTHS[inicio.month], "anio": inicio.year,
+                }
             return (
                 f"{_fecha_texto(inicio.day, inicio.month)} – "
                 f"{_fecha_texto_con_anio(fin.day, fin.month, fin.year)}"
@@ -316,28 +479,27 @@ def celebracion_resumen(evento):
                 f"{_fecha_texto(evento.dia_inicio_anual, evento.mes_inicio_anual)} – "
                 f"{_fecha_texto(evento.dia_fin_anual, evento.mes_fin_anual)}"
             )
-        return f"Cada {_fecha_texto(evento.dia_inicio_anual, evento.mes_inicio_anual)}"
+        return _("Cada %(x)s") % {"x": _fecha_texto(evento.dia_inicio_anual, evento.mes_inicio_anual)}
 
     if evento.tipo_fecha == "anual_relativa":
         if not (evento.orden_semana_relativa and evento.dia_semana_relativa is not None and evento.mes_relativa):
             return ""
         regla = _regla_relativa_texto(evento)
-        return f"Cada {regla[0].lower()}{regla[1:]}"
+        return _("Cada %(x)s") % {"x": f"{regla[0].lower()}{regla[1:]}"}
 
     if evento.tipo_fecha == "pascua_relativa":
         if evento.offset_dias_pascua is None:
             return ""
-        nombre_dia = PASCUA_NOMBRE.get(evento.offset_dias_pascua, "")
-        return f"Cada {nombre_dia}"
+        return _("Cada %(x)s") % {"x": PASCUA_NOMBRE.get(evento.offset_dias_pascua, "")}
 
     if evento.tipo_fecha == "mes_aproximado":
         if not evento.mes_aproximado:
             return ""
-        nombre_mes = MESES_NOMBRE.get(evento.mes_aproximado, "").lower()
-        anio = evento.anio_aproximado or ""
-        return f"Durante {nombre_mes} de {anio}".strip()
+        return _("Durante %(mes)s de %(anio)s") % {
+            "mes": MONTHS.get(evento.mes_aproximado, ""), "anio": evento.anio_aproximado or "",
+        }
 
-    return "Fecha por confirmar"
+    return _("Fecha por confirmar")
 
 
 def horario_card_texto(evento):
@@ -348,11 +510,11 @@ def horario_card_texto(evento):
             return f"{_hora_texto(evento.hora_inicio)} – {_hora_texto(evento.hora_fin)}"
         return ""
     if evento.tipo_horario == "todo_el_dia":
-        return "Todo el día"
+        return _("Todo el día")
     if evento.tipo_horario == "variable":
-        return "Horarios variables"
+        return _("Horarios variables")
     if evento.tipo_horario == "por_confirmar":
-        return "Horario por confirmar"
+        return _("Horario por confirmar")
     return ""  # no_aplica: sin línea de horario
 
 
@@ -362,8 +524,8 @@ def ubicacion_card_texto(evento):
         return evento.lugar
     if evento.tipo_ubicacion == "ambito_general" and not evento.distrito_id and not evento.provincia_id:
         if evento.descripcion_ubicacion:
-            return f"Región Huánuco — {evento.descripcion_ubicacion}"
-        return "Región Huánuco"
+            return f"{_('Región Huánuco')} — {evento.descripcion_ubicacion}"
+        return _("Región Huánuco")
     if evento.descripcion_ubicacion:
         return evento.descripcion_ubicacion
     if evento.localidad:
@@ -371,26 +533,28 @@ def ubicacion_card_texto(evento):
     if evento.distrito:
         return evento.distrito.nombre_oficial
     if evento.provincia:
-        return f"Provincia de {evento.provincia.nombre_oficial}"
+        return _("Provincia de %(nombre)s") % {"nombre": evento.provincia.nombre_oficial}
     return ""
 
 
 def costo_card_texto(evento):
     if evento.tipo_costo == "gratis":
-        return "Gratuito"
+        return _("Gratuito")
     if evento.tipo_costo == "pagado":
         if evento.precio_desde and evento.precio_hasta:
             return f"S/ {evento.precio_desde} – S/ {evento.precio_hasta}"
         if evento.precio_desde:
-            return f"Desde S/ {evento.precio_desde}"
-        return "Consultar"
+            return _("Desde S/ %(precio)s") % {"precio": evento.precio_desde}
+        return _("Consultar")
     if evento.tipo_costo == "consultar":
-        return "Consultar"
+        return _("Consultar")
     return ""  # no_aplica: se omite u opcional en el template
 
 
-def estado_card(evento, hoy, rango=None):
-    """Prioridad: cancelado/reprogramado (administrativos) sobre lo calculado.
+def _estado_clave(evento, hoy, rango=None):
+    """Clave estable (español) del estado: el CSS usa su slug, la etiqueta
+    mostrada se traduce aparte (ver estado_card). Prioridad:
+    cancelado/reprogramado (administrativos) sobre lo calculado.
     "Hoy"/"En curso" siempre se evalúan contra `hoy` real (B4: es un hecho
     global, no depende del filtro), pero usando la ocurrencia contextual
     cuando hay un filtro temporal activo, para no contradecir la fecha
@@ -424,15 +588,23 @@ def estado_card(evento, hoy, rango=None):
     return None
 
 
+def estado_card(evento, hoy, rango=None):
+    """Etiqueta traducida del estado (o None)."""
+    clave = _estado_clave(evento, hoy, rango)
+    return str(ESTADOS_NOMBRE[clave]) if clave else None
+
+
 def tarjeta_para(evento, hoy, rango=None):
     """Datos ya formateados para la card (E4, sección 16) — nada de descripción larga aquí."""
+    clave_estado = _estado_clave(evento, hoy, rango)
     return {
         "evento": evento,
         "fecha": fecha_card(evento, hoy, rango),
         "horario": horario_card_texto(evento),
         "ubicacion": ubicacion_card_texto(evento),
         "costo": costo_card_texto(evento),
-        "estado": estado_card(evento, hoy, rango),
+        "estado": str(ESTADOS_NOMBRE[clave_estado]) if clave_estado else None,
+        "estado_slug": slugify(clave_estado) if clave_estado else "",
         # Misma regla que "recurrente" en datos_modal_para (única fuente de verdad).
         "recurrente": evento.tipo_fecha in ("anual_fija", "anual_relativa", "pascua_relativa"),
     }
@@ -607,18 +779,29 @@ def listado_eventos(request):
     if requiere_distinct:
         base = base.distinct()
 
-    # --- filtro temporal: ?fecha= tiene prioridad sobre ?cuando= ---
-    fecha_param = _parsear_fecha(get.get("fecha", ""))
-    cuando = get.get("cuando", "").strip()
+    # --- filtro temporal: ?desde=&hasta= > ?fecha= > ?cuando= ---
+    rango_viaje, rango_error, desde_valor, hasta_valor = _resolver_rango(get)
+    if rango_error:
+        # Un rango inválido no se propaga a ningún enlace (paginación, filtros…):
+        # el usuario ve el aviso y sus valores siguen en el formulario.
+        get.pop("desde", None)
+        get.pop("hasta", None)
+
+    fecha_param = None if rango_viaje else _parsear_fecha(get.get("fecha", ""))
+    cuando = "" if rango_viaje else get.get("cuando", "").strip()
     if cuando not in CUANDO_VALORES:
         cuando = ""
 
-    if fecha_param:
+    if rango_viaje:
+        fecha_desde, fecha_hasta = rango_viaje
+    elif fecha_param:
         fecha_desde = fecha_hasta = fecha_param
     elif cuando:
         fecha_desde, fecha_hasta = _rango_para_cuando(cuando, hoy)
     else:
         fecha_desde = fecha_hasta = None
+
+    cercanos_antes, cercanos_despues, datos_modal_cercanos = [], [], []
 
     if fecha_desde and fecha_hasta:
         # B4: con un filtro temporal activo, la card/modal/orden deben usar
@@ -626,6 +809,12 @@ def listado_eventos(request):
         # próxima respecto a hoy" — se propaga como `rango` hasta el render.
         rango = (fecha_desde, fecha_hasta)
         eventos = _ordenar_por_fecha_relevante(base.que_solapan(fecha_desde, fecha_hasta), hoy, rango)
+        if rango_viaje and not eventos:
+            # Sin resultados exactos: ±14 días con los mismos filtros, separado
+            # visualmente del viaje (nunca mezclado con "durante tu viaje").
+            cercanos_antes, cercanos_despues, datos_modal_cercanos = _eventos_cercanos(
+                base, fecha_desde, fecha_hasta, hoy
+            )
     else:
         rango = None
         # Listado general: 3 grupos (V4, sección 13/23-26).
@@ -649,7 +838,7 @@ def listado_eventos(request):
     # `semana` — desplazan la ventana 100% en cliente (JS), sin request ni
     # cambio de URL; el filtro de resultados se decide arriba exclusivamente
     # con `fecha`/`cuando`, nunca con el desplazamiento visual del selector.
-    ancla = fecha_param or hoy
+    ancla = fecha_param or (rango_viaje[0] if rango_viaje else hoy)
     dias_selector = []
     for i in range(DIAS_VENTANA_SELECTOR):
         dia = ancla + timedelta(days=i)
@@ -657,12 +846,14 @@ def listado_eventos(request):
             "fecha": dia,
             # Mes abreviado por card (E1): la ventana puede repartirse entre
             # dos meses (ej. Ago29-Sep04) — cada card lleva su propio mes.
-            "mes_abrev": MESES_ABREV[dia.month].upper(),
-            "dia_semana": DIAS_SEMANA_ABREV[dia.weekday()],
+            "mes_abrev": str(MONTHS_3[dia.month]).upper(),
+            "dia_semana": str(WEEKDAYS_ABBR[dia.weekday()]).upper(),
             "numero": dia.day,
             "es_hoy": dia == hoy,
             "activo": dia == fecha_param,
-            "querystring": _construir_querystring(get, fecha=dia.isoformat(), cuando=None),
+            "querystring": _construir_querystring(
+                get, fecha=dia.isoformat(), cuando=None, desde=None, hasta=None
+            ),
         })
 
     # Título fijo "Calendario - <año>" arriba del selector: ya no intenta
@@ -672,17 +863,25 @@ def listado_eventos(request):
     # desplazamiento client-side (B2) recalcula esto mismo al mover la
     # ventana, con la misma regla de "año más frecuente".
     anio_selector = Counter(d["fecha"].year for d in dias_selector).most_common(1)[0][0]
-    calendario_label = f"Calendario - {anio_selector}"
+    calendario_label = _("Calendario - %(anio)s") % {"anio": anio_selector}
 
-    # Un quick filter es una NUEVA selección temporal: limpia `fecha` para que
-    # la franja de días no quede anclada en una ventana ajena a la selección (E5).
+    # Un quick filter es una NUEVA selección temporal: limpia `fecha`/`desde`/
+    # `hasta` para que la franja de días no quede anclada en una ventana ajena
+    # a la selección (E5).
     querystrings_cuando = {
-        valor: _construir_querystring(get, cuando=valor, fecha=None) for valor in CUANDO_VALORES
+        valor: _construir_querystring(get, cuando=valor, fecha=None, desde=None, hasta=None)
+        for valor in CUANDO_VALORES
     }
     # Base para los hrefs que el JS del selector recalcula al desplazar la
-    # ventana (B2): mismos filtros reales, sin fecha/cuando/page.
-    querystring_todos = _construir_querystring(get, cuando=None, fecha=None)
+    # ventana (B2): mismos filtros reales, sin fecha/cuando/desde/hasta/page.
+    querystring_todos = _construir_querystring(get, cuando=None, fecha=None, desde=None, hasta=None)
     querystring_paginacion = _construir_querystring(get)
+    # Acciones explícitas del empty state (nada se relaja automáticamente):
+    # quitar solo los filtros no temporales conservando el rango, o solo el rango.
+    querystring_sin_filtros = _construir_querystring(
+        get, categoria=None, provincia=None, distrito=None, tags=None
+    )
+    querystring_sin_rango = _construir_querystring(get, desde=None, hasta=None)
 
     # Ventana de números del paginador (V2.1): se renderiza una sola lista
     # (la de desktop, hasta 5 números) y cada número lleva marcado si
@@ -697,6 +896,8 @@ def listado_eventos(request):
     # Solo se serializan los eventos de la página actual (6 máx.), nunca todo el sistema.
     tarjetas = [tarjeta_para(evento, hoy, rango) for evento in page_obj.object_list]
     datos_modal = [datos_modal_para(evento, hoy, rango) for evento in page_obj.object_list]
+    # Los cercanos (máx. 3+3) comparten el mismo modal único / json_script.
+    datos_modal += datos_modal_cercanos
 
     # Fuente para el <select> de distrito dependiente de provincia (R1.1/R1.4):
     # se arma en Django a partir de la misma lista ya cargada arriba, sin
@@ -716,14 +917,33 @@ def listado_eventos(request):
         archivo = ICONOS_EXPERIENCIA.get(tag.slug)
         tag.icono_archivo_evento = static(f"assets/img/eventos/{archivo}") if archivo else ""
 
-    # `page` no cuenta como filtro (es paginación); `semana` ya ni siquiera
-    # llega hasta aquí (se descarta al inicio de la vista). `fecha`/`cuando`
-    # comparten un único slot temporal porque son mutuamente excluyentes por
-    # construcción (elegir uno limpia el otro, ver arriba).
+    # Badge de "Filtros" y visibilidad de "Limpiar filtros": SOLO los filtros del
+    # panel (categoría, provincia, distrito, tags). La fecha (`fecha`/`cuando`/
+    # `desde`+`hasta`) ya tiene su propio control visible (chip + X), así que no
+    # cuenta aquí ni se borra con "Limpiar filtros". `page` es paginación y
+    # `semana` ya ni siquiera llega hasta aquí.
     cantidad_filtros_activos = sum(1 for f in (
-        categoria_slug, provincia_slug, distrito_slug,
-        bool(tags_slugs), bool(fecha_param or cuando),
+        categoria_slug, provincia_slug, distrito_slug, bool(tags_slugs),
     ) if f)
+
+    # --- bloque "durante tu viaje" / cercanos (solo con rango válido) ---
+    rango_resumen = ""
+    rango_titulo = ""
+    rango_vacio_texto = ""
+    if rango_viaje:
+        desde_viaje, hasta_viaje = rango_viaje
+        rango_resumen = _rango_corto(desde_viaje, hasta_viaje)
+        if eventos:
+            rango_titulo = ngettext(
+                "%(n)s evento durante tu viaje", "%(n)s eventos durante tu viaje", len(eventos)
+            ) % {"n": len(eventos)}
+        else:
+            rango_vacio_texto = _(
+                "No hay eventos programados exactamente entre el %(desde)s y el %(hasta)s."
+            ) % {
+                "desde": _fecha_texto(desde_viaje.day, desde_viaje.month),
+                "hasta": _fecha_texto(hasta_viaje.day, hasta_viaje.month),
+            }
 
     contexto = {
         "page_obj": page_obj,
@@ -740,6 +960,22 @@ def listado_eventos(request):
         "paginas_paginador": paginas_paginador,
         "cuando_activo": cuando,
         "fecha_activa": fecha_param,
+        # Rango (?desde=&hasta=): valores estables para los inputs del form;
+        # el texto del picker es solo presentación.
+        "rango_activo": bool(rango_viaje),
+        "rango_error": rango_error,
+        "desde_valor": desde_valor,
+        "hasta_valor": hasta_valor,
+        "rango_resumen": rango_resumen,
+        "rango_titulo": rango_titulo,
+        "rango_vacio_texto": rango_vacio_texto,
+        "cercanos_antes": cercanos_antes,
+        "cercanos_despues": cercanos_despues,
+        "hay_cercanos": bool(cercanos_antes or cercanos_despues),
+        "querystring_sin_filtros": querystring_sin_filtros,
+        "querystring_sin_rango": querystring_sin_rango,
+        "hay_modal": bool(tarjetas or datos_modal_cercanos),
+        "anios_eventos": _anios_con_eventos(),
         "filtros_activos": {
             "categoria": categoria_slug,
             "provincia": provincia_slug,
@@ -781,7 +1017,7 @@ def promocionar_evento(request):
         if request.POST.get("website"):
             # Honeypot activado: rechazo neutro, sin revelar que se detectó spam (R16).
             return _redirigir_a_next(request)
-        messages.error(request, "No pudimos enviar tu propuesta: revisa los datos e inténtalo de nuevo.")
+        messages.error(request, _("No pudimos enviar tu propuesta: revisa los datos e inténtalo de nuevo."))
         return _redirigir_a_next(request)
 
     datos = form.cleaned_data
@@ -807,10 +1043,10 @@ def promocionar_evento(request):
         email.send(fail_silently=False)
     except Exception:
         logger.exception("No se pudo enviar el correo de propuesta de evento (promocionar_evento)")
-        messages.error(request, "No pudimos enviar tu solicitud en este momento. Inténtalo nuevamente en unos minutos.")
+        messages.error(request, _("No pudimos enviar tu solicitud en este momento. Inténtalo nuevamente en unos minutos."))
         return _redirigir_a_next(request)
 
-    messages.success(request, "Gracias. Recibimos tu propuesta y será revisada por el equipo de Viaje Informado.")
+    messages.success(request, _("Gracias. Recibimos tu propuesta y será revisada por el equipo de Viaje Informado."))
     return _redirigir_a_next(request)
 
 
@@ -824,7 +1060,7 @@ def reportar_problema_evento(request):
     if not form.is_valid():
         if request.POST.get("website"):
             return _redirigir_a_next(request)
-        messages.error(request, "No pudimos enviar tu reporte: revisa los datos e inténtalo de nuevo.")
+        messages.error(request, _("No pudimos enviar tu reporte: revisa los datos e inténtalo de nuevo."))
         return _redirigir_a_next(request)
 
     datos = form.cleaned_data
@@ -846,8 +1082,8 @@ def reportar_problema_evento(request):
         email.send(fail_silently=False)
     except Exception:
         logger.exception("No se pudo enviar el correo de reporte de Eventos (reportar_problema_evento)")
-        messages.error(request, "No pudimos enviar tu solicitud en este momento. Inténtalo nuevamente en unos minutos.")
+        messages.error(request, _("No pudimos enviar tu solicitud en este momento. Inténtalo nuevamente en unos minutos."))
         return _redirigir_a_next(request)
 
-    messages.success(request, "Gracias por ayudarnos a mantener la información actualizada. Revisaremos tu reporte.")
+    messages.success(request, _("Gracias por ayudarnos a mantener la información actualizada. Revisaremos tu reporte."))
     return _redirigir_a_next(request)

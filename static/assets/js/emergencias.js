@@ -1,8 +1,8 @@
 (function () {
     "use strict";
 
-    var MENSAJE_COPIADO = "Número copiado";
-    var ETIQUETA_DEFECTO = "Copiar número";
+    var MENSAJE_COPIADO = ViI18n("em_copiado", "Número copiado");
+    var ETIQUETA_DEFECTO = ViI18n("em_copiar", "Copiar número");
     var DURACION_ESTADO_MS = 1800;
 
     var anunciador = document.getElementById("emergencias-anuncio");
@@ -49,7 +49,7 @@
             marcarComoCopiado(boton);
             anunciar(MENSAJE_COPIADO);
         } catch (error) {
-            anunciar("No se pudo copiar el número");
+            anunciar(ViI18n("em_no_copiar", "No se pudo copiar el número"));
         }
         document.body.removeChild(textarea);
     }
@@ -182,7 +182,7 @@
             event.preventDefault();
             botonEnviar.disabled = true;
             estado.removeAttribute("data-tipo");
-            estado.textContent = "Enviando...";
+            estado.textContent = ViI18n("enviando", "Enviando…");
 
             fetch(form.dataset.actionUrl, {
                 method: "POST",
@@ -196,16 +196,16 @@
                 .then(function (data) {
                     if (data.ok) {
                         estado.dataset.tipo = "exito";
-                        estado.textContent = "¡Gracias! Tu reporte fue enviado.";
+                        estado.textContent = ViI18n("em_gracias", "¡Gracias! Tu reporte fue enviado.");
                         window.setTimeout(cerrarModal, 1600);
                     } else {
                         estado.dataset.tipo = "error";
-                        estado.textContent = "No se pudo enviar el reporte. Revisa los campos e intenta de nuevo.";
+                        estado.textContent = ViI18n("em_revisa", "No se pudo enviar el reporte. Revisa los campos e intenta de nuevo.");
                     }
                 })
                 .catch(function () {
                     estado.dataset.tipo = "error";
-                    estado.textContent = "No se pudo enviar el reporte. Intenta de nuevo más tarde.";
+                    estado.textContent = ViI18n("em_tarde", "No se pudo enviar el reporte. Intenta de nuevo más tarde.");
                 })
                 .finally(function () {
                     botonEnviar.disabled = false;

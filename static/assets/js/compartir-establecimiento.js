@@ -40,9 +40,9 @@
 
     function copiarConFeedback(url) {
         copiarAlPortapapeles(url).then(function () {
-            toast('Enlace copiado', 'success');
+            toast(ViI18n('enlace_copiado', 'Enlace copiado'), 'success');
         }).catch(function () {
-            toast('No se pudo compartir el enlace.', 'error');
+            toast(ViI18n('enlace_error_punto', 'No se pudo compartir el enlace.'), 'error');
         });
     }
 
@@ -54,11 +54,11 @@
             if (navigator.share) {
                 navigator.share({
                     title: nombre,
-                    text: 'Mira este lugar en Viaje Informado',
+                    text: ViI18n('mira_lugar', 'Mira este lugar en Viaje Informado'),
                     url: url,
                 }).catch(function (error) {
                     if (error && error.name === 'AbortError') return; // cancelación normal
-                    toast('No se pudo compartir el enlace.', 'error');
+                    toast(ViI18n('enlace_error_punto', 'No se pudo compartir el enlace.'), 'error');
                 });
                 return;
             }

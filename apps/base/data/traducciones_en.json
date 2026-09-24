@@ -1,0 +1,3314 @@
+{
+  "_meta": {
+    "descripcion": "Traducciones EN (redactadas offline) del contenido dinámico P1. Se cargan con: python manage.py importar_traducciones_en",
+    "origen": "es",
+    "destino": "en",
+    "formato": "modelos -> 'app.Modelo' -> [ {locator: clave natural estable (slug o padre+orden/valor) | null, pk: referencia auxiliar, _ref: texto de referencia, campos: {campo: {es: original (se valida antes de escribir), en: traducción, es_corregido: opcional}}} ]",
+    "pendientes_de_correccion_manual": [
+      {
+        "modelo": "establecimientos.Establecimiento",
+        "slug": "rinconcito-huanuqueno",
+        "campo": "descripcion_corta",
+        "motivo": "Errata en el ES fuente: '...almuerzo huanuqueño.productores locales en Huánuco.' Corregir el ES y luego añadir su traducción."
+      }
+    ],
+    "reglas": [
+      "Traducción fiel: sin resumir, reinterpretar ni añadir información.",
+      "Se conservan nombres propios, topónimos, nombres oficiales de eventos, URLs, emails, teléfonos y códigos.",
+      "Se traducen los sustantivos comunes según el contexto.",
+      "No incluye LugarTuristico.nombre, Evento.nombre, Establecimiento.nombre ni PlatoTipico.nombre.",
+      "No incluye datos de prueba (QA) ni identificadores de archivo (p. ej. logo_el_viajero_carrusel_vi)."
+    ]
+  },
+  "modelos": {
+    "base.HomeHeroSlide": [
+      {
+        "locator": {
+          "orden": 2
+        },
+        "pk": 2,
+        "_ref": "Encuentra tu próxima experiencia",
+        "campos": {
+          "titulo_principal": {
+            "es": "Encuentra tu",
+            "en": "Find your"
+          },
+          "titulo_resaltado": {
+            "es": "próxima experiencia",
+            "en": "next experience"
+          },
+          "texto_alt": {
+            "es": "Vista de estatus de los negritos de Huánuco",
+            "es_corregido": "Vista de estatuas de los Negritos de Huánuco",
+            "en": "View of the Negritos de Huánuco statues"
+          },
+          "descripcion": {
+            "es": "Recorre paisajes, plazas, calles, tradiciones y lugares turísticos desde una plataforma pensada para viajeros y visitantes.",
+            "en": "Explore landscapes, squares, streets, traditions and tourist attractions from a platform designed for travelers and visitors."
+          },
+          "etiqueta": {
+            "es": "Experiencias · Turismo",
+            "en": "Experiences · Tourism"
+          }
+        }
+      },
+      {
+        "locator": {
+          "orden": 3
+        },
+        "pk": 3,
+        "_ref": "Cultura que se siente",
+        "campos": {
+          "titulo_principal": {
+            "es": "Cultura que se",
+            "en": "Culture you can"
+          },
+          "titulo_resaltado": {
+            "es": "siente",
+            "en": "feel"
+          },
+          "texto_alt": {
+            "es": "Vista de paisaje de amarilis",
+            "en": "View of the Amarilis landscape"
+          },
+          "descripcion": {
+            "es": "Explora celebraciones, danzas, costumbres y espacios que conservan la esencia cultural de nuestra región.",
+            "en": "Explore celebrations, dances, customs and spaces that preserve the cultural essence of our region."
+          },
+          "etiqueta": {
+            "es": "Tradición viva",
+            "en": "Living tradition"
+          }
+        }
+      }
+    ],
+    "turismo.CategoriaLugarTuristico": [
+      {
+        "locator": {
+          "slug": "plazas"
+        },
+        "pk": 1,
+        "_ref": "Plazas",
+        "campos": {
+          "nombre": {
+            "es": "Plazas",
+            "en": "Squares"
+          },
+          "descripcion": {
+            "es": "Espacios públicos representativos de la ciudad, ideales para el descanso, la recreación, la fotografía y el encuentro cultural.",
+            "en": "Public spaces representative of the city, ideal for rest, recreation, photography and cultural gatherings."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "parques"
+        },
+        "pk": 2,
+        "_ref": "Parques",
+        "campos": {
+          "nombre": {
+            "es": "Parques",
+            "en": "Parks"
+          },
+          "descripcion": {
+            "es": "Áreas verdes o recreativas destinadas al descanso, paseo familiar, actividades al aire libre y contacto con el entorno urbano o natural.",
+            "en": "Green or recreational areas intended for rest, family outings, outdoor activities and contact with the urban or natural surroundings."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "sitios-arqueologicos"
+        },
+        "pk": 3,
+        "_ref": "Sitios Arqueológicos",
+        "campos": {
+          "nombre": {
+            "es": "Sitios Arqueológicos",
+            "en": "Archaeological Sites"
+          },
+          "descripcion": {
+            "es": "Espacios históricos donde se conservan restos, construcciones o evidencias de antiguas culturas y civilizaciones.",
+            "en": "Historic spaces where remains, constructions or evidence of ancient cultures and civilizations are preserved."
+          }
+        }
+      }
+    ],
+    "turismo.RecomendacionLugarTuristico": [
+      {
+        "locator": {
+          "lugar__slug": "plaza-de-armas-de-huanuco",
+          "orden": 3
+        },
+        "pk": 3,
+        "_ref": "Ideal para fotografías — PLAZA DE ARMAS DE HUÁNUCO",
+        "campos": {
+          "titulo": {
+            "es": "Ideal para fotografías",
+            "en": "Ideal for photography"
+          },
+          "descripcion": {
+            "es": "Aprovecha los jardines, la pileta central y los edificios históricos alrededor para capturar buenas fotos del centro de Huánuco.",
+            "en": "Make the most of the gardens, the central fountain and the surrounding historic buildings to capture good photos of the center of Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "lugar__slug": "plaza-de-armas-de-huanuco",
+          "orden": 4
+        },
+        "pk": 4,
+        "_ref": "Mejor horario para visitar — PLAZA DE ARMAS DE HUÁNUCO",
+        "campos": {
+          "titulo": {
+            "es": "Mejor horario para visitar",
+            "en": "Best time to visit"
+          },
+          "descripcion": {
+            "es": "Se recomienda visitar la plaza durante la mañana o al atardecer para disfrutar de un ambiente más agradable.",
+            "en": "It is recommended to visit the square in the morning or at sunset to enjoy a more pleasant atmosphere."
+          }
+        }
+      }
+    ],
+    "establecimientos.CategoriaEstablecimiento": [
+      {
+        "locator": {
+          "slug": "restaurante-tipico-regional"
+        },
+        "pk": 1,
+        "_ref": "Restaurante típico / regional",
+        "campos": {
+          "nombre": {
+            "es": "Restaurante típico / regional",
+            "en": "Traditional / Regional Restaurant"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "polleria-parrillas"
+        },
+        "pk": 2,
+        "_ref": "Pollería / Parrillas",
+        "campos": {
+          "nombre": {
+            "es": "Pollería / Parrillas",
+            "en": "Rotisserie Chicken Restaurant / Grills"
+          },
+          "descripcion": {
+            "es": "Categoría de establecimiento que ofrece pollos y parrillas en su carta.",
+            "en": "Establishment category that offers chicken and grills on its menu."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "restaurante-criollo"
+        },
+        "pk": 3,
+        "_ref": "Restaurante Criollo",
+        "campos": {
+          "nombre": {
+            "es": "Restaurante Criollo",
+            "en": "Creole Restaurant"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "recreo-turistico"
+        },
+        "pk": 4,
+        "_ref": "Recreo Turístico",
+        "campos": {
+          "nombre": {
+            "es": "Recreo Turístico",
+            "en": "Recreational Venue"
+          },
+          "descripcion": {
+            "es": "Recreo turístico de la región de Huánuco",
+            "en": "Tourist recreational venue of the Huánuco region"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "centro-campestre"
+        },
+        "pk": 5,
+        "_ref": "Centro Campestre",
+        "campos": {
+          "nombre": {
+            "es": "Centro Campestre",
+            "en": "Countryside Recreation Center"
+          },
+          "descripcion": {
+            "es": "Ofrece una experiencia completa de ocio y naturaleza, incluyendo áreas deportivas, piscinas y, por lo general, cuenta con un restaurante propio.",
+            "en": "Offers a complete leisure and nature experience, including sports areas, swimming pools and, in general, its own restaurant."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "hotel"
+        },
+        "pk": 6,
+        "_ref": "Hotel",
+        "campos": {
+          "nombre": {
+            "es": "Hotel",
+            "en": "Hotel"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "hostal"
+        },
+        "pk": 7,
+        "_ref": "Hostal",
+        "campos": {
+          "nombre": {
+            "es": "Hostal",
+            "en": "Guesthouse"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "cafeteria"
+        },
+        "pk": 8,
+        "_ref": "Cafetería",
+        "campos": {
+          "nombre": {
+            "es": "Cafetería",
+            "en": "Cafeteria"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "comida-rapida"
+        },
+        "pk": 9,
+        "_ref": "Comida rápida",
+        "campos": {
+          "nombre": {
+            "es": "Comida rápida",
+            "en": "Fast Food"
+          }
+        }
+      }
+    ],
+    "establecimientos.ContactoSucursalEstablecimiento": [
+      {
+        "locator": {
+          "sucursal__establecimiento__slug": "rinconcito-huanuqueno",
+          "sucursal__slug": "local-principal",
+          "valor": "942936134"
+        },
+        "pk": 1,
+        "_ref": "WhatsApp principal - 942936134",
+        "campos": {
+          "etiqueta": {
+            "es": "WhatsApp principal",
+            "en": "Main WhatsApp"
+          }
+        }
+      },
+      {
+        "locator": {
+          "sucursal__establecimiento__slug": "rinconcito-huanuqueno",
+          "sucursal__slug": "local-principal",
+          "valor": "962666211"
+        },
+        "pk": 2,
+        "_ref": "WhatsApp secundario - 962666211",
+        "campos": {
+          "etiqueta": {
+            "es": "WhatsApp secundario",
+            "en": "Secondary WhatsApp"
+          }
+        }
+      },
+      {
+        "locator": {
+          "sucursal__establecimiento__slug": "rinconcito-huanuqueno",
+          "sucursal__slug": "local-principal",
+          "valor": "062510310"
+        },
+        "pk": 3,
+        "_ref": "Teléfono fijo - 062510310",
+        "campos": {
+          "etiqueta": {
+            "es": "Teléfono fijo",
+            "en": "Landline"
+          }
+        }
+      }
+    ],
+    "establecimientos.Establecimiento": [
+      {
+        "locator": {
+          "slug": "el-viajero"
+        },
+        "pk": 1,
+        "_ref": "EL VIAJERO",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "Logo del restaurante El Viajero",
+            "en": "Logo of the El Viajero restaurant"
+          },
+          "descripcion_corta": {
+            "es": "Pollería y restaurante familiar con platos variados en Huánuco.",
+            "en": "Rotisserie chicken restaurant and family restaurant with a variety of dishes in Huánuco."
+          },
+          "descripcion": {
+            "es": "El Viajero es una pollería y restaurante familiar ideal para almuerzos y cenas en Huánuco.",
+            "en": "El Viajero is a rotisserie chicken restaurant and family restaurant ideal for lunches and dinners in Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "recreo-la-perricholi"
+        },
+        "pk": 2,
+        "_ref": "RECREO LA PERRICHOLI",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "Logo del Recreo La Perricholi",
+            "en": "Logo of Recreo La Perricholi"
+          },
+          "descripcion_corta": {
+            "es": "Restaurante que ofrece la comida tradicional de la región Huánuco.",
+            "en": "Restaurant offering the traditional food of the Huánuco region."
+          },
+          "descripcion": {
+            "es": "Recreo turístico La Perricholi combina la gastronomía local con un ambiente tranquilo y natural, siendo una opción frecuente para almuerzos familiares o reuniones sociales",
+            "en": "The tourist recreational venue La Perricholi combines local gastronomy with a peaceful and natural atmosphere, making it a frequent option for family lunches or social gatherings"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "centro-campestre-jacaranda"
+        },
+        "pk": 3,
+        "_ref": "CENTRO CAMPESTRE JACARANDÁ",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "Logo de Centro Campestre Jacarandá",
+            "en": "Logo of Centro Campestre Jacarandá"
+          },
+          "descripcion_corta": {
+            "es": "Jacarandá Centro Campestre, ideal para disfrutar con la familia, amigos o colegas del trabajo. Degusta nuestra comida tradicional alrededor de un ambiente natural.",
+            "en": "Jacarandá Centro Campestre, ideal for enjoying with family, friends or work colleagues. Taste our traditional food in a natural setting."
+          },
+          "descripcion": {
+            "es": "Jacarandá Centro Campestre, ideal para disfrutar con la familia, amigos o colegas del trabajo. Degusta nuestra comida tradicional alrededor de un ambiente natural. ¡Te esperamos!",
+            "en": "Jacarandá Centro Campestre, ideal for enjoying with family, friends or work colleagues. Taste our traditional food in a natural setting. We look forward to seeing you!"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "real-hotel"
+        },
+        "pk": 4,
+        "_ref": "REAL HOTEL",
+        "campos": {
+          "descripcion_corta": {
+            "es": "El hotel más elegante y sofisticado de Huánuco.",
+            "en": "The most elegant and sophisticated hotel in Huánuco."
+          },
+          "descripcion": {
+            "es": "Real Hotel es sinónimo de elegancia y confort, un refugio perfecto para quienes buscan una experiencia de lujo en el corazón de la ciudad. Con modernas instalaciones, habitaciones de diseño exquisito y un servicio personalizado que anticipa cada necesidad, nuestro hotel es el lugar ideal tanto para viajeros de negocios como de placer. En Real Hotel cada detalle está pensado para hacer de tu estancia algo inolvidable.",
+            "en": "Real Hotel is synonymous with elegance and comfort, a perfect refuge for those seeking a luxury experience in the heart of the city. With modern facilities, exquisitely designed rooms and personalized service that anticipates every need, our hotel is the ideal place for both business and leisure travelers. At Real Hotel every detail is designed to make your stay unforgettable."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "hostal-el-bosque"
+        },
+        "pk": 5,
+        "_ref": "HOSTAL EL BOSQUE",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "LOGO DE HOSTAL EL BOSQUE",
+            "en": "HOSTAL EL BOSQUE LOGO"
+          },
+          "descripcion_corta": {
+            "es": "Hostal El Bosque Elegancia y Confort",
+            "en": "Hostal El Bosque Elegance and Comfort"
+          },
+          "descripcion": {
+            "es": "Hostal El Bosque - Disfrute del amanecer huanuqueño desde nuestras hermosas y elegantes habitaciones con vista al caudaloso río Huallaga escoltado de coposos sauces y el vuelo de hermosas gaviotas.",
+            "en": "Hostal El Bosque - Enjoy the Huánuco sunrise from our beautiful and elegant rooms overlooking the mighty Huallaga River, flanked by leafy willows and the flight of beautiful seagulls."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "huapri"
+        },
+        "pk": 6,
+        "_ref": "HUAPRI",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "Logo HUAPRI",
+            "en": "HUAPRI logo"
+          },
+          "descripcion_corta": {
+            "es": "HUAPRI comprometidos con brindar calidad y buen servicio en los más de 50 años de atención continua.",
+            "en": "HUAPRI, committed to providing quality and good service over more than 50 years of continuous service."
+          },
+          "descripcion": {
+            "es": "HUAPRI es un restaurante tradicional de Huánuco, reconocido por sus salchipapas, sándwiches, café y propuestas de comida peruana en un ambiente clásico y familiar. Una parada recomendada para quienes desean probar sabores populares y representativos de la ciudad.",
+            "en": "HUAPRI is a traditional restaurant in Huánuco, known for its salchipapas, sandwiches, coffee and Peruvian food offerings in a classic, family-friendly atmosphere. A recommended stop for those who want to try popular flavors that are representative of the city."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "rinconcito-huanuqueno"
+        },
+        "pk": 7,
+        "_ref": "RINCONCITO HUANUQUEÑO",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "LOGO RINCONCITO HUANUQUEÑO",
+            "en": "RINCONCITO HUANUQUEÑO LOGO"
+          },
+          "descripcion": {
+            "es": "Restaurante que a través de los años ha logrado darle el mejor sabor a todas sus preparaciones. Contamos con personal calificado para brindarle la mejor atención y garantizar que su estancia en nuestro local sea agradable.",
+            "en": "A restaurant that over the years has managed to give the best flavor to all its preparations. We have qualified staff to provide you with the best service and to ensure that your stay at our premises is pleasant."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "sol-de-mayo"
+        },
+        "pk": 8,
+        "_ref": "SOL DE MAYO",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "LOGO SOL DE MAYO",
+            "en": "SOL DE MAYO LOGO"
+          },
+          "descripcion_corta": {
+            "es": "Sabor profundo, tradición huanuqueña y ese toque que aquí sabemos darle.",
+            "en": "Deep flavor, Huánuco tradition and that touch that we know how to give it here."
+          },
+          "descripcion": {
+            "es": "Restaurante criollo ubicado en Huánuco, reconocido por ofrecer comida peruana tradicional en un ambiente familiar y acogedor. Su propuesta gastronómica se orienta a platos caseros, contundentes y de sabor local, ideales para quienes buscan una alternativa cómoda para desayunar, almorzar o compartir una comida tranquila durante su visita a la ciudad",
+            "en": "Creole restaurant located in Huánuco, known for offering traditional Peruvian food in a family-friendly and welcoming atmosphere. Its gastronomic offering focuses on homemade, hearty dishes with local flavor, ideal for those looking for a comfortable option to have breakfast, lunch or share a relaxed meal during their visit to the city"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "polleria-carlos"
+        },
+        "pk": 9,
+        "_ref": "POLLERÍA CARLOS",
+        "campos": {
+          "texto_alt_imagen": {
+            "es": "LOGO POLLERIA CARLOS",
+            "en": "POLLERIA CARLOS LOGO"
+          },
+          "descripcion_corta": {
+            "es": "Pollería Carlos, tradicional pollería huanuqueña especializada en pollo a la brasa, ideal para disfrutar una comida familiar, casual y contundente en pleno centro de la ciudad.",
+            "en": "Pollería Carlos, a traditional Huánuco rotisserie chicken restaurant specializing in pollo a la brasa, ideal for enjoying a family, casual and hearty meal right in the city center."
+          },
+          "descripcion": {
+            "es": "Pollería Carlos reconocida por su propuesta centrada en el tradicional pollo a la brasa peruano. Es una alternativa ideal para quienes buscan una comida sabrosa, práctica y familiar, especialmente después de recorrer el centro de la ciudad o compartir una salida con amigos y familia.",
+            "en": "Pollería Carlos is known for its offering centered on the traditional Peruvian pollo a la brasa. It is an ideal option for those looking for a tasty, practical and family meal, especially after touring the city center or sharing an outing with friends and family."
+          }
+        }
+      }
+    ],
+    "establecimientos.ImagenEstablecimiento": [
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 0
+        },
+        "pk": 5,
+        "_ref": "Logo del Recreo Turistico",
+        "campos": {
+          "titulo": {
+            "es": "Logo del Recreo Turistico",
+            "en": "Logo of the recreational venue"
+          },
+          "texto_alt": {
+            "es": "Logo de la Perricholi",
+            "en": "La Perricholi logo"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 1
+        },
+        "pk": 6,
+        "_ref": "Fachada del Recreo",
+        "campos": {
+          "titulo": {
+            "es": "Fachada del Recreo",
+            "en": "Facade of the recreational venue"
+          },
+          "texto_alt": {
+            "es": "Fachada del Recreo La Perricholi",
+            "en": "Facade of Recreo La Perricholi"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 2
+        },
+        "pk": 7,
+        "_ref": "Fotografia del plato tipico",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia del plato tipico",
+            "en": "Photograph of the traditional dish"
+          },
+          "texto_alt": {
+            "es": "Fotografia del plato tipico Picante de cuy",
+            "en": "Photograph of the traditional dish Picante de cuy"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 3
+        },
+        "pk": 8,
+        "_ref": "Fotografia del plato tipico",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia del plato tipico",
+            "en": "Photograph of the traditional dish"
+          },
+          "texto_alt": {
+            "es": "Fotografia del plato Chicharron con mote",
+            "en": "Photograph of the dish Chicharron con mote"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 4
+        },
+        "pk": 9,
+        "_ref": "Fotografia de la carta",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia de la carta",
+            "en": "Photograph of the menu"
+          },
+          "texto_alt": {
+            "es": "Fotografia de la carta La Perricholi",
+            "en": "Photograph of the La Perricholi menu"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "centro-campestre-jacaranda",
+          "orden": 0
+        },
+        "pk": 10,
+        "_ref": "Logo de Jacarandá",
+        "campos": {
+          "titulo": {
+            "es": "Logo de Jacarandá",
+            "en": "Jacarandá logo"
+          },
+          "texto_alt": {
+            "es": "Logo de Jacarandá",
+            "en": "Jacarandá logo"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "centro-campestre-jacaranda",
+          "orden": 1
+        },
+        "pk": 11,
+        "_ref": "Platillo de comida Jacaranda",
+        "campos": {
+          "titulo": {
+            "es": "Platillo de comida Jacaranda",
+            "en": "Jacaranda food dish"
+          },
+          "texto_alt": {
+            "es": "Platillo de comida Jacaranda",
+            "en": "Jacaranda food dish"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "centro-campestre-jacaranda",
+          "orden": 2
+        },
+        "pk": 12,
+        "_ref": "Platillo de comida Jacaranda",
+        "campos": {
+          "titulo": {
+            "es": "Platillo de comida Jacaranda",
+            "en": "Jacaranda food dish"
+          },
+          "texto_alt": {
+            "es": "Platillo de comida Jacaranda",
+            "en": "Jacaranda food dish"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "centro-campestre-jacaranda",
+          "orden": 3
+        },
+        "pk": 13,
+        "_ref": "Platillo de comida Jacaranda",
+        "campos": {
+          "titulo": {
+            "es": "Platillo de comida Jacaranda",
+            "en": "Jacaranda food dish"
+          },
+          "texto_alt": {
+            "es": "Platillo de comida Jacaranda",
+            "en": "Jacaranda food dish"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "centro-campestre-jacaranda",
+          "orden": 4
+        },
+        "pk": 14,
+        "_ref": "Bebida de Jacaranda",
+        "campos": {
+          "titulo": {
+            "es": "Bebida de Jacaranda",
+            "en": "Jacaranda drink"
+          },
+          "texto_alt": {
+            "es": "Bebida de Jacaranda",
+            "en": "Jacaranda drink"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 0
+        },
+        "pk": 15,
+        "_ref": "logo real hotel",
+        "campos": {
+          "titulo": {
+            "es": "logo real hotel",
+            "en": "Real Hotel logo"
+          },
+          "texto_alt": {
+            "es": "logo real hotel1",
+            "en": "Real Hotel logo 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 1
+        },
+        "pk": 16,
+        "_ref": "foto habitacion SUITE PRESIDENCIAL",
+        "campos": {
+          "titulo": {
+            "es": "foto habitacion SUITE PRESIDENCIAL",
+            "en": "Photo of the Presidential Suite"
+          },
+          "texto_alt": {
+            "es": "foto habitacion SUITE PRESIDENCIAL1",
+            "en": "Photo of the Presidential Suite 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 2
+        },
+        "pk": 17,
+        "_ref": "foto habitacion SUITE PRESIDENCIAL",
+        "campos": {
+          "titulo": {
+            "es": "foto habitacion SUITE PRESIDENCIAL",
+            "en": "Photo of the Presidential Suite"
+          },
+          "texto_alt": {
+            "es": "foto habitacion SUITE PRESIDENCIAL2",
+            "en": "Photo of the Presidential Suite 2"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 3
+        },
+        "pk": 18,
+        "_ref": "foto habitacion SUITE PRESIDENCIAL",
+        "campos": {
+          "titulo": {
+            "es": "foto habitacion SUITE PRESIDENCIAL",
+            "en": "Photo of the Presidential Suite"
+          },
+          "texto_alt": {
+            "es": "foto habitacion SUITE PRESIDENCIAL3",
+            "en": "Photo of the Presidential Suite 3"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 4
+        },
+        "pk": 19,
+        "_ref": "foto HABITACIÓN INDIVIDUAL",
+        "campos": {
+          "titulo": {
+            "es": "foto HABITACIÓN INDIVIDUAL",
+            "en": "Photo of the single room"
+          },
+          "texto_alt": {
+            "es": "foto HABITACIÓN INDIVIDUAL1",
+            "en": "Photo of the single room 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 5
+        },
+        "pk": 20,
+        "_ref": "foto HABITACIÓN INDIVIDUAL",
+        "campos": {
+          "titulo": {
+            "es": "foto HABITACIÓN INDIVIDUAL",
+            "en": "Photo of the single room"
+          },
+          "texto_alt": {
+            "es": "foto HABITACIÓN INDIVIDUAL2",
+            "en": "Photo of the single room 2"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 6
+        },
+        "pk": 21,
+        "_ref": "foto RESTOBAR",
+        "campos": {
+          "titulo": {
+            "es": "foto RESTOBAR",
+            "en": "Photo of the restobar"
+          },
+          "texto_alt": {
+            "es": "foto RESTOBAR",
+            "en": "Photo of the restobar"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "hostal-el-bosque",
+          "orden": 0
+        },
+        "pk": 22,
+        "_ref": "logo hostal el bosque",
+        "campos": {
+          "titulo": {
+            "es": "logo hostal el bosque",
+            "en": "Hostal El Bosque logo"
+          },
+          "texto_alt": {
+            "es": "logo hostal el bosque",
+            "en": "Hostal El Bosque logo"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "hostal-el-bosque",
+          "orden": 1
+        },
+        "pk": 23,
+        "_ref": "foto recepcion hostal el bosque",
+        "campos": {
+          "titulo": {
+            "es": "foto recepcion hostal el bosque",
+            "en": "Photo of the Hostal El Bosque reception"
+          },
+          "texto_alt": {
+            "es": "foto recepcion hostal el bosque",
+            "en": "Photo of the Hostal El Bosque reception"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "hostal-el-bosque",
+          "orden": 2
+        },
+        "pk": 24,
+        "_ref": "foto estacionamiento hostal el bosque",
+        "campos": {
+          "titulo": {
+            "es": "foto estacionamiento hostal el bosque",
+            "en": "Photo of the Hostal El Bosque parking lot"
+          },
+          "texto_alt": {
+            "es": "foto estacionamiento hostal el bosque",
+            "en": "Photo of the Hostal El Bosque parking lot"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "hostal-el-bosque",
+          "orden": 3
+        },
+        "pk": 25,
+        "_ref": "foto habitacion el bosque",
+        "campos": {
+          "titulo": {
+            "es": "foto habitacion el bosque",
+            "en": "Photo of the El Bosque room"
+          },
+          "texto_alt": {
+            "es": "foto habitacion el bosque1",
+            "en": "Photo of the El Bosque room 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "hostal-el-bosque",
+          "orden": 4
+        },
+        "pk": 26,
+        "_ref": "foto habitacion el bosque",
+        "campos": {
+          "titulo": {
+            "es": "foto habitacion el bosque",
+            "en": "Photo of the El Bosque room"
+          },
+          "texto_alt": {
+            "es": "foto habitacion el bosque2",
+            "en": "Photo of the El Bosque room 2"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "hostal-el-bosque",
+          "orden": 5
+        },
+        "pk": 27,
+        "_ref": "foto habitacion el bosque",
+        "campos": {
+          "titulo": {
+            "es": "foto habitacion el bosque",
+            "en": "Photo of the El Bosque room"
+          },
+          "texto_alt": {
+            "es": "foto habitacion el bosque3",
+            "en": "Photo of the El Bosque room 3"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "huapri",
+          "orden": 0
+        },
+        "pk": 28,
+        "_ref": "Huapri logo",
+        "campos": {
+          "titulo": {
+            "es": "Huapri logo",
+            "en": "Huapri logo"
+          },
+          "texto_alt": {
+            "es": "Huapri logo",
+            "en": "Huapri logo"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "huapri",
+          "orden": 1
+        },
+        "pk": 29,
+        "_ref": "Fachada HUAPRI",
+        "campos": {
+          "titulo": {
+            "es": "Fachada HUAPRI",
+            "en": "HUAPRI facade"
+          },
+          "texto_alt": {
+            "es": "Fachada HUAPRI",
+            "en": "HUAPRI facade"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "huapri",
+          "orden": 2
+        },
+        "pk": 30,
+        "_ref": "Foto desayuno HUAPRI",
+        "campos": {
+          "titulo": {
+            "es": "Foto desayuno HUAPRI",
+            "en": "HUAPRI breakfast photo"
+          },
+          "texto_alt": {
+            "es": "Foto desayuno HUAPRI",
+            "en": "HUAPRI breakfast photo"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "huapri",
+          "orden": 3
+        },
+        "pk": 31,
+        "_ref": "Carta HUAPRI",
+        "campos": {
+          "titulo": {
+            "es": "Carta HUAPRI",
+            "en": "HUAPRI menu"
+          },
+          "texto_alt": {
+            "es": "Carta HUAPRI",
+            "en": "HUAPRI menu"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "rinconcito-huanuqueno",
+          "orden": 0
+        },
+        "pk": 32,
+        "_ref": "logo rinconcito huanuqueño",
+        "campos": {
+          "titulo": {
+            "es": "logo rinconcito huanuqueño",
+            "en": "Rinconcito Huanuqueño logo"
+          },
+          "texto_alt": {
+            "es": "logo rinconcito huanuqueño",
+            "en": "Rinconcito Huanuqueño logo"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "rinconcito-huanuqueno",
+          "orden": 1
+        },
+        "pk": 33,
+        "_ref": "fotografia del local rinconcito",
+        "campos": {
+          "titulo": {
+            "es": "fotografia del local rinconcito",
+            "en": "Photograph of the Rinconcito premises"
+          },
+          "texto_alt": {
+            "es": "fotografia del local rinconcito1",
+            "en": "Photograph of the Rinconcito premises 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "rinconcito-huanuqueno",
+          "orden": 2
+        },
+        "pk": 34,
+        "_ref": "fotografia del local rinconcito",
+        "campos": {
+          "titulo": {
+            "es": "fotografia del local rinconcito",
+            "en": "Photograph of the Rinconcito premises"
+          },
+          "texto_alt": {
+            "es": "fotografia del local rinconcito2",
+            "en": "Photograph of the Rinconcito premises 2"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "rinconcito-huanuqueno",
+          "orden": 3
+        },
+        "pk": 35,
+        "_ref": "fotografia del local rinconcito",
+        "campos": {
+          "titulo": {
+            "es": "fotografia del local rinconcito",
+            "en": "Photograph of the Rinconcito premises"
+          },
+          "texto_alt": {
+            "es": "fotografia del local rinconcito3",
+            "en": "Photograph of the Rinconcito premises 3"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "rinconcito-huanuqueno",
+          "orden": 4
+        },
+        "pk": 36,
+        "_ref": "fotografia carta rinconcito",
+        "campos": {
+          "titulo": {
+            "es": "fotografia carta rinconcito",
+            "en": "Photograph of the Rinconcito menu"
+          },
+          "texto_alt": {
+            "es": "fotografia carta rinconcito1",
+            "en": "Photograph of the Rinconcito menu 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "rinconcito-huanuqueno",
+          "orden": 5
+        },
+        "pk": 37,
+        "_ref": "fotografia carta rinconcito",
+        "campos": {
+          "titulo": {
+            "es": "fotografia carta rinconcito",
+            "en": "Photograph of the Rinconcito menu"
+          },
+          "texto_alt": {
+            "es": "fotografia carta rinconcito2",
+            "en": "Photograph of the Rinconcito menu 2"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "orden": 0
+        },
+        "pk": 38,
+        "_ref": "Logo Sol de mayo",
+        "campos": {
+          "titulo": {
+            "es": "Logo Sol de mayo",
+            "en": "Sol de mayo logo"
+          },
+          "texto_alt": {
+            "es": "Logo Sol de mayo1",
+            "en": "Sol de mayo logo 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "orden": 1
+        },
+        "pk": 39,
+        "_ref": "Fotografia plato Sol de mayo",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia plato Sol de mayo",
+            "en": "Photograph of a Sol de mayo dish"
+          },
+          "texto_alt": {
+            "es": "Fotografia plato Sol de mayo1",
+            "en": "Photograph of a Sol de mayo dish 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "orden": 2
+        },
+        "pk": 40,
+        "_ref": "Fotografia plato Sol de mayo",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia plato Sol de mayo",
+            "en": "Photograph of a Sol de mayo dish"
+          },
+          "texto_alt": {
+            "es": "Fotografia plato Sol de mayo2",
+            "en": "Photograph of a Sol de mayo dish 2"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "orden": 3
+        },
+        "pk": 41,
+        "_ref": "Fotografia plato Sol de mayo",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia plato Sol de mayo",
+            "en": "Photograph of a Sol de mayo dish"
+          },
+          "texto_alt": {
+            "es": "Fotografia plato Sol de mayo3",
+            "en": "Photograph of a Sol de mayo dish 3"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "orden": 4
+        },
+        "pk": 42,
+        "_ref": "Fotografia plato Sol de mayo",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia plato Sol de mayo",
+            "en": "Photograph of a Sol de mayo dish"
+          },
+          "texto_alt": {
+            "es": "Fotografia plato Sol de mayo4",
+            "en": "Photograph of a Sol de mayo dish 4"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "orden": 5
+        },
+        "pk": 43,
+        "_ref": "Fotografia plato Sol de mayo",
+        "campos": {
+          "titulo": {
+            "es": "Fotografia plato Sol de mayo",
+            "en": "Photograph of a Sol de mayo dish"
+          },
+          "texto_alt": {
+            "es": "Fotografia plato Sol de mayo5",
+            "en": "Photograph of a Sol de mayo dish 5"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "orden": 0
+        },
+        "pk": 44,
+        "_ref": "LOGO POLLERIA CARLOS",
+        "campos": {
+          "titulo": {
+            "es": "LOGO POLLERIA CARLOS",
+            "en": "POLLERIA CARLOS LOGO"
+          },
+          "texto_alt": {
+            "es": "LOGO POLLERIA CARLOS1",
+            "en": "POLLERIA CARLOS LOGO 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "orden": 1
+        },
+        "pk": 45,
+        "_ref": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+        "campos": {
+          "titulo": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH"
+          },
+          "texto_alt": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS1",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "orden": 2
+        },
+        "pk": 46,
+        "_ref": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+        "campos": {
+          "titulo": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH"
+          },
+          "texto_alt": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS2",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH 2"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "orden": 3
+        },
+        "pk": 47,
+        "_ref": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+        "campos": {
+          "titulo": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH"
+          },
+          "texto_alt": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS3",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH 3"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "orden": 4
+        },
+        "pk": 48,
+        "_ref": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+        "campos": {
+          "titulo": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH"
+          },
+          "texto_alt": {
+            "es": "FOTOGRAFIA PLATO POLLERIA CARLOS4",
+            "en": "PHOTOGRAPH OF A POLLERIA CARLOS DISH 4"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "orden": 5
+        },
+        "pk": 49,
+        "_ref": "FOTOGRAFIA CARTA POLLERIA CARLOS",
+        "campos": {
+          "titulo": {
+            "es": "FOTOGRAFIA CARTA POLLERIA CARLOS",
+            "en": "PHOTOGRAPH OF THE POLLERIA CARLOS MENU"
+          },
+          "texto_alt": {
+            "es": "FOTOGRAFIA CARTA POLLERIA CARLOS1",
+            "en": "PHOTOGRAPH OF THE POLLERIA CARLOS MENU 1"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "orden": 6
+        },
+        "pk": 50,
+        "_ref": "FOTOGRAFIA CARTA POLLERIA CARLOS",
+        "campos": {
+          "titulo": {
+            "es": "FOTOGRAFIA CARTA POLLERIA CARLOS",
+            "en": "PHOTOGRAPH OF THE POLLERIA CARLOS MENU"
+          },
+          "texto_alt": {
+            "es": "FOTOGRAFIA CARTA POLLERIA CARLOS2",
+            "en": "PHOTOGRAPH OF THE POLLERIA CARLOS MENU 2"
+          }
+        }
+      }
+    ],
+    "establecimientos.RecomendacionEstablecimiento": [
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 1
+        },
+        "pk": 1,
+        "_ref": "RECREO LA PERRICHOLI - #1 PACHAMANCA",
+        "campos": {
+          "nombre": {
+            "es": "PACHAMANCA",
+            "en": "PACHAMANCA"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 2
+        },
+        "pk": 2,
+        "_ref": "RECREO LA PERRICHOLI - #2 PICANTE DE CUY",
+        "campos": {
+          "nombre": {
+            "es": "PICANTE DE CUY",
+            "en": "PICANTE DE CUY"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "orden": 3
+        },
+        "pk": 3,
+        "_ref": "RECREO LA PERRICHOLI - #3 LOCRO DE GALLINA",
+        "campos": {
+          "nombre": {
+            "es": "LOCRO DE GALLINA",
+            "en": "LOCRO DE GALLINA"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 1
+        },
+        "pk": 4,
+        "_ref": "REAL HOTEL - #1 HABITACIÓN INDIVIDUAL",
+        "campos": {
+          "nombre": {
+            "es": "HABITACIÓN INDIVIDUAL",
+            "en": "SINGLE ROOM"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 2
+        },
+        "pk": 5,
+        "_ref": "REAL HOTEL - #2 SUITE PRESIDENCIAL",
+        "campos": {
+          "nombre": {
+            "es": "SUITE PRESIDENCIAL",
+            "en": "PRESIDENTIAL SUITE"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "orden": 3
+        },
+        "pk": 6,
+        "_ref": "REAL HOTEL - #3 HABITACION MATRIMONIAL",
+        "campos": {
+          "nombre": {
+            "es": "HABITACION MATRIMONIAL",
+            "en": "DOUBLE ROOM"
+          }
+        }
+      }
+    ],
+    "establecimientos.ServicioEstablecimiento": [
+      {
+        "locator": {
+          "slug": "wi-fi-gratuito"
+        },
+        "pk": 1,
+        "_ref": "Wi-Fi Gratuito",
+        "campos": {
+          "nombre": {
+            "es": "Wi-Fi Gratuito",
+            "en": "Free Wi-Fi"
+          },
+          "descripcion": {
+            "es": "Ícono de Wi-Fi",
+            "en": "Wi-Fi icon"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "tv-cable"
+        },
+        "pk": 2,
+        "_ref": "TV-Cable",
+        "campos": {
+          "nombre": {
+            "es": "TV-Cable",
+            "en": "Cable TV"
+          },
+          "descripcion": {
+            "es": "Brinda servicio de TV",
+            "en": "Provides TV service"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "desayuno"
+        },
+        "pk": 3,
+        "_ref": "Desayuno",
+        "campos": {
+          "nombre": {
+            "es": "Desayuno",
+            "en": "Breakfast"
+          },
+          "descripcion": {
+            "es": "Ofrece servicio de desayuno.",
+            "en": "Offers breakfast service."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "estacionamiento"
+        },
+        "pk": 4,
+        "_ref": "Estacionamiento",
+        "campos": {
+          "nombre": {
+            "es": "Estacionamiento",
+            "en": "Parking"
+          },
+          "descripcion": {
+            "es": "Espacio disponible para estacionar vehículos de los clientes, sujeto a disponibilidad del establecimiento.",
+            "en": "Space available for customers to park their vehicles, subject to the establishment's availability."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "aire-acondicionado"
+        },
+        "pk": 5,
+        "_ref": "Aire acondicionado",
+        "campos": {
+          "nombre": {
+            "es": "Aire acondicionado",
+            "en": "Air conditioning"
+          },
+          "descripcion": {
+            "es": "Ambientes climatizados para brindar mayor comodidad durante la visita o estadía.",
+            "en": "Climate-controlled spaces to provide greater comfort during the visit or stay."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "apto-para-familias"
+        },
+        "pk": 6,
+        "_ref": "Apto para familias",
+        "campos": {
+          "nombre": {
+            "es": "Apto para familias",
+            "en": "Family-friendly"
+          },
+          "descripcion": {
+            "es": "Ambiente adecuado para la visita de familias, con espacios cómodos y una atención orientada a grupos familiares",
+            "en": "An environment suitable for family visits, with comfortable spaces and service geared toward family groups"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "musica-en-vivo"
+        },
+        "pk": 7,
+        "_ref": "Música en vivo",
+        "campos": {
+          "nombre": {
+            "es": "Música en vivo",
+            "en": "Live music"
+          },
+          "descripcion": {
+            "es": "Presentaciones musicales disponibles en fechas u horarios determinados.",
+            "en": "Musical performances available on certain dates or at certain times."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "delivery"
+        },
+        "pk": 8,
+        "_ref": "Delivery",
+        "campos": {
+          "nombre": {
+            "es": "Delivery",
+            "en": "Delivery"
+          },
+          "descripcion": {
+            "es": "Permite solicitar pedidos para recoger y consumir fuera del establecimiento.",
+            "en": "Allows you to place orders to pick up and consume outside the establishment."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "pet-friendly"
+        },
+        "pk": 9,
+        "_ref": "Pet friendly",
+        "campos": {
+          "nombre": {
+            "es": "Pet friendly",
+            "en": "Pet friendly"
+          },
+          "descripcion": {
+            "es": "Permite el ingreso de mascotas bajo las condiciones establecidas por el establecimiento.",
+            "en": "Pets are allowed under the conditions set by the establishment."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "ascensor"
+        },
+        "pk": 10,
+        "_ref": "Ascensor",
+        "campos": {
+          "nombre": {
+            "es": "Ascensor",
+            "en": "Elevator"
+          },
+          "descripcion": {
+            "es": "Cuenta con ascensor para facilitar el acceso a diferentes niveles del establecimiento.",
+            "en": "Has an elevator to facilitate access to different levels of the establishment."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "reservas"
+        },
+        "pk": 11,
+        "_ref": "Reservas",
+        "campos": {
+          "nombre": {
+            "es": "Reservas",
+            "en": "Reservations"
+          },
+          "descripcion": {
+            "es": "Permite realizar reservas con anticipación, según disponibilidad del establecimiento.",
+            "en": "Allows reservations to be made in advance, subject to the establishment's availability."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "ducha-con-agua-caliente"
+        },
+        "pk": 12,
+        "_ref": "Ducha con agua caliente",
+        "campos": {
+          "nombre": {
+            "es": "Ducha con agua caliente",
+            "en": "Shower with hot water"
+          },
+          "descripcion": {
+            "es": "Baño equipado con ducha que dispone de agua fría y caliente para mayor comodidad durante la estadía.",
+            "en": "Bathroom equipped with a shower that has cold and hot water for greater comfort during the stay."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "piscina"
+        },
+        "pk": 13,
+        "_ref": "Piscina",
+        "campos": {
+          "nombre": {
+            "es": "Piscina",
+            "en": "Swimming pool"
+          },
+          "descripcion": {
+            "es": "Área recreativa con piscina para el disfrute de huéspedes, visitantes o clientes autorizados.",
+            "en": "Recreational area with a swimming pool for the enjoyment of guests, visitors or authorized customers."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "acceso-para-silla-de-ruedas"
+        },
+        "pk": 14,
+        "_ref": "Acceso para silla de ruedas",
+        "campos": {
+          "nombre": {
+            "es": "Acceso para silla de ruedas",
+            "en": "Wheelchair access"
+          },
+          "descripcion": {
+            "es": "Cuenta con facilidades de acceso para personas que utilizan silla de ruedas o tienen movilidad reducida.",
+            "en": "Has access facilities for people who use wheelchairs or have reduced mobility."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "lavanderia"
+        },
+        "pk": 15,
+        "_ref": "Lavandería",
+        "campos": {
+          "nombre": {
+            "es": "Lavandería",
+            "en": "Laundry"
+          },
+          "descripcion": {
+            "es": "Servicio de lavado de ropa, disponible según las condiciones del establecimiento.",
+            "en": "Clothes washing service, available according to the establishment's conditions."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "zona-de-ninos"
+        },
+        "pk": 16,
+        "_ref": "Zona de niños",
+        "campos": {
+          "nombre": {
+            "es": "Zona de niños",
+            "en": "Children's area"
+          },
+          "descripcion": {
+            "es": "Área destinada al entretenimiento o comodidad de los niños dentro del establecimiento.",
+            "en": "Area intended for the entertainment or comfort of children within the establishment."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "pago-con-tarjeta"
+        },
+        "pk": 17,
+        "_ref": "Pago con tarjeta",
+        "campos": {
+          "nombre": {
+            "es": "Pago con tarjeta",
+            "en": "Card payment"
+          },
+          "descripcion": {
+            "es": "Permite realizar pagos con tarjeta de crédito o débito, según disponibilidad del local.",
+            "en": "Allows payment by credit or debit card, subject to the venue's availability."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "movilidad"
+        },
+        "pk": 18,
+        "_ref": "Movilidad",
+        "campos": {
+          "nombre": {
+            "es": "Movilidad",
+            "en": "Transportation"
+          },
+          "descripcion": {
+            "es": "Servicio de traslado desde o hacia el aeropuerto o agencia de viaje, disponible a pedido y con costo adicional.",
+            "en": "Transfer service to or from the airport or travel agency, available on request and at an additional cost."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "jacuzzi"
+        },
+        "pk": 19,
+        "_ref": "Jacuzzi",
+        "campos": {
+          "nombre": {
+            "es": "Jacuzzi",
+            "en": "Jacuzzi"
+          },
+          "descripcion": {
+            "es": "Espacio de hidromasaje pensado para el descanso, relajación y comodidad de los huéspedes o visitantes.",
+            "en": "Hydromassage space designed for the rest, relaxation and comfort of guests or visitors."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "sauna"
+        },
+        "pk": 20,
+        "_ref": "Sauna",
+        "campos": {
+          "nombre": {
+            "es": "Sauna",
+            "en": "Sauna"
+          },
+          "descripcion": {
+            "es": "Ambiente de vapor o calor seco destinado al descanso, bienestar y relajación.",
+            "en": "Steam or dry heat environment intended for rest, well-being and relaxation."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "gimnasio"
+        },
+        "pk": 21,
+        "_ref": "Gimnasio",
+        "campos": {
+          "nombre": {
+            "es": "Gimnasio",
+            "en": "Gym"
+          },
+          "descripcion": {
+            "es": "Espacio equipado para realizar ejercicios físicos durante la visita o estadía.",
+            "en": "Equipped space for physical exercise during the visit or stay."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "servicio-a-la-habitacion"
+        },
+        "pk": 22,
+        "_ref": "Servicio a la habitación",
+        "campos": {
+          "nombre": {
+            "es": "Servicio a la habitación",
+            "en": "Room service"
+          },
+          "descripcion": {
+            "es": "Servicio de atención a la habitación, según disponibilidad del alojamiento.",
+            "en": "Room service, subject to the accommodation's availability."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "frigobar"
+        },
+        "pk": 23,
+        "_ref": "Frigobar",
+        "campos": {
+          "nombre": {
+            "es": "Frigobar",
+            "en": "Minibar"
+          },
+          "descripcion": {
+            "es": "La habitación cuenta con frigobar, ideal para mantener bebidas, snacks o alimentos a una temperatura adecuada, brindando mayor comodidad al huésped durante su estadía.",
+            "en": "The room has a minibar, ideal for keeping drinks, snacks or food at a suitable temperature, providing greater comfort to the guest during their stay."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "recepcion-24-horas"
+        },
+        "pk": 24,
+        "_ref": "Recepción 24 horas",
+        "campos": {
+          "nombre": {
+            "es": "Recepción 24 horas",
+            "en": "24-hour reception"
+          },
+          "descripcion": {
+            "es": "Atención disponible durante todo el día para ingreso, consultas o asistencia.",
+            "en": "Service available all day for check-in, inquiries or assistance."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "servicio-de-limpieza"
+        },
+        "pk": 25,
+        "_ref": "Servicio de limpieza",
+        "campos": {
+          "nombre": {
+            "es": "Servicio de limpieza",
+            "en": "Cleaning service"
+          },
+          "descripcion": {
+            "es": "Limpieza de habitaciones o ambientes durante la estadía.",
+            "en": "Cleaning of rooms or spaces during the stay."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "toallas-y-articulos-de-aseo"
+        },
+        "pk": 26,
+        "_ref": "Toallas y artículos de aseo",
+        "campos": {
+          "nombre": {
+            "es": "Toallas y artículos de aseo",
+            "en": "Towels and toiletries"
+          },
+          "descripcion": {
+            "es": "El alojamiento proporciona toallas y artículos básicos de aseo personal, como jabón y/o shampoo para mayor comodidad del huésped durante su estadía.",
+            "en": "The accommodation provides towels and basic personal hygiene items, such as soap and/or shampoo, for greater guest comfort during the stay."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "restobar"
+        },
+        "pk": 27,
+        "_ref": "Restobar",
+        "campos": {
+          "nombre": {
+            "es": "Restobar",
+            "en": "Restobar"
+          },
+          "descripcion": {
+            "es": "Espacio dentro del alojamiento donde se ofrecen bebidas, comidas ligeras o atención tipo bar para comodidad de los huéspedes.",
+            "en": "Space within the accommodation where drinks, light meals or bar-style service are offered for the guests' comfort."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "servicios-higienicos"
+        },
+        "pk": 28,
+        "_ref": "Servicios higiénicos",
+        "campos": {
+          "nombre": {
+            "es": "Servicios higiénicos",
+            "en": "Restrooms"
+          },
+          "descripcion": {
+            "es": "El establecimiento cuenta con servicios higiénicos disponibles para el uso de sus clientes durante la visita.",
+            "en": "The establishment has restrooms available for customers to use during their visit."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "almuerzos"
+        },
+        "pk": 29,
+        "_ref": "Almuerzos",
+        "campos": {
+          "nombre": {
+            "es": "Almuerzos",
+            "en": "Lunches"
+          },
+          "descripcion": {
+            "es": "El establecimiento ofrece opciones de almuerzo además de su carta principal, según disponibilidad del día.",
+            "en": "The establishment offers lunch options in addition to its main menu, depending on the day's availability."
+          }
+        }
+      }
+    ],
+    "establecimientos.SucursalEstablecimiento": [
+      {
+        "locator": {
+          "establecimiento__slug": "el-viajero",
+          "slug": "sucursal-jiron-ayacucho"
+        },
+        "pk": 1,
+        "_ref": "EL VIAJERO - SUCURSAL - JIRÓN AYACUCHO",
+        "campos": {
+          "referencia": {
+            "es": "Cerca al Mercado Modelo de Huánuco",
+            "en": "Near the Mercado Modelo de Huánuco"
+          },
+          "horario_atencion": {
+            "es": "Lunes a Domingo de 7 a.m. a 10 p.m.",
+            "en": "Monday to Sunday from 7 a.m. to 10 p.m."
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "el-viajero",
+          "slug": "sucursal-jiron-taparaca"
+        },
+        "pk": 2,
+        "_ref": "EL VIAJERO - SUCURSAL - JIRÓN TAPARACA",
+        "campos": {
+          "referencia": {
+            "es": "A una cuadra del Estadio Leoncio Prado",
+            "en": "One block from the Estadio Leoncio Prado"
+          },
+          "horario_atencion": {
+            "es": "Lunes a Domingo de 12 p.m. a 12 a.m.",
+            "en": "Monday to Sunday from 12 p.m. to 12 a.m."
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "el-viajero",
+          "slug": "sucursal-plaza-mayor-de-amarilis"
+        },
+        "pk": 3,
+        "_ref": "EL VIAJERO - SUCURSAL - PLAZA MAYOR DE AMARILIS",
+        "campos": {
+          "referencia": {
+            "es": "Cerca a la Plaza Mayor de Amarilis",
+            "en": "Near the Plaza Mayor de Amarilis"
+          },
+          "horario_atencion": {
+            "es": "Lunes a Domingo de 12 p.m. a 12 a.m.",
+            "en": "Monday to Sunday from 12 p.m. to 12 a.m."
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "recreo-la-perricholi",
+          "slug": "local-principal"
+        },
+        "pk": 4,
+        "_ref": "RECREO LA PERRICHOLI - Local Principal",
+        "campos": {
+          "referencia": {
+            "es": "Cerca a la Universidad Nacional Hermilio Valdizán (UNHEVAL)",
+            "en": "Near the Universidad Nacional Hermilio Valdizán (UNHEVAL)"
+          },
+          "horario_atencion": {
+            "es": "Lunes, miércoles a domingo: 11:00 a. m. - 5:00 p. m. | Martes: cerrado",
+            "en": "Monday and Wednesday–Sunday: 11:00 a.m.–5:00 p.m. | Tuesday: closed"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "centro-campestre-jacaranda",
+          "slug": "local-principal"
+        },
+        "pk": 5,
+        "_ref": "CENTRO CAMPESTRE JACARANDÁ - Local Principal",
+        "campos": {
+          "referencia": {
+            "es": "Camino al aeropuerto.",
+            "en": "On the way to the airport."
+          },
+          "horario_atencion": {
+            "es": "Siempre abierto",
+            "en": "Always open"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "real-hotel",
+          "slug": "local-principal"
+        },
+        "pk": 6,
+        "_ref": "REAL HOTEL - Local Principal",
+        "campos": {
+          "referencia": {
+            "es": "Frente a la Plaza de Armas de Huánuco.",
+            "en": "Across from the Plaza de Armas de Huánuco."
+          },
+          "horario_atencion": {
+            "es": "Abierto las 24 horas.",
+            "en": "Open 24 hours."
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "hostal-el-bosque",
+          "slug": "local-principal"
+        },
+        "pk": 7,
+        "_ref": "HOSTAL EL BOSQUE - Local Principal",
+        "campos": {
+          "referencia": {
+            "es": "A menos de 5 cuadras del Puente Calicanto.",
+            "en": "Less than 5 blocks from the Puente Calicanto."
+          },
+          "horario_atencion": {
+            "es": "Consultar",
+            "en": "Please inquire"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "huapri",
+          "slug": "local-principal"
+        },
+        "pk": 8,
+        "_ref": "HUAPRI - Local Principal",
+        "campos": {
+          "referencia": {
+            "es": "A una cuadra del Estadio Leoncio Prado",
+            "en": "One block from the Estadio Leoncio Prado"
+          },
+          "horario_atencion": {
+            "es": "Consultar",
+            "en": "Please inquire"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "rinconcito-huanuqueno",
+          "slug": "local-principal"
+        },
+        "pk": 9,
+        "_ref": "RINCONCITO HUANUQUEÑO - Local Principal",
+        "campos": {
+          "referencia": {
+            "es": "A metros del puente Tingo.",
+            "en": "A few meters from the Tingo bridge."
+          },
+          "horario_atencion": {
+            "es": "Lunes-Domingo de 09:00 am - 5:00 pm",
+            "en": "Monday–Sunday from 09:00 a.m.–5:00 p.m."
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "slug": "sucursal-amarilis-carretera-central"
+        },
+        "pk": 10,
+        "_ref": "SOL DE MAYO - SUCURSAL - AMARILIS CARRETERA CENTRAL",
+        "campos": {
+          "referencia": {
+            "es": "Cerca al Grifo Primax - Pastor",
+            "en": "Near the Primax - Pastor gas station"
+          },
+          "horario_atencion": {
+            "es": "Consultar",
+            "en": "Please inquire"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "sol-de-mayo",
+          "slug": "sucursal-28-de-julio"
+        },
+        "pk": 11,
+        "_ref": "SOL DE MAYO - SUCURSAL - 28 DE JULIO",
+        "campos": {
+          "referencia": {
+            "es": "Cerca a la Plaza de Armas de Huánuco.",
+            "en": "Near the Plaza de Armas de Huánuco."
+          },
+          "horario_atencion": {
+            "es": "Consultar",
+            "en": "Please inquire"
+          }
+        }
+      },
+      {
+        "locator": {
+          "establecimiento__slug": "polleria-carlos",
+          "slug": "local-principal"
+        },
+        "pk": 12,
+        "_ref": "POLLERÍA CARLOS - Local Principal",
+        "campos": {
+          "referencia": {
+            "es": "Cerca a la Plaza de Armas de Huánuco",
+            "en": "Near the Plaza de Armas de Huánuco"
+          },
+          "horario_atencion": {
+            "es": "Consultar",
+            "en": "Please inquire"
+          }
+        }
+      }
+    ],
+    "gastronomia.CategoriaPlatoTipico": [
+      {
+        "locator": {
+          "slug": "platos-de-fondo"
+        },
+        "pk": 1,
+        "_ref": "Platos de fondo",
+        "campos": {
+          "nombre": {
+            "es": "Platos de fondo",
+            "en": "Main dishes"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "sopas-y-caldos"
+        },
+        "pk": 2,
+        "_ref": "Sopas y caldos",
+        "campos": {
+          "nombre": {
+            "es": "Sopas y caldos",
+            "en": "Soups and broths"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "entradas"
+        },
+        "pk": 3,
+        "_ref": "Entradas",
+        "campos": {
+          "nombre": {
+            "es": "Entradas",
+            "en": "Starters"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "postres-y-dulces"
+        },
+        "pk": 4,
+        "_ref": "Postres y dulces",
+        "campos": {
+          "nombre": {
+            "es": "Postres y dulces",
+            "en": "Desserts and sweets"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "bebidas-tradicionales"
+        },
+        "pk": 5,
+        "_ref": "Bebidas tradicionales",
+        "campos": {
+          "nombre": {
+            "es": "Bebidas tradicionales",
+            "en": "Traditional drinks"
+          }
+        }
+      }
+    ],
+    "gastronomia.IngredienteClavePlato": [
+      {
+        "locator": {
+          "plato__slug": "pachamanca-huanuquena",
+          "nombre_es": "Cerdo"
+        },
+        "pk": 1,
+        "_ref": "Pachamanca huanuqueña - Cerdo",
+        "campos": {
+          "nombre": {
+            "es": "Cerdo",
+            "en": "Pork"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "pachamanca-huanuquena",
+          "nombre_es": "Chincho"
+        },
+        "pk": 2,
+        "_ref": "Pachamanca huanuqueña - Chincho",
+        "campos": {
+          "nombre": {
+            "es": "Chincho",
+            "en": "Chincho herb"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "pachamanca-huanuquena",
+          "nombre_es": "Papas"
+        },
+        "pk": 3,
+        "_ref": "Pachamanca huanuqueña - Papas",
+        "campos": {
+          "nombre": {
+            "es": "Papas",
+            "en": "Potatoes"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "pachamanca-huanuquena",
+          "nombre_es": "Humitas"
+        },
+        "pk": 4,
+        "_ref": "Pachamanca huanuqueña - Humitas",
+        "campos": {
+          "nombre": {
+            "es": "Humitas",
+            "en": "Humitas"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "locro-de-gallina",
+          "nombre_es": "Gallina"
+        },
+        "pk": 5,
+        "_ref": "Locro de gallina - Gallina",
+        "campos": {
+          "nombre": {
+            "es": "Gallina",
+            "en": "Hen"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "locro-de-gallina",
+          "nombre_es": "Papas"
+        },
+        "pk": 6,
+        "_ref": "Locro de gallina - Papas",
+        "campos": {
+          "nombre": {
+            "es": "Papas",
+            "en": "Potatoes"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "locro-de-gallina",
+          "nombre_es": "Zapallo"
+        },
+        "pk": 7,
+        "_ref": "Locro de gallina - Zapallo",
+        "campos": {
+          "nombre": {
+            "es": "Zapallo",
+            "en": "Squash"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "locro-de-gallina",
+          "nombre_es": "Culantro"
+        },
+        "pk": 8,
+        "_ref": "Locro de gallina - Culantro",
+        "campos": {
+          "nombre": {
+            "es": "Culantro",
+            "en": "Cilantro"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "picante-de-cuy",
+          "nombre_es": "Cuy"
+        },
+        "pk": 9,
+        "_ref": "Picante de cuy - Cuy",
+        "campos": {
+          "nombre": {
+            "es": "Cuy",
+            "en": "Guinea pig"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "picante-de-cuy",
+          "nombre_es": "Maní"
+        },
+        "pk": 10,
+        "_ref": "Picante de cuy - Maní",
+        "campos": {
+          "nombre": {
+            "es": "Maní",
+            "en": "Peanuts"
+          }
+        }
+      },
+      {
+        "locator": {
+          "plato__slug": "picante-de-cuy",
+          "nombre_es": "Ají amarillo"
+        },
+        "pk": 11,
+        "_ref": "Picante de cuy - Ají amarillo",
+        "campos": {
+          "nombre": {
+            "es": "Ají amarillo",
+            "en": "Ají amarillo pepper"
+          }
+        }
+      }
+    ],
+    "gastronomia.PlatoTipico": [
+      {
+        "locator": {
+          "slug": "pachamanca-huanuquena"
+        },
+        "pk": 1,
+        "_ref": "Pachamanca huanuqueña",
+        "campos": {
+          "descripcion_corta": {
+            "es": "Carnes y tubérculos cocidos bajo tierra con piedras calientes, envueltos en hojas de chincho y plátano.",
+            "en": "Meats and tubers cooked underground with hot stones, wrapped in chincho leaves and banana leaves."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "locro-de-gallina"
+        },
+        "pk": 2,
+        "_ref": "Locro de gallina",
+        "campos": {
+          "descripcion_corta": {
+            "es": "Caldo espeso con gallina, papas y verduras de la sierra huanuqueña.",
+            "en": "Thick broth with hen, potatoes and vegetables from the Huánuco highlands."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "picante-de-cuy"
+        },
+        "pk": 3,
+        "_ref": "Picante de cuy",
+        "campos": {
+          "descripcion_corta": {
+            "es": "Cuy frito bañado en salsa picante de maní y ají.",
+            "en": "Fried guinea pig covered in a spicy peanut and chili pepper sauce."
+          }
+        }
+      }
+    ],
+    "eventos.CategoriaEvento": [
+      {
+        "locator": {
+          "slug": "festividades-y-tradiciones"
+        },
+        "pk": 7,
+        "_ref": "Festividades y tradiciones",
+        "campos": {
+          "nombre": {
+            "es": "Festividades y tradiciones",
+            "en": "Festivals and traditions"
+          },
+          "descripcion": {
+            "es": "Celebraciones tradicionales, costumbres populares y manifestaciones culturales que forman parte de la identidad de Huánuco.",
+            "en": "Traditional celebrations, popular customs and cultural expressions that are part of the identity of Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "cultura-y-arte"
+        },
+        "pk": 8,
+        "_ref": "Cultura y arte",
+        "campos": {
+          "nombre": {
+            "es": "Cultura y arte",
+            "en": "Culture and art"
+          },
+          "descripcion": {
+            "es": "Actividades culturales y artísticas como exposiciones, presentaciones, muestras, encuentros, talleres y expresiones del patrimonio local.",
+            "en": "Cultural and artistic activities such as exhibitions, performances, showcases, gatherings, workshops and expressions of local heritage."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "ferias-y-exposiciones"
+        },
+        "pk": 9,
+        "_ref": "Ferias y exposiciones",
+        "campos": {
+          "nombre": {
+            "es": "Ferias y exposiciones",
+            "en": "Fairs and exhibitions"
+          },
+          "descripcion": {
+            "es": "Ferias comerciales, artesanales, productivas, turísticas y exposiciones abiertas al público que se realizan en Huánuco.",
+            "en": "Commercial, craft, productive and tourist fairs and exhibitions open to the public held in Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "gastronomia"
+        },
+        "pk": 10,
+        "_ref": "Gastronomía",
+        "campos": {
+          "nombre": {
+            "es": "Gastronomía",
+            "en": "Gastronomy"
+          },
+          "descripcion": {
+            "es": "Festivales, ferias, concursos y actividades relacionadas con la gastronomía, productos regionales y sabores tradicionales de Huánuco.",
+            "en": "Festivals, fairs, competitions and activities related to gastronomy, regional products and traditional flavors of Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "musica-y-espectaculos"
+        },
+        "pk": 11,
+        "_ref": "Música y espectáculos",
+        "campos": {
+          "nombre": {
+            "es": "Música y espectáculos",
+            "en": "Music and shows"
+          },
+          "descripcion": {
+            "es": "Conciertos, presentaciones musicales, espectáculos escénicos y actividades de entretenimiento realizadas en Huánuco.",
+            "en": "Concerts, musical performances, stage shows and entertainment activities held in Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "deporte-y-aventura"
+        },
+        "pk": 12,
+        "_ref": "Deporte y aventura",
+        "campos": {
+          "nombre": {
+            "es": "Deporte y aventura",
+            "en": "Sports and adventure"
+          },
+          "descripcion": {
+            "es": "Competencias deportivas, actividades al aire libre, rutas, carreras y experiencias de aventura realizadas en Huánuco y sus alrededores.",
+            "en": "Sports competitions, outdoor activities, routes, races and adventure experiences held in Huánuco and its surroundings."
+          }
+        }
+      }
+    ],
+    "eventos.Evento": [
+      {
+        "locator": {
+          "slug": "festividad-de-la-danza-de-los-negritos-de-huanuco"
+        },
+        "pk": 33,
+        "_ref": "Festividad de la Danza de los Negritos de Huánuco",
+        "campos": {
+          "descripcion_ubicacion": {
+            "es": "Diversos puntos de la ciudad de Huánuco.",
+            "en": "Various points of the city of Huánuco."
+          },
+          "descripcion": {
+            "es": "La Festividad de los Negritos de Huánuco es una de las expresiones culturales más representativas de la región. Durante varias semanas, diferentes cuadrillas recorren calles, plazas y espacios tradicionales con danzas, música y coloridos atuendos en honor al Niño Jesús.\r\n\r\nLa celebración forma parte de la identidad cultural huanuqueña y permite al visitante acercarse a una tradición que reúne devoción religiosa, música y danza. Los Negritos de Huánuco han sido reconocidos como Patrimonio Cultural de la Nación por su importancia histórica, simbólica y cultural.",
+            "en": "The Festividad de los Negritos de Huánuco is one of the most representative cultural expressions of the region. For several weeks, different troupes travel through streets, squares and traditional spaces with dances, music and colorful attire in honor of the Child Jesus.\n\nThe celebration is part of Huánuco's cultural identity and allows visitors to get closer to a tradition that brings together religious devotion, music and dance. The Negritos de Huánuco have been recognized as Cultural Heritage of the Nation for their historical, symbolic and cultural importance."
+          },
+          "contexto_cultural": {
+            "es": "Los Negritos de Huánuco no son únicamente un espectáculo de danza. La festividad está profundamente vinculada a la devoción al Niño Jesús y a la memoria histórica y cultural de Huánuco. Las cuadrillas mantienen tradiciones, personajes, música y coreografías transmitidas a lo largo de generaciones. Para los huanuqueños, esta celebración representa una de las manifestaciones más importantes de su identidad cultural.",
+            "en": "The Negritos de Huánuco are not just a dance performance. The festival is deeply linked to devotion to the Child Jesus and to the historical and cultural memory of Huánuco. The troupes maintain traditions, characters, music and choreographies passed down through generations. For the people of Huánuco, this celebration represents one of the most important expressions of their cultural identity."
+          },
+          "descripcion_corta": {
+            "es": "Música, danza, color y devoción al Niño Jesús llenan las calles durante la temporada navideña.",
+            "en": "Music, dance, color and devotion to the Child Jesus fill the streets during the Christmas season."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "aniversario-de-huanuco"
+        },
+        "pk": 34,
+        "_ref": "Aniversario de Huánuco",
+        "campos": {
+          "descripcion_ubicacion": {
+            "es": "Diferentes espacios públicos, instituciones, plazas y escenarios de la ciudad de Huánuco según la programación oficial de cada año.",
+            "en": "Different public spaces, institutions, squares and venues in the city of Huánuco according to each year's official program."
+          },
+          "descripcion": {
+            "es": "Cada 15 de agosto, Huánuco conmemora el aniversario de su fundación española, ocurrida en 1539. Durante esta celebración se desarrollan actividades cívicas, culturales, artísticas y recreativas que congregan a instituciones, autoridades, residentes y visitantes.\r\n\r\nLa programación puede incluir ceremonias oficiales, desfiles, presentaciones de danzas, ferias, actividades gastronómicas y espectáculos que permiten conocer diferentes expresiones de la identidad huanuqueña.",
+            "en": "Every August 15, Huánuco commemorates the anniversary of its Spanish founding, which took place in 1539. During this celebration, civic, cultural, artistic and recreational activities are held that bring together institutions, authorities, residents and visitors.\n\nThe program may include official ceremonies, parades, dance performances, fairs, gastronomic activities and shows that allow visitors to experience different expressions of Huánuco's identity."
+          },
+          "contexto_cultural": {
+            "es": "El 15 de agosto es una de las fechas cívicas más importantes de Huánuco. La ciudad fue fundada en 1539 y durante su aniversario se desarrollan distintas actividades a lo largo de varios días, aunque el día central de conmemoración es el 15 de agosto. Para un visitante, esta temporada es una oportunidad para encontrar expresiones culturales, danzas, ferias y actividades especiales en la ciudad.",
+            "en": "August 15 is one of the most important civic dates in Huánuco. The city was founded in 1539 and during its anniversary various activities take place over several days, although the main day of commemoration is August 15. For a visitor, this season is an opportunity to find cultural expressions, dances, fairs and special activities in the city."
+          },
+          "recomendaciones": {
+            "es": "Durante la semana de aniversario suelen desarrollarse distintas actividades en varios puntos de la ciudad. Revisa la programación oficial antes de tu visita para conocer horarios y ubicaciones. Para ceremonias, desfiles y espectáculos de mayor concurrencia, llega con anticipación y lleva ropa cómoda, protección solar y agua. Algunas calles del centro pueden presentar restricciones temporales de tránsito durante las celebraciones.",
+            "en": "During anniversary week, various activities usually take place at several points in the city. Check the official program before your visit to find out times and locations. For ceremonies, parades and shows with larger crowds, arrive early and bring comfortable clothing, sun protection and water. Some streets in the center may have temporary traffic restrictions during the celebrations."
+          },
+          "descripcion_corta": {
+            "es": "Huánuco celebra cada 15 de agosto el aniversario de su fundación con actividades cívicas, culturales, artísticas y festivas en distintos puntos de la ciudad.",
+            "en": "Huánuco celebrates its founding anniversary every August 15 with civic, cultural, artistic and festive activities at different points in the city."
+          },
+          "lugar": {
+            "es": "Diversos puntos de la ciudad de Huánuco",
+            "en": "Various locations across the city of Huánuco"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "dia-de-la-identidad-cultural-huanuquena"
+        },
+        "pk": 39,
+        "_ref": "Día de la Identidad Cultural Huanuqueña",
+        "campos": {
+          "descripcion": {
+            "es": "El Día de la Identidad Cultural Huanuqueña es una celebración regional dedicada a revalorar y fortalecer las costumbres, tradiciones, historia y expresiones culturales que forman parte de la identidad de Huánuco.\r\n\r\nFue institucionalizado mediante la Ordenanza Regional N.° 053-2016-GRHCO y se conmemora cada primer viernes después del aniversario de Huánuco. La celebración representa a las once provincias de la región y permite conocer parte de su diversidad cultural a través de manifestaciones como música, danza, vestimenta tradicional, gastronomía, artesanía y otras expresiones propias de los pueblos huanuqueños.",
+            "en": "The Día de la Identidad Cultural Huanuqueña is a regional celebration dedicated to revaluing and strengthening the customs, traditions, history and cultural expressions that are part of the identity of Huánuco.\n\nIt was institutionalized through Regional Ordinance No. 053-2016-GRHCO and is commemorated every first Friday after the anniversary of Huánuco. The celebration represents the eleven provinces of the region and lets visitors experience part of their cultural diversity through expressions such as music, dance, traditional dress, gastronomy, crafts and other expressions of the peoples of Huánuco."
+          },
+          "contexto_cultural": {
+            "es": "Esta celebración no corresponde a una única presentación ni a un solo lugar. Es una fecha de alcance regional en la que distintas instituciones, organizaciones y comunidades pueden desarrollar actividades culturales propias. La programación, los horarios y los espacios utilizados pueden cambiar cada año, por lo que es recomendable consultar las actividades oficiales de la edición vigente antes de realizar una visita.",
+            "en": "This celebration does not correspond to a single performance or a single place. It is a date of regional scope on which different institutions, organizations and communities can carry out their own cultural activities. The program, schedules and venues used may change every year, so it is advisable to check the official activities of the current edition before visiting."
+          },
+          "recomendaciones": {
+            "es": "Utiliza ropa cómoda y respeta los espacios destinados a danzas, ceremonias y exhibiciones culturales. Aprovecha la celebración para conocer también la gastronomía, vestimenta y expresiones tradicionales de las diferentes provincias de la región.",
+            "en": "Wear comfortable clothing and respect the spaces intended for dances, ceremonies and cultural exhibitions. Take the opportunity of the celebration to also get to know the gastronomy, dress and traditional expressions of the different provinces of the region."
+          },
+          "descripcion_corta": {
+            "es": "Celebración regional que reafirma la identidad huanuqueña y pone en valor las costumbres, tradiciones, historia, gastronomía y expresiones culturales de las once provincias de Huánuco.",
+            "en": "Regional celebration that reaffirms the identity of Huánuco and highlights the customs, traditions, history, gastronomy and cultural expressions of the eleven provinces of Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "festival-de-la-shacta"
+        },
+        "pk": 40,
+        "_ref": "Festival de la Shacta",
+        "campos": {
+          "descripcion_ubicacion": {
+            "es": "Diversos espacios de la ciudad de Huánuco",
+            "en": "Various spaces in the city of Huánuco"
+          },
+          "descripcion": {
+            "es": "El Festival de la Shacta es una celebración cultural dedicada al aguardiente tradicional de caña de azúcar de Huánuco y a los conocimientos y prácticas asociados con su producción.\r\n\r\nCada segundo sábado de septiembre se conmemora el Día del Aguardiente de Caña de Azúcar de Huánuco, fecha establecida a nivel regional para revalorar su importancia cultural, social y productiva como parte de la identidad huanuqueña.",
+            "en": "The Festival de la Shacta is a cultural celebration dedicated to the traditional sugarcane aguardiente of Huánuco and to the knowledge and practices associated with its production.\n\nEvery second Saturday of September, the Día del Aguardiente de Caña de Azúcar de Huánuco is commemorated, a date established at the regional level to revalue its cultural, social and productive importance as part of the identity of Huánuco."
+          },
+          "contexto_cultural": {
+            "es": "La Shacta es un aguardiente tradicional elaborado a partir de caña de azúcar y estrechamente vinculado con la historia productiva de Huánuco. Más allá de la bebida, su elaboración conserva conocimientos, técnicas y prácticas transmitidas entre generaciones. En 2016, el Ministerio de Cultura declaró al sistema de producción de Shacta como Patrimonio Cultural de la Nación por su valor social, simbólico y cultural para los huanuqueños.",
+            "en": "Shacta is a traditional aguardiente made from sugarcane and closely linked to the productive history of Huánuco. Beyond the drink itself, its production preserves knowledge, techniques and practices passed down between generations. In 2016, the Ministry of Culture declared the Shacta production system Cultural Heritage of the Nation for its social, symbolic and cultural value to the people of Huánuco."
+          },
+          "recomendaciones": {
+            "es": "Si decides participar en degustaciones de bebidas alcohólicas, hazlo con moderación y evita conducir después. Aprovecha también la celebración para conocer la historia productiva y las tradiciones asociadas a esta bebida emblemática de Huánuco.",
+            "en": "If you decide to take part in tastings of alcoholic beverages, do so in moderation and avoid driving afterwards. Take the opportunity of the celebration to also learn about the productive history and traditions associated with this emblematic drink of Huánuco."
+          },
+          "descripcion_corta": {
+            "es": "Celebración dedicada a la Shacta, tradicional aguardiente de caña de azúcar.",
+            "en": "Celebration dedicated to Shacta, a traditional sugarcane aguardiente."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "semana-santa-en-huanuco"
+        },
+        "pk": 41,
+        "_ref": "Semana Santa en Huánuco",
+        "campos": {
+          "descripcion_ubicacion": {
+            "es": "Diversos templos y espacios de la ciudad de Huánuco",
+            "en": "Various churches and spaces in the city of Huánuco"
+          },
+          "descripcion": {
+            "es": "La Semana Santa en Huánuco es una de las celebraciones religiosas más representativas del calendario cultural local. Durante estos días se desarrollan misas, procesiones, actos litúrgicos y otras expresiones de fe que convocan a fieles y visitantes en distintos templos y espacios de la ciudad.\r\n\r\nLa celebración comprende actividades que se desarrollan desde el Domingo de Ramos hasta el Domingo de Resurrección, y forma parte de una tradición profundamente arraigada en la vida religiosa y cultural huanuqueña.",
+            "en": "Holy Week in Huánuco is one of the most representative religious celebrations of the local cultural calendar. During these days, masses, processions, liturgical acts and other expressions of faith take place, bringing together worshippers and visitors in various churches and spaces of the city.\n\nThe celebration includes activities held from Palm Sunday to Easter Sunday, and is part of a tradition deeply rooted in the religious and cultural life of Huánuco."
+          },
+          "contexto_cultural": {
+            "es": "Si deseas asistir, es recomendable revisar previamente el cronograma oficial de cada edición, ya que las fechas, recorridos y horarios pueden variar cada año.",
+            "en": "If you wish to attend, it is advisable to check the official schedule for each edition beforehand, since the dates, routes and times may vary each year."
+          },
+          "recomendaciones": {
+            "es": "Si deseas presenciar una procesión o ceremonia, llega con anticipación y mantén una actitud respetuosa durante las actividades religiosas. Evita bloquear el paso de los participantes y procura no usar flash si tomas fotografías dentro de templos o durante momentos de oración.",
+            "en": "If you want to witness a procession or ceremony, arrive early and maintain a respectful attitude during religious activities. Avoid blocking the participants' path and try not to use flash if you take photos inside churches or during moments of prayer."
+          },
+          "descripcion_corta": {
+            "es": "Celebración religiosa y cultural que reúne procesiones, ceremonias litúrgicas y manifestaciones de fe en distintos templos y espacios de la ciudad de Huánuco.",
+            "en": "Religious and cultural celebration that brings together processions, liturgical ceremonies and expressions of faith in various churches and spaces of the city of Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "fiesta-de-san-juan-en-tingo-maria"
+        },
+        "pk": 42,
+        "_ref": "Fiesta de San Juan en Tingo María",
+        "campos": {
+          "descripcion": {
+            "es": "La Fiesta de San Juan en Tingo María es una de las celebraciones culturales más representativas de la provincia de Leoncio Prado y de la Amazonía peruana. Su día central es el 24 de junio, fecha dedicada a San Juan Bautista.\r\n\r\nDurante la temporada festiva, Tingo María reúne actividades culturales, gastronómicas, religiosas y recreativas. Entre las expresiones más características se encuentran ferias de productos locales, presentaciones artísticas, concursos, danzas tradicionales y actividades vinculadas con los ríos y playas de la ciudad.\r\n\r\nLa gastronomía ocupa un lugar especial durante la festividad, destacando el tradicional juane como uno de los platos más representativos de estas fechas.",
+            "en": "The Fiesta de San Juan en Tingo María is one of the most representative cultural celebrations of the province of Leoncio Prado and of the Peruvian Amazon. Its main day is June 24, a date dedicated to Saint John the Baptist.\n\nDuring the festive season, Tingo María hosts cultural, gastronomic, religious and recreational activities. Among the most characteristic expressions are fairs of local products, artistic performances, contests, traditional dances and activities linked to the rivers and beaches of the city.\n\nGastronomy has a special place during the festival, with the traditional juane standing out as one of the most representative dishes of these dates."
+          },
+          "contexto_cultural": {
+            "es": "El 24 de junio es el día central de la Fiesta de San Juan, aunque las actividades pueden comenzar varios días antes. Una de las tradiciones asociadas a esta celebración es el vínculo con los ríos y el agua, relacionado históricamente con la figura de San Juan Bautista.",
+            "en": "June 24 is the main day of the Fiesta de San Juan, although activities may begin several days earlier. One of the traditions associated with this celebration is the connection with rivers and water, historically related to the figure of Saint John the Baptist."
+          },
+          "recomendaciones": {
+            "es": "Reserva alojamiento con anticipación si visitas Tingo María durante estas fechas, lleva ropa ligera y considera protección para el sol y la lluvia. Aprovecha la celebración para probar la gastronomía local, especialmente el tradicional juane, y respeta las indicaciones de seguridad durante actividades realizadas cerca de ríos y playas.",
+            "en": "Book accommodation in advance if you visit Tingo María during these dates, bring light clothing and consider protection against sun and rain. Take advantage of the celebration to try the local cuisine, especially the traditional juane, and follow safety instructions during activities held near rivers and beaches."
+          },
+          "descripcion_corta": {
+            "es": "Una de las celebraciones más representativas de Tingo María y la Amazonía peruana.",
+            "en": "One of the most representative celebrations of Tingo María and the Peruvian Amazon."
+          },
+          "lugar": {
+            "es": "Diversos espacios de la ciudad de Tingo María",
+            "en": "Various venues in the city of Tingo María"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "fiesta-del-sol"
+        },
+        "pk": 43,
+        "_ref": "Fiesta del Sol",
+        "campos": {
+          "descripcion": {
+            "es": "La Fiesta del Sol en Huánuco Pampa es una de las celebraciones culturales más representativas de la región Huánuco. Cada 27 de julio, el Complejo Arqueológico de Huánuco Pampa se convierte en escenario de una gran representación inspirada en las ceremonias y tradiciones del mundo inca.\r\n\r\nDurante la escenificación participan el Inca, la Coya, sacerdotes, chasquis, guerreros y otros personajes, acompañados por música, danzas y vestimentas tradicionales. La ceremonia busca revalorar el legado histórico de Huánuco Pampa, considerado uno de los principales centros administrativos incas del antiguo Chinchaysuyo.",
+            "en": "The Fiesta del Sol in Huánuco Pampa is one of the most representative cultural celebrations of the Huánuco region. Every July 27, the Huánuco Pampa Archaeological Complex becomes the stage for a large representation inspired by the ceremonies and traditions of the Inca world.\n\nThe staging involves the Inca, the Coya, priests, chasquis, warriors and other characters, accompanied by music, dances and traditional costumes. The ceremony seeks to revalue the historical legacy of Huánuco Pampa, considered one of the main Inca administrative centers of the ancient Chinchaysuyo."
+          },
+          "contexto_cultural": {
+            "es": "Su puesta en escena recrea ceremonias relacionadas con el culto al Sol, el agradecimiento por las cosechas y diferentes expresiones de la organización y cosmovisión andina. La actividad se desarrolla a gran altitud, por lo que los visitantes deben considerar las condiciones climáticas y físicas propias de la zona.",
+            "en": "Its staging recreates ceremonies related to the worship of the Sun, gratitude for the harvests and different expressions of Andean organization and worldview. The activity takes place at high altitude, so visitors should take into account the climatic and physical conditions typical of the area."
+          },
+          "recomendaciones": {
+            "es": "Llega con anticipación al complejo arqueológico, especialmente durante el día central, debido a la alta concurrencia de visitantes. Huánuco Pampa se encuentra a gran altitud, por lo que se recomienda llevar ropa abrigadora, protección solar, agua y caminar con calma si no estás acostumbrado a la altura. Respeta las zonas arqueológicas señalizadas y evita ingresar a espacios restringidos durante la escenificación.",
+            "en": "Arrive early at the archaeological complex, especially on the main day, due to the high number of visitors. Huánuco Pampa is at high altitude, so it is recommended to bring warm clothing, sun protection, water and to walk calmly if you are not used to the altitude. Respect the marked archaeological zones and avoid entering restricted areas during the staging."
+          },
+          "descripcion_corta": {
+            "es": "Gran escenificación cultural realizada cada 27 de julio en Huánuco Pampa, donde cientos de participantes recrean ceremonias, danzas y tradiciones vinculadas al legado inca del Chinchaysuyo.",
+            "en": "Large cultural staging held every July 27 in Huánuco Pampa, where hundreds of participants recreate ceremonies, dances and traditions linked to the Inca legacy of the Chinchaysuyo."
+          },
+          "lugar": {
+            "es": "Complejo Arqueológico de Huánuco Pampa",
+            "en": "Huánuco Pampa Archaeological Complex"
+          }
+        }
+      }
+    ],
+    "eventos.RecomendacionEvento": [
+      {
+        "locator": {
+          "evento__slug": "festividad-de-la-danza-de-los-negritos-de-huanuco",
+          "orden": 1
+        },
+        "pk": 1,
+        "_ref": "Consulta la programación",
+        "campos": {
+          "titulo": {
+            "es": "Consulta la programación",
+            "en": "Check the schedule"
+          },
+          "descripcion": {
+            "es": "Si deseas observar los recorridos de las cuadrillas, consulta previamente la programación de cada día, ya que los horarios y puntos de presentación pueden variar. Llega con anticipación a las zonas de mayor concurrencia, especialmente en el centro de Huánuco.",
+            "en": "If you want to watch the troupes' routes, check the schedule for each day in advance, as the times and performance locations may vary. Arrive early at the busiest areas, especially in the center of Huánuco."
+          }
+        }
+      },
+      {
+        "locator": {
+          "evento__slug": "festividad-de-la-danza-de-los-negritos-de-huanuco",
+          "orden": 2
+        },
+        "pk": 2,
+        "_ref": "Disfruta la festividad con respeto",
+        "campos": {
+          "titulo": {
+            "es": "Disfruta la festividad con respeto",
+            "en": "Enjoy the festival with respect"
+          },
+          "descripcion": {
+            "es": "Lleva ropa cómoda, protección para el sol o la lluvia según el clima y evita interrumpir el recorrido de los danzantes. Si deseas tomar fotografías, hazlo con respeto y sin obstaculizar las presentaciones.",
+            "en": "Wear comfortable clothing, protection for the sun or rain depending on the weather, and avoid interrupting the dancers' route. If you want to take photos, do so respectfully and without obstructing the performances."
+          }
+        }
+      }
+    ],
+    "eventos.TagExperiencia": [
+      {
+        "locator": {
+          "slug": "familias"
+        },
+        "pk": 7,
+        "_ref": "Familias",
+        "campos": {
+          "nombre": {
+            "es": "Familias",
+            "en": "Families"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "cultura"
+        },
+        "pk": 8,
+        "_ref": "Cultura",
+        "campos": {
+          "nombre": {
+            "es": "Cultura",
+            "en": "Culture"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "fotografia"
+        },
+        "pk": 9,
+        "_ref": "Fotografía",
+        "campos": {
+          "nombre": {
+            "es": "Fotografía",
+            "en": "Photography"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "gastronomia"
+        },
+        "pk": 10,
+        "_ref": "Gastronomía",
+        "campos": {
+          "nombre": {
+            "es": "Gastronomía",
+            "en": "Gastronomy"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "naturaleza"
+        },
+        "pk": 11,
+        "_ref": "Naturaleza",
+        "campos": {
+          "nombre": {
+            "es": "Naturaleza",
+            "en": "Nature"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "aventura"
+        },
+        "pk": 12,
+        "_ref": "Aventura",
+        "campos": {
+          "nombre": {
+            "es": "Aventura",
+            "en": "Adventure"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "ninos"
+        },
+        "pk": 13,
+        "_ref": "Niños",
+        "campos": {
+          "nombre": {
+            "es": "Niños",
+            "en": "Children"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "vida-nocturna"
+        },
+        "pk": 14,
+        "_ref": "Vida nocturna",
+        "campos": {
+          "nombre": {
+            "es": "Vida nocturna",
+            "en": "Nightlife"
+          }
+        }
+      }
+    ],
+    "movilidad.CategoriaMovilidad": [
+      {
+        "locator": {
+          "slug": "via-terrestre"
+        },
+        "pk": 1,
+        "_ref": "via-terrestre",
+        "campos": {
+          "nombre": {
+            "es": "Vía terrestre",
+            "en": "Land route"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "via-aerea"
+        },
+        "pk": 2,
+        "_ref": "via-aerea",
+        "campos": {
+          "nombre": {
+            "es": "Vía aérea",
+            "en": "Air route"
+          }
+        }
+      }
+    ],
+    "movilidad.RutaMovilidad": [
+      {
+        "locator": {
+          "slug": "lima-huanuco-aereo"
+        },
+        "pk": 6,
+        "_ref": "Lima – Huánuco (vía aérea)",
+        "campos": {
+          "duracion_estimada": {
+            "es": "45 minutos",
+            "en": "45 minutes"
+          }
+        }
+      }
+    ],
+    "movilidad.TransportePublico": [
+      {
+        "locator": {
+          "slug": "mototaxi"
+        },
+        "pk": 1,
+        "_ref": "mototaxi",
+        "campos": {
+          "nombre": {
+            "es": "Mototaxi",
+            "en": "Mototaxi"
+          },
+          "descripcion": {
+            "es": "Ideal para desplazamiento rápido dentro de la ciudad.",
+            "en": "Ideal for getting around the city quickly."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "colectivos"
+        },
+        "pk": 2,
+        "_ref": "colectivos",
+        "campos": {
+          "nombre": {
+            "es": "Colectivos",
+            "en": "Colectivos (shared taxis)"
+          },
+          "descripcion": {
+            "es": "Transporte compartido para rutas frecuentes y recorridos urbanos.",
+            "en": "Shared transport for frequent routes and city trips."
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "microbuses"
+        },
+        "pk": 3,
+        "_ref": "microbuses",
+        "campos": {
+          "nombre": {
+            "es": "Microbuses",
+            "en": "Minibuses"
+          },
+          "descripcion": {
+            "es": "Recomendado para trayectos largos, cubre más rutas y sectores de la ciudad.",
+            "en": "Recommended for longer trips; covers more routes and areas of the city."
+          }
+        }
+      }
+    ],
+    "movilidad.ConsejoMovilidad": [
+      {
+        "locator": {
+          "texto_es": "Lleva siempre efectivo en soles para facilitar tus pagos."
+        },
+        "pk": 1,
+        "_ref": "Lleva siempre efectivo en soles para fac",
+        "campos": {
+          "texto": {
+            "es": "Lleva siempre efectivo en soles para facilitar tus pagos.",
+            "en": "Always carry cash in soles to make payments easier."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Verifica el estado de la carretera antes de viajar."
+        },
+        "pk": 6,
+        "_ref": "Verifica el estado de la carretera antes",
+        "campos": {
+          "texto": {
+            "es": "Verifica el estado de la carretera antes de viajar.",
+            "en": "Check road conditions before traveling."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Confirma la programación del vuelo antes de dirigirte al aeropuerto."
+        },
+        "pk": 10,
+        "_ref": "Confirma la programación del vuelo antes",
+        "campos": {
+          "texto": {
+            "es": "Confirma la programación del vuelo antes de dirigirte al aeropuerto.",
+            "en": "Confirm your flight schedule before heading to the airport."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Si es tu primera vez en la ciudad, consulta las tarifas antes de abordar."
+        },
+        "pk": 2,
+        "_ref": "Si es tu primera vez en la ciudad, consu",
+        "campos": {
+          "texto": {
+            "es": "Si es tu primera vez en la ciudad, consulta las tarifas antes de abordar.",
+            "en": "If it's your first time in the city, check the fares before boarding."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Reservar con anticipación durante feriados o fechas festivas."
+        },
+        "pk": 7,
+        "_ref": "Reservar con anticipación durante feriad",
+        "campos": {
+          "texto": {
+            "es": "Reservar con anticipación durante feriados o fechas festivas.",
+            "en": "Book in advance during public holidays and festive dates."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Llega con anticipación y revisa las condiciones de equipaje."
+        },
+        "pk": 11,
+        "_ref": "Llega con anticipación y revisa las cond",
+        "campos": {
+          "texto": {
+            "es": "Llega con anticipación y revisa las condiciones de equipaje.",
+            "en": "Arrive early and check the baggage requirements."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Procura no olvidar tus pertenencias en los medios de transporte."
+        },
+        "pk": 3,
+        "_ref": "Procura no olvidar tus pertenencias en l",
+        "campos": {
+          "texto": {
+            "es": "Procura no olvidar tus pertenencias en los medios de transporte.",
+            "en": "Try not to leave your belongings behind on public transport."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Lleva ropa de abrigo para los tramos de mayor altitud."
+        },
+        "pk": 8,
+        "_ref": "Lleva ropa de abrigo para los tramos de ",
+        "campos": {
+          "texto": {
+            "es": "Lleva ropa de abrigo para los tramos de mayor altitud.",
+            "en": "Bring warm clothing for the higher-altitude stretches."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "La disponibilidad de vuelos puede variar."
+        },
+        "pk": 12,
+        "_ref": "La disponibilidad de vuelos puede variar",
+        "campos": {
+          "texto": {
+            "es": "La disponibilidad de vuelos puede variar.",
+            "en": "Flight availability may vary."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Evita movilizarte muy tarde en zonas poco iluminadas."
+        },
+        "pk": 4,
+        "_ref": "Evita movilizarte muy tarde en zonas poc",
+        "campos": {
+          "texto": {
+            "es": "Evita movilizarte muy tarde en zonas poco iluminadas.",
+            "en": "Avoid getting around very late at night in poorly lit areas."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Considerar medicamentos para el soroche si no estás acostumbrado a la altura."
+        },
+        "pk": 9,
+        "_ref": "Considerar medicamentos para el soroche ",
+        "campos": {
+          "texto": {
+            "es": "Considerar medicamentos para el soroche si no estás acostumbrado a la altura.",
+            "en": "Consider taking altitude sickness medication (soroche) if you are not used to high altitude."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Organiza con anticipación tu traslado desde el aeropuerto."
+        },
+        "pk": 13,
+        "_ref": "Organiza con anticipación tu traslado de",
+        "campos": {
+          "texto": {
+            "es": "Organiza con anticipación tu traslado desde el aeropuerto.",
+            "en": "Arrange your transfer from the airport in advance."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Pide ayuda a los locales si tienes dudas sobre rutas o tarifas."
+        },
+        "pk": 5,
+        "_ref": "Pide ayuda a los locales si tienes dudas",
+        "campos": {
+          "texto": {
+            "es": "Pide ayuda a los locales si tienes dudas sobre rutas o tarifas.",
+            "en": "Ask locals for help if you have doubts about routes or fares."
+          }
+        }
+      },
+      {
+        "locator": {
+          "texto_es": "Viajar de noche es ideal para amanecer en Huánuco."
+        },
+        "pk": 14,
+        "_ref": "Viajar de noche es ideal para amanecer e",
+        "campos": {
+          "texto": {
+            "es": "Viajar de noche es ideal para amanecer en Huánuco.",
+            "en": "Traveling overnight is ideal for waking up in Huánuco."
+          }
+        }
+      }
+    ],
+    "servicios_turista.CategoriaServicioTurista": [
+      {
+        "locator": {
+          "slug": "hospitales"
+        },
+        "pk": 7,
+        "_ref": "hospitales",
+        "campos": {
+          "nombre": {
+            "es": "Hospitales",
+            "en": "Hospitals"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "comisarias"
+        },
+        "pk": 8,
+        "_ref": "comisarias",
+        "campos": {
+          "nombre": {
+            "es": "Comisarías",
+            "en": "Police stations"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "farmacias-boticas"
+        },
+        "pk": 9,
+        "_ref": "farmacias-boticas",
+        "campos": {
+          "nombre": {
+            "es": "Farmacias / Boticas",
+            "en": "Pharmacies"
+          }
+        }
+      }
+    ],
+    "servicios_turista.ServicioTurista": [
+      {
+        "locator": {
+          "slug": "hospital-regional-hermilio-valdizan"
+        },
+        "pk": 10,
+        "_ref": "hospital-regional-hermilio-valdizan",
+        "campos": {
+          "descripcion_corta": {
+            "es": "Atención especializada de alta complejidad",
+            "en": "Specialized high-complexity care"
+          },
+          "horario_atencion": {
+            "es": "Atención 24 horas (Emergencia) | Consulta externa: Lunes a Sábado de 7:00 AM - 1:00 PM",
+            "en": "24-hour care (Emergency) | Outpatient clinic: Monday to Saturday, 7:00 AM - 1:00 PM"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "comisaria-de-huanuco"
+        },
+        "pk": 11,
+        "_ref": "comisaria-de-huanuco",
+        "campos": {
+          "descripcion_corta": {
+            "es": "Dependencia policial de la Policía Nacional del Perú  encargada de mantener el orden público.",
+            "en": "Police station of the Peruvian National Police (Policía Nacional del Perú), in charge of maintaining public order."
+          },
+          "horario_atencion": {
+            "es": "Lunes a sábado: 8:00 AM - 05:00 PM",
+            "en": "Monday to Saturday: 8:00 AM - 05:00 PM"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "botica-falcon"
+        },
+        "pk": 12,
+        "_ref": "botica-falcon",
+        "campos": {
+          "descripcion_corta": {
+            "es": "Empresa huanuqueña dedicada a la venta al por menor de productos farmacéuticos, cosméticos y artículos de tocador.",
+            "en": "Huánuco-based company dedicated to the retail sale of pharmaceutical products, cosmetics and toiletries."
+          },
+          "horario_atencion": {
+            "es": "Lunes a domingo: 08:00 AM - 10:00 PM",
+            "en": "Monday to Sunday: 08:00 AM - 10:00 PM"
+          }
+        }
+      },
+      {
+        "locator": {
+          "slug": "hospital-materno-infantil-carlos-showing-ferrari"
+        },
+        "pk": 13,
+        "_ref": "hospital-materno-infantil-carlos-showing-ferrari",
+        "campos": {
+          "descripcion_corta": {
+            "es": "Especializado en salud materno-infantil, gineco-obstetricia y pediatría.",
+            "en": "Specialized in maternal and child health, gynecology and obstetrics, and pediatrics."
+          }
+        }
+      }
+    ],
+    "emergencias.ContactoEmergencia": [
+      {
+        "locator": {
+          "ambito": "nacional",
+          "categoria": "policia",
+          "nombre": "Policía Nacional del Perú"
+        },
+        "pk": 12,
+        "_ref": "Policía Nacional del Perú",
+        "campos": {
+          "descripcion": {
+            "es": "Emergencias de seguridad y apoyo policial.",
+            "en": "Security emergencies and police support."
+          }
+        }
+      },
+      {
+        "locator": {
+          "ambito": "nacional",
+          "categoria": "bomberos",
+          "nombre": "Bomberos Voluntarios del Perú"
+        },
+        "pk": 13,
+        "_ref": "Bomberos Voluntarios del Perú",
+        "campos": {
+          "descripcion": {
+            "es": "Incendios, rescates y otras emergencias.",
+            "en": "Fires, rescues and other emergencies."
+          }
+        }
+      },
+      {
+        "locator": {
+          "ambito": "nacional",
+          "categoria": "salud",
+          "nombre": "SAMU"
+        },
+        "pk": 14,
+        "_ref": "SAMU",
+        "campos": {
+          "descripcion": {
+            "es": "Atención médica ante urgencias y emergencias.",
+            "en": "Medical care for urgent situations and emergencies."
+          }
+        }
+      }
+    ]
+  }
+}

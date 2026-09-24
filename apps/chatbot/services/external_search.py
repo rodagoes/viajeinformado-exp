@@ -9,6 +9,7 @@ ofrece, en nuestro contrato, citas/URLs estructuradas verificables.
 """
 from django.conf import settings
 from django.utils import timezone
+from django.utils.translation import get_language, gettext, gettext_lazy
 
 from . import llm_client, trusted_sources
 from .providers import EXTERNAL_TRUSTED
@@ -19,10 +20,10 @@ MAX_EXTERNAL_SEARCHES_PER_TURN = 1
 PROVEEDORES_SOPORTADOS = ("gemini",)
 SENTINELA_SIN_EVIDENCIA = "SIN_EVIDENCIA"
 
-TEXTO_SIN_EVIDENCIA = (
+TEXTO_SIN_EVIDENCIA = gettext_lazy(
     "No tengo información suficiente y verificable para confirmarte ese dato en este momento."
 )
-TEXTO_NO_VERIFICADO = "No pude verificar ese dato en fuentes oficiales en este momento."
+TEXTO_NO_VERIFICADO = gettext_lazy("No pude verificar ese dato en fuentes oficiales en este momento.")
 
 
 class BusquedaExternaNoDisponible(Exception):
@@ -47,7 +48,13 @@ def construir_prompt_busqueda(tool=None, fecha_local=None):
     fecha = (fecha_local or timezone.localdate()).isoformat()
     preferidos = trusted_sources.DOMINIOS_PREFERIDOS.get(tool)
     texto = f", en especial {', '.join(preferidos)}" if preferidos else ""
-    return _PLANTILLA_PROMPT.format(fecha=fecha, preferidos=texto, sentinela=SENTINELA_SIN_EVIDENCIA)
+    prompt = _PLANTILLA_PROMPT.format(fecha=fecha, preferidos=texto, sentinela=SENTINELA_SIN_EVIDENCIA)
+    if (get_language() or "es").startswith("en"):
+        prompt += (
+            " El turista usa la interfaz en inglés: responde en inglés, empezando por "
+            '"According to official sources consulted". El sentinela se mantiene tal cual.'
+        )
+    return prompt
 
 
 def construir_consulta(consulta, resumen_interno=None):
@@ -129,4 +136,4 @@ def buscar(consulta, tool=None, resumen_interno=None):
 
 def formatear_respuesta(resultado):
     lineas = [f"- {f['titulo']} — {f['url']}" for f in resultado["fuentes"][:MAX_FUENTES]]
-    return f"{resultado['texto']}\n\nFuentes oficiales:\n" + "\n".join(lineas)
+    return f"{resultado['texto']}\n\n{gettext('Fuentes oficiales:')}\n" + "\n".join(lineas)

@@ -33,8 +33,8 @@
         var fallback = buildUrls(query);
 
         return {
-            nombre: text(d.nombre) || "Local principal",
-            label: text(d.label) || (d.esPrincipal === "true" ? "Local principal" : "Sucursal"),
+            nombre: text(d.nombre) || ViI18n("local_principal", "Local principal"),
+            label: text(d.label) || (d.esPrincipal === "true" ? ViI18n("local_principal", "Local principal") : ViI18n("sucursal", "Sucursal")),
             direccion: direccion,
             referencia: text(d.referencia),
             horario: text(d.horario),
@@ -101,7 +101,7 @@
     /* ─── Actualizar contenido ─── */
 
     function updateLocation(root, data) {
-        var dir = data.direccion || "Dirección no registrada";
+        var dir = data.direccion || ViI18n("sin_direccion", "Dirección no registrada");
         var ref = data.referencia || "";
         var hor = data.horario || "";
 

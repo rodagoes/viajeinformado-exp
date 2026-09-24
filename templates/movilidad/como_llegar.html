@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}¿Cómo llegar a Huánuco? • Viaje Informado{% endblock %}
+{% block title %}{% translate "¿Cómo llegar a Huánuco? • Viaje Informado" %}{% endblock %}
 
 {% block extra_css %}
 <link
@@ -21,12 +22,11 @@
 
         <div class="como-llegar__hero-content">
             <h1 class="como-llegar__hero-title">
-                ¿Cómo llegar a Huánuco?
+                {% translate "¿Cómo llegar a Huánuco?" %}
             </h1>
 
             <p class="como-llegar__hero-desc">
-                Conozca las rutas, tiempos y medios de transporte
-                para planificar tu llegada.
+                {% translate "Conozca las rutas, tiempos y medios de transporte para planificar tu llegada." %}
             </p>
         </div>
     </section>
@@ -38,7 +38,7 @@
             class="cl-selector"
             data-como-llegar-selector
             role="tablist"
-            aria-label="Seleccionar vía de acceso a Huánuco">
+            aria-label="{% translate "Seleccionar vía de acceso a Huánuco" %}">
 
             <button
                 type="button"
@@ -54,7 +54,7 @@
                     aria-hidden="true">
                 </i>
 
-                <span>Vía terrestre</span>
+                <span>{% translate "Vía terrestre" %}</span>
             </button>
 
             <button
@@ -72,7 +72,7 @@
                     aria-hidden="true">
                 </i>
 
-                <span>Vía aérea</span>
+                <span>{% translate "Vía aérea" %}</span>
             </button>
         </div>
 
@@ -92,14 +92,14 @@
                         id="cl-rutas-list"
                         class="cl-rutas"
                         data-rutas-list
-                        aria-label="Rutas terrestres hacia Huánuco">
+                        aria-label="{% translate "Rutas terrestres hacia Huánuco" %}">
 
                     {% for ruta in rutas_terrestres %}
                     <article class="cl-ruta{% if forloop.counter > 3 %} cl-ruta--extra{% endif %}">
 
                         <span
                             class="cl-ruta__orden"
-                            aria-label="Ruta número {{ ruta.orden }}">
+                            aria-label="{% blocktranslate trimmed with orden=ruta.orden %}Ruta número {{ orden }}{% endblocktranslate %}">
                             {{ ruta.orden }}
                         </span>
 
@@ -124,7 +124,7 @@
 
                         <div
                             class="cl-ruta__tiempos"
-                            aria-label="Tiempos referenciales de la ruta">
+                            aria-label="{% translate "Tiempos referenciales de la ruta" %}">
 
                             {% if ruta.duracion_bus %}
                             <div
@@ -137,7 +137,7 @@
 
                                 <span class="cl-ruta__tiempo-texto">
                                     <span class="cl-ruta__tiempo-label">
-                                        Bus
+                                        {% translate "Bus" %}
                                     </span>
 
                                     <span class="cl-ruta__tiempo-valor">
@@ -157,7 +157,7 @@
 
                                 <span class="cl-ruta__tiempo-texto">
                                     <span class="cl-ruta__tiempo-label">
-                                        Carro
+                                        {% translate "Carro" %}
                                     </span>
 
                                     <span class="cl-ruta__tiempo-valor">
@@ -169,7 +169,7 @@
 
                             {% if not ruta.duracion_bus and not ruta.duracion_automovil %}
                             <span class="cl-ruta__tiempo-pendiente">
-                                Tiempos por confirmar
+                                {% translate "Tiempos por confirmar" %}
                             </span>
                             {% endif %}
                         </div>
@@ -177,7 +177,7 @@
 
                     {% empty %}
                     <p class="cl-vacio">
-                        Pronto publicaremos las rutas terrestres hacia Huánuco.
+                        {% translate "Pronto publicaremos las rutas terrestres hacia Huánuco." %}
                     </p>
                     {% endfor %}
                     </div>
@@ -192,7 +192,7 @@
                         hidden>
 
                         <span data-rutas-toggle-label>
-                            Ver todas las rutas
+                            {% translate "Ver todas las rutas" %}
                         </span>
 
                         <i
@@ -208,12 +208,12 @@
                 <!-- MAPA -->
                 <aside
                     class="cl-mapa-wrap"
-                    aria-label="Mapa general de accesos a Huánuco">
+                    aria-label="{% translate "Mapa general de accesos a Huánuco" %}">
 
                     <div class="cl-mapa">
                         <img
                             src="{% static 'assets/img/como-llegar/mapa-accesos-hco.webp' %}"
-                            alt="Mapa general de las principales rutas terrestres de acceso a Huánuco"
+                            alt="{% translate "Mapa general de las principales rutas terrestres de acceso a Huánuco" %}"
                             class="cl-mapa__img"
                             loading="lazy"
                             decoding="async"
@@ -230,7 +230,7 @@
                             </i>
 
                             <span>
-                                Mapa de accesos en preparación
+                                {% translate "Mapa de accesos en preparación" %}
                             </span>
                         </div>
                     </div>
@@ -243,8 +243,7 @@
                     </span>
 
                     <span class="cl-nota__texto">
-                        Los tiempos son referenciales y pueden variar según
-                        el clima, el tráfico o el estado de la carretera.
+                        {% translate "Los tiempos son referenciales y pueden variar según el clima, el tráfico o el estado de la carretera." %}
                     </span>
                 </p>
 
@@ -271,7 +270,7 @@
                         <h2
                             id="cl-consejos-terrestres-title"
                             class="cl-consejos__title">
-                            Consejos para su viaje
+                            {% translate "Consejos para su viaje" %}
                         </h2>
                     </div>
 
@@ -337,7 +336,7 @@
                             aria-hidden="true">
 
                         <span class="cl-vuelo__ciudad">
-                            {{ ruta.origen_texto|default:"Lima" }}
+                            {{ ruta.origen_texto|default:_("Lima") }}
                         </span>
                     </div>
 
@@ -366,7 +365,7 @@
                             aria-hidden="true">
 
                         <span class="cl-vuelo__ciudad">
-                            {{ ruta.destino_texto|default:"Huánuco" }}
+                            {{ ruta.destino_texto|default:_("Huánuco") }}
                         </span>
                     </div>
                 </div>
@@ -383,7 +382,7 @@
                                 <i class="bi bi-geo-alt-fill"></i>
                             </span>
 
-                            <span>Salida</span>
+                            <span>{% translate "Salida" %}</span>
                         </dt>
 
                         <dd>{{ ruta.punto_partida }}</dd>
@@ -399,7 +398,7 @@
                                 <i class="bi bi-clock-fill"></i>
                             </span>
 
-                            <span>Tiempo estimado</span>
+                            <span>{% translate "Tiempo estimado" %}</span>
                         </dt>
 
                         <dd>{{ ruta.duracion_estimada }}</dd>
@@ -415,7 +414,7 @@
                                 <i class="bi bi-geo-fill"></i>
                             </span>
 
-                            <span>Llegada</span>
+                            <span>{% translate "Llegada" %}</span>
                         </dt>
 
                         <dd>{{ ruta.punto_llegada }}</dd>
@@ -438,7 +437,7 @@
 
             {% empty %}
             <p class="cl-vacio">
-                Pronto publicaremos información sobre la vía aérea hacia Huánuco.
+                {% translate "Pronto publicaremos información sobre la vía aérea hacia Huánuco." %}
             </p>
             {% endfor %}
 
@@ -449,7 +448,7 @@
                 </span>
 
                 <span class="cl-nota__texto">
-                    El tiempo estimado de vuelo es referencial y puede variar según la aerolínea.
+                    {% translate "El tiempo estimado de vuelo es referencial y puede variar según la aerolínea." %}
                 </span>
             </p>
 
@@ -476,7 +475,7 @@
                     <h2
                         id="cl-consejos-aereos-title"
                         class="cl-consejos__title">
-                        Consejos para su viaje
+                        {% translate "Consejos para su viaje" %}
                     </h2>
                 </div>
 

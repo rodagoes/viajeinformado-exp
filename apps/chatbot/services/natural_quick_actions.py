@@ -73,13 +73,63 @@ _FRASES = {
     },
 }
 
+# Equivalentes en inglés: se reconocen siempre (no dependen del idioma activo)
+# porque el turista puede escribir en inglés con la interfaz en español.
+_FRASES_EN = {
+    "clima_huanuco": {
+        "weather in huanuco", "huanuco weather", "weather huanuco",
+        "how is the weather in huanuco", "what's the weather in huanuco", "whats the weather in huanuco",
+        "what is the weather in huanuco", "what is the weather like in huanuco",
+        "temperature in huanuco", "what's the temperature in huanuco", "what is the temperature in huanuco",
+    },
+    "clima_tingo_maria": {
+        "weather in tingo maria", "tingo maria weather", "weather tingo maria",
+        "how is the weather in tingo maria", "what's the weather in tingo maria", "whats the weather in tingo maria",
+        "what is the weather in tingo maria", "what is the weather like in tingo maria",
+        "temperature in tingo maria", "what's the temperature in tingo maria", "what is the temperature in tingo maria",
+    },
+    "tipo_cambio": {
+        "exchange rate", "what is the exchange rate", "what's the exchange rate", "the exchange rate today",
+        "what is the exchange rate today", "dollar exchange rate", "how much is the dollar", "how much is the dollar today",
+        "dollar price",
+    },
+    "emergencias": {
+        "emergencies", "emergency", "emergency numbers", "emergency number",
+        "emergency contacts", "emergency phone numbers",
+    },
+    "eventos_proximos": {
+        "upcoming events", "what events are there", "what events are coming up",
+        "are there any upcoming events", "events this week",
+    },
+    "platos_tipicos": {
+        "traditional dishes", "typical dishes", "what are the typical dishes", "what are the traditional dishes",
+        "traditional dishes of huanuco", "typical dishes of huanuco", "what are the traditional dishes of huanuco",
+    },
+    "lugares_destacados": {
+        "featured places", "top places", "what tourist places are there",
+        "featured tourist places", "what places do you recommend",
+    },
+    "tarifas_movilidad": {
+        "transport fares", "mobility fares", "taxi fares", "taxi fare", "how much is a taxi", "taxi price",
+        "how do i get around in huanuco", "what transport is there in huanuco", "transport fares in huanuco",
+        "how much does it cost to get around in huanuco", "how much is a mototaxi",
+    },
+    "mis_favoritos": {
+        "my favorites", "my favourites", "what are my favorites", "show me my favorites", "show my favorites",
+        "view my favorites", "what do i have in favorites", "show me my favourite places",
+    },
+}
+for _accion, _frases in _FRASES_EN.items():
+    _FRASES[_accion] |= _frases
+
 assert set(_FRASES) <= set(QUICK_ACTIONS)
 
 # "emergencias en <zona>" / "policía en <zona>" / ... — la zona se valida
 # contra datos reales (presenters.resolver_zona_emergencia); si no coincide
 # con alguna que tenga contactos locales registrados, no hay match.
 _PATRON_EMERGENCIA_ZONA = re.compile(
-    r"^(?:emergencias?|policia|contactos? de emergencia|numeros? de emergencia)\s+en\s+(.+)$"
+    r"^(?:emergencias?|policia|contactos? de emergencia|numeros? de emergencia"
+    r"|emergenc(?:y|ies)|police|emergency (?:contacts?|numbers?))\s+(?:en|in)\s+(.+)$"
 )
 
 

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Viaje Informado • Huánuco{% endblock %}
+{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/listado-lugar-turistico.css' %}">
@@ -42,13 +43,13 @@
                                     <i class="bi bi-search"></i>
                                 </span>
                                 <input type="text" name="q" class="form-control"
-                                    placeholder="Buscar por nombre..." value="{{ q }}">
+                                    placeholder="{% translate "Buscar por nombre..." %}" value="{{ q }}">
                             </div>
                         </div>
 
                         <div class="col-lg-2 col-md-4">
                             <select name="categoria" class="form-select">
-                                <option value="">Categoría</option>
+                                <option value="">{% translate "Categoría" %}</option>
                                 {% for categoria in categorias_opciones %}
                                     <option value="{{ categoria.id }}"
                                         {% if categoria.selected %}selected{% endif %}>
@@ -84,11 +85,11 @@
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-dorado flex-grow-1">
                                     <i class="bi bi-funnel"></i>
-                                    Buscar
+                                    {% translate "Buscar" %}
                                 </button>
                                 <a href="{{ request.path }}"
                                     class="btn btn-contorno-dorado btn-limpiar-filtro"
-                                    title="Limpiar filtros">
+                                    title="{% translate "Limpiar filtros" %}">
                                     <i class="bi bi-eraser"></i>
                                 </a>
                             </div>
@@ -98,10 +99,10 @@
 
                     <div class="filtros-resumen">
                         <span class="contador-resultados">
-                            {{ total_resultados }} coincidencia{% if total_resultados != 1 %}s{% endif %} encontrada{% if total_resultados != 1 %}s{% endif %}
+                            {% blocktranslate count counter=total_resultados %}{{ counter }} coincidencia encontrada{% plural %}{{ counter }} coincidencias encontradas{% endblocktranslate %}
                         </span>
                         <div class="orden-caja">
-                            <label for="orden_select">Ordenar:</label>
+                            <label for="orden_select">{% translate "Ordenar:" %}</label>
                             <select name="orden" id="orden_select" class="form-select form-select-sm"
                                 onchange="this.form.submit()">
                                 {% for opcion in opciones_orden %}
@@ -128,7 +129,7 @@
                                 {% if lugar.imagen_principal %}
                                     <img src="{{ lugar.imagen_principal.url }}"
                                         alt="{{ lugar.texto_alt_imagen|default:lugar.nombre }}"
-                                        loading="lazy">
+                                        loading="lazy" decoding="async">
                                 {% else %}
                                     <div class="lugar-imagen-vacia">
                                         <i class="bi bi-image-alt"></i>
@@ -138,14 +139,14 @@
                                 {% if lugar.dificultad != 'no_aplica' %}
                                     <span class="lugar-badge-dificultad lugar-dificultad--{{ lugar.dificultad }}">
                                         <i class="bi bi-lightning-charge-fill"></i>
-                                        {{ lugar.get_dificultad_display }}
+                                        {% translate lugar.get_dificultad_display %}
                                     </span>
                                 {% endif %}
 
                                 {% if lugar.destacado %}
                                     <span class="lugar-badge-destacado">
                                         <i class="bi bi-star-fill"></i>
-                                        Destacado
+                                        {% translate "Destacado" %}
                                     </span>
                                 {% endif %}
 
@@ -198,17 +199,17 @@
                                         <i class="bi bi-ticket-perforated"></i>
                                         <span>
                                             {% if lugar.tipo_costo == 'gratis' %}
-                                                Entrada gratuita
+                                                {% translate "Entrada gratuita" %}
                                             {% elif lugar.tipo_costo == 'pagado' %}
                                                 {% if lugar.precio_desde and lugar.precio_hasta %}
                                                     S/ {{ lugar.precio_desde|floatformat:0 }} – {{ lugar.precio_hasta|floatformat:0 }}
                                                 {% elif lugar.precio_desde %}
-                                                    Desde S/ {{ lugar.precio_desde|floatformat:0 }}
+                                                    {% translate "Desde" %} S/ {{ lugar.precio_desde|floatformat:0 }}
                                                 {% else %}
-                                                    Pagado
+                                                    {% translate "Pagado" %}
                                                 {% endif %}
                                             {% else %}
-                                                Consultar precio
+                                                {% translate "Consultar precio" %}
                                             {% endif %}
                                         </span>
                                     </div>
@@ -234,7 +235,7 @@
                                                 </span>
                                             {% endfor %}
                                             {% if servicios|length > 3 %}
-                                                <span class="lugar-servicios-mas">+{{ servicios|length|add:"-3" }} más</span>
+                                                <span class="lugar-servicios-mas">+{{ servicios|length|add:"-3" }} {% translate "más" %}</span>
                                             {% endif %}
                                         </div>
                                     {% endif %}
@@ -244,7 +245,7 @@
                                 <div class="lugar-accion">
                                     <a href="{% url 'turismo:detalle_lugar' lugar.slug %}"
                                         class="btn btn-contorno-dorado">
-                                        Explorar &rarr;
+                                        {% translate "Explorar &rarr;" %}
                                     </a>
                                 </div>
 
@@ -258,12 +259,12 @@
                         <div class="lugar-estado-vacio">
                             <i class="bi bi-search"></i>
                     
-                            <h3>No se encontraron resultados</h3>
+                            <h3>{% translate "No se encontraron resultados" %}</h3>
                     
-                            <p>Intenta cambiar los filtros de búsqueda.</p>
+                            <p>{% translate "Intenta cambiar los filtros de búsqueda." %}</p>
                     
                             <a href="{{ request.path }}" class="btn btn-contorno-dorado">
-                                Limpiar filtros
+                                {% translate "Limpiar filtros" %}
                             </a>
                         </div>
                     </div>
@@ -275,7 +276,7 @@
 
             <!-- Paginación -->
             {% if page_obj.has_other_pages %}
-                <nav aria-label="Navegación de páginas"
+                <nav aria-label="{% translate "Navegación de páginas" %}"
                     class="d-flex justify-content-center vi-paginacion-contenedor">
                     <ul class="pagination vi-paginacion">
 
@@ -283,14 +284,14 @@
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page=1{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
-                                    aria-label="Primera">
+                                    aria-label="{% translate "Primera" %}">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
-                                    aria-label="Anterior">
+                                    aria-label="{% translate "Anterior" %}">
                                     <span aria-hidden="true">&lsaquo;</span>
                                 </a>
                             </li>
@@ -324,14 +325,14 @@
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
-                                    aria-label="Siguiente">
+                                    aria-label="{% translate "Siguiente" %}">
                                     <span aria-hidden="true">&rsaquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link"
                                     href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
-                                    aria-label="Última">
+                                    aria-label="{% translate "Última" %}">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>

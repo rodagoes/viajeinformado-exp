@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
         playPauseBtn.innerHTML = playing
             ? '<i class="bi bi-pause-fill" aria-hidden="true"></i>'
             : '<i class="bi bi-play-fill" aria-hidden="true"></i>';
-        playPauseBtn.setAttribute('aria-label', playing ? 'Pausar presentación' : 'Reanudar presentación');
+        playPauseBtn.setAttribute('aria-label', playing ? ViI18n('home_pausar', 'Pausar presentación') : ViI18n('home_reanudar', 'Reanudar presentación'));
     }
 
     restartProgress(activeIndex());

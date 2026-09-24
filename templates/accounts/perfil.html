@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Mi perfil • Viaje Informado{% endblock %}
+{% block title %}{% translate "Mi perfil • Viaje Informado" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/componentes/ui-comun.css' %}">
@@ -12,7 +13,7 @@
 <main class="perfil-pagina">
     <div class="container">
         <div class="perfil-tarjeta">
-            <h1 class="visually-hidden">Mi perfil</h1>
+            <h1 class="visually-hidden">{% translate "Mi perfil" %}</h1>
 
             <div class="perfil-cabecera">
                 <div class="perfil-cabecera-avatar-wrap">
@@ -24,13 +25,13 @@
                         {% endif %}
                     </div>
                     <div class="dropdown perfil-foto-menu">
-                        <button type="button" class="perfil-foto-lapiz" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Cambiar foto de perfil">
+                        <button type="button" class="perfil-foto-lapiz" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="{% translate "Cambiar foto de perfil" %}">
                             <i class="bi bi-pencil-fill" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu perfil-foto-dropdown">
-                            <button type="button" class="dropdown-item" data-foto-cargar>Cargar una imagen</button>
+                            <button type="button" class="dropdown-item" data-foto-cargar>{% translate "Cargar una imagen" %}</button>
                             {% if request.user.perfil.foto_perfil %}
-                            <button type="button" class="dropdown-item text-danger" data-foto-quitar>Quitar foto</button>
+                            <button type="button" class="dropdown-item text-danger" data-foto-quitar>{% translate "Quitar foto" %}</button>
                             {% endif %}
                         </div>
                     </div>
@@ -38,7 +39,7 @@
                 <div class="perfil-cabecera-info">
                     <h2 class="perfil-cabecera-nombre">{{ request.user.get_full_name|default:request.user.username }}</h2>
                     {% if request.user.get_full_name %}<p class="perfil-cabecera-username">@{{ request.user.username }}</p>{% endif %}
-                    <p class="perfil-cabecera-miembro">Miembro desde {{ request.user.date_joined|date:"F Y" }}</p>
+                    <p class="perfil-cabecera-miembro">{% blocktranslate with fecha=request.user.date_joined|date:"F Y" %}Miembro desde {{ fecha }}{% endblocktranslate %}</p>
                 </div>
             </div>
 
@@ -58,13 +59,13 @@
                               {% if request.user.perfil.foto_perfil %}hidden{% endif %}>{{ request.user.username|first|upper }}</span>
                     </div>
                     <div class="perfil-foto-editor-mini__texto">
-                        <p class="perfil-fila-label">JPG, PNG o WebP, máx. 5 MB</p>
+                        <p class="perfil-fila-label">{% translate "JPG, PNG o WebP, máx. 5 MB" %}</p>
                         {% if form_foto.foto_perfil.errors %}
                         <div class="perfil-error" role="alert">{{ form_foto.foto_perfil.errors.0 }}</div>
                         {% endif %}
                         <div class="perfil-fila-acciones">
-                            <button type="submit" class="btn perfil-guardar-btn">Guardar</button>
-                            <button type="button" class="perfil-cancelar-btn" data-cancelar="foto_perfil">Cancelar</button>
+                            <button type="submit" class="btn perfil-guardar-btn">{% translate "Guardar" %}</button>
+                            <button type="button" class="perfil-cancelar-btn" data-cancelar="foto_perfil">{% translate "Cancelar" %}</button>
                         </div>
                     </div>
                 </div>
@@ -75,25 +76,25 @@
             <section class="perfil-seccion">
                 <div class="vi-section-heading">
                     <span class="vi-section-heading__icon" aria-hidden="true"><i class="bi bi-person"></i></span>
-                    <h2 class="vi-section-heading__title">Información personal</h2>
+                    <h2 class="vi-section-heading__title">{% translate "Información personal" %}</h2>
                 </div>
 
-                {% include "accounts/includes/fila_perfil.html" with campo="nombres" label="Nombres" valor_actual=request.user.first_name campo_form=forms_por_campo.nombres.first_name campo_en_edicion=campo_en_edicion %}
+                {% include "accounts/includes/fila_perfil.html" with campo="nombres" label=_("Nombres") valor_actual=request.user.first_name campo_form=forms_por_campo.nombres.first_name campo_en_edicion=campo_en_edicion %}
 
-                {% include "accounts/includes/fila_perfil.html" with campo="apellidos" label="Apellidos" valor_actual=request.user.last_name campo_form=forms_por_campo.apellidos.last_name campo_en_edicion=campo_en_edicion %}
+                {% include "accounts/includes/fila_perfil.html" with campo="apellidos" label=_("Apellidos") valor_actual=request.user.last_name campo_form=forms_por_campo.apellidos.last_name campo_en_edicion=campo_en_edicion %}
             </section>
 
             <section class="perfil-seccion">
                 <div class="vi-section-heading">
                     <span class="vi-section-heading__icon" aria-hidden="true"><i class="bi bi-person-vcard"></i></span>
-                    <h2 class="vi-section-heading__title">Información de cuenta</h2>
+                    <h2 class="vi-section-heading__title">{% translate "Información de cuenta" %}</h2>
                 </div>
 
-                {% include "accounts/includes/fila_perfil.html" with campo="username" label="Nombre de usuario" valor_actual=request.user.username campo_form=forms_por_campo.username.username campo_en_edicion=campo_en_edicion ayuda="Este nombre podrá mostrarse públicamente en tus reseñas." %}
+                {% include "accounts/includes/fila_perfil.html" with campo="username" label=_("Nombre de usuario") valor_actual=request.user.username campo_form=forms_por_campo.username.username campo_en_edicion=campo_en_edicion ayuda=_("Este nombre podrá mostrarse públicamente en tus reseñas.") %}
 
                 <div class="perfil-fila perfil-fila--solo-lectura">
                     <div class="perfil-fila-texto">
-                        <span class="perfil-fila-label">Registrado desde</span>
+                        <span class="perfil-fila-label">{% translate "Registrado desde" %}</span>
                         <span class="perfil-fila-valor">{{ request.user.date_joined|date }}</span>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ LANGUAGE_CODE|default:'es' }}">
 
 <head>
     <meta charset="UTF-8">
@@ -28,11 +28,15 @@
     <link rel="stylesheet" href="{% static 'assets/css/footer.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/responsive.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/pillcobot.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/componentes/skeleton.css' %}">
 
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
+    {# Cadenas de UI para JS: disponibles antes de cualquier script de página (ver main.js / ViI18n). #}
+    {{ vi_i18n|json_script:"vi-i18n" }}
+    <script src="{% static 'assets/js/vi-i18n.js' %}"></script>
 
     {% block site_header %}
     {% include 'partials/header.html' %}
@@ -55,6 +59,7 @@
 
     <!-- Custom JS -->
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/skeleton.js' %}"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
     <script src="{% static 'assets/js/pillcobot.js' %}"></script>
 

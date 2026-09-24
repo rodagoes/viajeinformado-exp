@@ -59,7 +59,14 @@
             return;
         }
 
-        infoPanel.innerHTML = '<p class="his-mapa-info__cargando">Cargando información…</p>';
+        // Skeleton mientras la petición REAL está en vuelo; se retira en `finally`
+        // (éxito o error). Sin temporizadores.
+        infoPanel.innerHTML =
+            '<span class="vi-skel-line vi-skel-line--titulo" aria-hidden="true"></span>' +
+            '<span class="vi-skel-line" aria-hidden="true"></span>' +
+            '<span class="vi-skel-line" aria-hidden="true"></span>' +
+            '<span class="vi-skel-line vi-skel-line--corta" aria-hidden="true"></span>';
+        infoPanel.setAttribute('aria-busy', 'true');
 
         fetch('/ubicaciones/provincia/' + slug + '/')
             .then((res) => {
@@ -71,9 +78,15 @@
                 paintInfo(data, nombre);
             })
             .catch(() => {
-                infoPanel.innerHTML = '<p class="his-mapa-info__error">No se pudo cargar la información de esta provincia.</p>';
+                infoPanel.innerHTML = '<p class="his-mapa-info__error">' + ViI18n('his_error', 'No se pudo cargar la información de esta provincia.') + '</p>';
+            })
+            .finally(() => {
+                infoPanel.removeAttribute('aria-busy');
             });
     }
+
+    // Formato numérico según el idioma activo de la interfaz.
+    const LOCALE = (document.documentElement.lang || 'es').startsWith('en') ? 'en-US' : 'es-PE';
 
     function titleCase(texto) {
         return texto.toLowerCase().replace(/^\S|\s\S/g, (c) => c.toUpperCase());
@@ -81,10 +94,10 @@
 
     function paintInfo(data, nombre) {
         const superficie = data.superficie_km2
-            ? Number(data.superficie_km2).toLocaleString('es-PE') + ' km²'
+            ? Number(data.superficie_km2).toLocaleString(LOCALE) + ' km²'
             : '—';
         const altitud = data.altitud_m
-            ? Number(data.altitud_m).toLocaleString('es-PE') + ' m s. n. m.'
+            ? Number(data.altitud_m).toLocaleString(LOCALE) + ' ' + ViI18n('his_msnm', 'm s. n. m.')
             : '—';
         const capital = data.capital || '—';
 
@@ -93,12 +106,12 @@
         infoPanel.innerHTML =
             '<h3 class="his-mapa-info__titulo">' + nombre + '</h3>' +
             '<dl class="his-mapa-info__datos">' +
-                '<div class="his-mapa-info__dato"><i class="bi bi-flag-fill" aria-hidden="true"></i><dt>Capital</dt><dd>' + capital + '</dd></div>' +
-                '<div class="his-mapa-info__dato"><i class="bi bi-bounding-box" aria-hidden="true"></i><dt>Superficie</dt><dd>' + superficie + '</dd></div>' +
-                '<div class="his-mapa-info__dato"><i class="bi bi-triangle-fill" aria-hidden="true"></i><dt>Altitud</dt><dd>' + altitud + '</dd></div>' +
+                '<div class="his-mapa-info__dato"><i class="bi bi-flag-fill" aria-hidden="true"></i><dt>' + ViI18n('his_capital', 'Capital') + '</dt><dd>' + capital + '</dd></div>' +
+                '<div class="his-mapa-info__dato"><i class="bi bi-bounding-box" aria-hidden="true"></i><dt>' + ViI18n('his_superficie', 'Superficie') + '</dt><dd>' + superficie + '</dd></div>' +
+                '<div class="his-mapa-info__dato"><i class="bi bi-triangle-fill" aria-hidden="true"></i><dt>' + ViI18n('his_altitud', 'Altitud') + '</dt><dd>' + altitud + '</dd></div>' +
             '</dl>' +
             '<div class="his-mapa-info__distritos">' +
-                '<h4>Distritos (' + data.distritos.length + ')</h4>' +
+                '<h4>' + ViI18n('his_distritos', 'Distritos') + ' (' + data.distritos.length + ')</h4>' +
                 '<ul>' + distritosHtml + '</ul>' +
             '</div>';
     }

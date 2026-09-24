@@ -16,6 +16,7 @@ import re
 import time
 
 from django.db import transaction
+from django.utils.translation import gettext, gettext_lazy
 
 from ..models import Conversacion, Mensaje
 from . import (
@@ -236,8 +237,8 @@ def _buscar_externo(conversacion, contador, consulta, tool=None, resumen_interno
 
 def _texto_sin_evidencia(estado):
     if estado == "error":
-        return external_search.TEXTO_NO_VERIFICADO
-    return external_search.TEXTO_SIN_EVIDENCIA
+        return str(external_search.TEXTO_NO_VERIFICADO)
+    return str(external_search.TEXTO_SIN_EVIDENCIA)
 
 
 def _completar_sin_evidencia(conversacion, contador, consulta, tool=None):
@@ -270,17 +271,17 @@ def _completar_complejo(conversacion, contador, consulta, texto, resultados):
 
 
 _DOMINIO_VACIO = {
-    "buscar_lugares": "lugares turísticos",
-    "buscar_restaurantes": "restaurantes",
-    "buscar_alojamientos": "alojamientos",
-    "buscar_restaurantes_por_plato": "restaurantes que sirvan ese plato",
-    "buscar_platos": "platos típicos",
-    "buscar_eventos": "eventos",
-    "buscar_ubicaciones": "ubicaciones",
-    "consultar_servicios_utiles": "servicios útiles",
-    "consultar_emergencias": "contactos de emergencia",
-    "consultar_como_llegar": "rutas",
-    "consultar_favoritos": "favoritos",
+    "buscar_lugares": gettext_lazy("lugares turísticos"),
+    "buscar_restaurantes": gettext_lazy("restaurantes"),
+    "buscar_alojamientos": gettext_lazy("alojamientos"),
+    "buscar_restaurantes_por_plato": gettext_lazy("restaurantes que sirvan ese plato"),
+    "buscar_platos": gettext_lazy("platos típicos"),
+    "buscar_eventos": gettext_lazy("eventos"),
+    "buscar_ubicaciones": gettext_lazy("ubicaciones"),
+    "consultar_servicios_utiles": gettext_lazy("servicios útiles"),
+    "consultar_emergencias": gettext_lazy("contactos de emergencia"),
+    "consultar_como_llegar": gettext_lazy("rutas"),
+    "consultar_favoritos": gettext_lazy("favoritos"),
 }
 
 
@@ -298,11 +299,11 @@ def _sintesis_parcial(resultados):
             if texto and texto not in partes:
                 partes.append(texto)
         elif "items" in r:
-            dominio = _DOMINIO_VACIO.get(r["tool"], "resultados")
+            dominio = str(_DOMINIO_VACIO.get(r["tool"], gettext_lazy("resultados")))
             if dominio not in sin_datos:
                 sin_datos.append(dominio)
     if sin_datos:
-        partes.append(f"No encontré {' ni '.join(sin_datos)} registrados para esa búsqueda.")
+        partes.append(gettext("No encontré %(dominios)s registrados para esa búsqueda.") % {"dominios": gettext(" ni ").join(sin_datos)})
     return "\n\n".join(partes)
 
 
@@ -511,7 +512,7 @@ def _procesar_emergencia_zona(conversacion, texto_persistido, zona):
 # explícitas de alta confianza: condición de salud declarada + petición de
 # seguridad/consejo. Una simple pregunta de ingredientes ("¿lleva maní?") no
 # coincide y sigue el flujo gastronómico normal. Ante la duda, no bloquea.
-TEXTO_FUERA_ALCANCE_MEDICO = (
+TEXTO_FUERA_ALCANCE_MEDICO = gettext_lazy(
     "PillcoBot está enfocado en información turística de Huánuco. Puedo contarte sobre los "
     "ingredientes o la preparación de un plato, pero no evaluar si es seguro para una alergia "
     "o condición de salud. Para eso, consulta a un profesional de salud."
@@ -535,7 +536,7 @@ def detectar_consulta_medica(mensaje):
 def procesar_turno(conversacion, contenido):
     # Scope guard: consulta médica/sanitaria explícita → respuesta controlada sin IA ni C5.
     if detectar_consulta_medica(contenido):
-        return _persistir_turno(conversacion, contenido, TEXTO_FUERA_ALCANCE_MEDICO, "")
+        return _persistir_turno(conversacion, contenido, str(TEXTO_FUERA_ALCANCE_MEDICO), "")
     # Natural Fast Path — emergencias por zona (dinámico, valida contra zonas reales).
     zona = natural_quick_actions.detectar_emergencia_zona(contenido)
     if zona is not None:

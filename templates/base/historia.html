@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Historia de Huánuco | Viaje Informado{% endblock %}
+{% block title %}{% translate "Historia de Huánuco | Viaje Informado" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/historia.css' %}">
@@ -16,10 +17,10 @@
         <div class="container">
             <div class="his-hero__content">
                 <img class="his-hero__icon" src="{% static 'assets/img/historia/escudo-huanuco.webp' %}"
-                    alt="Escudo de Huánuco" loading="eager">
-                <p class="his-hero__eyebrow">EXPLORAR</p>
-                <h1 class="his-hero__title">Historia de Huánuco</h1>
-                <p class="his-hero__desc">Conoce los acontecimientos, símbolos y datos que forman parte de la identidad de Huánuco.</p>
+                    alt="{% translate "Escudo de Huánuco" %}" loading="eager">
+                <p class="his-hero__eyebrow">{% translate "EXPLORAR" %}</p>
+                <h1 class="his-hero__title">{% translate "Historia de Huánuco" %}</h1>
+                <p class="his-hero__desc">{% translate "Conoce los acontecimientos, símbolos y datos que forman parte de la identidad de Huánuco." %}</p>
             </div>
         </div>
     </section>
@@ -30,28 +31,28 @@
             <div class="his-datos__grid">
                 <div class="his-dato-card">
                     <img src="{% static 'assets/img/icons/icono-card1-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
-                    <span class="his-dato-card__cifra">1 894 m s. n. m.</span>
-                    <span class="his-dato-card__desc">Altitud aproximada de la ciudad de Huánuco.</span>
+                    <span class="his-dato-card__cifra">{% translate "1 894 m s. n. m." %}</span>
+                    <span class="his-dato-card__desc">{% translate "Altitud aproximada de la ciudad de Huánuco." %}</span>
                 </div>
                 <div class="his-dato-card">
                     <img src="{% static 'assets/img/icons/icono-card2-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
-                    <span class="his-dato-card__cifra">15 de agosto de 1539</span>
-                    <span class="his-dato-card__desc">Fecha de fundación española de Huánuco.</span>
+                    <span class="his-dato-card__cifra">{% translate "15 de agosto de 1539" %}</span>
+                    <span class="his-dato-card__desc">{% translate "Fecha de fundación española de Huánuco." %}</span>
                 </div>
                 <div class="his-dato-card">
                     <img src="{% static 'assets/img/icons/icono-card3-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
-                    <span class="his-dato-card__cifra">11 provincias</span>
-                    <span class="his-dato-card__desc">Provincias que conforman el departamento de Huánuco.</span>
+                    <span class="his-dato-card__cifra">{% translate "11 provincias" %}</span>
+                    <span class="his-dato-card__desc">{% translate "Provincias que conforman el departamento de Huánuco." %}</span>
                 </div>
                 <div class="his-dato-card">
                     <img src="{% static 'assets/img/icons/icono-card4-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
-                    <span class="his-dato-card__cifra">84 distritos</span>
-                    <span class="his-dato-card__desc">Distritos distribuidos dentro del departamento de Huánuco.</span>
+                    <span class="his-dato-card__cifra">{% translate "84 distritos" %}</span>
+                    <span class="his-dato-card__desc">{% translate "Distritos distribuidos dentro del departamento de Huánuco." %}</span>
                 </div>
                 <div class="his-dato-card">
                     <img src="{% static 'assets/img/icons/icono-card5-historia.svg' %}" class="detalle__icono" alt="" aria-hidden="true">
-                    <span class="his-dato-card__cifra">738.383 habitantes</span>
-                    <span class="his-dato-card__desc">Fuente: INEI, 2026. Población total estimada</span>
+                    <span class="his-dato-card__cifra">{% translate "738.383 habitantes" %}</span>
+                    <span class="his-dato-card__desc">{% translate "Fuente: INEI, 2026. Población total estimada" %}</span>
                 </div>
             </div>
         </div>
@@ -63,20 +64,15 @@
             <div class="his-fundacion">
                 <span class="his-fundacion__badge" aria-hidden="true"><i class="bi bi-bank2"></i></span>
                 <div class="his-fundacion__texto">
-                    <h2>Fundación de Huánuco</h2>
+                    <h2>{% translate "Fundación de Huánuco" %}</h2>
                     <p>
-                        El 15 de agosto de 1539, el capitán español Gómez de Alvarado y Contreras fundó la ciudad
-                        bajo el nombre de «León de Huánuco de los Caballeros», dentro de la estrategia española
-                        para consolidar su dominio en el centro del virreinato.
+                        {% translate "El 15 de agosto de 1539, el capitán español Gómez de Alvarado y Contreras fundó la ciudad bajo el nombre de «León de Huánuco de los Caballeros», dentro de la estrategia española para consolidar su dominio en el centro del virreinato." %}
                     </p>
                     <p>
-                        La fundación se realizó primero en Huánuco Pampa, en la actual provincia de Dos de Mayo.
-                        El asedio de fuerzas incas obligó a trasladar la ciudad, en 1540, al valle del río Huallaga,
-                        donde se ubica hasta hoy.
+                        {% translate "La fundación se realizó primero en Huánuco Pampa, en la actual provincia de Dos de Mayo. El asedio de fuerzas incas obligó a trasladar la ciudad, en 1540, al valle del río Huallaga, donde se ubica hasta hoy." %}
                     </p>
                     <p>
-                        Desde entonces, Huánuco se consolidó como un punto de encuentro entre la sierra y la selva
-                        central, un rol que conserva en su identidad cultural.
+                        {% translate "Desde entonces, Huánuco se consolidó como un punto de encuentro entre la sierra y la selva central, un rol que conserva en su identidad cultural." %}
                     </p>
                 </div>
             </div>
@@ -87,8 +83,8 @@
     <section class="his-provincias-wrap">
         <div class="container">
             <div class="his-provincias">
-                <h2 class="his-section-title">Huánuco y sus provincias</h2>
-                <p class="his-provincias__intro">Conoce las 11 provincias y los distritos que conforman nuestro región.</p>
+                <h2 class="his-section-title">{% translate "Huánuco y sus provincias" %}</h2>
+                <p class="his-provincias__intro">{% translate "Conoce las 11 provincias y los distritos que conforman nuestro región." %}</p>
                 <div class="his-provincias__grid">
                     <ul class="his-provincias__lista" data-provincias-lista>
                         <li><button type="button" class="is-active" data-provincia="huanuco" aria-pressed="true"><i
@@ -119,10 +115,10 @@
                         <div class="his-mapa-flip__inner">
                           <div class="his-mapa-flip__front" data-provincias-mapa>
                             <button type="button" class="his-mapa-info-btn" data-info-btn>
-                                <i class="bi bi-info-circle" aria-hidden="true"></i> Info
+                                <i class="bi bi-info-circle" aria-hidden="true"></i> {% translate "Info" %}
                             </button>
                             <svg viewBox="0 0 640 508" role="img"
-                                aria-label="Mapa del departamento de Huánuco por provincias">
+                                aria-label="{% translate "Mapa del departamento de Huánuco por provincias" %}">
                             <path class="mapa-provincia is-active" data-provincia="huanuco"
                                 d="M 187.74,430.80 L 182.03,412.19 L 171.22,410.00 L 168.94,402.92 L 175.09,394.02 L 176.81,378.09 L 181.59,369.91 L 202.26,360.73 L 199.55,347.00 L 200.51,321.52 L 197.43,314.28 L 208.50,308.94 L 222.13,292.80 L 223.08,285.86 L 233.51,279.10 L 242.62,281.10 L 257.79,275.21 L 267.38,268.56 L 286.84,269.09 L 300.16,277.19 L 315.44,272.70 L 326.40,260.45 L 335.06,258.93 L 344.32,251.08 L 349.95,254.17 L 348.83,267.79 L 360.39,299.58 L 364.16,301.67 L 347.27,320.74 L 344.50,334.46 L 347.98,344.70 L 341.37,349.63 L 330.45,340.90 L 289.74,347.23 L 283.51,360.67 L 276.81,365.54 L 272.61,384.14 L 265.07,383.92 L 239.39,403.11 L 220.07,420.63 L 211.53,418.71 L 190.15,421.26 L 187.74,430.80 Z">
                                 <title>Huánuco</title>
@@ -172,10 +168,10 @@
 
                           <div class="his-mapa-flip__back">
                             <button type="button" class="his-mapa-back-btn" data-back-btn>
-                                <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver al mapa
+                                <i class="bi bi-arrow-left" aria-hidden="true"></i> {% translate "Volver al mapa" %}
                             </button>
                             <div class="his-mapa-info" data-mapa-info>
-                                <p class="his-mapa-info__cargando">Cargando información…</p>
+                                <p class="his-mapa-info__cargando">{% translate "Cargando información…" %}</p>
                             </div>
                           </div>
                         </div>
@@ -189,47 +185,41 @@
     {# 5. NUESTROS SÍMBOLOS #}
     <section class="his-simbolos">
         <div class="container">
-            <h2 class="his-section-title">Nuestros símbolos</h2>
+            <h2 class="his-section-title">{% translate "Nuestros símbolos" %}</h2>
             <div class="his-simbolos__grid">
                 <article class="his-simbolo-card">
                     <div class="his-simbolo-card__media" aria-hidden="true">
-                        <img src="{% static 'assets/img/historia/bandera1-hco.webp' %}" alt="Primera bandera"
+                        <img src="{% static 'assets/img/historia/bandera1-hco.webp' %}" alt="{% translate "Primera bandera" %}"
                             loading="lazy">
                     </div>
                     <div class="his-simbolo-card__body">
-                        <h3>Primera bandera de Huánuco</h3>
+                        <h3>{% translate "Primera bandera de Huánuco" %}</h3>
                         <p>
-                            Usada en marzo de 1812 durante la rebelión independentista liderada por 
-                            Juan José Crespo y Castillo, y se enarboló en la entrada de Ambo. 
-                            Representaba la unión y valentía de los pueblos indígenas y mestizos contra el dominio español
+                            {% translate "Usada en marzo de 1812 durante la rebelión independentista liderada por Juan José Crespo y Castillo, y se enarboló en la entrada de Ambo. Representaba la unión y valentía de los pueblos indígenas y mestizos contra el dominio español" %}
                         </p>
                     </div>
                 </article>
                 <article class="his-simbolo-card">
                     <div class="his-simbolo-card__media" aria-hidden="true">
-                        <img src="{% static 'assets/img/historia/bandera2-hco.webp' %}" alt="Bandera actual"
+                        <img src="{% static 'assets/img/historia/bandera2-hco.webp' %}" alt="{% translate "Bandera actual" %}"
                             loading="lazy">
                     </div>
                     <div class="his-simbolo-card__body">
-                        <h3>Bandera actual de Huánuco</h3>
+                        <h3>{% translate "Bandera actual de Huánuco" %}</h3>
                         <p>
-                            Sus orígenes se remontan a 1976, la bandera actual combina crema y verde nilo en diagonal. El verde representa la
-                            vegetación de la selva alta huanuqueña, mientras que el crema simboliza
-                            la fertilidad de los suelos de la región.
+                            {% translate "Sus orígenes se remontan a 1976, la bandera actual combina crema y verde nilo en diagonal. El verde representa la vegetación de la selva alta huanuqueña, mientras que el crema simboliza la fertilidad de los suelos de la región." %}
                         </p>
                     </div>
                 </article>
                 <article class="his-simbolo-card">
                     <div class="his-simbolo-card__media">
-                        <img src="{% static 'assets/img/historia/escudo-huanuco.webp' %}" alt="Escudo de Huánuco"
+                        <img src="{% static 'assets/img/historia/escudo-huanuco.webp' %}" alt="{% translate "Escudo de Huánuco" %}"
                             loading="lazy">
                     </div>
                     <div class="his-simbolo-card__body">
-                        <h3>Escudo de Huánuco</h3>
+                        <h3>{% translate "Escudo de Huánuco" %}</h3>
                         <p>
-                            El escudo tiene su origen en 1543, cuando el gobernador Cristóbal Vaca de Castro
-                            concedió a la ciudad su blasón. Representa la unión entre la historia hispana y las
-                            raíces andinas de la región.
+                            {% translate "El escudo tiene su origen en 1543, cuando el gobernador Cristóbal Vaca de Castro concedió a la ciudad su blasón. Representa la unión entre la historia hispana y las raíces andinas de la región." %}
                         </p>
                     </div>
                 </article>
@@ -238,13 +228,12 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512" fill="#002D89"><title xmlns="" fill="#002D89">anthem</title><path fill="#002D89" d="M356.906 49.594c-108.533.34-194.246 85.275-306.719 20.312c17.05 30.293 55.26 55.692 101.47 67.688C127.244 173.63 60.63 189.984 15.75 186c141.27 81.595 210.67-64.442 380.313 29.656l-19.907 48.688H18.312v18.687h350.22l-17.907 43.814H17.78v18.687h325.19l-18.845 46.126H19.937v18.688h304.938c1.4 12.458 8.875 23.708 19.625 31.5c14 10.147 33.528 15.774 55.875 15.812c22.347.04 43.583-5.58 60.438-15.062c16.854-9.482 29.862-23.084 33.156-40c3.293-16.916-5.158-32.884-19.158-43.03c-14-10.15-33.527-15.776-55.875-15.814s-43.583 5.55-60.437 15.03c-.327.185-.645.377-.97.564L471.345 81l-17.313-7.063l-.06.126c-34.838-18.096-66.836-24.564-97.064-24.47zm85.53 41.906c.567-.02 1.122-.022 1.69 0c.864.033 1.728.145 2.593.28l-42.75 104.532c-26.664-27.147 4.468-103.57 38.467-104.812"/></svg>
                     </div>
                     <div class="his-simbolo-card__body">
-                        <h3>Himno de Huánuco</h3>
+                        <h3>{% translate "Himno de Huánuco" %}</h3>
                         <p>
-                            Compuesto en 1969 para el centenario de la creación política del departamento,
-                            con letra de Augusto Rivera Vargas y música de Jaime Díaz Orihuela.
+                            {% translate "Compuesto en 1969 para el centenario de la creación política del departamento, con letra de Augusto Rivera Vargas y música de Jaime Díaz Orihuela." %}
                         </p>
                         <button type="button" class="his-himno-btn" data-himno-abrir>
-                            <i class="bi bi-file-text" aria-hidden="true"></i> Leer el himno
+                            <i class="bi bi-file-text" aria-hidden="true"></i> {% translate "Leer el himno" %}
                         </button>
                     </div>
                 </article>
@@ -255,14 +244,14 @@
     <div class="his-himno-modal" data-himno-modal hidden>
         <div class="his-himno-modal__backdrop" data-himno-cerrar></div>
         <div class="his-himno-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="his-himno-titulo">
-            <button type="button" class="his-himno-modal__cerrar" data-himno-cerrar aria-label="Cerrar">
+            <button type="button" class="his-himno-modal__cerrar" data-himno-cerrar aria-label="{% translate "Cerrar" %}">
                 <i class="bi bi-x-lg" aria-hidden="true"></i>
             </button>
             <div class="his-himno-pergamino">
-                <p class="his-himno-pergamino__eyebrow">Departamento de Huánuco</p>
-                <h3 id="his-himno-titulo">Himno de Huánuco</h3>
+                <p class="his-himno-pergamino__eyebrow">{% translate "Departamento de Huánuco" %}</p>
+                <h3 id="his-himno-titulo">{% translate "Himno de Huánuco" %}</h3>
                 <div class="his-himno-pergamino__divider" aria-hidden="true"><span></span><i></i><span></span></div>
-                <p class="his-himno-pergamino__autoria">Letra: Augusto Rivera Vargas — Música: Jaime Díaz Orihuela (1969)</p>
+                <p class="his-himno-pergamino__autoria">{% translate "Letra: Augusto Rivera Vargas — Música: Jaime Díaz Orihuela (1969)" %}</p>
                 <div class="his-himno-pergamino__texto">
                     <p>
                         <em>
@@ -334,26 +323,24 @@
     {# 6. ¿SABÍAS QUE? #}
     <section class="his-sabias">
         <div class="container">
-            <h2 class="his-section-title">¿Sabías que?</h2>
+            <h2 class="his-section-title">{% translate "¿Sabías que?" %}</h2>
             <div class="his-sabias__grid">
                 <div class="his-sabias__card">
                     <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/pataamarilla-icono-historia.png' %}" alt="Pata amarilla" loading="lazy"></span>
                     <p>
-                        Uno de los términos que se les dio a los huanuqueños es el de “Pata amarilla”
-                        y está relacionado con el suelo arcilloso de la región.
+                        {% translate "Uno de los términos que se les dio a los huanuqueños es el de “Pata amarilla” y está relacionado con el suelo arcilloso de la región." %}
                     </p>
                 </div>
                 <div class="his-sabias__card">
-                    <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/artista-icono-historia.png' %}" alt="Artista" loading="lazy"></span>
+                    <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/artista-icono-historia.png' %}" alt="{% translate "Artista" %}" loading="lazy"></span>
                     <p>
-                        Una de las melodías peruanas más famosas del mundo "El Cóndor Pasa" nació del compositor huanuqueño
-                        Daniel Alomía Robles en 1871.
+                        {% translate 'Una de las melodías peruanas más famosas del mundo "El Cóndor Pasa" nació del compositor huanuqueño Daniel Alomía Robles en 1871.' %}
                     </p>
                 </div>
                 <div class="his-sabias__card">
-                    <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/rio-icono-historia.png' %}" alt="Rio huallaga" loading="lazy"></span>
+                    <span class="his-sabias__icono" aria-hidden="true"><img src="{% static 'assets/img/historia/rio-icono-historia.png' %}" alt="{% translate "Rio huallaga" %}" loading="lazy"></span>
                     <p>
-                        La ciudad de Huánuco se encuentra sobre un valle que fue moldeado durante siglos por el río Huallaga.
+                        {% translate "La ciudad de Huánuco se encuentra sobre un valle que fue moldeado durante siglos por el río Huallaga." %}
                     </p>
                 </div>
             </div>
@@ -363,10 +350,10 @@
     {# 7. CTA FINAL #}
     <section class="his-cta">
         <div class="container his-cta__inner">
-            <h2>Continúa descubriendo Huánuco</h2>
-            <p>Conoce los lugares turísticos, paisajes y atractivos que forman parte de nuestra historia.</p>
+            <h2>{% translate "Continúa descubriendo Huánuco" %}</h2>
+            <p>{% translate "Conoce los lugares turísticos, paisajes y atractivos que forman parte de nuestra historia." %}</p>
             <a href="{% url 'turismo:listado_lugares' %}" class="his-cta__btn">
-                Explorar lugares turísticos
+                {% translate "Explorar lugares turísticos" %}
                 <i class="bi bi-arrow-right" aria-hidden="true"></i>
             </a>
         </div>

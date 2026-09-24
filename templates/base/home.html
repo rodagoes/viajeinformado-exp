@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
 {% block extra_css %}
@@ -27,7 +28,8 @@
                     </video>
                     {% else %}
                     <img src="{{ slide.archivo.url }}" alt="{{ slide.texto_alt|default:slide.titulo_principal }}"
-                        class="inicio-hero-img">
+                        class="inicio-hero-img" decoding="async"
+                        {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
                     {% endif %}
 
                     <!-- Overlay -->
@@ -55,27 +57,27 @@
 
             <!-- Flechas (solo desktop) -->
             <button class="carousel-control-prev inicio-hero-control" type="button"
-                data-bs-target="#carouselInicioPremium" data-bs-slide="prev" aria-label="Anterior">
+                data-bs-target="#carouselInicioPremium" data-bs-slide="prev" aria-label="{% translate "Anterior" %}">
                 <i class="bi bi-chevron-left text-white fs-4"></i>
-                <span class="visually-hidden">Anterior</span>
+                <span class="visually-hidden">{% translate "Anterior" %}</span>
             </button>
 
             <button class="carousel-control-next inicio-hero-control" type="button"
-                data-bs-target="#carouselInicioPremium" data-bs-slide="next" aria-label="Siguiente">
+                data-bs-target="#carouselInicioPremium" data-bs-slide="next" aria-label="{% translate "Siguiente" %}">
                 <i class="bi bi-chevron-right text-white fs-4"></i>
-                <span class="visually-hidden">Siguiente</span>
+                <span class="visually-hidden">{% translate "Siguiente" %}</span>
             </button>
 
             <!-- Controles: play/pause + bullets con progreso -->
-            <div class="inicio-hero-controls" role="group" aria-label="Controles de presentación">
-                <button type="button" class="inicio-hero-playpause" aria-label="Pausar presentación">
+            <div class="inicio-hero-controls" role="group" aria-label="{% translate "Controles de presentación" %}">
+                <button type="button" class="inicio-hero-playpause" aria-label="{% translate "Pausar presentación" %}">
                     <i class="bi bi-pause-fill" aria-hidden="true"></i>
                 </button>
-                <div class="inicio-hero-bullets" role="tablist" aria-label="Diapositivas">
+                <div class="inicio-hero-bullets" role="tablist" aria-label="{% translate "Diapositivas" %}">
                     {% for slide in hero_slides %}
                     <button type="button" class="inicio-hero-bullet {% if forloop.first %}active{% endif %}"
                         data-bs-target="#carouselInicioPremium" data-bs-slide-to="{{ forloop.counter0 }}"
-                        aria-label="Slide {{ forloop.counter }}"
+                        aria-label="{% blocktranslate trimmed with n=forloop.counter %}Diapositiva {{ n }}{% endblocktranslate %}"
                         aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
                         <svg class="inicio-hero-bullet__ring" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
                             <circle class="inicio-hero-bullet__track" cx="16" cy="16" r="13"></circle>
@@ -100,16 +102,15 @@
                 <div class="container position-relative z-1 pt-5 mt-md-5">
                     <div class="row">
                         <div class="col-lg-6 col-md-8 pt-5">
-                            <p class="inicio-hero-label">HISTORIA · CULTURA · NATURALEZA</p>
+                            <p class="inicio-hero-label">{% translate "HISTORIA · CULTURA · NATURALEZA" %}</p>
 
                             <h1 class="display-3 fw-bold mb-4">
-                                Descubre lugares<br>
-                                <span>con identidad</span>
+                                {% translate "Descubre lugares" %}<br>
+                                <span>{% translate "con identidad" %}</span>
                             </h1>
 
                             <p class="lead">
-                                Tu guía para descubrir Huánuco con información clara, destinos únicos y
-                                experiencias que conectan con nuestra identidad.
+                                {% translate "Tu guía para descubrir Huánuco con información clara, destinos únicos y experiencias que conectan con nuestra identidad." %}
                             </p>
                         </div>
                     </div>
@@ -124,9 +125,9 @@
 <section class="py-5 bg-white">
     <div class="container py-5">
         <div class="text-center" data-animar="animate__fadeInUp">
-            <h2 class="vi-section-title">¿De qué manera te ayudamos?</h2>
+            <h2 class="vi-section-title">{% translate "¿De qué manera te ayudamos?" %}</h2>
             <p class="vi-section-subtitle">
-                Te ayudamos a organizar tu experiencia en Huánuco y encontrar fácilmente qué visitar, dónde comer, dónde alojarte y cómo desplazarte.
+                {% translate "Te ayudamos a organizar tu experiencia en Huánuco y encontrar fácilmente qué visitar, dónde comer, dónde alojarte y cómo desplazarte." %}
             </p>
         </div>
 
@@ -134,9 +135,9 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="/restaurantes/" class="vi-help-card" data-animar="animate__fadeInUp">
                     <i class="bi bi-cup-hot-fill vi-help-icon"></i>
-                    <h3 class="vi-help-title">Restaurantes</h3>
+                    <h3 class="vi-help-title">{% translate "Restaurantes" %}</h3>
                     <p class="vi-help-text">
-                        Descubre platos típicos, comida local y restaurantes recomendados en Huánuco.
+                        {% translate "Descubre platos típicos, comida local y restaurantes recomendados en Huánuco." %}
                     </p>
                 </a>
             </div>
@@ -144,9 +145,9 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="/alojamientos/" class="vi-help-card animar-delay-1" data-animar="animate__fadeInUp">
                     <i class="bi bi-house-door-fill vi-help-icon"></i>
-                    <h3 class="vi-help-title">Alojamientos</h3>
+                    <h3 class="vi-help-title">{% translate "Alojamientos" %}</h3>
                     <p class="vi-help-text">
-                        Encuentra hoteles y hostales según tu presupuesto y ubicación.
+                        {% translate "Encuentra hoteles y hostales según tu presupuesto y ubicación." %}
                     </p>
                 </a>
             </div>
@@ -154,9 +155,9 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="/lugares-turisticos/" class="vi-help-card animar-delay-2" data-animar="animate__fadeInUp">
                     <i class="bi bi-camera-fill vi-help-icon"></i>
-                    <h3 class="vi-help-title">Sitios turísticos</h3>
+                    <h3 class="vi-help-title">{% translate "Sitios turísticos" %}</h3>
                     <p class="vi-help-text">
-                        Explora atractivos naturales, arqueológicos, culturales y lugares imperdibles.
+                        {% translate "Explora atractivos naturales, arqueológicos, culturales y lugares imperdibles." %}
                     </p>
                 </a>
             </div>
@@ -164,9 +165,9 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="/eventos/" class="vi-help-card" data-animar="animate__fadeInUp">
                     <i class="bi bi-calendar-event-fill vi-help-icon"></i>
-                    <h3 class="vi-help-title">Eventos</h3>
+                    <h3 class="vi-help-title">{% translate "Eventos" %}</h3>
                     <p class="vi-help-text">
-                        Consulta actividades culturales, festividades, ferias y eventos turísticos.
+                        {% translate "Consulta actividades culturales, festividades, ferias y eventos turísticos." %}
                     </p>
                 </a>
             </div>
@@ -174,9 +175,9 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="/planifica/tarifas-taxi/" class="vi-help-card animar-delay-1" data-animar="animate__fadeInUp">
                     <i class="bi bi-car-front-fill vi-help-icon"></i>
-                    <h3 class="vi-help-title">¿Cómo movilizarte?</h3>
+                    <h3 class="vi-help-title">{% translate "¿Cómo movilizarte?" %}</h3>
                     <p class="vi-help-text">
-                        Tarifas referenciales de taxi y consejos para moverte por Huánuco.
+                        {% translate "Tarifas referenciales de taxi y consejos para moverte por Huánuco." %}
                     </p>
                 </a>
             </div>
@@ -184,9 +185,9 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <a href="/planifica/servicios-utiles/" class="vi-help-card animar-delay-2" data-animar="animate__fadeInUp">
                     <i class="bi bi-info-circle-fill vi-help-icon"></i>
-                    <h3 class="vi-help-title">Servicios útiles</h3>
+                    <h3 class="vi-help-title">{% translate "Servicios útiles" %}</h3>
                     <p class="vi-help-text">
-                        Encuentra farmacias, bancos, hospitales y servicios para turistas.
+                        {% translate "Encuentra farmacias, bancos, hospitales y servicios para turistas." %}
                     </p>
                 </a>
             </div>
@@ -198,9 +199,9 @@
 <section class="py-5 vi-home-info-section">
     <div class="container py-5">
         <div class="text-center" data-animar="animate__fadeInUp">
-            <h2 class="vi-section-title">¿Qué puedes encontrar aquí?</h2>
+            <h2 class="vi-section-title">{% translate "¿Qué puedes encontrar aquí?" %}</h2>
             <p class="vi-section-subtitle">
-                Información pensada para que el turista tome mejores decisiones antes y durante su visita.
+                {% translate "Información pensada para que el turista tome mejores decisiones antes y durante su visita." %}
             </p>
         </div>
 
@@ -210,9 +211,9 @@
                     <div class="vi-info-icon">
                         <i class="bi bi-geo-alt-fill"></i>
                     </div>
-                    <h3 class="vi-info-title">Ubicación precisa</h3>
+                    <h3 class="vi-info-title">{% translate "Ubicación precisa" %}</h3>
                     <p class="vi-info-text">
-                        Mapas, referencias y direcciones para ubicar cada destino o establecimiento.
+                        {% translate "Mapas, referencias y direcciones para ubicar cada destino o establecimiento." %}
                     </p>
                 </div>
             </div>
@@ -222,9 +223,9 @@
                     <div class="vi-info-icon">
                         <i class="bi bi-tags-fill"></i>
                     </div>
-                    <h3 class="vi-info-title">Información de precios</h3>
+                    <h3 class="vi-info-title">{% translate "Información de precios" %}</h3>
                     <p class="vi-info-text">
-                        Rangos de precios actualizados para hospedajes, restaurantes, movilidad y actividades.
+                        {% translate "Rangos de precios actualizados para hospedajes, restaurantes, movilidad y actividades." %}
                     </p>
                 </div>
             </div>
@@ -234,9 +235,9 @@
                     <div class="vi-info-icon">
                         <i class="bi bi-telephone-fill"></i>
                     </div>
-                    <h3 class="vi-info-title">Contacto directo</h3>
+                    <h3 class="vi-info-title">{% translate "Contacto directo" %}</h3>
                     <p class="vi-info-text">
-                        Teléfonos, correos, WhatsApp y redes sociales de establecimientos registrados.
+                        {% translate "Teléfonos, correos, WhatsApp y redes sociales de establecimientos registrados." %}
                     </p>
                 </div>
             </div>
@@ -246,9 +247,9 @@
                     <div class="vi-info-icon">
                         <i class="bi bi-star-fill"></i>
                     </div>
-                    <h3 class="vi-info-title">Reseñas y calificaciones</h3>
+                    <h3 class="vi-info-title">{% translate "Reseñas y calificaciones" %}</h3>
                     <p class="vi-info-text">
-                        Opiniones y valoraciones que ayudarán al turista a tomar mejores decisiones.
+                        {% translate "Opiniones y valoraciones que ayudarán al turista a tomar mejores decisiones." %}
                     </p>
                 </div>
             </div>
@@ -258,9 +259,9 @@
                     <div class="vi-info-icon">
                         <i class="bi bi-currency-exchange"></i>
                     </div>
-                    <h3 class="vi-info-title">Tipo de cambio referencial</h3>
+                    <h3 class="vi-info-title">{% translate "Tipo de cambio referencial" %}</h3>
                     <p class="vi-info-text">
-                        Conversión aproximada de precios en soles a dólares para turistas extranjeros.
+                        {% translate "Conversión aproximada de precios en soles a dólares para turistas extranjeros." %}
                     </p>
                 </div>
             </div>
@@ -270,9 +271,9 @@
                     <div class="vi-info-icon">
                         <i class="bi bi-lightbulb-fill"></i>
                     </div>
-                    <h3 class="vi-info-title">Recomendaciones inteligentes</h3>
+                    <h3 class="vi-info-title">{% translate "Recomendaciones inteligentes" %}</h3>
                     <p class="vi-info-text">
-                        Sugerencias según tiempo disponible, presupuesto, ubicación y tipo de viajero.
+                        {% translate "Sugerencias según tiempo disponible, presupuesto, ubicación y tipo de viajero." %}
                     </p>
                 </div>
             </div>
@@ -291,16 +292,14 @@
                             class="vi-chatbot-icon__img">
                     </div>
                     <span class="text-uppercase tracking-wide fw-bold vi-chatbot-kicker">
-                        ASISTENTE VIRTUAL
+                        {% translate "ASISTENTE VIRTUAL" %}
                     </span>
                 </div>
 
-                <h2 class="display-6 fw-bold mb-4">Tu guía virtual en tiempo real</h2>
+                <h2 class="display-6 fw-bold mb-4">{% translate "Tu guía virtual en tiempo real" %}</h2>
 
                 <p class="lead mb-4 vi-chatbot-description">
-                    Pillco Bot estará preparado para responder dudas turísticas sobre Huánuco: dónde
-                    comer, cómo llegar, cuánto gastar, qué visitar si llueve, qué eventos hay y cómo planificar mejor tu
-                    recorrido.
+                    {% translate "Pillco Bot estará preparado para responder dudas turísticas sobre Huánuco: dónde comer, cómo llegar, cuánto gastar, qué visitar si llueve, qué eventos hay y cómo planificar mejor tu recorrido." %}
                 </p>
             </div>
 
@@ -315,7 +314,7 @@
                         <div>
                             <h5 class="mb-0 fw-bold text-navy-deep">Pillco Bot</h5>
                             <small class="text-success">
-                                <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> En línea
+                                <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> {% translate "En línea" %}
                             </small>
                         </div>
                     </div>
@@ -323,16 +322,13 @@
                     <div class="d-flex flex-column gap-3">
                         <div class="align-self-end text-end" style="max-width: 85%;">
                             <div class="vi-chatbot-question">
-                                Hola, soy extranjero y quiero conocer Huánuco, ¿qué me recomiendas?
+                                {% translate "Hola, soy extranjero y quiero conocer Huánuco, ¿qué me recomiendas?" %}
                             </div>
                         </div>
 
                         <div class="align-self-start text-start" style="max-width: 85%;">
                             <div class="vi-chatbot-answer">
-                                ¡Hola! Soy Pillco Bot y seré tu guía turístico virtual. Te recomiendo si estás por el
-                                centro visitar <strong>La Catedral de Huánuco</strong>.
-                                Además visitar <strong>El templo de las manos cruzadas de Kotosh</strong>.
-                                ¿Te gustaría que te indique cómo llegar?
+                                {% translate "¡Hola! Soy Pillco Bot y seré tu guía turístico virtual. Te recomiendo si estás por el centro visitar" %} <strong>{% translate "La Catedral de Huánuco" %}</strong>{% translate ". Además visitar" %} <strong>{% translate "El templo de las manos cruzadas de Kotosh" %}</strong>{% translate ". ¿Te gustaría que te indique cómo llegar?" %}
                             </div>
                         </div>
                     </div>
@@ -354,11 +350,10 @@
                     </lottie-player>
                 </div>
 
-                <h2 class="vi-section-title">¿Quieres promocionar tu negocio turístico?</h2>
+                <h2 class="vi-section-title">{% translate "¿Quieres promocionar tu negocio turístico?" %}</h2>
 
                 <p class="vi-section-subtitle mx-auto mb-4">
-                    Si tienes un restaurante, hotel, evento o servicio turístico en Huánuco, puedes contactarte con el
-                    equipo de Viaje Informado para evaluar tu incorporación a la plataforma.
+                    {% translate "Si tienes un restaurante, hotel, evento o servicio turístico en Huánuco, puedes contactarte con el equipo de Viaje Informado para evaluar tu incorporación a la plataforma." %}
                 </p>
 
                 <a href="mailto:viajeinformadohuanuco@gmail.com"

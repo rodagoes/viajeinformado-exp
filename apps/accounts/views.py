@@ -16,6 +16,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme, urlencode
 from django.views.decorators.http import require_POST
+from django.utils.translation import gettext
 
 from .forms import (
     ApellidoForm, CambiarEmailForm, EliminarCuentaForm, FotoPerfilForm, LoginForm,
@@ -42,16 +43,16 @@ SESSION_OTP_USER = 'otp_user_id'
 SESSION_EMAIL_PENDIENTE = 'cuenta_email_pendiente'
 
 
-def _enviar_otp(user, destino=None, proposito=CodigoOTP.PROPOSITO_VERIFICACION,
-                 asunto='Tu código de verificación - Viaje Informado'):
+def _enviar_otp(user, destino=None, proposito=CodigoOTP.PROPOSITO_VERIFICACION, asunto=None):
     codigo = CodigoOTP.generar(user, proposito=proposito)
+    # Los correos salen en el idioma activo de la sesión del usuario (gettext en tiempo de petición).
     send_mail(
-        asunto,
-        f'Hola {user.first_name or user.username},\n\n'
-        f'Tu código de verificación es: {codigo}\n\n'
-        f'Este código expira en {settings.OTP_EXPIRATION_MINUTES} minutos.\n\n'
-        'Si no solicitaste este código, ignora este correo.\n\n'
-        'Equipo de Viaje Informado',
+        asunto or gettext('Tu código de verificación - Viaje Informado'),
+        gettext('Hola %(nombre)s,') % {'nombre': user.first_name or user.username} + '\n\n'
+        + gettext('Tu código de verificación es: %(codigo)s') % {'codigo': codigo} + '\n\n'
+        + gettext('Este código expira en %(minutos)s minutos.') % {'minutos': settings.OTP_EXPIRATION_MINUTES} + '\n\n'
+        + gettext('Si no solicitaste este código, ignora este correo.') + '\n\n'
+        + gettext('Equipo de Viaje Informado'),
         None,
         [destino or user.email],
     )
@@ -79,11 +80,11 @@ def _reenviar_otp_generico(request, proposito, destino, asunto):
     if otp and otp.segundos_para_reenvio() > 0:
         messages.warning(
             request,
-            f'Debes esperar {settings.OTP_RESEND_COOLDOWN_SECONDS} segundos antes de solicitar otro código.',
+            gettext('Debes esperar %(segundos)s segundos antes de solicitar otro código.') % {'segundos': settings.OTP_RESEND_COOLDOWN_SECONDS},
         )
     else:
         _enviar_otp(request.user, destino=destino, proposito=proposito, asunto=asunto)
-        messages.success(request, 'Código reenviado correctamente.')
+        messages.success(request, gettext('Código reenviado correctamente.'))
 
 
 def obtener_metodos_acceso(user):
@@ -115,7 +116,7 @@ def registro(request):
         request.session.pop('otp_next', None)
         if siguiente and url_has_allowed_host_and_scheme(siguiente, allowed_hosts={request.get_host()}):
             request.session['otp_next'] = siguiente
-        messages.success(request, 'Te enviamos un código de verificación a tu correo. Revisa también tu bandeja de spam o correo no deseado.')
+        messages.success(request, gettext('Te enviamos un código de verificación a tu correo. Revisa también tu bandeja de spam o correo no deseado.'))
         return redirect('accounts:verificar_codigo')
     return render(request, 'accounts/registro.html', {'form': form})
 
@@ -133,12 +134,12 @@ def iniciar_sesion(request):
             username = user_por_email.username if user_por_email else identificador
         user = authenticate(request, username=username, password=password)
         if user is None:
-            messages.error(request, 'Usuario o contraseña incorrectos.', extra_tags='login_error')
+            messages.error(request, gettext('Usuario o contraseña incorrectos.'), extra_tags='login_error')
         else:
             perfil = PerfilUsuario.objects.filter(user=user).first()
             if perfil and not perfil.verificado and not user.is_staff:
                 request.session[SESSION_OTP_USER] = user.pk
-                messages.warning(request, 'Tu cuenta aún no está verificada. Revisa tu correo o solicita un nuevo código.')
+                messages.warning(request, gettext('Tu cuenta aún no está verificada. Revisa tu correo o solicita un nuevo código.'))
                 return redirect('accounts:verificar_codigo')
             auth_login(request, user)
             siguiente = request.GET.get('next')
@@ -150,14 +151,14 @@ def iniciar_sesion(request):
 
 def cerrar_sesion(request):
     auth_logout(request)
-    messages.info(request, 'Cerraste sesión correctamente.')
+    messages.info(request, gettext('Cerraste sesión correctamente.'))
     return redirect('base:home')
 
 
 def verificar_codigo(request):
     user = _usuario_pendiente(request)
     if user is None:
-        messages.error(request, 'No hay ninguna verificación pendiente. Inicia sesión o regístrate.')
+        messages.error(request, gettext('No hay ninguna verificación pendiente. Inicia sesión o regístrate.'))
         return redirect('accounts:login')
     form = OTPForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -188,17 +189,17 @@ def verificar_codigo(request):
 def reenviar_codigo(request):
     user = _usuario_pendiente(request)
     if user is None:
-        messages.error(request, 'No hay ninguna verificación pendiente. Inicia sesión o regístrate.')
+        messages.error(request, gettext('No hay ninguna verificación pendiente. Inicia sesión o regístrate.'))
         return redirect('accounts:login')
     otp = CodigoOTP.activo(user)
     if otp and otp.segundos_para_reenvio() > 0:
         messages.warning(
             request,
-            f'Debes esperar {settings.OTP_RESEND_COOLDOWN_SECONDS} segundos antes de solicitar otro código.',
+            gettext('Debes esperar %(segundos)s segundos antes de solicitar otro código.') % {'segundos': settings.OTP_RESEND_COOLDOWN_SECONDS},
         )
     else:
         _enviar_otp(user)
-        messages.success(request, 'Código reenviado correctamente.')
+        messages.success(request, gettext('Código reenviado correctamente.'))
     return redirect('accounts:verificar_codigo')
 
 
@@ -229,7 +230,7 @@ def perfil(request):
 
             if 'quitar_foto' in request.POST:
                 perfil_usuario.foto_perfil.delete(save=True)
-                messages.success(request, 'Foto de perfil eliminada.')
+                messages.success(request, gettext('Foto de perfil eliminada.'))
                 return redirect('accounts:perfil')
 
             foto_anterior_nombre = perfil_usuario.foto_perfil.name if perfil_usuario.foto_perfil else ''
@@ -243,13 +244,13 @@ def perfil(request):
                     # El archivo nuevo ya quedó guardado arriba: recién ahora es seguro
                     # limpiar el anterior (nunca se borra antes de confirmar el reemplazo).
                     _borrar_archivo_best_effort(foto_anterior_storage, foto_anterior_nombre)
-                messages.success(request, 'Foto de perfil actualizada.')
+                messages.success(request, gettext('Foto de perfil actualizada.'))
                 return redirect('accounts:perfil')
             campo_en_edicion = 'foto_perfil'
         else:
             entrada = CAMPOS_PERFIL.get(accion)
             if entrada is None:
-                return HttpResponseBadRequest('Acción no reconocida.')
+                return HttpResponseBadRequest(gettext('Acción no reconocida.'))
             _, FormClass = entrada
             form = FormClass(request.POST, instance=request.user)
             if form.is_valid():
@@ -257,7 +258,7 @@ def perfil(request):
                 form.save()
                 if accion == 'username' and username_anterior != request.user.username:
                     PerfilUsuario.objects.filter(user=request.user).update(username_actualizado_en=timezone.now())
-                messages.success(request, 'Cambios guardados.')
+                messages.success(request, gettext('Cambios guardados.'))
                 return redirect('accounts:perfil')
             # ModelForm._post_clean() ya escribió el intento inválido en
             # request.user (misma instancia que form.instance) aunque is_valid()
@@ -302,7 +303,7 @@ def cambiar_email(request):
         nuevo_email = form.cleaned_data['nuevo_email']
         request.session[SESSION_EMAIL_PENDIENTE] = nuevo_email
         _enviar_otp(request.user, destino=nuevo_email, proposito='email_change',
-                    asunto='Confirma tu nuevo correo - Viaje Informado')
+                    asunto=gettext('Confirma tu nuevo correo - Viaje Informado'))
         return redirect('accounts:verificar_nuevo_email')
     return render(request, 'accounts/cambiar_email.html', {'form': form})
 
@@ -311,7 +312,7 @@ def cambiar_email(request):
 def verificar_nuevo_email(request):
     nuevo_email = request.session.get(SESSION_EMAIL_PENDIENTE)
     if not nuevo_email:
-        messages.error(request, 'No hay un cambio de correo pendiente.')
+        messages.error(request, gettext('No hay un cambio de correo pendiente.'))
         return redirect('accounts:cuenta')
 
     form = OTPForm(request.POST or None)
@@ -320,11 +321,11 @@ def verificar_nuevo_email(request):
         if ok:
             if not tiene_reauth_reciente(request):
                 del request.session[SESSION_EMAIL_PENDIENTE]
-                messages.error(request, 'Tu verificación expiró por seguridad. Vuelve a intentarlo.')
+                messages.error(request, gettext('Tu verificación expiró por seguridad. Vuelve a intentarlo.'))
                 return redirect('accounts:cambiar_email')
             if User.objects.filter(email__iexact=nuevo_email).exclude(pk=request.user.pk).exists():
                 del request.session[SESSION_EMAIL_PENDIENTE]
-                messages.error(request, 'Ese correo ya pertenece a otra cuenta. Intenta con otro.')
+                messages.error(request, gettext('Ese correo ya pertenece a otra cuenta. Intenta con otro.'))
                 return redirect('accounts:cambiar_email')
 
             perfil_usuario = PerfilUsuario.objects.filter(user=request.user).first()
@@ -339,11 +340,11 @@ def verificar_nuevo_email(request):
             del request.session[SESSION_EMAIL_PENDIENTE]
             if email_anterior and verificado_anterior:
                 _notificar_best_effort(
-                    email_anterior, 'Tu correo fue actualizado - Viaje Informado',
-                    'El correo electrónico de tu cuenta de Viaje Informado fue cambiado.\n\n'
-                    'Si no fuiste tú, contáctanos de inmediato.',
+                    email_anterior, gettext('Tu correo fue actualizado - Viaje Informado'),
+                    gettext('El correo electrónico de tu cuenta de Viaje Informado fue cambiado.') + '\n\n'
+                    + gettext('Si no fuiste tú, contáctanos de inmediato.'),
                 )
-            messages.success(request, 'Correo actualizado.')
+            messages.success(request, gettext('Correo actualizado.'))
             return redirect('accounts:cuenta')
         messages.error(request, error)
 
@@ -359,14 +360,14 @@ def verificar_nuevo_email(request):
 def reenviar_codigo_email(request):
     pendiente = request.session.get(SESSION_EMAIL_PENDIENTE)
     if not pendiente:
-        messages.error(request, 'No hay un cambio de correo pendiente.')
+        messages.error(request, gettext('No hay un cambio de correo pendiente.'))
         return redirect('accounts:cuenta')
     if not tiene_reauth_reciente(request):
         del request.session[SESSION_EMAIL_PENDIENTE]
-        messages.error(request, 'Tu verificación expiró por seguridad. Vuelve a intentarlo.')
+        messages.error(request, gettext('Tu verificación expiró por seguridad. Vuelve a intentarlo.'))
         return redirect('accounts:cambiar_email')
     _reenviar_otp_generico(request, proposito='email_change', destino=pendiente,
-                            asunto='Confirma tu nuevo correo - Viaje Informado')
+                            asunto=gettext('Confirma tu nuevo correo - Viaje Informado'))
     return redirect('accounts:verificar_nuevo_email')
 
 
@@ -383,11 +384,11 @@ def gestionar_password(request):
         perfil_usuario = PerfilUsuario.objects.filter(user=request.user).first()
         if request.user.email and perfil_usuario and perfil_usuario.verificado:
             _notificar_best_effort(
-                request.user.email, 'Tu contraseña fue actualizada - Viaje Informado',
-                'La contraseña de tu cuenta de Viaje Informado fue actualizada.\n\n'
-                'Si no fuiste tú, contáctanos de inmediato.',
+                request.user.email, gettext('Tu contraseña fue actualizada - Viaje Informado'),
+                gettext('La contraseña de tu cuenta de Viaje Informado fue actualizada.') + '\n\n'
+                + gettext('Si no fuiste tú, contáctanos de inmediato.'),
             )
-        messages.success(request, 'Contraseña creada.' if not tiene_password else 'Contraseña actualizada.')
+        messages.success(request, gettext('Contraseña creada.') if not tiene_password else gettext('Contraseña actualizada.'))
         return redirect('accounts:cuenta')
     return render(request, 'accounts/gestionar_password.html', {'form': form, 'tiene_password': tiene_password})
 
@@ -401,13 +402,13 @@ def desconectar_social(request, provider):
         return redirect(reverse('accounts:reauth'))
     cuenta_social = SocialAccount.objects.filter(user=request.user, provider=provider).first()
     if cuenta_social is None:
-        messages.error(request, 'No tienes esa cuenta conectada.')
+        messages.error(request, gettext('No tienes esa cuenta conectada.'))
         return redirect('accounts:cuenta')
     form = DisconnectForm(data={'account': cuenta_social.pk}, request=request)
     if form.is_valid():
         form.save()  # el mensaje de éxito lo agrega allauth (plantilla propia sobrescrita en español)
     else:
-        messages.error(request, 'No puedes desconectar tu único método de acceso.')
+        messages.error(request, gettext('No puedes desconectar tu único método de acceso.'))
     return redirect('accounts:cuenta')
 
 
@@ -424,14 +425,14 @@ def reauth(request):
             if request.user.check_password(form.cleaned_data['password']):
                 marcar_reauth(request)
                 return redirect(destino_url)
-            form.add_error('password', 'Contraseña incorrecta.')
+            form.add_error('password', gettext('Contraseña incorrecta.'))
         return render(request, 'accounts/reauth.html', {'form': form, 'metodo': 'password'})
 
     if not email_verificado:
         # Caso inalcanzable con los flujos actuales (ver adapters.py/views.py:
         # login local exige perfil.verificado, alta social siempre lo fija True),
         # pero se defiende igual en vez de degradar seguridad silenciosamente.
-        messages.error(request, 'No podemos confirmar tu identidad de forma segura en este momento. Contáctanos para continuar.')
+        messages.error(request, gettext('No podemos confirmar tu identidad de forma segura en este momento. Contáctanos para continuar.'))
         return redirect('accounts:cuenta')
 
     form = OTPForm(request.POST or None)
@@ -442,7 +443,7 @@ def reauth(request):
             return redirect(destino_url)
         messages.error(request, error)
     elif not CodigoOTP.activo(request.user, proposito='reauth'):
-        _enviar_otp(request.user, proposito='reauth', asunto='Confirma tu identidad - Viaje Informado')
+        _enviar_otp(request.user, proposito='reauth', asunto=gettext('Confirma tu identidad - Viaje Informado'))
     otp = CodigoOTP.activo(request.user, proposito='reauth')
     return render(request, 'accounts/reauth.html', {
         'form': form, 'metodo': 'otp', 'cooldown': otp.segundos_para_reenvio() if otp else 0,
@@ -454,7 +455,7 @@ def reauth(request):
 @require_POST
 def reenviar_codigo_reauth(request):
     _reenviar_otp_generico(request, proposito='reauth', destino=request.user.email,
-                            asunto='Confirma tu identidad - Viaje Informado')
+                            asunto=gettext('Confirma tu identidad - Viaje Informado'))
     destino_clave = request.POST.get('next')
     query = urlencode({'next': destino_clave}) if destino_clave in REAUTH_DESTINOS else ''
     url = reverse('accounts:reauth')
@@ -480,9 +481,10 @@ def eliminar_cuenta(request):
             _borrar_archivo_best_effort(foto_storage, foto_nombre)
         if email_anterior and verificado_anterior:
             _notificar_best_effort(
-                email_anterior, 'Tu cuenta fue eliminada - Viaje Informado',
-                f'Hola {username_anterior},\n\nTu cuenta de Viaje Informado fue eliminada correctamente.\n\n'
-                'Equipo de Viaje Informado',
+                email_anterior, gettext('Tu cuenta fue eliminada - Viaje Informado'),
+                gettext('Hola %(nombre)s,') % {'nombre': username_anterior} + '\n\n'
+                + gettext('Tu cuenta de Viaje Informado fue eliminada correctamente.') + '\n\n'
+                + gettext('Equipo de Viaje Informado'),
             )
         return redirect('accounts:cuenta_eliminada')
     return render(request, 'accounts/eliminar_cuenta.html', {'form': form})

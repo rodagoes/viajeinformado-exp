@@ -1,12 +1,13 @@
 {% extends 'accounts/base_auth.html' %}
 
-{% block title %}Crear cuenta - Viaje Informado{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Crear cuenta - Viaje Informado" %}{% endblock %}
 
 {% block auth_page_class %} vi-auth-page--compact{% endblock %}
 
 {% block auth_content %}
-<h1 class="vi-auth-title">Crea tu cuenta</h1>
-<p class="vi-auth-subtitle">Regístrese para poner conocer lo mejor de Huánuco.</p>
+<h1 class="vi-auth-title">{% translate "Crea tu cuenta" %}</h1>
+<p class="vi-auth-subtitle">{% translate "Regístrese para poner conocer lo mejor de Huánuco." %}</p>
 
 <form method="post" novalidate>
     {% csrf_token %}
@@ -17,17 +18,17 @@
         <div class="vi-auth-password-wrap">
             {{ field }}
             <label for="{{ field.id_for_label }}">
-                {% if field.name == 'password1' %}<i class="bi bi-lock-fill" aria-hidden="true"></i>Ingrese su contraseña{% else %}<i class="bi bi-shield-lock-fill" aria-hidden="true"></i>Confirme su contraseña{% endif %}
+                {% if field.name == 'password1' %}<i class="bi bi-lock-fill" aria-hidden="true"></i>{% translate "Ingrese su contraseña" %}{% else %}<i class="bi bi-shield-lock-fill" aria-hidden="true"></i>{% translate "Confirme su contraseña" %}{% endif %}
                 <span class="vi-auth-req" aria-hidden="true">*</span>
             </label>
-            <button type="button" class="vi-auth-toggle-pass" aria-label="Mostrar u ocultar contraseña">
+            <button type="button" class="vi-auth-toggle-pass" aria-label="{% translate "Mostrar u ocultar contraseña" %}">
                 <i class="bi bi-eye"></i>
             </button>
         </div>
         {% else %}
         {{ field }}
         <label for="{{ field.id_for_label }}">
-            {% if field.name == 'nombres' %}<i class="bi bi-person-lines-fill" aria-hidden="true"></i>Ingrese sus nombres{% elif field.name == 'apellidos' %}<i class="bi bi-person-lines-fill" aria-hidden="true"></i>Ingrese sus apellidos{% elif field.name == 'username' %}<i class="bi bi-threads" aria-hidden="true"></i>Ingrese su nombre de usuario{% elif field.name == 'email' %}<i class="bi bi-envelope-fill" aria-hidden="true"></i>Ingrese su correo electrónico{% else %}{{ field.label }}{% endif %}
+            {% if field.name == 'nombres' %}<i class="bi bi-person-lines-fill" aria-hidden="true"></i>{% translate "Ingrese sus nombres" %}{% elif field.name == 'apellidos' %}<i class="bi bi-person-lines-fill" aria-hidden="true"></i>{% translate "Ingrese sus apellidos" %}{% elif field.name == 'username' %}<i class="bi bi-threads" aria-hidden="true"></i>{% translate "Ingrese su nombre de usuario" %}{% elif field.name == 'email' %}<i class="bi bi-envelope-fill" aria-hidden="true"></i>{% translate "Ingrese su correo electrónico" %}{% else %}{{ field.label }}{% endif %}
             <span class="vi-auth-req" aria-hidden="true">*</span>
         </label>
         {% endif %}
@@ -36,23 +37,23 @@
         {% endfor %}
         {% if field.name == 'password1' %}
         <ul class="vi-auth-checklist" id="password-checklist" aria-live="polite">
-            <li data-check="len"><i class="bi bi-circle"></i> Mínimo 8 caracteres</li>
-            <li data-check="upper"><i class="bi bi-circle"></i> Una letra mayúscula</li>
-            <li data-check="lower"><i class="bi bi-circle"></i> Una letra minúscula</li>
-            <li data-check="digit"><i class="bi bi-circle"></i> Al menos un número</li>
-            <li data-check="symbol"><i class="bi bi-circle"></i> Al menos un símbolo (! @ # % & * ? $ . -)</li>
-            <li data-check="match"><i class="bi bi-circle"></i> Ambas contraseñas coinciden</li>
+            <li data-check="len"><i class="bi bi-circle"></i> {% translate "Mínimo 8 caracteres" %}</li>
+            <li data-check="upper"><i class="bi bi-circle"></i> {% translate "Una letra mayúscula" %}</li>
+            <li data-check="lower"><i class="bi bi-circle"></i> {% translate "Una letra minúscula" %}</li>
+            <li data-check="digit"><i class="bi bi-circle"></i> {% translate "Al menos un número" %}</li>
+            <li data-check="symbol"><i class="bi bi-circle"></i> {% translate "Al menos un símbolo (! @ # % & * ? $ . -)" %}</li>
+            <li data-check="match"><i class="bi bi-circle"></i> {% translate "Ambas contraseñas coinciden" %}</li>
         </ul>
         {% endif %}
     </div>
     {% endfor %}
 
     <button type="submit" class="vi-auth-btn-primary">
-        <i class="bi bi-person-plus"></i> Crear cuenta
+        <i class="bi bi-person-plus"></i> {% translate "Crear cuenta" %}
     </button>
 </form>
 
 <p class="vi-auth-footer-link">
-    ¿Ya tienes cuenta? <a href="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">Inicia sesión</a>
+    {% translate "¿Ya tienes cuenta?" %} <a href="{% url 'accounts:login' %}{% if request.GET.next %}?next={{ request.GET.next|urlencode }}{% endif %}">{% translate "Inicia sesión" %}</a>
 </p>
 {% endblock %}

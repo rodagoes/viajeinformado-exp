@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q, Prefetch
 from django.urls import reverse
+from django.utils.translation import gettext
 
 from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
 from apps.interacciones.forms import ResenaForm
@@ -104,31 +105,31 @@ def listado_lugares(request):
     ]
 
     dificultad_opciones = [
-        {"value": "", "label": "Dificultad", "selected": dificultad_sel == ""},
-        {"value": "facil", "label": "Fácil", "selected": dificultad_sel == "facil"},
-        {"value": "moderada", "label": "Moderada", "selected": dificultad_sel == "moderada"},
-        {"value": "dificil", "label": "Difícil", "selected": dificultad_sel == "dificil"},
+        {"value": "", "label": gettext("Dificultad"), "selected": dificultad_sel == ""},
+        {"value": "facil", "label": gettext("Fácil"), "selected": dificultad_sel == "facil"},
+        {"value": "moderada", "label": gettext("Moderada"), "selected": dificultad_sel == "moderada"},
+        {"value": "dificil", "label": gettext("Difícil"), "selected": dificultad_sel == "dificil"},
     ]
 
     tipo_costo_opciones = [
-        {"value": "", "label": "Costo", "selected": tipo_costo_sel == ""},
-        {"value": "gratis", "label": "Gratis", "selected": tipo_costo_sel == "gratis"},
-        {"value": "pagado", "label": "Pagado", "selected": tipo_costo_sel == "pagado"},
-        {"value": "consultar", "label": "Consultar", "selected": tipo_costo_sel == "consultar"},
+        {"value": "", "label": gettext("Costo"), "selected": tipo_costo_sel == ""},
+        {"value": "gratis", "label": gettext("Gratis"), "selected": tipo_costo_sel == "gratis"},
+        {"value": "pagado", "label": gettext("Pagado"), "selected": tipo_costo_sel == "pagado"},
+        {"value": "consultar", "label": gettext("Consultar"), "selected": tipo_costo_sel == "consultar"},
     ]
 
     opciones_orden = [
-        {"value": "", "label": "Seleccione", "selected": orden == ""},
-        {"value": "nombre_asc", "label": "Nombre A–Z", "selected": orden == "nombre_asc"},
-        {"value": "nombre_desc", "label": "Nombre Z–A", "selected": orden == "nombre_desc"},
-        {"value": "precio_asc", "label": "Menor a Mayor Precio", "selected": orden == "precio_asc"},
-        {"value": "precio_desc", "label": "Mayor a Menor Precio", "selected": orden == "precio_desc"},
+        {"value": "", "label": gettext("Seleccione"), "selected": orden == ""},
+        {"value": "nombre_asc", "label": gettext("Nombre A–Z"), "selected": orden == "nombre_asc"},
+        {"value": "nombre_desc", "label": gettext("Nombre Z–A"), "selected": orden == "nombre_desc"},
+        {"value": "precio_asc", "label": gettext("Menor a Mayor Precio"), "selected": orden == "precio_asc"},
+        {"value": "precio_desc", "label": gettext("Mayor a Menor Precio"), "selected": orden == "precio_desc"},
     ]
 
     context = {
         "page_obj": page_obj,
-        "titulo": "Lugares Turísticos de Huánuco",
-        "subtitulo": "Descubre los mejores atractivos naturales, históricos y culturales de la región.",
+        "titulo": gettext("Lugares Turísticos de Huánuco"),
+        "subtitulo": gettext("Descubre los mejores atractivos naturales, históricos y culturales de la región."),
         "q": q,
         "categoria_sel": categoria_id,
         "dificultad_sel": dificultad_sel,
@@ -215,11 +216,11 @@ def detalle_lugar(request, slug):
                 with transaction.atomic():
                     resena.save()
             except IntegrityError:
-                messages.error(request, "Ya existe una reseña tuya para este lugar turístico.")
+                messages.error(request, gettext("Ya existe una reseña tuya para este lugar turístico."))
                 return redirect(f"{lugar.get_absolute_url()}#resenas")
             messages.success(
                 request,
-                "Tu reseña se ha actualizado correctamente." if mi_resena else "Tu reseña se ha publicado correctamente.",
+                gettext("Tu reseña se ha actualizado correctamente.") if mi_resena else gettext("Tu reseña se ha publicado correctamente."),
             )
             return redirect(f"{lugar.get_absolute_url()}#resenas")
         form_resena_invalido = form
@@ -275,7 +276,7 @@ def detalle_lugar(request, slug):
     if lugar.imagen_historia:
         historia_imagen = {
             "url": lugar.imagen_historia.url,
-            "alt": lugar.texto_alt_imagen_historia or f"Imagen histórica de {lugar.nombre}",
+            "alt": lugar.texto_alt_imagen_historia or gettext("Imagen histórica de %(nombre)s") % {"nombre": lugar.nombre},
         }
     elif primera_imagen_galeria:
         historia_imagen = primera_imagen_galeria

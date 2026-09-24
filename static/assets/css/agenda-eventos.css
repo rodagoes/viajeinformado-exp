@@ -693,27 +693,25 @@
     font-size: 0.92rem;
 }
 
-/* Icono de limpieza rápida (E4): visible solo cuando ya hay filtros
-   activos, para no obligar a abrir el offcanvas solo para ver "Limpiar". */
-.ev-btn-limpiar-rapido {
+/* "Limpiar filtros" (móvil): acción de TEXTO, visible solo cuando hay filtros del
+   panel activos (no cuenta la fecha). Deliberadamente no es una X: la única X de
+   la pantalla es la del chip de fechas, que quita solo el rango. */
+.ev-acciones-rapidas__limpiar {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 1px solid var(--ev-borde);
-    background: var(--ev-blanco);
-    color: var(--ev-texto-sec);
-    font-size: 0.95rem;
-    transition: border-color 0.15s var(--ev-ease-out), color 0.15s var(--ev-ease-out);
+    min-height: 44px;
+    padding: 0 8px;
+    color: var(--ev-azul);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
 }
 
-.ev-btn-limpiar-rapido:hover,
-.ev-btn-limpiar-rapido:focus-visible {
-    border-color: #B3261E;
-    color: #B3261E;
+.ev-acciones-rapidas__limpiar:hover,
+.ev-acciones-rapidas__limpiar:focus-visible {
+    color: var(--ev-azul-oscuro);
 }
 
 .ev-btn-filtros:hover {
@@ -2796,4 +2794,594 @@ body.ev-modal-abierto .modal-backdrop {
     .ev-selector-dias__lista {
         scroll-behavior: auto;
     }
+}
+/* ---- 9. RANGO DE FECHAS ("Elegir fechas") + EVENTOS CERCANOS ----
+   Capas separadas: A) pill + input de texto de Flatpickr (sin name),
+   B) hidden desde/hasta, C) inputs date nativos (fallback). El atributo
+   [hidden] necesita !important porque .ev-fecha-picker define su propio
+   `display`. */
+.ev-rango {
+    align-items: center;
+    gap: 8px;
+}
+
+.ev-rango__picker[hidden],
+.ev-rango__nativo[hidden] {
+    display: none !important;
+}
+
+/* El <input> de Flatpickr es solo una capa transparente de clic/foco: va FUERA del flujo
+   (absolute) porque un <input> de texto tiene un ancho intrínseco (~212 px, size=20) que, como
+   ítem del grid, estiraba el chip por encima del ancho de su contenido ("Elegir fechas" con un
+   hueco vacío a la derecha). Así el ancho lo dicta solo el icono + texto. */
+.ev-rango__control {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: transparent;
+    cursor: pointer;
+    caret-color: transparent;
+}
+
+/* Con rango aplicado el chip lleva la X dentro (a la derecha): se reserva su sitio en el
+   padding para que el texto nunca quede debajo. */
+.ev-rango__picker.is-active .ev-fecha-picker__visual {
+    padding-right: 48px;
+}
+
+.ev-rango__nativo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ev-rango__nativo-campo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ev-texto-sec);
+    white-space: nowrap;
+}
+
+.ev-rango__nativo-campo input[type="date"] {
+    min-height: 44px;
+    padding: 6px 10px;
+    border: 1px solid var(--ev-borde);
+    border-radius: 999px;
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font: inherit;
+}
+
+/* X del chip de fechas: quita solo el rango. Hermana del input (no dentro), por encima de él. */
+.ev-rango__quitar {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    color: var(--ev-blanco); /* el chip con rango va en azul */
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.15s var(--ev-ease-out);
+}
+
+.ev-rango__quitar:hover {
+    background: rgba(255, 255, 255, 0.24);
+}
+
+.ev-rango__quitar:focus-visible {
+    outline: 2px solid var(--ev-blanco);
+    outline-offset: -2px;
+    background: rgba(255, 255, 255, 0.24);
+}
+
+.ev-rango-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px auto 0;
+    padding: 10px 14px;
+    max-width: 640px;
+    border-radius: var(--ev-radius-sm);
+    border: 1px solid #F4C7C3;
+    background: #FEF3F2;
+    color: #912018;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.ev-rango-resumen {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+}
+
+.ev-rango-resumen__titulo {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--ev-azul-oscuro);
+}
+
+.ev-rango-resumen__fechas {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ev-texto-sec);
+}
+
+.ev-rango-resumen__cambiar {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ev-azul);
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.ev-vacio--rango {
+    padding-bottom: 12px;
+}
+
+/* Bloques "Justo antes" / "Poco después": mismas columnas que .ev-cards. */
+.ev-cercanos {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 14px;
+}
+
+.ev-cercanos__titulo {
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ev-azul);
+}
+
+.ev-cercanos__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    min-width: 0;
+}
+
+@media (min-width: 700px) {
+    .ev-cercanos__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1440px) {
+    .ev-cercanos__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.ev-card__distancia {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0 0;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--ev-fondo-card);
+    color: var(--ev-azul-oscuro);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.ev-sin-cercanos {
+    grid-column: 1 / -1;
+    text-align: center;
+}
+
+.ev-sin-cercanos__intro {
+    margin: 0 0 12px;
+    color: var(--ev-texto-sec);
+    font-size: 0.95rem;
+}
+
+.ev-sin-cercanos__enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ev-sin-cercanos__enlaces a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--ev-borde);
+    background: var(--ev-blanco);
+    color: var(--ev-azul-oscuro);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.ev-sin-cercanos__enlaces a:hover,
+.ev-sin-cercanos__enlaces a:focus-visible {
+    border-color: var(--ev-azul);
+    color: var(--ev-azul);
+}
+
+.ev-rango-acciones {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    cursor: default;
+}
+
+.ev-rango-acciones button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+/* Tema de Flatpickr con la paleta de Eventos: inicio/fin en azul y el rango
+   intermedio resaltado. */
+.flatpickr-calendar {
+    border-radius: var(--ev-radius-md);
+    box-shadow: 0 20px 44px rgba(0, 45, 137, 0.18);
+    font-family: inherit;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.flatpickr-day.inRange,
+.flatpickr-day.inRange:hover {
+    background: var(--ev-fondo-card);
+    border-color: var(--ev-fondo-card);
+    color: var(--ev-texto);
+    box-shadow: -5px 0 0 var(--ev-fondo-card), 5px 0 0 var(--ev-fondo-card);
+}
+
+.flatpickr-day.today {
+    border-color: var(--ev-azul-oscuro);
+}
+
+/* Pie [Limpiar] [Listo], cabecera de la hoja móvil y selector de año (creados por
+   agenda-eventos.js dentro del calendario de Flatpickr). */
+.flatpickr-calendar .ev-cal-cabecera {
+    display: none; /* solo en la hoja móvil */
+}
+
+.flatpickr-calendar .ev-cal-pie {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 10px 12px 12px;
+    border-top: 1px solid var(--ev-borde);
+}
+
+.ev-cal-ayuda {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.8rem;
+    color: var(--ev-texto-sec);
+}
+
+.ev-cal-btn {
+    min-height: 44px;
+    padding: 0 20px;
+    border: 1px solid var(--ev-borde);
+    border-radius: 999px;
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ev-cal-btn--pri {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.ev-cal-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ev-cal-btn:focus-visible,
+.ev-cal-cerrar:focus-visible {
+    outline: 2px solid var(--ev-azul);
+    outline-offset: 2px;
+}
+
+/* Selector de año móvil: botón que abre la vista de décadas (agenda-eventos.js) y sustituye
+   al input numérico de Flatpickr (abría el teclado). */
+.flatpickr-current-month .ev-cal-anio {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 32px;
+    margin: 0 0 0 4px;
+    padding: 0 6px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 300;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.ev-cal-anio i {
+    font-size: 0.7em;
+}
+
+.ev-cal-anio:focus-visible,
+.ev-cal-anios button:focus-visible {
+    outline: 2px solid var(--ev-azul);
+    outline-offset: 2px;
+}
+
+.ev-cal-anio-oculto {
+    display: none !important;
+}
+
+/* Vista de años: ocupa el lugar del mes dentro de la misma hoja (el pie Limpiar/Listo se mantiene). */
+.flatpickr-calendar .ev-cal-anios {
+    display: none;
+    padding: 4px 12px 12px;
+}
+
+.flatpickr-calendar.ev-cal--anios .ev-cal-anios {
+    display: block;
+}
+
+.flatpickr-calendar.ev-cal--anios .flatpickr-months,
+.flatpickr-calendar.ev-cal--anios .flatpickr-innerContainer {
+    display: none;
+}
+
+.ev-cal-anios__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.ev-cal-anios__rango {
+    font-weight: 700;
+    color: var(--ev-texto);
+}
+
+.ev-cal-anios__flecha {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ev-texto-sec);
+    cursor: pointer;
+}
+
+.ev-cal-anios__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.ev-cal-anios__anio {
+    min-height: 48px;
+    border: 1px solid var(--ev-borde);
+    border-radius: 12px;
+    background: var(--ev-blanco);
+    color: var(--ev-texto);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ev-cal-anios__anio.is-actual {
+    border-color: var(--ev-azul-oscuro); /* el año de hoy, igual que el día de hoy en el mes */
+}
+
+.ev-cal-anios__anio[aria-current="true"] {
+    background: var(--ev-azul);
+    border-color: var(--ev-azul);
+    color: var(--ev-blanco);
+}
+
+.ev-cal-anios__hoy {
+    display: block;
+    min-height: 44px;
+    margin: 8px auto 0;
+    padding: 0 16px;
+    border: 0;
+    background: transparent;
+    color: var(--ev-azul);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Capas (de menor a mayor): contenido normal < popover desktop (1045) < cabecera fija (1050, header.css)
+   < hoja móvil modal (fondo 1070 + hoja 1071, por encima de PillcoBot 1060). Flatpickr trae 99999. */
+.flatpickr-calendar.open {
+    z-index: 1045;
+}
+
+/* Fondo de la hoja móvil (lo crea el JS; solo se muestra en móvil). */
+.ev-cal-fondo {
+    position: fixed;
+    inset: 0;
+    z-index: 1070;
+    background: rgba(0, 20, 60, 0.45);
+}
+
+.ev-cal-fondo[hidden] {
+    display: none;
+}
+
+/* Bloqueo de scroll: el JS fija el body (position: fixed) y guarda/restaura scrollY. */
+html.ev-cal-bloqueo {
+    overscroll-behavior: none;
+}
+
+@keyframes ev-cal-entrada {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (min-width: 768px) {
+    .ev-cal-fondo {
+        display: none !important;
+    }
+}
+
+/* Móvil / tablet vertical: hoja inferior FIJA y centrada (sin transform de centrado, así
+   la animación de Flatpickr no puede desplazarla). Reemplaza al antiguo modal centrado con
+   translate(-50%, -50%), que parpadeaba en iPhone. */
+@media (max-width: 767.98px) {
+    .flatpickr-calendar.open {
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: min(100vw, 440px) !important;
+        max-width: 100vw !important;
+        margin: 0 auto !important;
+        z-index: 1071; /* sobre el fondo (1070), la cabecera (1050) y PillcoBot (1060) */
+        max-height: 92vh;
+        max-height: 92dvh;
+        overflow-y: auto;
+        border-radius: 20px 20px 0 0;
+        padding-bottom: env(safe-area-inset-bottom, 0);
+        box-shadow: 0 -12px 40px rgba(0, 20, 60, 0.28);
+        animation: ev-cal-entrada 0.2s ease-out both !important;
+    }
+
+    .flatpickr-calendar.arrowTop::before,
+    .flatpickr-calendar.arrowTop::after,
+    .flatpickr-calendar.arrowBottom::before,
+    .flatpickr-calendar.arrowBottom::after {
+        display: none;
+    }
+
+    .flatpickr-calendar .ev-cal-cabecera {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px 6px;
+    }
+
+    .ev-cal-titulo {
+        font-weight: 700;
+        color: var(--ev-texto);
+    }
+
+    .ev-cal-cerrar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        margin: -6px -8px -6px 0;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--ev-texto-sec);
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+
+    /* El contenido interno de Flatpickr tiene ancho fijo (307 px): en la hoja ocupa todo el ancho. */
+    .flatpickr-calendar.open .flatpickr-innerContainer,
+    .flatpickr-calendar.open .flatpickr-rContainer,
+    .flatpickr-calendar.open .flatpickr-days,
+    .flatpickr-calendar.open .dayContainer,
+    .flatpickr-calendar.open .flatpickr-weekdays,
+    .flatpickr-calendar.open .flatpickr-weekdaycontainer {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+    }
+
+    .flatpickr-calendar.open .flatpickr-day {
+        max-width: none;
+        height: 44px;
+        line-height: 42px;
+    }
+
+    /* Las flechas de mes se anclan a la fila de meses (no al borde superior de la hoja, donde está la cabecera). */
+    .flatpickr-calendar.open .flatpickr-months {
+        position: relative;
+    }
+
+    .flatpickr-calendar.open .flatpickr-months .flatpickr-month {
+        height: 48px;
+    }
+
+    .flatpickr-prev-month,
+    .flatpickr-next-month {
+        padding: 14px 16px;
+    }
+
+    /* 16 px evita el zoom automático de iOS al abrir los <select>. */
+    .flatpickr-current-month .ev-cal-anio,
+    .flatpickr-current-month .flatpickr-monthDropdown-months {
+        font-size: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flatpickr-calendar.open {
+        animation: none !important;
+    }
+}
+
+/* Móvil: la fila de filtros rápidos hace scroll horizontal; el rango de fechas
+   (la acción principal de planificación) pasa al inicio para que no quede
+   oculto a la derecha. */
+@media (max-width: 575.98px) {
+    .ev-filtros-rapidos .ev-rango { order: -2; }
 }

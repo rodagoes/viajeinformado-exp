@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Viaje Informado • Huánuco{% endblock %}
+{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,10 +33,10 @@
   {# ================================================================ #}
   <div class="dl-crumb-bar">
     <div class="container-xl">
-      <nav aria-label="Ruta de navegación">
+      <nav aria-label="{% translate "Ruta de navegación" %}">
         <ol class="dl-crumb">
           <li>
-            <a href="{% url 'turismo:listado_lugares' %}">Lugares turísticos</a>
+            <a href="{% url 'turismo:listado_lugares' %}">{% translate "Lugares turísticos" %}</a>
           </li>
           <li><span class="dl-crumb-sep">›</span></li>
           <li><span class="dl-crumb-cur">{{ lugar.nombre }}</span></li>
@@ -66,7 +67,7 @@
       <div class="dl-banner-pills">
         {% if lugar.destacado %}
         <span class="dl-banner-pill dl-banner-pill-gold">
-          <i class="bi bi-star-fill" aria-hidden="true"></i> Destacado
+          <i class="bi bi-star-fill" aria-hidden="true"></i> {% translate "Destacado" %}
         </span>
         {% endif %}
 
@@ -87,8 +88,8 @@
 
     </div>
 
-    <a href="#dl-sobre" class="dl-banner-scroll" aria-label="Ver más información">
-      <span>Conocer más</span>
+    <a href="#dl-sobre" class="dl-banner-scroll" aria-label="{% translate "Ver más información" %}">
+      <span>{% translate "Conocer más" %}</span>
       <i class="bi bi-chevron-down" aria-hidden="true"></i>
     </a>
 
@@ -101,7 +102,7 @@
     <div class="container-xl">
       <div class="dl-sobre-inner">
 
-        <h2 class="dl-section-title" id="dl-sobre-title" data-animar="animate__fadeInUp">Sobre el lugar</h2>
+        <h2 class="dl-section-title" id="dl-sobre-title" data-animar="animate__fadeInUp">{% translate "Sobre el lugar" %}</h2>
 
         {% if lugar.descripcion or lugar.descripcion_corta %}
         <div class="dl-prose animar-delay-1" data-animar="animate__fadeInUp">
@@ -113,23 +114,23 @@
         </div>
         {% endif %}
 
-        <div class="dl-sobre-icons animar-delay-2" role="group" aria-label="Acciones del lugar" data-animar="animate__fadeInUp">
+        <div class="dl-sobre-icons animar-delay-2" role="group" aria-label="{% translate "Acciones del lugar" %}" data-animar="animate__fadeInUp">
 
           <div class="dl-icon-wrap">
             {% include "interacciones/includes/corazon.html" with tipo="lugar" pk=lugar.pk es_favorito=es_favorito nombre=lugar.nombre boton_class="dl-icon-circle s1" %}
-            <span class="dl-icon-label">Favorito</span>
+            <span class="dl-icon-label">{% translate "Favorito" %}</span>
           </div>
 
           <div class="dl-icon-wrap">
             <a
               href="#dl-ubicacion"
               class="dl-icon-circle s2"
-              aria-label="Ver ubicación en el mapa"
-              title="Ver en mapa"
+              aria-label="{% translate "Ver ubicación en el mapa" %}"
+              title="{% translate "Ver en mapa" %}"
             >
               <i class="bi bi-map-fill" aria-hidden="true"></i>
             </a>
-            <span class="dl-icon-label">Ubicación</span>
+            <span class="dl-icon-label">{% translate "Ubicación" %}</span>
           </div>
 
           <div class="dl-icon-wrap">
@@ -137,12 +138,12 @@
               class="dl-icon-circle s3"
               type="button"
               data-action="share"
-              aria-label="Compartir este lugar"
-              title="Compartir"
+              aria-label="{% translate "Compartir este lugar" %}"
+              title="{% translate "Compartir" %}"
             >
               <i class="bi bi-share-fill" aria-hidden="true"></i>
             </button>
-            <span class="dl-icon-label">Compartir</span>
+            <span class="dl-icon-label">{% translate "Compartir" %}</span>
           </div>
 
         </div>
@@ -153,7 +154,7 @@
   {# ================================================================ #}
   {# 4. BLOQUE OSCURO PREMIUM — historia / ubicación / recomendaciones #}
   {# ================================================================ #}
-  <section class="dl-section-experiencia" aria-label="Información detallada de {{ lugar.nombre }}">
+  <section class="dl-section-experiencia" aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Información detallada de {{ nombre }}{% endblocktranslate %}">
 
     {% if lugar.historia %}
     <article class="dl-feature-row dl-feature-row--historia" id="dl-historia" aria-labelledby="dl-historia-title">
@@ -168,8 +169,8 @@
       </div>
 
       <div class="dl-feature-content" data-animar="animate__fadeInUp">
-        <span class="dl-feature-kicker">Memoria del lugar</span>
-        <h2 id="dl-historia-title">Historia</h2>
+        <span class="dl-feature-kicker">{% translate "Memoria del lugar" %}</span>
+        <h2 id="dl-historia-title">{% translate "Historia" %}</h2>
         <div class="dl-feature-prose">
           {{ lugar.historia|linebreaks }}
         </div>
@@ -179,15 +180,15 @@
 
     <article class="dl-feature-row dl-feature-row--ubicacion" id="dl-ubicacion" aria-labelledby="dl-ubic-title">
       <div class="dl-feature-content" data-animar="animate__fadeInUp">
-        <span class="dl-feature-kicker">Cómo llegar</span>
-        <h2 id="dl-ubic-title">Ubicación</h2>
+        <span class="dl-feature-kicker">{% translate "Cómo llegar" %}</span>
+        <h2 id="dl-ubic-title">{% translate "Ubicación" %}</h2>
 
         <div class="dl-location-panel">
           {% if direccion_texto %}
           <div class="dl-location-row">
             <span class="dl-location-ico" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></span>
             <div>
-              <small>Dirección</small>
+              <small>{% translate "Dirección" %}</small>
               <strong>{{ direccion_texto }}</strong>
             </div>
           </div>
@@ -197,7 +198,7 @@
           <div class="dl-location-row">
             <span class="dl-location-ico" aria-hidden="true"><i class="bi bi-signpost-2-fill"></i></span>
             <div>
-              <small>Referencia</small>
+              <small>{% translate "Referencia" %}</small>
               <strong>{{ lugar.referencia }}</strong>
             </div>
           </div>
@@ -207,7 +208,7 @@
           <div class="dl-location-row">
             <span class="dl-location-ico" aria-hidden="true"><i class="bi bi-clock-fill"></i></span>
             <div>
-              <small>Horario</small>
+              <small>{% translate "Horario" %}</small>
               <strong>{{ lugar.horario_visita }}</strong>
             </div>
           </div>
@@ -226,23 +227,23 @@
 
             {% if route_url %}
             <button type="button" class="du-action primary" data-show-dir
-              aria-label="Cómo llegar a {{ lugar.nombre }} en Google Maps">
+              aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Cómo llegar a {{ nombre }} en Google Maps{% endblocktranslate %}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
               </svg>
-              <span>Cómo llegar</span>
+              <span>{% translate "Cómo llegar" %}</span>
             </button>
             {% endif %}
 
             {% if open_url %}
             <a href="{{ open_url }}" target="_blank" rel="noopener noreferrer"
               class="du-action"
-              aria-label="Abrir {{ lugar.nombre }} en Google Maps">
+              aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Abrir {{ nombre }} en Google Maps{% endblocktranslate %}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"></circle>
                 <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
               </svg>
-              <span>Abrir mapa</span>
+              <span>{% translate "Abrir mapa" %}</span>
             </a>
             {% endif %}
 
@@ -252,26 +253,26 @@
           <div class="du-directions" data-directions hidden>
 
             <div class="du-directions-hd">
-              <h5>Cómo llegar</h5>
-              <button type="button" class="du-directions-close" data-hide-dir aria-label="Cerrar">
+              <h5>{% translate "Cómo llegar" %}</h5>
+              <button type="button" class="du-directions-close" data-hide-dir aria-label="{% translate "Cerrar" %}">
                 <i class="bi bi-x-lg" aria-hidden="true"></i>
               </button>
             </div>
 
-            <p class="du-directions-label">Desde</p>
+            <p class="du-directions-label">{% translate "Desde" %}</p>
             <input class="du-direction-input" type="text" value="Mi ubicación actual" readonly>
 
-            <p class="du-directions-label">Hasta</p>
+            <p class="du-directions-label">{% translate "Hasta" %}</p>
             <input class="du-direction-input" type="text" value="{{ direccion_texto|default:'' }}" data-destino readonly>
 
-            <div class="du-direction-modes" aria-label="Modo de traslado">
+            <div class="du-direction-modes" aria-label="{% translate "Modo de traslado" %}">
               <button type="button" class="du-mode is-active" data-modo="walking">
                 <i class="bi bi-person-walking" aria-hidden="true"></i>
-                <span>A pie</span>
+                <span>{% translate "A pie" %}</span>
               </button>
               <button type="button" class="du-mode" data-modo="driving">
                 <i class="bi bi-car-front" aria-hidden="true"></i>
-                <span>En auto</span>
+                <span>{% translate "En auto" %}</span>
               </button>
             </div>
 
@@ -281,11 +282,11 @@
               target="_blank"
               rel="noopener noreferrer"
               data-enlace-ruta
-              aria-label="Iniciar ruta a {{ lugar.nombre }} en Google Maps">
+              aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Iniciar ruta a {{ nombre }} en Google Maps{% endblocktranslate %}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
               </svg>
-              <span>Iniciar ruta en Google Maps</span>
+              <span>{% translate "Iniciar ruta en Google Maps" %}</span>
             </a>
             {% endif %}
 
@@ -317,7 +318,7 @@
       {# ── COLUMNA IZQUIERDA: Carrusel 3D de multimedia ── #}
       <div class="dl-feature-media dl-feature-media--gallery dl-feature-media--carousel">
         {% if media_items %}
-        <div class="carousel-wrapper" aria-label="Galería multimedia de {{ lugar.nombre }}">
+        <div class="carousel-wrapper" aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Galería multimedia de {{ nombre }}{% endblocktranslate %}">
 
           <div class="carousel-track" id="c3dTrack">
             {% for item in media_items %}
@@ -356,7 +357,7 @@
                   </div>
                 {% endif %}
 
-                <button class="fullview-btn" type="button" title="Ver completo" aria-label="Ver completo">
+                <button class="fullview-btn" type="button" title="{% translate "Ver completo" %}" aria-label="{% translate "Ver completo" %}">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <polyline points="15 3 21 3 21 9"></polyline>
                     <polyline points="9 21 3 21 3 15"></polyline>
@@ -371,13 +372,13 @@
           </div>{# /carousel-track #}
 
           <div class="carousel-nav">
-            <button class="nav-arrow" id="c3dPrev" type="button" aria-label="Multimedia anterior">
+            <button class="nav-arrow" id="c3dPrev" type="button" aria-label="{% translate "Multimedia anterior" %}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
-            <div class="dots" id="c3dDots" role="tablist" aria-label="Navegar multimedia"></div>
-            <button class="nav-arrow" id="c3dNext" type="button" aria-label="Multimedia siguiente">
+            <div class="dots" id="c3dDots" role="tablist" aria-label="{% translate "Navegar multimedia" %}"></div>
+            <button class="nav-arrow" id="c3dNext" type="button" aria-label="{% translate "Multimedia siguiente" %}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
@@ -388,16 +389,16 @@
         {% else %}
         <div class="c3d-empty-placeholder" aria-hidden="true">
           <i class="bi bi-images"></i>
-          <p>Sin multimedia</p>
+          <p>{% translate "Sin multimedia" %}</p>
         </div>
         {% endif %}
       </div>{# /dl-feature-media--carousel #}
 
       <div class="dl-feature-content" data-animar="animate__fadeInUp">
-        <span class="dl-feature-kicker">Consejos útiles</span>
-        <h2 id="dl-reco-title">Recomendaciones para el visitante</h2>
+        <span class="dl-feature-kicker">{% translate "Consejos útiles" %}</span>
+        <h2 id="dl-reco-title">{% translate "Recomendaciones para el visitante" %}</h2>
         {% if recomendaciones_items %}
-        <div class="dl-reco-list" aria-label="Recomendaciones para visitar {{ lugar.nombre }}">
+        <div class="dl-reco-list" aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Recomendaciones para visitar {{ nombre }}{% endblocktranslate %}">
           {% for recomendacion in recomendaciones_items %}
           <article class="dl-reco-item">
             <span class="dl-reco-icon" aria-hidden="true">
@@ -420,7 +421,7 @@
         </div>
         {% else %}
         <div class="dl-feature-prose">
-          <p>Próximamente se agregarán recomendaciones específicas para visitar este lugar.</p>
+          <p>{% translate "Próximamente se agregarán recomendaciones específicas para visitar este lugar." %}</p>
         </div>
         {% endif %}
       </div>
@@ -434,14 +435,14 @@
   <section class="dl-section-datos" id="dl-datos" aria-labelledby="dl-datos-title">
     <div class="container-xl">
 
-      <h2 class="dl-section-title" id="dl-datos-title" data-animar="animate__fadeInUp">Datos del lugar</h2>
+      <h2 class="dl-section-title" id="dl-datos-title" data-animar="animate__fadeInUp">{% translate "Datos del lugar" %}</h2>
 
-      <div class="dl-datos-grid animar-delay-1" aria-label="Ficha técnica de {{ lugar.nombre }}" data-animar="animate__fadeInUp">
+      <div class="dl-datos-grid animar-delay-1" aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Ficha técnica de {{ nombre }}{% endblocktranslate %}" data-animar="animate__fadeInUp">
 
         {% if lugar.categoria_principal %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-tag-fill"></i></div>
-          <p class="dl-dato-label">Categoría</p>
+          <p class="dl-dato-label">{% translate "Categoría" %}</p>
           <p class="dl-dato-val">{{ lugar.categoria_principal.nombre }}</p>
         </div>
         {% endif %}
@@ -449,7 +450,7 @@
         {% if ubicacion_resumen %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></div>
-          <p class="dl-dato-label">Ubicación</p>
+          <p class="dl-dato-label">{% translate "Ubicación" %}</p>
           <p class="dl-dato-val">{{ ubicacion_resumen }}</p>
         </div>
         {% endif %}
@@ -457,13 +458,13 @@
         {% if lugar.dificultad and lugar.dificultad != 'no_aplica' %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-bar-chart-fill"></i></div>
-          <p class="dl-dato-label">Dificultad</p>
+          <p class="dl-dato-label">{% translate "Dificultad" %}</p>
           <p class="dl-dato-val">
             <span class="dl-dif-badge dl-dif-{{ lugar.dificultad }}">
               {% if lugar.dificultad == 'facil' %}<i class="bi bi-check-circle-fill" aria-hidden="true"></i>{% endif %}
               {% if lugar.dificultad == 'moderada' %}<i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>{% endif %}
               {% if lugar.dificultad == 'dificil' %}<i class="bi bi-x-circle-fill" aria-hidden="true"></i>{% endif %}
-              {{ lugar.get_dificultad_display }}
+              {% translate lugar.get_dificultad_display %}
             </span>
           </p>
         </div>
@@ -472,7 +473,7 @@
         {% if lugar.tiempo_visita_estimado %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-clock-fill"></i></div>
-          <p class="dl-dato-label">Duración estimada</p>
+          <p class="dl-dato-label">{% translate "Duración estimada" %}</p>
           <p class="dl-dato-val">{{ lugar.tiempo_visita_estimado }}</p>
         </div>
         {% endif %}
@@ -480,19 +481,19 @@
         {% if lugar.horario_visita %}
         <div class="dl-dato-card">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-calendar3"></i></div>
-          <p class="dl-dato-label">Horario</p>
+          <p class="dl-dato-label">{% translate "Horario" %}</p>
           <p class="dl-dato-val">{{ lugar.horario_visita }}</p>
         </div>
         {% endif %}
 
         <div class="dl-dato-card dl-dato-card--entrada">
           <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-ticket-perforated-fill"></i></div>
-          <p class="dl-dato-label">Entrada</p>
+          <p class="dl-dato-label">{% translate "Entrada" %}</p>
           <div class="dl-dato-val dl-dato-val-entrada{% if lugar.tipo_costo == 'no_requiere' or lugar.tipo_costo == 'gratis' %} free{% endif %}">
             {% if lugar.tipo_costo == 'no_requiere' %}
-              <strong>Acceso libre</strong>
+              <strong>{% translate "Acceso libre" %}</strong>
             {% elif lugar.tipo_costo == 'gratis' %}
-              <strong>Ingreso gratuito</strong>
+              <strong>{% translate "Ingreso gratuito" %}</strong>
             {% elif lugar.tipo_costo == 'pagado' %}
               {% if lugar.precio_desde and lugar.precio_hasta %}
                 {% if lugar.precio_desde == lugar.precio_hasta %}
@@ -501,11 +502,11 @@
                   <strong>S/. {{ lugar.precio_desde|floatformat:0 }} — S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
                 {% endif %}
               {% elif lugar.precio_desde %}
-                <strong>Desde S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
+                <strong>{% translate "Desde" %} S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
               {% elif lugar.precio_hasta %}
-                <strong>Hasta S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
+                <strong>{% translate "Hasta" %} S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
               {% else %}
-                <strong>Consultar</strong>
+                <strong>{% translate "Consultar" %}</strong>
               {% endif %}
 
               {% if entrada_usd_disponible %}
@@ -521,10 +522,10 @@
                   US$ {{ precio_hasta_usd_txt }}
                 {% endif %}
               </small>
-              <em>TC S/. {{ tipo_cambio_venta_txt }} · {{ fecha_tipo_cambio_txt }}</em>
+              <em>{% translate "TC" %} S/. {{ tipo_cambio_venta_txt }} · {{ fecha_tipo_cambio_txt }}</em>
               {% endif %}
             {% else %}
-              <strong>Consultar</strong>
+              <strong>{% translate "Consultar" %}</strong>
             {% endif %}
           </div>
         </div>
@@ -532,8 +533,8 @@
       </div>
 
       {% if lugar.categorias_secundarias.all %}
-      <div class="dl-sec-cats" aria-label="Categorías adicionales">
-        <p class="dl-sec-cats-label">También en</p>
+      <div class="dl-sec-cats" aria-label="{% translate "Categorías adicionales" %}">
+        <p class="dl-sec-cats-label">{% translate "También en" %}</p>
         <div class="dl-sec-tags">
           {% for cat in lugar.categorias_secundarias.all %}
           <span class="dl-sec-tag"><i class="bi bi-tag" aria-hidden="true"></i> {{ cat.nombre }}</span>
@@ -564,16 +565,16 @@
   id="c3dLightbox"
   role="dialog"
   aria-modal="true"
-  aria-label="Galería de imágenes — {{ lugar.nombre }}"
+  aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Galería de imágenes — {{ nombre }}{% endblocktranslate %}"
 >
 
   {# ── Header ── #}
   <div class="c3d-lb-header">
     <div class="c3d-lb-header-text">
-      <span class="c3d-lb-kicker">Galería de imágenes</span>
+      <span class="c3d-lb-kicker">{% translate "Galería de imágenes" %}</span>
       <strong class="c3d-lb-title">{{ lugar.nombre }}</strong>
     </div>
-    <button class="c3d-lb-close" id="c3dLbClose" type="button" aria-label="Cerrar visor">
+    <button class="c3d-lb-close" id="c3dLbClose" type="button" aria-label="{% translate "Cerrar visor" %}">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -586,7 +587,7 @@
 
     <div class="c3d-lb-peek c3d-lb-peek--prev" id="c3dLbPeekPrev" aria-hidden="true"></div>
 
-    <button class="c3d-lb-arrow c3d-lb-prev" id="c3dLbPrev" type="button" aria-label="Imagen anterior">
+    <button class="c3d-lb-arrow c3d-lb-prev" id="c3dLbPrev" type="button" aria-label="{% translate "Imagen anterior" %}">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="15 18 9 12 15 6"></polyline>
       </svg>
@@ -594,7 +595,7 @@
 
     <div class="c3d-lightbox-content" id="c3dLbContent"></div>
 
-    <button class="c3d-lb-arrow c3d-lb-next" id="c3dLbNext" type="button" aria-label="Imagen siguiente">
+    <button class="c3d-lb-arrow c3d-lb-next" id="c3dLbNext" type="button" aria-label="{% translate "Imagen siguiente" %}">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <polyline points="9 18 15 12 9 6"></polyline>
       </svg>
@@ -605,7 +606,7 @@
   </div>
 
   {# ── Dots ── #}
-  <div class="c3d-lb-dots" id="c3dLbDots" role="tablist" aria-label="Navegar imágenes"></div>
+  <div class="c3d-lb-dots" id="c3dLbDots" role="tablist" aria-label="{% translate "Navegar imágenes" %}"></div>
 
 </div>
 

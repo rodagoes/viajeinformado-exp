@@ -1,3 +1,5 @@
+// ViI18n(clave, fallback) vive en vi-i18n.js (cargado al inicio del <body>).
+
 document.addEventListener("DOMContentLoaded", function() {
     // Set current year in footer
     const yearSpan = document.getElementById('current-year');

@@ -34,7 +34,7 @@
         toast.innerHTML =
             '<i class="vi-toast__icon bi ' + (iconos[tag] || iconos.success) + '" aria-hidden="true"></i>' +
             '<span class="vi-toast__message"></span>' +
-            '<button type="button" class="vi-toast__close" aria-label="Cerrar mensaje"><i class="bi bi-x" aria-hidden="true"></i></button>';
+            '<button type="button" class="vi-toast__close" aria-label="' + ViI18n('fav_cerrar', 'Cerrar mensaje') + '"><i class="bi bi-x" aria-hidden="true"></i></button>';
         toast.querySelector('.vi-toast__message').textContent = mensaje;
 
         var hide = function () {
@@ -57,9 +57,9 @@
         var icon = btn.querySelector('i');
         if (icon) icon.className = activo ? 'bi bi-heart-fill' : 'bi bi-heart';
         var nombre = btn.dataset.nombreRecurso || '';
-        btn.setAttribute('aria-label', (activo ? 'Quitar ' : 'Agregar ') + nombre + (activo ? ' de favoritos' : ' a favoritos'));
+        btn.setAttribute('aria-label', (activo ? ViI18n('fav_quitar', 'Quitar %(nombre)s de favoritos') : ViI18n('fav_agregar', 'Agregar %(nombre)s a favoritos')).replace('%(nombre)s', nombre));
         var texto = btn.querySelector('span');
-        if (texto) texto.textContent = activo ? 'Guardado' : 'Guardar';
+        if (texto) texto.textContent = activo ? ViI18n('fav_guardado', 'Guardado') : ViI18n('fav_guardar', 'Guardar');
     }
 
     document.addEventListener('submit', function (event) {
@@ -91,7 +91,7 @@
             .then(function (data) {
                 if (!data) return;
                 setHeartState(btn, data.es_favorito);
-                showToast(data.es_favorito ? 'Agregado a tus favoritos.' : 'Eliminado de tus favoritos.');
+                showToast(data.es_favorito ? ViI18n('fav_agregado', 'Agregado a tus favoritos.') : ViI18n('fav_eliminado', 'Eliminado de tus favoritos.'));
 
                 var paginaFavoritos = document.querySelector('[data-favoritos-page]');
                 if (paginaFavoritos && !data.es_favorito) {
@@ -111,7 +111,7 @@
             })
             .catch(function () {
                 setHeartState(btn, estabaActivo);
-                showToast('No pudimos actualizar tus favoritos. Inténtalo nuevamente.', 'error');
+                showToast(ViI18n('fav_error', 'No pudimos actualizar tus favoritos. Inténtalo nuevamente.'), 'error');
             })
             .finally(function () {
                 btn.disabled = false;
@@ -164,13 +164,13 @@
         var popover = document.createElement('div');
         popover.className = 'vi-favorito-anon-popover';
         popover.setAttribute('role', 'dialog');
-        popover.setAttribute('aria-label', 'Inicia sesión para guardar en favoritos');
+        popover.setAttribute('aria-label', ViI18n('fav_login', 'Inicia sesión para guardar en favoritos'));
         popover.setAttribute('tabindex', '-1');
         popover.innerHTML =
-            '<p>Inicia sesión para guardar este lugar en tus favoritos.</p>' +
+            '<p>' + ViI18n('fav_popover', 'Inicia sesión para guardar este lugar en tus favoritos.') + '</p>' +
             '<div class="vi-favorito-anon-popover__acciones">' +
-            '<a href="' + btn.dataset.loginUrl + '">Iniciar sesión</a>' +
-            '<a href="' + btn.dataset.registroUrl + '">Crear cuenta</a>' +
+            '<a href="' + btn.dataset.loginUrl + '">' + ViI18n('fav_iniciar', 'Iniciar sesión') + '</a>' +
+            '<a href="' + btn.dataset.registroUrl + '">' + ViI18n('fav_crear', 'Crear cuenta') + '</a>' +
             '</div>';
 
         document.body.appendChild(popover);

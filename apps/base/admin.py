@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin, TranslationStackedInline, TranslationTabularInline
 from .models import HomeHeroSlide
 
 
@@ -8,7 +9,7 @@ admin.site.index_title = "Panel de administración"
 
 
 @admin.register(HomeHeroSlide)
-class HomeHeroSlideAdmin(admin.ModelAdmin):
+class HomeHeroSlideAdmin(TranslationAdmin):
     list_display = ['etiqueta', 'titulo_principal', 'titulo_resaltado', 'tipo_archivo', 'orden', 'activo']
     list_editable = ['orden', 'activo']
     search_fields = ['titulo_principal', 'etiqueta', 'descripcion']

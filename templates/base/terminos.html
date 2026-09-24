@@ -1,26 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Términos y Condiciones - Viaje Informado{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "Términos y Condiciones - Viaje Informado" %}{% endblock %}
 
 {% block content %}
 <div class="container vi-page">
     <div class="row justify-content-center">
         <div class="col-lg-8 vi-page-card">
-            <h1 class="fw-bold mb-4 text-center">Términos y Condiciones</h1>
+            <h1 class="fw-bold mb-4 text-center">{% translate "Términos y Condiciones" %}</h1>
             
             <div class="vi-text-muted">
-                <p>Bienvenido a Viaje Informado. Al acceder a este sitio web, usted acepta estar sujeto a estos Términos y Condiciones.</p>
+                <p>{% translate "Bienvenido a Viaje Informado. Al acceder a este sitio web, usted acepta estar sujeto a estos Términos y Condiciones." %}</p>
                 
-                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">1. Uso del sitio</h3>
-                <p>Usted acepta utilizar este sitio solo con fines lícitos y de una manera que no infrinja los derechos de, ni restrinja o inhiba el uso y disfrute de este sitio por parte de cualquier tercero.</p>
+                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">{% translate "1. Uso del sitio" %}</h3>
+                <p>{% translate "Usted acepta utilizar este sitio solo con fines lícitos y de una manera que no infrinja los derechos de, ni restrinja o inhiba el uso y disfrute de este sitio por parte de cualquier tercero." %}</p>
                 
-                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">2. Propiedad intelectual</h3>
-                <p>Todo el contenido incluido en este sitio es propiedad de Viaje Informado o de sus proveedores de contenido y está protegido por las leyes de derechos de autor.</p>
+                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">{% translate "2. Propiedad intelectual" %}</h3>
+                <p>{% translate "Todo el contenido incluido en este sitio es propiedad de Viaje Informado o de sus proveedores de contenido y está protegido por las leyes de derechos de autor." %}</p>
                 
-                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">3. Negocios</h3>
-                <p>Si usted es un negocio y desea promocionarse, debe comunicarse exclusivamente a través de <a href="mailto:viajeinformadohuanuco@gmail.com" style="color: var(--vi-teal);">viajeinformadohuanuco@gmail.com</a>.</p>
+                <h3 class="mt-4 mb-3" style="color: var(--vi-navy-deep);">{% translate "3. Negocios" %}</h3>
+                <p>{% translate "Si usted es un negocio y desea promocionarse, debe comunicarse exclusivamente a través de" %} <a href="mailto:viajeinformadohuanuco@gmail.com" style="color: var(--vi-teal);">viajeinformadohuanuco@gmail.com</a>.</p>
                 
-                <p class="mt-5 small"><em>Última actualización: Mayo 2026</em></p>
+                <p class="mt-5 small"><em>{% translate "Última actualización: Mayo 2026" %}</em></p>
             </div>
         </div>
     </div>

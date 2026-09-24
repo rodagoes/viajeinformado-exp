@@ -3868,7 +3868,7 @@ class FavoritosChatTests(FavoritosDataMixin, TestCase):
         respuesta = self.turno("¿Cuáles son mis favoritos?")
 
         self.crear.assert_not_called()
-        self.assertIn(presenters.TEXTO_FAVORITOS_LOGIN, respuesta.contenido)
+        self.assertIn(str(presenters.TEXTO_FAVORITOS_LOGIN), respuesta.contenido)
         self.assertIn(f"Iniciar sesión: {reverse('accounts:login')}", respuesta.contenido)
         self.assertEqual(respuesta.tipo_fuente, "internal")
         self.assertIsNone(respuesta.presentacion)
@@ -3949,7 +3949,7 @@ class FavoritosChatTests(FavoritosDataMixin, TestCase):
 
         datos = respuesta.json()
         self.assertNotEqual(datos["conversation_id"], conversacion_a.pk)
-        self.assertIn(presenters.TEXTO_FAVORITOS_LOGIN, datos["respuesta"]["contenido"])
+        self.assertIn(str(presenters.TEXTO_FAVORITOS_LOGIN), datos["respuesta"]["contenido"])
         self.assertNotIn("Kotosh", datos["respuesta"]["contenido"])
         self.assertEqual(conversacion_a.mensajes.count(), 0)
 

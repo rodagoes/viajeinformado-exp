@@ -4,6 +4,7 @@ temporadas". Único lugar que conoce los nombres de settings de coordenadas;
 el servicio y la vista solo trabajan con el slug validado.
 """
 from django.conf import settings
+from django.utils.translation import gettext
 
 CIUDAD_PREDETERMINADA = "huanuco"
 _ORDEN_CIUDADES = ("huanuco", "tingo-maria")
@@ -16,14 +17,14 @@ def _configuraciones():
         "huanuco": {
             "slug": "huanuco",
             "nombre": "Huánuco",
-            "nombre_completo": "Huánuco (Ciudad)",
+            "nombre_completo": gettext("Huánuco (Ciudad)"),
             "latitud": settings.CLIMA_HUANUCO_LATITUD,
             "longitud": settings.CLIMA_HUANUCO_LONGITUD,
         },
         "tingo-maria": {
             "slug": "tingo-maria",
             "nombre": "Tingo María",
-            "nombre_completo": "Tingo María (Ciudad)",
+            "nombre_completo": gettext("Tingo María (Ciudad)"),
             "latitud": settings.CLIMA_TINGO_MARIA_LATITUD,
             "longitud": settings.CLIMA_TINGO_MARIA_LONGITUD,
         },

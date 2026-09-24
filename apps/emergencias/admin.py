@@ -2,6 +2,7 @@ from datetime import date, timedelta
 
 from django import forms
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 from django.utils.html import format_html
 
 from .models import ContactoEmergencia, NumeroContactoAdicional, ZonaAtencionEmergencia
@@ -26,7 +27,7 @@ class ContactoEmergenciaForm(forms.ModelForm):
         return cleaned_data
 
 
-class NumeroContactoAdicionalInline(admin.TabularInline):
+class NumeroContactoAdicionalInline(TranslationTabularInline):
     model = NumeroContactoAdicional
     extra = 1
     fields = ["etiqueta", "numero_visible", "numero_tel", "orden"]
@@ -52,7 +53,7 @@ class ZonaAtencionEmergenciaAdmin(admin.ModelAdmin):
 
 
 @admin.register(ContactoEmergencia)
-class ContactoEmergenciaAdmin(admin.ModelAdmin):
+class ContactoEmergenciaAdmin(TranslationAdmin):
     form = ContactoEmergenciaForm
     inlines = [NumeroContactoAdicionalInline]
     list_display = [

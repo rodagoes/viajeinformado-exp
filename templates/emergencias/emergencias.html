@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 
-{% block title %}Emergencias • Viaje Informado{% endblock %}
+{% block title %}{% translate "Emergencias • Viaje Informado" %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/emergencias.css' %}">
@@ -18,11 +19,10 @@
             <span class="emergencias-page__hero-icon" aria-hidden="true">
                 <i class="bi bi-telephone-fill"></i>
             </span>
-            <p class="emergencias-page__hero-eyebrow">PLANIFICA TU VIAJE</p>
-            <h1 class="emergencias-page__hero-title">Directorio de Emergencia</h1>
+            <p class="emergencias-page__hero-eyebrow">{% translate "PLANIFICA TU VIAJE" %}</p>
+            <h1 class="emergencias-page__hero-title">{% translate "Directorio de Emergencia" %}</h1>
             <p class="emergencias-page__hero-desc">
-                Encuentra rápidamente contactos nacionales y locales según la
-                zona en la que te encuentres.
+                {% translate "Encuentra rápidamente contactos nacionales y locales según la zona en la que te encuentres." %}
             </p>
         </div>
     </section>
@@ -36,15 +36,15 @@
                         <i class="bi bi-geo-alt-fill"></i>
                     </span>
                     <div class="emergencias-selector__copy">
-                        <p class="emergencias-selector__eyebrow">Zona de atención</p>
-                        <h2 class="emergencias-selector__title">¿Dónde te encuentras?</h2>
+                        <p class="emergencias-selector__eyebrow">{% translate "Zona de atención" %}</p>
+                        <h2 class="emergencias-selector__title">{% translate "¿Dónde te encuentras?" %}</h2>
                     </div>
                 </div>
 
                 <span class="emergencias-selector__divisor" aria-hidden="true"></span>
 
                 <form method="get" class="emergencias-selector__form" id="emergencias-selector-form">
-                    <label for="emergencias-zona-select" class="visually-hidden">Zona de atención</label>
+                    <label for="emergencias-zona-select" class="visually-hidden">{% translate "Zona de atención" %}</label>
                     <div class="emergencias-selector__campo">
                         <select
                             name="zona"
@@ -52,7 +52,7 @@
                             class="emergencias-selector__select"
                             {% if zonas_agrupadas %}onchange="this.form.requestSubmit()"{% else %}disabled{% endif %}>
                             {% if not zonas_agrupadas %}
-                            <option value="">Sin zonas configuradas todavía</option>
+                            <option value="">{% translate "Sin zonas configuradas todavía" %}</option>
                             {% endif %}
                             {% for grupo in zonas_agrupadas %}
                             <optgroup label="Provincia de {{ grupo.provincia.nombre_oficial|title }}">
@@ -69,7 +69,7 @@
                         <i class="bi bi-chevron-down emergencias-selector__chevron" aria-hidden="true"></i>
                     </div>
                     <noscript>
-                        <button type="submit" class="emergencias-selector__submit">Ver contactos</button>
+                        <button type="submit" class="emergencias-selector__submit">{% translate "Ver contactos" %}</button>
                     </noscript>
                 </form>
             </div>
@@ -81,10 +81,10 @@
         <div class="container">
             <div class="emergencias-page__section-heading">
                 <h2 id="emergencias-nacionales-title" class="emergencias-page__section-title">
-                    Directorios nacionales
+                    {% translate "Directorios nacionales" %}
                 </h2>
                 <p class="emergencias-page__section-subtitle">
-                    Disponibles sin importar la zona seleccionada
+                    {% translate "Disponibles sin importar la zona seleccionada" %}
                 </p>
             </div>
 
@@ -118,7 +118,7 @@
                     {% if c.fecha_verificacion %}
                     <p class="emergencia-card__verificado">
                         <i class="bi bi-patch-check-fill" aria-hidden="true"></i>
-                        Verificado en {{ c.fecha_verificacion|date:"F Y" }}
+                        {% blocktranslate with fecha=c.fecha_verificacion|date:"F Y" %}Verificado en {{ fecha }}{% endblocktranslate %}
                     </p>
                     {% endif %}
 
@@ -127,8 +127,8 @@
                             <a
                                 class="emergencia-card__btn-llamar"
                                 href="tel:{{ c.numero_tel }}"
-                                aria-label="Llamar a {{ c.nombre }}, {{ c.numero_visible }}">
-                                <i class="bi bi-telephone-fill" aria-hidden="true"></i> Llamar
+                                aria-label="{% blocktranslate trimmed with nombre=c.nombre numero=c.numero_visible %}Llamar a {{ nombre }}, {{ numero }}{% endblocktranslate %}">
+                                <i class="bi bi-telephone-fill" aria-hidden="true"></i> {% translate "Llamar" %}
                             </a>
                         </div>
                         <div class="emergencias__accion-copiar">
@@ -136,9 +136,9 @@
                                 type="button"
                                 class="emergencia-card__btn-copiar"
                                 data-copiar-numero="{{ c.numero_tel }}"
-                                aria-label="Copiar el número de {{ c.nombre }}">
+                                aria-label="{% blocktranslate trimmed with nombre=c.nombre %}Copiar el número de {{ nombre }}{% endblocktranslate %}">
                                 <i class="bi bi-clipboard" data-copiar-icono aria-hidden="true"></i>
-                                <span data-copiar-etiqueta>Copiar número</span>
+                                <span data-copiar-etiqueta>{% translate "Copiar número" %}</span>
                             </button>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
             {% else %}
             <div class="emergencias-page__vacio">
                 <i class="bi bi-hourglass-split" aria-hidden="true"></i>
-                <p>Los contactos nacionales verificados estarán disponibles próximamente.</p>
+                <p>{% translate "Los contactos nacionales verificados estarán disponibles próximamente." %}</p>
             </div>
             {% endif %}
         </div>
@@ -159,10 +159,10 @@
         <div class="container">
             <div class="emergencias-page__section-heading">
                 <h2 id="emergencias-locales-title" class="emergencias-page__section-title">
-                    Directorio local{% if zona_actual %} de {{ zona_actual.nombre_visible }}{% endif %}
+                    {% if zona_actual %}{% blocktranslate with zona=zona_actual.nombre_visible %}Directorio local de {{ zona }}{% endblocktranslate %}{% else %}{% translate "Directorio local" %}{% endif %}
                 </h2>
                 <p class="emergencias-page__section-subtitle">
-                    Contactos correspondientes a la zona seleccionada
+                    {% translate "Contactos correspondientes a la zona seleccionada" %}
                 </p>
             </div>
 
@@ -189,7 +189,7 @@
                             <a
                                 href="tel:{{ extra.numero_tel }}"
                                 class="emergencia-card__telefono emergencia-card__telefono--extra"
-                                aria-label="Llamar al número {% if extra.etiqueta %}{{ extra.etiqueta }} {% endif %}de {{ c.nombre }}, {{ extra.numero_visible }}">
+                                aria-label="{% if extra.etiqueta %}{% blocktranslate trimmed with etiqueta=extra.etiqueta nombre=c.nombre numero=extra.numero_visible %}Llamar al número {{ etiqueta }} de {{ nombre }}, {{ numero }}{% endblocktranslate %}{% else %}{% blocktranslate trimmed with nombre=c.nombre numero=extra.numero_visible %}Llamar al número de {{ nombre }}, {{ numero }}{% endblocktranslate %}{% endif %}">
                                 <i class="bi bi-telephone-fill" aria-hidden="true"></i>
                                 {% if extra.etiqueta %}<span class="emergencia-card__telefono-etiqueta">{{ extra.etiqueta }}:</span>{% endif %}
                                 {{ extra.numero_visible }}
@@ -215,7 +215,7 @@
                         {% if c.fecha_verificacion %}
                         <span class="emergencia-card__meta-item emergencia-card__meta-item--verificado">
                             <i class="bi bi-patch-check-fill" aria-hidden="true"></i>
-                            Verificado el {{ c.fecha_verificacion|date:"d/m/Y" }}
+                            {% blocktranslate with fecha=c.fecha_verificacion|date:"d/m/Y" %}Verificado el {{ fecha }}{% endblocktranslate %}
                         </span>
                         {% endif %}
                     </p>
@@ -226,15 +226,15 @@
                             type="button"
                             class="emergencia-card__btn-copiar"
                             data-copiar-numero="{{ c.numero_tel }}"
-                            aria-label="Copiar el número de {{ c.nombre }}">
+                            aria-label="{% blocktranslate trimmed with nombre=c.nombre %}Copiar el número de {{ nombre }}{% endblocktranslate %}">
                             <i class="bi bi-clipboard" data-copiar-icono aria-hidden="true"></i>
-                            <span data-copiar-etiqueta>Copiar número</span>
+                            <span data-copiar-etiqueta>{% translate "Copiar número" %}</span>
                         </button>
                         <a
                             class="emergencia-card__btn-llamar emergencia-card__btn-llamar--local"
                             href="tel:{{ c.numero_tel }}"
-                            aria-label="Llamar a {{ c.nombre }}, {{ c.numero_visible }}">
-                            <i class="bi bi-telephone-fill" aria-hidden="true"></i> Llamar
+                            aria-label="{% blocktranslate trimmed with nombre=c.nombre numero=c.numero_visible %}Llamar a {{ nombre }}, {{ numero }}{% endblocktranslate %}">
+                            <i class="bi bi-telephone-fill" aria-hidden="true"></i> {% translate "Llamar" %}
                         </a>
                     </div>
                 </article>
@@ -244,14 +244,13 @@
             <div class="emergencias-page__vacio">
                 <i class="bi bi-search-heart" aria-hidden="true"></i>
                 <p>
-                    Estamos verificando los contactos locales de esta zona.
-                    Mientras tanto, utiliza los números nacionales mostrados arriba.
+                    {% translate "Estamos verificando los contactos locales de esta zona. Mientras tanto, utiliza los números nacionales mostrados arriba." %}
                 </p>
             </div>
             {% else %}
             <div class="emergencias-page__vacio">
                 <i class="bi bi-signpost-2" aria-hidden="true"></i>
-                <p>Las zonas de atención están siendo configuradas.</p>
+                <p>{% translate "Las zonas de atención están siendo configuradas." %}</p>
             </div>
             {% endif %}
         </div>
@@ -268,10 +267,9 @@
                             <i class="bi bi-phone-fill"></i>
                         </span>
                         <div>
-                            <h2 class="emergencias-qr__title">¿Necesitas llamar desde tu celular?</h2>
+                            <h2 class="emergencias-qr__title">{% translate "¿Necesitas llamar desde tu celular?" %}</h2>
                             <p class="emergencias-qr__desc">
-                                Escanea el código QR para abrir esta página con la zona
-                                seleccionada ({{ zona_actual.nombre_visible }}).
+                                {% blocktranslate trimmed with zona=zona_actual.nombre_visible %}Escanea el código QR para abrir esta página con la zona seleccionada ({{ zona }}).{% endblocktranslate %}
                             </p>
                         </div>
                     </div>
@@ -280,7 +278,7 @@
                         src="{{ qr_data_uri }}"
                         width="152"
                         height="152"
-                        alt="Código QR hacia la página de Emergencias con la zona {{ zona_actual.nombre_visible }} seleccionada">
+                        alt="{% blocktranslate trimmed with zona=zona_actual.nombre_visible %}Código QR hacia la página de Emergencias con la zona {{ zona }} seleccionada{% endblocktranslate %}">
                 </div>
                 {% endif %}
 
@@ -304,12 +302,10 @@
                             </div>
                         </div>
                         <p class="emergencias-extranjeros__es" lang="es">
-                            Si necesitas ayuda, utiliza los números de esta página para
-                            contactar a la Policía, Bomberos o SAMU.
+                            Si necesitas ayuda, utiliza los números de esta página para contactar a la Policía, Bomberos o SAMU.
                         </p>
                         <p class="emergencias-extranjeros__en" lang="en" hidden>
-                            If you need help, use the numbers on this page to contact
-                            Police, Fire Department or Health Services.
+                            If you need help, use the numbers on this page to contact Police, Fire Department or Health Services.
                         </p>
                     </div>
                 </div>
@@ -320,16 +316,16 @@
     <!-- ANTES DE LLAMAR -->
     <section class="emergencias-page__section">
         <div class="container">
-            <h2 class="emergencias-page__section-title">¡IMPORTANTE!</h2>
+            <h2 class="emergencias-page__section-title">{% translate "¡IMPORTANTE!" %}</h2>
             <div class="emergencias-antes-llamar">
                 <div class="emergencias-antes-llamar__item">
                     <span class="emergencias-antes-llamar__icon" aria-hidden="true">
                         <lottie-player src="{% static 'assets/img/icons/ubicacion-icono-emg.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
                     </span>
                     <div>
-                        <h3 class="emergencias-antes-llamar__titulo">Indicar tu ubicación exacta</h3>
+                        <h3 class="emergencias-antes-llamar__titulo">{% translate "Indicar tu ubicación exacta" %}</h3>
                         <p class="emergencias-antes-llamar__desc">
-                            Menciona una calle, distrito o punto de referencia cercano.
+                            {% translate "Menciona una calle, distrito o punto de referencia cercano." %}
                         </p>
                     </div>
                 </div>
@@ -338,9 +334,9 @@
                         <lottie-player src="{% static 'assets/img/icons/comunicar-icono-emg.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
                     </span>
                     <div>
-                        <h3 class="emergencias-antes-llamar__titulo">Describir la emergencia con calma</h3>
+                        <h3 class="emergencias-antes-llamar__titulo">{% translate "Describir la emergencia con calma" %}</h3>
                         <p class="emergencias-antes-llamar__desc">
-                            Explica brevemente qué sucede para que puedan ayudarte mejor.
+                            {% translate "Explica brevemente qué sucede para que puedan ayudarte mejor." %}
                         </p>
                     </div>
                 </div>
@@ -349,9 +345,9 @@
                         <lottie-player src="{% static 'assets/img/icons/bateria-icono-emg.json' %}" autoplay loop mode="normal" style="width: 3rem; height: 3rem;"></lottie-player>
                     </span>
                     <div>
-                        <h3 class="emergencias-antes-llamar__titulo">Mantener tu celular con batería</h3>
+                        <h3 class="emergencias-antes-llamar__titulo">{% translate "Mantener tu celular con batería" %}</h3>
                         <p class="emergencias-antes-llamar__desc">
-                            Así podrás recibir información y mantenerte comunicado.
+                            {% translate "Así podrás recibir información y mantenerte comunicado." %}
                         </p>
                     </div>
                 </div>
@@ -365,16 +361,16 @@
             <p class="emergencias-page__verificacion-texto">
                 {% if ultima_verificacion %}
                 <i class="bi bi-patch-check-fill" aria-hidden="true"></i>
-                Información verificada en {{ ultima_verificacion|date:"F Y" }}.
+                {% blocktranslate with fecha=ultima_verificacion|date:"F Y" %}Información verificada en {{ fecha }}.{% endblocktranslate %}
                 {% else %}
                 <i class="bi bi-info-circle" aria-hidden="true"></i>
-                Aún no hay contactos verificados registrados para esta página.
+                {% translate "Aún no hay contactos verificados registrados para esta página." %}
                 {% endif %}
                 <button
                     type="button"
                     class="emergencias-page__verificacion-link"
                     data-abrir-modal="reportar-problema">
-                    Reportar un número incorrecto
+                    {% translate "Reportar un número incorrecto" %}
                 </button>
             </p>
         </div>
@@ -389,11 +385,11 @@
             aria-modal="true"
             aria-labelledby="reportar-problema-titulo"
             tabindex="-1">
-            <button type="button" class="emergencias-modal__cerrar" data-cerrar-modal aria-label="Cerrar">
+            <button type="button" class="emergencias-modal__cerrar" data-cerrar-modal aria-label="{% translate "Cerrar" %}">
                 <i class="bi bi-x-lg" aria-hidden="true"></i>
             </button>
 
-            <h2 id="reportar-problema-titulo" class="emergencias-modal__titulo">Reportar un problema</h2>
+            <h2 id="reportar-problema-titulo" class="emergencias-modal__titulo">{% translate "Reportar un problema" %}</h2>
 
             <form
                 id="reportar-problema-form"
@@ -409,35 +405,35 @@
                     aria-hidden="true">
 
                 <div class="emergencias-modal__campo">
-                    <label for="reportar-problema-titulo-campo">Nombre del problema</label>
+                    <label for="reportar-problema-titulo-campo">{% translate "Nombre del problema" %}</label>
                     <input
                         type="text"
                         id="reportar-problema-titulo-campo"
                         name="titulo"
                         required
                         maxlength="140"
-                        placeholder="Ejemplo: Información errónea">
+                        placeholder="{% translate "Ejemplo: Información errónea" %}">
                 </div>
 
                 <div class="emergencias-modal__campo">
-                    <label for="reportar-problema-desc-campo">Describa el problema</label>
+                    <label for="reportar-problema-desc-campo">{% translate "Describa el problema" %}</label>
                     <textarea
                         id="reportar-problema-desc-campo"
                         name="descripcion"
                         required
                         maxlength="2000"
                         rows="4"
-                        placeholder="Ejemplo: Los números de teléfono de Serenazgo Huánuco no son los correctos, actualizarlos."></textarea>
+                        placeholder="{% translate "Ejemplo: Los números de teléfono de Serenazgo Huánuco no son los correctos, actualizarlos." %}"></textarea>
                 </div>
 
                 <p class="emergencias-modal__estado" data-estado-envio role="status" aria-live="polite"></p>
 
                 <div class="emergencias-modal__acciones">
                     <button type="button" class="emergencias-modal__btn emergencias-modal__btn--cancelar" data-cerrar-modal>
-                        Cancelar
+                        {% translate "Cancelar" %}
                     </button>
                     <button type="submit" class="emergencias-modal__btn emergencias-modal__btn--enviar">
-                        Enviar reporte
+                        {% translate "Enviar reporte" %}
                     </button>
                 </div>
             </form>
