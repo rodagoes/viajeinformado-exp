@@ -1,7 +1,8 @@
 from modeltranslation.translator import TranslationOptions, register
 
 from .models import (
-    CategoriaServicioTurista, ContactoServicioTurista, ImagenServicioTurista, ServicioTurista,
+    CategoriaServicioTurista, ContactoServicioTurista, ImagenServicioTurista, SedeServicioTurista,
+    ServicioTurista,
 )
 
 
@@ -18,6 +19,13 @@ class ServicioTuristaTranslationOptions(TranslationOptions):
         "descripcion_corta", "descripcion", "referencia", "horario_atencion",
         "recomendaciones", "notas", "texto_alt_imagen",
     )
+
+
+# Los campos físicos de la entidad (referencia, horario_atencion) quedan
+# registrados mientras existan las columnas legadas; la fuente real es la sede.
+@register(SedeServicioTurista)
+class SedeServicioTuristaTranslationOptions(TranslationOptions):
+    fields = ("referencia", "horario_atencion")
 
 
 @register(ContactoServicioTurista)

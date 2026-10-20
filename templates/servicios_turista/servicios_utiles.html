@@ -6,6 +6,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/componentes/como-llegar-desplegable.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/componentes/paginacion.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/servicios-utiles.css' %}">
 {% endblock %}
 
@@ -168,8 +169,9 @@
                 </div>
 
                 {% if page_obj.has_other_pages %}
-                <nav aria-label="{% translate "Navegación de páginas" %}" class="su-paginacion">
-                    <ul class="pagination">
+                <!-- Paginación: componente compartido (componentes/paginacion.css), igual que Restaurantes/Alojamientos -->
+                <nav aria-label="{% translate "Navegación de páginas" %}" class="d-flex justify-content-center vi-paginacion-contenedor su-paginacion">
+                    <ul class="pagination vi-paginacion">
 
                         {% if page_obj.has_previous %}
                         <li class="page-item">
@@ -183,8 +185,8 @@
                             </a>
                         </li>
                         {% else %}
-                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
-                        <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Primera" %}">&laquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Anterior" %}">&lsaquo;</span></li>
                         {% endif %}
 
                         {% for i in page_obj.paginator.page_range %}
@@ -193,7 +195,7 @@
                                 <span class="page-link"><span>{{ i }}</span></span>
                             </li>
                             {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                            <li class="page-item page-number">
+                            <li class="page-item page-number{% if i > page_obj.number|add:'1' or i < page_obj.number|add:'-1' %} page-number--solo-desktop{% endif %}">
                                 <a class="page-link" href="?zona={{ zona_actual_slug }}{% if categoria_actual %}&categoria={{ categoria_actual.slug }}{% endif %}&page={{ i }}">
                                     <span>{{ i }}</span>
                                 </a>
@@ -213,8 +215,8 @@
                             </a>
                         </li>
                         {% else %}
-                        <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
-                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Siguiente" %}">&rsaquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Última" %}">&raquo;</span></li>
                         {% endif %}
 
                     </ul>

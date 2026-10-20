@@ -49,6 +49,7 @@ from apps.movilidad.models import (
 from apps.servicios_turista.models import (
     CategoriaServicioTurista,
     ContactoServicioTurista,
+    SedeServicioTurista,
     ServicioTurista,
 )
 from apps.turismo.models import (
@@ -795,20 +796,23 @@ class ProvidersDataMixin:
         cls.cat_farmacia = CategoriaServicioTurista.objects.create(nombre="Farmacias", slug="farmacias")
         cls.botica = ServicioTurista.objects.create(
             categoria_principal=cls.cat_farmacia, nombre="Botica Central", slug="botica-central",
-            distrito=cls.dist_huanuco, tipo_atencion="presencial", disponibilidad="veinticuatro_horas",
-            horario_atencion="24 horas",
+            tipo_atencion="presencial",
+        )
+        cls.sede_botica = SedeServicioTurista.objects.create(
+            servicio=cls.botica, distrito=cls.dist_huanuco,
+            disponibilidad="veinticuatro_horas", horario_atencion="24 horas",
         )
         ContactoServicioTurista.objects.create(
             servicio=cls.botica, tipo_contacto="whatsapp", valor="999111222", es_principal=True
         )
-        ServicioTurista.objects.create(
+        botica_tingo = ServicioTurista.objects.create(
             categoria_principal=cls.cat_farmacia, nombre="Botica Tingo", slug="botica-tingo",
-            distrito=cls.dist_rupa, disponibilidad="horario",
         )
-        ServicioTurista.objects.create(
-            categoria_principal=cls.cat_farmacia, nombre="Botica cerrada", slug="botica-cerrada",
-            distrito=cls.dist_amarilis, activo=False,
+        SedeServicioTurista.objects.create(servicio=botica_tingo, distrito=cls.dist_rupa, disponibilidad="horario")
+        botica_cerrada = ServicioTurista.objects.create(
+            categoria_principal=cls.cat_farmacia, nombre="Botica cerrada", slug="botica-cerrada", activo=False,
         )
+        SedeServicioTurista.objects.create(servicio=botica_cerrada, distrito=cls.dist_amarilis)
 
         # Emergencias
         cls.zona_huanuco = ZonaAtencionEmergencia.objects.create(distrito=cls.dist_huanuco, slug="huanuco")
@@ -1175,6 +1179,35 @@ class ServiciosProviderTests(ProvidersDataMixin, TestCase):
         self.assertEqual(self.nombres(prov_servicios.consultar_servicios_utiles(disponibilidad="veinticuatro_horas")), ["Botica Central"])
         with self.assertRaises(ArgumentoInvalido):
             prov_servicios.consultar_servicios_utiles(tipo_atencion="drone")
+
+    def test_servicios_utiles_un_resultado_por_sede(self):
+        plus = ServicioTurista.objects.create(
+            categoria_principal=self.cat_farmacia, nombre="Farmacia Plus", slug="farmacia-plus",
+            destacado=True, telefono="062 100 100", tipo_atencion="presencial",
+        )
+        centro = SedeServicioTurista.objects.create(
+            servicio=plus, nombre="Centro", distrito=self.dist_huanuco, direccion="Jr. A 1", telefono="062 200 200",
+        )
+        norte = SedeServicioTurista.objects.create(servicio=plus, nombre="Norte", distrito=self.dist_huanuco)
+        SedeServicioTurista.objects.create(servicio=plus, nombre="Cerrada", distrito=self.dist_huanuco, activo=False)
+        # Contacto repetido del teléfono de la sede: no debe duplicarse en "contactos".
+        ContactoServicioTurista.objects.create(servicio=plus, sede=centro, tipo_contacto="telefono", valor="062200200")
+
+        resultado = prov_servicios.consultar_servicios_utiles(categoria="farmacias")
+        # Destacados primero; una fila por sede activa; sede genérica sin sufijo.
+        self.assertEqual(
+            self.nombres(resultado),
+            ["Farmacia Plus - Centro", "Farmacia Plus - Norte", "Botica Central", "Botica Tingo"],
+        )
+        item_centro, item_norte = resultado["items"][:2]
+        self.assertEqual(item_centro["id"], centro.pk)
+        self.assertEqual(item_norte["id"], norte.pk)
+        self.assertEqual(item_centro["telefono"], "062 200 200")  # la sede prevalece
+        self.assertEqual(item_centro["contactos"], [])  # el contacto repetido no se duplica
+        self.assertEqual(item_norte["telefono"], "062 100 100")  # hereda de la entidad
+        self.assertEqual(self.nombres(prov_servicios.consultar_servicios_utiles(q="plus", distrito="huanuco")),
+                         ["Farmacia Plus - Centro", "Farmacia Plus - Norte"])
+        self.assertEqual(self.nombres(prov_servicios.consultar_servicios_utiles(q="norte")), ["Farmacia Plus - Norte"])
 
     def test_emergencias_por_categoria_y_24_horas(self):
         self.assertEqual(self.nombres(prov_servicios.consultar_emergencias(categoria="policia")), ["PNP"])

@@ -1,0 +1,110 @@
+/* Django Admin de sedes de Servicios útiles (no afecta al sitio público). */
+
+/* Campos de Google Maps: anchos y adaptables para pegar URL e iframe largos. */
+.aligned .field-maps_url textarea,
+.aligned .field-embed_maps textarea {
+    flex: 1 1 24rem;
+    width: 100%;
+    max-width: 64rem;
+    min-width: 0;
+    box-sizing: border-box;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+}
+
+/* Horario personalizado (texto ES/EN): campos anchos para leer el texto completo. */
+.aligned .field-horario_atencion_es input[type="text"],
+.aligned .field-horario_atencion_en input[type="text"] {
+    width: 100%;
+    max-width: 64rem;
+    box-sizing: border-box;
+}
+
+/* Horario: segundo turno plegable. */
+.sede-bloque-horario .form-multiline {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+}
+.sede-oculto {
+    display: none !important;
+}
+.sede-turno-boton {
+    margin: 0 0 0 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 0;
+    background: none;
+    color: var(--link-fg, #447e9b);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.sede-turno-boton:hover,
+.sede-turno-boton:focus {
+    color: var(--link-hover-color, #036);
+}
+
+/* Vista previa del horario (ES / EN). */
+.field-vista_previa_horario .readonly {
+    display: block;
+    width: 100%;
+    max-width: 64rem;
+    overflow: visible;
+}
+.sede-vista-previa {
+    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--hairline-color, #ddd);
+    border-radius: 6px;
+    background: var(--darkened-bg, #f8f8f8);
+}
+.sede-vista-previa__modo {
+    margin: 0 0 0.5rem;
+    padding: 0;
+    font-weight: 600;
+}
+.sede-vista-previa__textos {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.5rem 1rem;
+    margin: 0;
+}
+.sede-vista-previa__textos dt {
+    margin: 0;
+    padding: 0;
+    font-weight: 600;
+    color: var(--body-quiet-color, #666);
+}
+.sede-vista-previa__textos dd {
+    margin: 0;
+    padding: 0;
+    line-height: 1.45;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.sede-vista-previa__nota {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    font-size: 0.8125rem;
+    color: var(--body-quiet-color, #666);
+}
+.sede-vista-previa__aviso {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    color: var(--error-fg, #ba2121);
+}
+
+@media (max-width: 767px) {
+    .aligned .field-maps_url textarea,
+    .aligned .field-embed_maps textarea {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+    .sede-vista-previa__textos {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.125rem;
+    }
+    .sede-vista-previa__textos dd {
+        margin-bottom: 0.5rem;
+    }
+}

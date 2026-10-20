@@ -1,12 +1,13 @@
-import re
-
 from django.core.paginator import Paginator
 from django.db.models import Prefetch, Q
 from django.shortcuts import render
+from django.utils.translation import gettext, gettext_lazy
 
-from apps.base.services.mapas import coord_a_texto, construir_urls_mapa
+from apps.base.services.mapas import coord_a_texto
 
-from .models import CategoriaServicioTurista, ContactoServicioTurista, ServicioTurista
+from .models import CategoriaServicioTurista, ContactoServicioTurista, SedeServicioTurista
+from .services.contactos import contactos_de_sede, telefono_llamar
+from .services.mapas_sede import resolver_mapa
 from .services.zonas import (
     NOMBRE_ZONA_TODAS,
     ZONA_TODAS_SLUG,
@@ -15,13 +16,6 @@ from .services.zonas import (
     resolver_zona,
 )
 
-TELEFONO_LIMPIO_RE = re.compile(r"[^\d+]")
-
-# Tipos de ContactoServicioTurista pensados para llamar/tel:. No se usa
-# para decidir qué mostrar (eso lo hace _es_telefonico según el valor),
-# solo queda documentado el catálogo real del modelo.
-from django.utils.translation import gettext, gettext_lazy
-
 ENLACES_OFICIALES_CONFIG = [
     ("sitio_web", gettext_lazy("Sitio web oficial"), "bi-globe2"),
     ("facebook", gettext_lazy("Facebook oficial"), "bi-facebook"),
@@ -29,91 +23,25 @@ ENLACES_OFICIALES_CONFIG = [
 ]
 
 
-def _texto_disponibilidad(servicio):
+def _texto_disponibilidad(sede):
     """'Atención 24 h' si corresponde; si no, el horario tal cual está
     guardado. Nunca se calcula un estado ABIERTO/CERRADO en tiempo real:
     no hay horario estructurado suficiente para garantizarlo."""
-    if servicio.disponibilidad == "veinticuatro_horas":
+    if sede.disponibilidad == "veinticuatro_horas":
         return gettext("Atención 24 h")
-    return servicio.horario_atencion or ""
+    return sede.horario_atencion or ""
 
 
-def _telefono_tel(telefono):
-    """Normaliza a solo dígitos y '+' inicial, listo para href="tel:...".
-    Presentación pura: no se agrega ningún campo nuevo al modelo."""
-    if not telefono:
-        return ""
-    return TELEFONO_LIMPIO_RE.sub("", telefono)
-
-
-def _es_telefonico(valor):
-    """Un valor de contacto "parece" un teléfono si tiene suficientes
-    dígitos, sin importar el tipo_contacto elegido en el Admin (evita
-    asumir que solo "telefono"/"celular" son llamables)."""
-    return len(re.sub(r"\D", "", valor or "")) >= 6
-
-
-def _clave_dedup_contacto(valor):
-    """Clave para no repetir el mismo contacto dos veces (ej. "(062)
-    512400" y "062512400"): por dígitos si es telefónico, por texto si
-    no (correos, etc.). No modifica el valor guardado en BD."""
-    if _es_telefonico(valor):
-        return _telefono_tel(valor)
-    return valor.strip().lower()
-
-
-def _contactos_modal(servicio):
-    """Consolida ContactoServicioTurista.objects (ya prefetcheados y
-    activos) con ServicioTurista.telefono como fallback general,
-    deduplicando por número/valor."""
-    vistos = set()
-    resultado = []
-
-    for contacto in servicio.contactos.all():
-        valor = (contacto.valor or "").strip()
-        if not valor:
-            continue
-        clave = _clave_dedup_contacto(valor)
-        if clave in vistos:
-            continue
-        vistos.add(clave)
-        resultado.append({
-            "etiqueta": contacto.etiqueta,
-            "valor": valor,
-            "valor_tel": _telefono_tel(valor) if _es_telefonico(valor) else "",
-        })
-
-    telefono_general = (servicio.telefono or "").strip()
-    if telefono_general:
-        clave = _clave_dedup_contacto(telefono_general)
-        if clave not in vistos:
-            resultado.append({
-                "etiqueta": "",
-                "valor": telefono_general,
-                "valor_tel": _telefono_tel(telefono_general),
-            })
-
-    return resultado
-
-
-def _telefono_llamar(servicio):
-    """Teléfono para el botón "Llamar" (solo móvil): contacto principal
-    llamable primero, luego el primer contacto llamable por orden, y
-    ServicioTurista.telefono como último fallback."""
-    contactos_llamables = [c for c in servicio.contactos.all() if _es_telefonico(c.valor)]
-
-    principal = next((c for c in contactos_llamables if c.es_principal), None)
-    if principal:
-        return _telefono_tel(principal.valor)
-
-    if contactos_llamables:
-        return _telefono_tel(contactos_llamables[0].valor)
-
-    return _telefono_tel(servicio.telefono)
+def _contactos_modal(sede):
+    """Contactos de la sede (precedencia y deduplicación en services.contactos)."""
+    return [
+        {"etiqueta": c["etiqueta"], "valor": c["valor"], "valor_tel": c["valor_tel"]}
+        for c in contactos_de_sede(sede)
+    ]
 
 
 def _enlaces_oficiales(servicio):
-    """Enlaces oficiales presentes (sitio_web/facebook/instagram). Lista
+    """Enlaces oficiales de la entidad (sitio_web/facebook/instagram). Lista
     vacía si no hay ninguno: la pill del modal desaparece por completo."""
     enlaces = []
     for campo, label, icono in ENLACES_OFICIALES_CONFIG:
@@ -123,58 +51,43 @@ def _enlaces_oficiales(servicio):
     return enlaces
 
 
-def _datos_mapa(servicio):
-    """Datos para el panel "Cómo llegar", o None si no hay ni coordenadas
-    ni dirección (en ese caso la card no debe ofrecer un botón que no
-    funcionaría)."""
-    latitud = coord_a_texto(servicio.latitud)
-    longitud = coord_a_texto(servicio.longitud)
-    direccion = (servicio.direccion or "").strip()
-
-    if not (latitud and longitud) and not direccion and not (servicio.embed_maps or servicio.maps_url):
+def _datos_mapa(sede):
+    """Datos para el panel "Cómo llegar", o None si no hay nada que mostrar (en
+    ese caso la card no debe ofrecer un botón que no funcionaría). La fuente de
+    cada enlace y su fiabilidad las decide services.mapas_sede.resolver_mapa."""
+    mapa = resolver_mapa(sede)
+    if not mapa["hay_mapa"]:
         return None
-
-    zona_nombre = nombre_publico_zona(servicio.distrito) if servicio.distrito_id else ""
-    direccion_partes = [direccion, zona_nombre, "Perú"]
-    direccion_mapa = ", ".join(parte for parte in direccion_partes if parte)
-
-    embed_url, open_url, route_url = construir_urls_mapa(
-        latitud=latitud,
-        longitud=longitud,
-        direccion_mapa=direccion_mapa,
-        maps_url=(servicio.maps_url or "").strip(),
-        embed_maps=servicio.embed_maps or "",
-        zoom_coordenadas=17,
-        zoom_direccion=17,
-    )
-
     return {
-        "nombre": servicio.nombre,
-        "direccion": direccion,
-        "latitud": latitud,
-        "longitud": longitud,
-        "open_url": open_url,
-        "route_url": route_url,
-        "embed_url": embed_url,
+        "nombre": sede.nombre_publico,
+        "direccion": (sede.direccion or "").strip(),
+        "latitud": coord_a_texto(sede.latitud),
+        "longitud": coord_a_texto(sede.longitud),
+        "open_url": mapa["open_url"],
+        "route_url": mapa["route_url"],
+        "embed_url": mapa["embed_url"],
+        "precision": mapa["precision"],
     }
 
 
-def _tarjeta_servicio(servicio):
+def _tarjeta_servicio(sede):
+    """Una tarjeta por sede; su id (pk de la sede) es el que usa el JS."""
+    servicio = sede.servicio
     imagen = servicio.imagen_principal
 
     return {
-        "id": servicio.id,
-        "nombre": servicio.nombre,
+        "id": sede.id,
+        "nombre": sede.nombre_publico,
         "categoria": servicio.categoria_principal.nombre if servicio.categoria_principal_id else "",
         "descripcion_corta": servicio.descripcion_corta,
-        "direccion": servicio.direccion,
-        "disponibilidad_texto": _texto_disponibilidad(servicio),
-        "telefono_tel": _telefono_llamar(servicio),
-        "contactos": _contactos_modal(servicio),
+        "direccion": sede.direccion,
+        "disponibilidad_texto": _texto_disponibilidad(sede),
+        "telefono_tel": telefono_llamar(sede),
+        "contactos": _contactos_modal(sede),
         "enlaces": _enlaces_oficiales(servicio),
         "imagen_url": imagen.url if imagen else "",
-        "imagen_alt": servicio.texto_alt_imagen or servicio.nombre,
-        "mapa": _datos_mapa(servicio),
+        "imagen_alt": servicio.texto_alt_imagen or sede.nombre_publico,
+        "mapa": _datos_mapa(sede),
     }
 
 
@@ -198,26 +111,23 @@ def servicios_utiles(request):
         for z in zonas_con_servicios
     ]
 
-    # Queryset acotado a la zona resuelta, a TODAS las zonas con servicios
-    # activos (mismo alcance de departamento que obtener_zonas_con_servicios),
-    # o vacío si no hay ninguna zona con servicios activos todavía.
+    # Sedes visibles: sede activa Y entidad activa. Acotado a la zona resuelta,
+    # a TODAS las zonas con servicios activos (mismo alcance de departamento que
+    # obtener_zonas_con_servicios), o vacío si todavía no hay ninguna.
+    sedes_activas = SedeServicioTurista.objects.filter(activo=True, servicio__activo=True)
     if mostrar_todas:
-        qs_zona = ServicioTurista.objects.filter(
-            activo=True, distrito__provincia__departamento__slug="huanuco"
-        )
+        qs_zona = sedes_activas.filter(distrito__provincia__departamento__slug="huanuco")
     elif zona is not None:
-        qs_zona = ServicioTurista.objects.filter(activo=True, distrito=zona)
+        qs_zona = sedes_activas.filter(distrito=zona)
     else:
-        qs_zona = ServicioTurista.objects.none()
+        qs_zona = SedeServicioTurista.objects.none()
 
     # Categorías disponibles: solo las que tienen servicios activos en la
     # zona actual, igual que hace establecimientos con las suyas.
-    categorias_principales_ids = qs_zona.exclude(
-        categoria_principal__isnull=True
-    ).values_list("categoria_principal_id", flat=True)
+    categorias_principales_ids = qs_zona.values_list("servicio__categoria_principal_id", flat=True)
     categorias_secundarias_ids = qs_zona.exclude(
-        categorias_secundarias__isnull=True
-    ).values_list("categorias_secundarias__id", flat=True)
+        servicio__categorias_secundarias__isnull=True
+    ).values_list("servicio__categorias_secundarias__id", flat=True)
     categorias_ids = list(categorias_principales_ids) + list(categorias_secundarias_ids)
 
     categorias = list(
@@ -248,24 +158,21 @@ def servicios_utiles(request):
         for c in categorias
     ]
 
-    qs = qs_zona.select_related("categoria_principal", "distrito").prefetch_related(
-        Prefetch(
-            "contactos",
-            queryset=ContactoServicioTurista.objects.filter(activo=True).order_by(
-                "-es_principal", "orden", "id"
-            ),
-        )
-    ).order_by("categoria_principal__nombre", "nombre")
+    activos = ContactoServicioTurista.objects.filter(activo=True)
+    qs = qs_zona.select_related("servicio__categoria_principal", "distrito").prefetch_related(
+        Prefetch("contactos", queryset=activos),
+        Prefetch("servicio__contactos", queryset=activos),
+    ).order_by("servicio__categoria_principal__nombre", "servicio__nombre", "nombre", "id")
     if categoria_actual is not None:
         qs = qs.filter(
-            Q(categoria_principal=categoria_actual)
-            | Q(categorias_secundarias=categoria_actual)
+            Q(servicio__categoria_principal=categoria_actual)
+            | Q(servicio__categorias_secundarias=categoria_actual)
         ).distinct()
 
     paginator = Paginator(qs, 6)
     page_obj = paginator.get_page(request.GET.get("page"))
 
-    tarjetas = [_tarjeta_servicio(servicio) for servicio in page_obj]
+    tarjetas = [_tarjeta_servicio(sede) for sede in page_obj]
     tarjetas_con_mapa = [t for t in tarjetas if t["mapa"] is not None]
 
     context = {

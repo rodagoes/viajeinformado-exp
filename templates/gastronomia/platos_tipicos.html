@@ -5,6 +5,7 @@
 {% block title %}{% translate "Platos típicos de Huánuco | Viaje Informado" %}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/paginacion.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/platos-tipicos.css' %}">
 {% endblock %}
 
@@ -93,31 +94,35 @@
             </div>
 
             {% if page_obj.has_other_pages %}
-                <nav aria-label="{% translate "Navegación de páginas" %}" class="d-flex justify-content-center pt-pagination">
-                    <ul class="pagination">
+                <!-- Paginación: componente compartido (componentes/paginacion.css), igual que Restaurantes/Alojamientos -->
+                <nav aria-label="{% translate "Navegación de páginas" %}" class="d-flex justify-content-center vi-paginacion-contenedor">
+                    <ul class="pagination vi-paginacion">
 
                         {% if page_obj.has_previous %}
                             <li class="page-item">
-                                <a class="page-link"
-                                    href="?page={{ page_obj.previous_page_number }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}"
-                                    aria-label="{% translate "Anterior" %}">
+                                <a class="page-link" href="?page=1{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}" aria-label="{% translate "Primera" %}">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}" aria-label="{% translate "Anterior" %}">
                                     <span aria-hidden="true">&lsaquo;</span>
                                 </a>
                             </li>
                         {% else %}
-                            <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+                            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Primera" %}">&laquo;</span></li>
+                            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Anterior" %}">&lsaquo;</span></li>
                         {% endif %}
 
                         {% for i in page_obj.paginator.page_range %}
                             {% if page_obj.number == i %}
-                                <li class="page-item active" aria-current="page">
-                                    <span class="page-link">{{ i }}</span>
+                                <li class="page-item page-number active" aria-current="page">
+                                    <span class="page-link"><span>{{ i }}</span></span>
                                 </li>
                             {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                                <li class="page-item">
-                                    <a class="page-link"
-                                        href="?page={{ i }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}">
-                                        {{ i }}
+                                <li class="page-item page-number{% if i > page_obj.number|add:'1' or i < page_obj.number|add:'-1' %} page-number--solo-desktop{% endif %}">
+                                    <a class="page-link" href="?page={{ i }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}">
+                                        <span>{{ i }}</span>
                                     </a>
                                 </li>
                             {% endif %}
@@ -125,14 +130,18 @@
 
                         {% if page_obj.has_next %}
                             <li class="page-item">
-                                <a class="page-link"
-                                    href="?page={{ page_obj.next_page_number }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}"
-                                    aria-label="{% translate "Siguiente" %}">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}" aria-label="{% translate "Siguiente" %}">
                                     <span aria-hidden="true">&rsaquo;</span>
                                 </a>
                             </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}" aria-label="{% translate "Última" %}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
                         {% else %}
-                            <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+                            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Siguiente" %}">&rsaquo;</span></li>
+                            <li class="page-item disabled"><span class="page-link" aria-disabled="true" aria-label="{% translate "Última" %}">&raquo;</span></li>
                         {% endif %}
 
                     </ul>

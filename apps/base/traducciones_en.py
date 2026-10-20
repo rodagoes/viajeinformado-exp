@@ -63,6 +63,7 @@ LOCATORS = {
     "movilidad.ConsejoMovilidad": ("texto_es",),
     "servicios_turista.CategoriaServicioTurista": ("slug",),
     "servicios_turista.ServicioTurista": ("slug",),
+    "servicios_turista.SedeServicioTurista": ("servicio__slug", "slug"),
     "servicios_turista.ContactoServicioTurista": ("servicio__slug", "valor"),
     "servicios_turista.ImagenServicioTurista": ("servicio__slug", "orden"),
     "emergencias.ContactoEmergencia": ("ambito", "categoria", "nombre"),

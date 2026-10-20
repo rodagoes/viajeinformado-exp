@@ -6,7 +6,7 @@
 .pt-page {
     --pt-blanco: #FFFFFF;
     --pt-azul-oscuro: #002D89;
-    --pt-azul-brillante: #007FFF;
+    --pt-azul: #007FFF;
     --pt-fondo-general: #F7F9FD;
     --pt-fondo-tarjeta: #EEF3FB;
     --pt-texto-principal: #182033;
@@ -20,7 +20,7 @@
 
 .pt-page .pt-hero {
     position: relative;
-    background: linear-gradient(135deg, var(--pt-azul-oscuro) 0%, var(--pt-azul-brillante) 100%);
+    background: linear-gradient(135deg, var(--pt-azul-oscuro) 0%, var(--pt-azul) 100%);
     padding: 140px 0 40px;
     overflow: hidden;
 }
@@ -154,11 +154,19 @@
 .pt-page .pt-card {
     display: flex;
     flex-direction: column;
-    background: var(--pt-fondo-tarjeta);
+    background: var(--pt-blanco);
     border: 1px solid var(--pt-bordes);
     border-radius: 16px;
     overflow: hidden;
     height: 100%;
+    box-shadow: 15px 15px 30px #bebebe,
+             -15px -15px 30px #ffffff;
+    transition: 0.2s ease-in-out;
+}
+
+.pt-page .pt-card:hover {
+    cursor: pointer;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.1);
 }
 
 .pt-page .pt-card__image {
@@ -210,10 +218,10 @@
 }
 
 .pt-page .pt-card__title {
-    font-family: 'Playfair Display', serif;
+    font-family: "Inter", sans-serif;
     font-size: 1.2rem;
     font-weight: 800;
-    color: var(--pt-texto-principal);
+    color: #000000;
     margin: 0 0 8px;
 }
 
@@ -238,7 +246,7 @@
     font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--pt-azul-oscuro);
+    color: var(--pt-azul);
     margin-bottom: 8px;
 }
 
@@ -252,10 +260,10 @@
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    background: rgba(0, 45, 137, 0.06);
-    border: 1px solid rgba(0, 45, 137, 0.12);
+    background: var(--pt-azul);
+    border: 1px solid var(--pt-azul);
     border-radius: 999px;
-    color: var(--pt-azul-oscuro);
+    color: var(--pt-blanco);
     font-size: 0.75rem;
     font-weight: 600;
     line-height: 1;
@@ -269,8 +277,8 @@
     gap: 7px;
     padding: 9px 18px;
     border-radius: 8px;
-    border: 1px solid var(--pt-azul-oscuro);
-    color: var(--pt-azul-oscuro);
+    border: 1px solid var(--pt-azul);
+    color: var(--pt-azul);
     background: transparent;
     font-size: 0.88rem;
     font-weight: 700;
@@ -280,7 +288,7 @@
 
 .pt-page .pt-card__action:hover,
 .pt-page .pt-card__action:focus-visible {
-    background: var(--pt-azul-oscuro);
+    background: var(--pt-azul);
     color: var(--pt-blanco);
 }
 
@@ -305,6 +313,49 @@
    Paginación
 ========================================================= */
 
-.pt-page .pt-pagination {
-    margin-top: 44px;
+/* ---- Paginación ----
+   Mismo aspecto que Restaurantes/Alojamientos: componente compartido
+   componentes/paginacion.css + los dos ajustes que esa página añade encima
+   (sombra del número activo y tamaños en móvil), acotados a esta página. */
+.pt-page .vi-paginacion .page-number.active .page-link::before {
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.16),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06),
+        0 97px 39px rgba(0, 45, 137, 0.02);
+}
+
+.pt-page .vi-paginacion .page-number.active .page-link::after {
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.14),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06);
+}
+
+@media (max-width: 575.98px) {
+    .pt-page .vi-paginacion {
+        gap: 8px;
+    }
+
+    .pt-page .vi-paginacion .page-link {
+        min-width: 40px;
+        height: 40px;
+    }
+
+    .pt-page .vi-paginacion .page-number .page-link {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+    }
+
+    .pt-page .vi-paginacion .page-number .page-link::before {
+        width: 44px;
+        height: 44px;
+    }
+
+    /* Como en Eventos: en móvil solo la página activa y sus vecinas inmediatas (máx. 7 controles
+       en una fila; con 5 números el paginador no cabe en 360-390 px). */
+    .pt-page .vi-paginacion .page-number--solo-desktop {
+        display: none;
+    }
 }

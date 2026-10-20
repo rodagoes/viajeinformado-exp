@@ -6,7 +6,8 @@ from apps.clima.services.clima_actual import obtener_clima_actual
 from apps.clima.ubicaciones import CIUDAD_PREDETERMINADA, listar_ciudades
 from apps.emergencias.models import ContactoEmergencia, ZonaAtencionEmergencia
 from apps.monedas.models import TipoCambio
-from apps.servicios_turista.models import ContactoServicioTurista, ServicioTurista
+from apps.servicios_turista.models import ContactoServicioTurista, SedeServicioTurista, ServicioTurista
+from apps.servicios_turista.services.contactos import clave_dedup, contactos_de_sede
 from apps.servicios_turista.services.zonas import nombre_publico_zona
 
 from . import (
@@ -29,28 +30,34 @@ from . import (
 
 # --- Servicios útiles -------------------------------------------------------
 
-def _servicio(servicio):
+def _servicio(sede):
+    """Un item por sede (= una tarjeta de la página). Datos comunes de la entidad,
+    datos físicos de la sede; el teléfono de la sede prevalece sobre el de la entidad."""
+    servicio = sede.servicio
+    telefono = sede.telefono or servicio.telefono
+    contactos = contactos_de_sede(sede, incluir_telefonos=False)
+    if telefono:
+        contactos = [c for c in contactos if clave_dedup(c["valor"]) != clave_dedup(telefono)]
     return {
-        "id": servicio.pk,
-        "nombre": servicio.nombre,
+        "id": sede.pk,
+        "nombre": sede.nombre_publico,
         "slug": servicio.slug,
         "categoria": servicio.categoria_principal.nombre,
         "categoria_slug": servicio.categoria_principal.slug,
         "descripcion_corta": servicio.descripcion_corta,
         "tipo_atencion": servicio.tipo_atencion,
-        "disponibilidad": servicio.disponibilidad,
-        "horario_atencion": servicio.horario_atencion,
-        "direccion": servicio.direccion,
-        "referencia": servicio.referencia,
-        "zona": nombre_publico_zona(servicio.distrito) if servicio.distrito_id else None,
-        **ubicacion_de(servicio.distrito, servicio.localidad),
-        "telefono": servicio.telefono,
+        "disponibilidad": sede.disponibilidad,
+        "horario_atencion": sede.horario_atencion,
+        "direccion": sede.direccion,
+        "referencia": sede.referencia,
+        "zona": nombre_publico_zona(sede.distrito),
+        **ubicacion_de(sede.distrito, sede.localidad),
+        "telefono": telefono,
         "whatsapp": servicio.whatsapp,
         "correo": servicio.correo,
         "sitio_web": servicio.sitio_web,
         "contactos": [
-            {"tipo": c.tipo_contacto, "etiqueta": c.etiqueta, "valor": c.valor}
-            for c in servicio.contactos.all()
+            {"tipo": c["tipo"], "etiqueta": c["etiqueta"], "valor": c["valor"]} for c in contactos
         ],
         "recomendaciones": servicio.recomendaciones,
         "url": reverse("servicios_turista:servicios_utiles"),
@@ -73,30 +80,36 @@ def consultar_servicios_utiles(
     disponibilidad = validar_choice(disponibilidad, "disponibilidad", ServicioTurista.DISPONIBILIDAD_CHOICES)
     filtros_ubicacion = kwargs_ubicacion(distrito, provincia)
 
+    activos = ContactoServicioTurista.objects.filter(activo=True)
     qs = (
-        ServicioTurista.objects.filter(activo=True)
-        .select_related("categoria_principal", "distrito__provincia", "localidad")
+        SedeServicioTurista.objects.filter(activo=True, servicio__activo=True)
+        .select_related("servicio__categoria_principal", "distrito__provincia", "localidad")
         .prefetch_related(
-            Prefetch(
-                "contactos",
-                queryset=ContactoServicioTurista.objects.filter(activo=True).order_by("orden", "id"),
-            )
+            Prefetch("contactos", queryset=activos),
+            Prefetch("servicio__contactos", queryset=activos),
         )
     )
     if q:
-        qs = qs.filter(Q(nombre__icontains=q) | Q(descripcion_corta__icontains=q))
+        qs = qs.filter(
+            Q(servicio__nombre__icontains=q)
+            | Q(nombre__icontains=q)
+            | Q(servicio__descripcion_corta__icontains=q)
+        )
     if categoria:
         qs = qs.filter(
-            Q(categoria_principal__slug=categoria) | Q(categorias_secundarias__slug=categoria)
+            Q(servicio__categoria_principal__slug=categoria)
+            | Q(servicio__categorias_secundarias__slug=categoria)
         ).distinct()
     if tipo_atencion:
-        qs = qs.filter(tipo_atencion=tipo_atencion)
+        qs = qs.filter(servicio__tipo_atencion=tipo_atencion)
     if disponibilidad:
         qs = qs.filter(disponibilidad=disponibilidad)
     if filtros_ubicacion:
         qs = qs.filter(**filtros_ubicacion)
 
-    qs = qs.order_by("-destacado", "categoria_principal__nombre", "nombre", "id")[:limit]
+    qs = qs.order_by(
+        "-servicio__destacado", "servicio__categoria_principal__nombre", "servicio__nombre", "nombre", "id"
+    )[:limit]
     return resultado_lista("consultar_servicios_utiles", [_servicio(s) for s in qs])
 
 

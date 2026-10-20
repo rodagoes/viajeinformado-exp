@@ -42,13 +42,15 @@ def nombre_publico_zona(distrito):
 
 
 def obtener_zonas_con_servicios():
-    """Distritos activos que tienen al menos un ServicioTurista activo,
+    """Distritos activos con al menos una sede activa de una entidad activa,
     limitados al departamento de Huánuco (alcance actual del proyecto,
     ver auditoría: Distrito.slug no es único a nivel global)."""
     return (
         Distrito.objects.filter(
             activo=True,
-            servicios_turista__activo=True,
+            # Un solo filter(): ambas condiciones deben cumplirse en la MISMA sede.
+            sedes_servicios_turista__activo=True,
+            sedes_servicios_turista__servicio__activo=True,
             provincia__departamento__slug="huanuco",
         )
         .distinct()

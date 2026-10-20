@@ -546,7 +546,7 @@ class AdminDeModelosAmpliadosTests(TestCase):
         for ruta in (
             "movilidad/categoriamovilidad", "movilidad/rutamovilidad", "movilidad/transportepublico",
             "movilidad/consejomovilidad", "servicios_turista/categoriaservicioturista",
-            "servicios_turista/servicioturista", "servicios_turista/contactoservicioturista",
+            "servicios_turista/servicioturista", "servicios_turista/sedeservicioturista",
             "emergencias/contactoemergencia",
         ):
             self.assertEqual(self.client.get(f"/admin/{ruta}/").status_code, 200, ruta)

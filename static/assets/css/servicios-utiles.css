@@ -1029,3 +1029,55 @@
         transition: none;
     }
 }
+
+/* ---- Paginación ----
+   Mismo aspecto que Restaurantes/Alojamientos: componente compartido
+   componentes/paginacion.css + los dos ajustes que esa página añade encima
+   (sombra del número activo y tamaños en móvil), acotados a esta página. */
+.servicios-utiles-page .vi-paginacion .page-number.active .page-link::before {
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.16),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06),
+        0 97px 39px rgba(0, 45, 137, 0.02);
+}
+
+.servicios-utiles-page .vi-paginacion .page-number.active .page-link::after {
+    box-shadow:
+        0 6px 13px rgba(0, 45, 137, 0.14),
+        0 24px 24px rgba(0, 45, 137, 0.10),
+        0 55px 33px rgba(0, 45, 137, 0.06);
+}
+
+@media (max-width: 575.98px) {
+    .servicios-utiles-page .vi-paginacion {
+        gap: 8px;
+    }
+
+    .servicios-utiles-page .vi-paginacion .page-link {
+        min-width: 40px;
+        height: 40px;
+    }
+
+    .servicios-utiles-page .vi-paginacion .page-number .page-link {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+    }
+
+    .servicios-utiles-page .vi-paginacion .page-number .page-link::before {
+        width: 44px;
+        height: 44px;
+    }
+
+    /* Como en Eventos: en móvil solo la página activa y sus vecinas inmediatas (máx. 7 controles
+       en una fila; con 5 números el paginador no cabe en 360-390 px). */
+    .servicios-utiles-page .vi-paginacion .page-number--solo-desktop {
+        display: none;
+    }
+}
+
+/* El paginador ocupa toda la fila de la cuadrícula (si no, caía en la columna lateral de 240 px). */
+.su-layout > .su-paginacion {
+    grid-column: 1 / -1;
+}
