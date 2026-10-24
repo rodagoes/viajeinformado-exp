@@ -1,7 +1,7 @@
 /* ============================================================
    ANIMACIONES DE ENTRADA — Viaje Informado
    Sistema de efectos al hacer scroll para Detalle Lugar Turístico.
-   Requiere: Animate.css (cargado antes) + animaciones-scroll.js
+   Requiere: animaciones-scroll.js. Ya no depende de Animate.css (solo se usaba fadeInUp).
    ============================================================ */
 
 /* ── Override del keyframe fadeInUp: movimiento de 40 px ──
@@ -12,6 +12,16 @@
    (ver media query abajo) y evitar temblores con translateY grande. */
 :root {
     --vi-fade-distance: 40px;
+}
+
+/* ── Mínimo de Animate.css que usa el sitio (animate__animated + animate__fadeInUp) ── */
+.animate__animated {
+    animation-duration: var(--animate-duration, 1s);
+    animation-fill-mode: both;
+}
+
+.animate__fadeInUp {
+    animation-name: fadeInUp;
 }
 
 @keyframes fadeInUp {

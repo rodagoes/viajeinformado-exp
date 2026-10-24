@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block title %}{% translate "Servicios Útiles • Viaje Informado" %}{% endblock %}
+{% block meta_description %}{% translate "Encuentra lugares y servicios que pueden ayudarte durante tu visita." %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/componentes/como-llegar-desplegable.css' %}">
@@ -396,6 +397,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{% include 'partials/lottie_js.html' %}
 <script src="{% static 'assets/js/desplazable-como-llegar.js' %}"></script>
 <script src="{% static 'assets/js/servicios-utiles.js' %}"></script>
 {% endblock %}

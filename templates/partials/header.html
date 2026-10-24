@@ -6,7 +6,7 @@
         <!-- MARCA (izquierda) -->
         <a href="{% url 'base:home' %}" class="vi-brand" aria-label="{% translate 'Ir al inicio de Viaje Informado' %}">
             <img class="vi-brand__img"
-                src="{% static 'assets/img/logo/viaje-informado-logo-horizontal.png' %}"
+                src="{% static 'assets/img/logo/viaje-informado-logo-horizontal.webp' %}"
                 alt="Viaje Informado" width="453" height="151">
         </a>
 
@@ -146,11 +146,11 @@
             <!-- IDIOMA (solo móvil: en desktop el selector vive en el header). Misma vista set_language que lang_selector.html -->
             <div class="vi-mobile-lang">
                 <span class="vi-mobile-lang__title" id="viMobileLangTitle">{% translate 'Idioma' %}</span>
-                <form action="{% url 'set_language' %}" method="post" class="vi-mobile-lang__switch"
-                    role="group" aria-labelledby="viMobileLangTitle">
+                <form action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
                     {% get_available_languages as LANGUAGES %}
+                    <div class="vi-mobile-lang__switch" role="group" aria-labelledby="viMobileLangTitle">
                     {% for code, nombre in LANGUAGES %}
                     <button type="submit" name="language" value="{{ code }}" lang="{{ code }}"
                         class="vi-mobile-lang__btn{% if code == LANGUAGE_CODE %} is-current{% endif %}"
@@ -159,6 +159,7 @@
                         <span class="vi-mobile-lang__flag" aria-hidden="true">{% if code == 'es' %}🇪🇸{% else %}🇺🇸{% endif %}</span>
                     </button>
                     {% endfor %}
+                    </div>
                 </form>
             </div>
         </div>

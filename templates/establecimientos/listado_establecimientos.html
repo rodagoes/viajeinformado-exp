@@ -2,7 +2,8 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
+{% block title %}{{ titulo }} | Viaje Informado{% endblock %}
+{% block meta_description %}{{ subtitulo|striptags|truncatechars:155 }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/establecimientos.css' %}">
@@ -83,7 +84,7 @@
                         </div>
 
                         <div class="col-lg-4 col-md-12">
-                            <select name="categoria" class="form-select">
+                            <select name="categoria" class="form-select" aria-label="{% translate "Categoría" %}">
                                 <option value="">{% translate "Categoría" %}</option>
                                 {% for categoria in categorias_opciones %}
                                     <option value="{{ categoria.id }}" {% if categoria.selected %}selected{% endif %}>
@@ -131,6 +132,7 @@
             </div>
 
             <!-- Listado -->
+            <h2 class="visually-hidden">{% translate "Resultados" %}</h2>
             <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center est-grilla">
 
                 {% for est in page_obj %}

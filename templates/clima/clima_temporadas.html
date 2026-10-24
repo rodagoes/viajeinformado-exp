@@ -4,9 +4,9 @@
 {% load clima_extras %}
 
 {% block title %}{% if ciudad.slug == "tingo-maria" %}{% translate "Clima en Tingo María" %}{% else %}{% translate "Clima en Huánuco" %}{% endif %} {% translate "• Viaje Informado" %}{% endblock %}
+{% block meta_description %}{% if ciudad.slug == "tingo-maria" %}{% translate "Información actual y recomendaciones para disfrutar la naturaleza y el clima tropical de la selva alta." %}{% else %}{% translate "Información actual y recomendaciones para que disfrutes tu viaje en cualquier época del año." %}{% endif %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/clima-temporadas.css' %}">
 {% endblock %}
@@ -403,5 +403,6 @@
 {% endblock %}
 
 {% block extra_js %}
+{% include 'partials/lottie_js.html' %}
 <script src="{% static 'assets/js/animaciones-scroll.js' %}"></script>
 {% endblock %}

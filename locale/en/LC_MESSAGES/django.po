@@ -5537,3 +5537,8 @@ msgstr "We use this data only to understand how the platform is used, how people
 #: templates/base/privacidad.html
 msgid "3. Cookies y métricas de uso"
 msgstr "3. Cookies and usage metrics"
+
+#: templates/establecimientos/listado_establecimientos.html
+#: templates/turismo/listado-lugares-turisticos.html
+msgid "Resultados"
+msgstr "Results"

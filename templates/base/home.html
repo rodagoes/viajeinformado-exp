@@ -3,7 +3,6 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
 {% endblock %}
 
@@ -73,7 +72,7 @@
                 <button type="button" class="inicio-hero-playpause" aria-label="{% translate "Pausar presentación" %}">
                     <i class="bi bi-pause-fill" aria-hidden="true"></i>
                 </button>
-                <div class="inicio-hero-bullets" role="tablist" aria-label="{% translate "Diapositivas" %}">
+                <div class="inicio-hero-bullets" role="group" aria-label="{% translate "Diapositivas" %}">
                     {% for slide in hero_slides %}
                     <button type="button" class="inicio-hero-bullet {% if forloop.first %}active{% endif %}"
                         data-bs-target="#carouselInicioPremium" data-bs-slide-to="{{ forloop.counter0 }}"
@@ -312,7 +311,7 @@
                                 class="vi-chatbot-icon__img">
                         </div>
                         <div>
-                            <h5 class="mb-0 fw-bold text-navy-deep">Pillco Bot</h5>
+                            <p class="h5 mb-0 fw-bold text-navy-deep vi-chatbot-mockup__name">Pillco Bot</p>
                             <small class="text-success">
                                 <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> {% translate "En línea" %}
                             </small>
@@ -431,6 +430,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{% include 'partials/lottie_js.html' %}
 <script src="{% static 'assets/js/animaciones-scroll.js' %}"></script>
 <script src="{% static 'assets/js/home.js' %}"></script>
 {% endblock %}

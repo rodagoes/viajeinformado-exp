@@ -6,10 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>{% block title %}Viaje Informado • Huánuco{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% translate "Tu guía para descubrir Huánuco con información clara, destinos únicos y experiencias que conectan con nuestra identidad." %}{% endblock %}">
+    <link rel="icon" type="image/png" href="{% static 'assets/img/logo/favicon.png' %}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
         rel="stylesheet">
@@ -61,7 +64,6 @@
     <script src="{% static 'assets/js/main.js' %}"></script>
     <script src="{% static 'assets/js/skeleton.js' %}"></script>
     {% if METRICAS_ACTIVAS %}<script src="{% static 'assets/js/metricas.js' %}" data-endpoint="{% url 'metricas:evento' %}" data-duracion="{% url 'metricas:duracion' %}" data-csrf="{{ csrf_token }}"></script>{% endif %}
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
     <script src="{% static 'assets/js/pillcobot.js' %}"></script>
 
     {% block extra_js %}{% endblock %}

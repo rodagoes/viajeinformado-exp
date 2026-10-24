@@ -2,7 +2,8 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
+{% block title %}{{ titulo }} | Viaje Informado{% endblock %}
+{% block meta_description %}{{ subtitulo|striptags|truncatechars:155 }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/listado-lugar-turistico.css' %}">
@@ -48,7 +49,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-4">
-                            <select name="categoria" class="form-select">
+                            <select name="categoria" class="form-select" aria-label="{% translate "Categoría" %}">
                                 <option value="">{% translate "Categoría" %}</option>
                                 {% for categoria in categorias_opciones %}
                                     <option value="{{ categoria.id }}"
@@ -60,7 +61,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-4">
-                            <select name="dificultad" class="form-select">
+                            <select name="dificultad" class="form-select" aria-label="{% translate "Dificultad" %}">
                                 {% for opcion in dificultad_opciones %}
                                     <option value="{{ opcion.value }}"
                                         {% if opcion.selected %}selected{% endif %}>
@@ -71,7 +72,7 @@
                         </div>
 
                         <div class="col-lg-2 col-md-4">
-                            <select name="tipo_costo" class="form-select">
+                            <select name="tipo_costo" class="form-select" aria-label="{% translate "Costo" %}">
                                 {% for opcion in tipo_costo_opciones %}
                                     <option value="{{ opcion.value }}"
                                         {% if opcion.selected %}selected{% endif %}>
@@ -118,6 +119,7 @@
             </div>
 
             <!-- Grilla de tarjetas -->
+            <h2 class="visually-hidden">{% translate "Resultados" %}</h2>
             <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 lugar-grilla">
 
                 {% for lugar in page_obj %}

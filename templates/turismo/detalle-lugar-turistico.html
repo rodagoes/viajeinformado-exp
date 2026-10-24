@@ -2,14 +2,13 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
+{% block title %}{{ lugar.nombre }} | Viaje Informado{% endblock %}
+{% block meta_description %}{% with d=lugar.descripcion_corta|default:lugar.descripcion|striptags|truncatechars:155 %}{% if d %}{{ d }}{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
 
 {% block extra_css %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alkatra:wght@400&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<!-- Animate.css: biblioteca de animaciones CSS (debe ir antes de animaciones-entrada.css) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="{% static 'assets/css/detalle-lugar-turistico.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/componentes/carousel-3d.css' %}">
 <!-- Animaciones de entrada al scroll (overrides sutiles + utilidades de delay) -->
@@ -379,7 +378,7 @@
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
-            <div class="dots" id="c3dDots" role="tablist" aria-label="{% translate "Navegar multimedia" %}"></div>
+            <div class="dots" id="c3dDots" role="group" aria-label="{% translate "Navegar multimedia" %}"></div>
             <button class="nav-arrow" id="c3dNext" type="button" aria-label="{% translate "Multimedia siguiente" %}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="9 18 15 12 9 6"></polyline>
@@ -608,7 +607,7 @@
   </div>
 
   {# ── Dots ── #}
-  <div class="c3d-lb-dots" id="c3dLbDots" role="tablist" aria-label="{% translate "Navegar imágenes" %}"></div>
+  <div class="c3d-lb-dots" id="c3dLbDots" role="group" aria-label="{% translate "Navegar imágenes" %}"></div>
 
 </div>
 

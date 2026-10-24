@@ -1,4 +1,28 @@
+import os
+from io import BytesIO
+
+from django.core.files.base import ContentFile
 from django.db import models
+from PIL import Image, ImageOps
+
+HERO_ANCHO_MAX = 1600
+
+
+def _a_webp(archivo):
+    """Imagen subida -> WebP (<= HERO_ANCHO_MAX px de ancho). Si no se puede leer, se conserva el original."""
+    try:
+        with Image.open(archivo) as img:
+            if img.format == "WEBP" and img.width <= HERO_ANCHO_MAX:
+                archivo.seek(0)
+                return archivo  # ya es WebP razonable: no se recomprime
+            img = ImageOps.exif_transpose(img)
+            img.thumbnail((HERO_ANCHO_MAX, HERO_ANCHO_MAX * 2))  # solo reduce, nunca amplía
+            buf = BytesIO()
+            img.convert("RGBA" if img.has_transparency_data else "RGB").save(buf, "WEBP", quality=75, method=6)
+    except (OSError, ValueError):
+        archivo.seek(0)  # Image.open ya leyó el archivo: sin rebobinar se guardaría vacío
+        return archivo
+    return ContentFile(buf.getvalue(), name=os.path.splitext(os.path.basename(archivo.name))[0] + ".webp")
 
 class HomeHeroSlide(models.Model):
     TIPO_ARCHIVO_CHOICES = [
@@ -31,6 +55,12 @@ class HomeHeroSlide(models.Model):
 
     def __str__(self):
         return f"{self.titulo_principal} {self.titulo_resaltado}"
+
+    def save(self, *args, **kwargs):
+        # El hero es el LCP del Home: un PNG de ~3 MB se sirve como WebP de ~150 KB. Solo imágenes recién subidas.
+        if self.tipo_archivo == 'image' and self.archivo and not self.archivo._committed:
+            self.archivo = _a_webp(self.archivo)
+        super().save(*args, **kwargs)
 
 
 class ConfiguracionPublica(models.Model):

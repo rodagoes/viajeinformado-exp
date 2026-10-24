@@ -901,3 +901,8 @@
         transform: none;
     }
 }
+
+/* Nombre del bot en el mockup: <p class="h5"> (no es un encabezado del documento) conserva la tipografía de h5. */
+.vi-chatbot-mockup__name {
+    font-family: 'Playfair Display', serif;
+}

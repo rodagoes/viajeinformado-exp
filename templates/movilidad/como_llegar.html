@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block title %}{% translate "¿Cómo llegar a Huánuco? • Viaje Informado" %}{% endblock %}
+{% block meta_description %}{% translate "Conozca las rutas, tiempos y medios de transporte para planificar tu llegada." %}{% endblock %}
 
 {% block extra_css %}
 <link
@@ -516,6 +517,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{% include 'partials/lottie_js.html' %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 <script src="{% static 'assets/js/como-llegar.js' %}"></script>
 {% endblock %}
