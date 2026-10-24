@@ -339,9 +339,71 @@
     </div>
 </section>
 
+{% if metricas_home %}
+<!-- SECCIÓN CIFRAS -->
+<section class="home-metricas" aria-labelledby="home-metricas-titulo">
+    <div class="container">
+        <div class="home-metricas__head text-center" data-animar="animate__fadeInUp">
+            <p class="home-metricas__eyebrow">{% translate "VIAJE INFORMADO EN CIFRAS" %}</p>
+            <h2 id="home-metricas-titulo" class="vi-section-title home-metricas__title">{% translate "Explora el impacto de Viaje Informado" %}</h2>
+            <p class="vi-section-subtitle home-metricas__lead">
+                {% translate "Descubre cómo los viajeros utilizan la plataforma para conocer y planificar su visita a Huánuco." %}
+            </p>
+        </div>
+
+        <ul class="home-metricas__grid list-unstyled" data-home-metricas>
+
+            <!-- Viajeros registrados -->
+            <li class="home-metricas__card" data-animar="animate__fadeInUp">
+                <span class="home-metricas__icon" aria-hidden="true">
+                    <img src="{% static 'assets/img/home-metricas/usuarios.svg' %}" alt="" class="home-metricas__icon-img">
+                </span>
+                <p class="home-metricas__value">
+                    <span data-count="{{ metricas_home.viajeros }}">{{ metricas_home.viajeros_texto }}</span><span class="home-metricas__plus">+</span>
+                </p>
+                <p class="home-metricas__label">{% translate "Usuarios registrados" %}</p>
+            </li>
+
+            <!-- Exploraciones turísticas -->
+            <li class="home-metricas__card" data-animar="animate__fadeInUp">
+                <span class="home-metricas__icon" aria-hidden="true">
+                    <img src="{% static 'assets/img/home-metricas/exploraciones.svg' %}" alt="" class="home-metricas__icon-img">
+                </span>
+                <p class="home-metricas__value">
+                    <span data-count="{{ metricas_home.exploraciones }}">{{ metricas_home.exploraciones_texto }}</span><span class="home-metricas__plus">+</span>
+                </p>
+                <p class="home-metricas__label">{% translate "Destinos turísticos consultados" %}</p>
+            </li>
+
+            <!-- Consultas al asistente -->
+            <li class="home-metricas__card" data-animar="animate__fadeInUp">
+                <span class="home-metricas__icon" aria-hidden="true">
+                    <img src="{% static 'assets/img/home-metricas/consultas.svg' %}" alt="" class="home-metricas__icon-img">
+                </span>
+                <p class="home-metricas__value">
+                    <span data-count="{{ metricas_home.consultas }}">{{ metricas_home.consultas_texto }}</span><span class="home-metricas__plus">+</span>
+                </p>
+                <p class="home-metricas__label">{% translate "Consultas al asistente virtual" %}</p>
+            </li>
+
+            <!-- Visitas a la plataforma -->
+            <li class="home-metricas__card" data-animar="animate__fadeInUp">
+                <span class="home-metricas__icon" aria-hidden="true">
+                    <img src="{% static 'assets/img/home-metricas/visitas.svg' %}" alt="" class="home-metricas__icon-img">
+                </span>
+                <p class="home-metricas__value">
+                    <span data-count="{{ metricas_home.visitas }}">{{ metricas_home.visitas_texto }}</span><span class="home-metricas__plus">+</span>
+                </p>
+                <p class="home-metricas__label">{% translate "Visitas a la plataforma" %}</p>
+            </li>
+        </ul>
+    </div>
+</section>
+{% endif %}
+
 <!-- SECCIÓN NEGOCIOS -->
-<section class="py-5 bg-white vi-business-section">
-    <div class="container py-5 text-center">
+<section class="bg-white vi-business-section">
+    <div class="container text-center">
         <div class="row justify-content-center">
             <div class="col-lg-8" data-animar="animate__fadeInUp">
                 <div class="mb-4">
@@ -364,6 +426,8 @@
         </div>
     </div>
 </section>
+
+
 {% endblock %}
 
 {% block extra_js %}

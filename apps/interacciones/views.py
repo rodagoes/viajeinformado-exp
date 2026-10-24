@@ -10,6 +10,9 @@ from django.utils.translation import gettext
 
 from apps.establecimientos.models import SucursalEstablecimiento
 
+from apps.metricas.choices import TipoInteraccion
+from apps.metricas.services.real import registrar_evento_real
+
 from .models import Favorito, Resena
 from .services import TIPOS_RECURSO as TIPOS_FAVORITO
 from .services import _filtro_recurso, resolver_recurso
@@ -55,6 +58,12 @@ def toggle_favorito(request, tipo, pk):
             Favorito.objects.create(usuario=request.user, **{campo: recurso})
     except IntegrityError:
         pass  # doble clic / carrera: el UniqueConstraint de F1 ya lo creó, se responde como éxito
+    else:
+        # Métrica: solo cuando ESTA petición creó el favorito (no al eliminar ni en el IntegrityError).
+        registrar_evento_real(
+            request, TipoInteraccion.FAVORITO_AGREGADO, entidad_tipo=tipo, entidad_id=recurso.pk,
+            meta={"tipo": recurso.tipo} if tipo == "establecimiento" else None,
+        )
 
     return JsonResponse({"ok": True, "es_favorito": True, "accion": "agregado"})
 

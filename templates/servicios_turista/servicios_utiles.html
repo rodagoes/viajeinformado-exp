@@ -157,6 +157,8 @@
                                 type="button"
                                 class="su-card__accion su-card__accion--primaria"
                                 data-abrir-como-llegar
+                                data-metrica-evento="ubicacion_click" data-metrica-via="servicios_utiles"
+                                data-metrica-entidad-tipo="servicio" data-metrica-entidad-id="{{ tarjeta.id }}"
                                 data-servicio-id="{{ tarjeta.id }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 512 512" fill="#ffffff"><title xmlns="" fill="#ffffff">trail-sign-sharp</title><path fill="#ffffff" d="m502.63 336l-80-80H278v-32h170V64H278V32h-44v32H89.37l-80 80l80 80H234v32H64v160h170v64h44v-64h144.63Z"/></svg>
                                 {% translate "Cómo llegar" %}
@@ -310,7 +312,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="como-llegar-wrap su-como-llegar" data-como-llegar>
+                <div class="como-llegar-wrap su-como-llegar" data-como-llegar data-metrica-entidad-tipo="servicio">
 
                     {% for tarjeta in tarjetas_con_mapa %}
                     <button
@@ -337,13 +339,13 @@
                     </div>
 
                     <div class="du-route-actions" data-cta-default>
-                        <button type="button" class="du-action primary" data-show-dir>
+                        <button type="button" class="du-action primary" data-show-dir data-metrica-evento="ubicacion_click" data-metrica-via="como_llegar">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
                             </svg>
                             <span>{% translate "Cómo llegar" %}</span>
                         </button>
-                        <a href="#" target="_blank" rel="noopener" class="du-action" data-open-link>
+                        <a href="#" target="_blank" rel="noopener" class="du-action" data-open-link data-metrica-evento="ubicacion_click" data-metrica-via="abrir_mapa">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
@@ -375,7 +377,7 @@
                         </div>
 
                         <a href="#" class="du-action primary du-action-full"
-                            target="_blank" rel="noopener noreferrer" data-enlace-ruta>
+                            target="_blank" rel="noopener noreferrer" data-enlace-ruta data-metrica-evento="ubicacion_click" data-metrica-via="iniciar_ruta" data-metrica-modo-desde="travelmode">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
                             </svg>

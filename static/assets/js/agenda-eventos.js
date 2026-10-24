@@ -1255,7 +1255,12 @@
         mostrarFila("organizador", Boolean(evento.organizador) || enlaces.length > 0);
 
         const modal = obtenerModalBootstrap(modalInfoEl);
-        if (modal) modal.show();
+        if (modal) {
+            // Métrica (apps.metricas): solo si el evento existe y el modal realmente se abre. La ventana anti doble
+            // clic de metricas.js evita duplicados inmediatos; cerrar y reabrir después sí cuenta de nuevo.
+            if (window.ViMetricas) window.ViMetricas.registrar("evento_detalle_click", { via: "agenda", entidadId: eventoId });
+            modal.show();
+        }
     };
 
     document.addEventListener("click", (event) => {

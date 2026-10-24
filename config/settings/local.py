@@ -1,6 +1,14 @@
+import sys
+
 from .base import *
 
 DEBUG = env.bool('DEBUG', default=True)
+
+# Métricas REALES activas solo en desarrollo local. Se apagan durante `manage.py test` para no alterar
+# los tests de otras apps (consultas, filas creadas); los tests de apps.metricas lo activan con override_settings.
+METRICAS_REAL_HABILITADAS = 'test' not in sys.argv
+# Herramientas de tesis/prueba visibles en el Admin local (en producción quedan ocultas).
+METRICAS_ADMIN_PRUEBAS_VISIBLE = env.bool('METRICAS_ADMIN_PRUEBAS_VISIBLE', default=True)
 
 DATABASES = {
     'default': {

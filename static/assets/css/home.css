@@ -511,17 +511,28 @@
    BUSINESS SECTION
    ========================================= */
 
-.vi-business-email {
+.vi-business-section {
+    padding: 4rem 0 4.75rem;
+}
+
+/* El correo es una sola unidad: nunca se parte, la tipografía se ajusta al ancho disponible */
+.vi-business-section .vi-business-email {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     max-width: 100%;
     margin: 0 auto;
-    text-align: center;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    padding: 0.6rem 1.25rem;
+    font-size: clamp(0.8rem, 3.9vw, 1.125rem);
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+.vi-business-section .vi-business-email:focus-visible {
+    outline: 3px solid #007fff;
+    outline-offset: 3px;
 }
 
 .vi-business-email__icon {
@@ -668,10 +679,8 @@
         line-height: 1.55;
     }
 
-    .vi-business-email {
-        width: 100%;
-        padding-left: 14px;
-        padding-right: 14px;
+    .vi-business-section .vi-business-email {
+        padding: 0.55rem 0.9rem;
     }
 }
 
@@ -719,5 +728,176 @@
 
     .vi-chatbot-mockup {
         border-radius: 1.25rem;
+    }
+}
+/* =========================================
+   CIFRAS (Viaje Informado en cifras)
+   ========================================= */
+
+.home-metricas {
+    background-color: #f7f9fd;
+    padding: 4.25rem 0;
+    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+}
+
+.home-metricas__head {
+    max-width: 720px;
+    margin: 0 auto 2.75rem;
+}
+
+.home-metricas__eyebrow {
+    margin: 0 0 0.6rem;
+    color: #007fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+.home-metricas__title {
+    margin-bottom: 0.9rem;
+}
+
+.home-metricas__lead {
+    margin: 0 auto;
+    color: #61708c;
+}
+
+.home-metricas__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.home-metricas__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 1.25rem 1.75rem;
+    background: #ffffff;
+    border: 1px solid #dfe7f3;
+    border-radius: 1.25rem;
+    box-shadow: 0 2px 10px rgba(0, 45, 137, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+@media (hover: hover) {
+    .home-metricas__card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 45, 137, 0.1);
+    }
+}
+
+/* Contenedor del icono: glassmorphism sutil sobre un halo azul suave */
+.home-metricas__icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1.25rem;
+    border-radius: 1rem;
+    color: #ffffff;
+    font-size: 1.6rem;
+    background:
+        radial-gradient(circle at 55% 55%, rgba(0, 128, 255, 0.979), transparent 145%),
+        rgb(255, 255, 255);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 128, 255, 0.445);
+    box-shadow:
+        0 8px 22px rgba(0, 45, 137, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/* Asset propio del icono (.svg/.png/.webp): conserva sus colores; ajusta tamaño aquí */
+.home-metricas__icon-img {
+    display: block;
+    width: 1.75rem;
+    height: 1.75rem;
+    object-fit: contain;
+}
+
+.home-metricas__value {
+    margin: 0 0 0.4rem;
+    color: #002d89;
+    font-size: clamp(2.25rem, 3.4vw, 2.9rem);
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.home-metricas__plus {
+    margin-left: 0.05em;
+    color: #007fff;
+    font-size: 0.6em;
+    font-weight: 700;
+    vertical-align: 0.3em;
+}
+
+.home-metricas__label {
+    margin: 0;
+    color: #182033;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+@media (max-width: 991.98px) {
+    .home-metricas {
+        padding: 3.5rem 0;
+    }
+
+    .home-metricas__head {
+        margin-bottom: 2.5rem;
+    }
+
+    .vi-business-section {
+        padding: 3.5rem 0 4rem;
+    }
+
+    .home-metricas__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .vi-business-section {
+        padding: 2.75rem 0 3.25rem;
+    }
+
+    .home-metricas {
+        padding: 2.75rem 0;
+    }
+
+    .home-metricas__head {
+        margin-bottom: 2rem;
+    }
+
+    .home-metricas__grid {
+        gap: 1rem;
+    }
+
+    .home-metricas__card {
+        padding: 1.5rem 0.75rem 1.35rem;
+    }
+}
+
+@media (max-width: 359.98px) {
+    .home-metricas__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-metricas__card {
+        transition: none;
+    }
+
+    .home-metricas__card:hover {
+        transform: none;
     }
 }

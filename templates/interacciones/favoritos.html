@@ -87,7 +87,9 @@
                         <span class="favorito-rating-texto favorito-sin-rating">{% translate "Aún sin reseñas" %}</span>
                         {% endif %}
                     </div>
-                    <a href="{{ recurso.get_absolute_url }}" class="favorito-ver-mas vi-btn-secondary">
+                    <a href="{{ recurso.get_absolute_url }}" class="favorito-ver-mas vi-btn-secondary"
+                       data-metrica-evento="{% if favorito.establecimiento %}{% if favorito.establecimiento.tipo == 'restaurante' %}restaurante_detalle_click{% else %}alojamiento_detalle_click{% endif %}{% else %}lugar_detalle_click{% endif %}"
+                       data-metrica-via="favoritos" data-metrica-entidad-id="{{ recurso.pk }}">
                         <img src="{% static 'assets/img/icons/vermas-fav.svg' %}" alt="" aria-hidden="true" class="favorito-ver-mas__icono">
                         {% translate "Ver más" %}
                     </a>

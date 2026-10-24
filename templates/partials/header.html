@@ -118,8 +118,8 @@
         <div class="vi-mobile-menu__inner">
             {% for item in header_nav_items %}
                 {% if item.children %}
-                <details class="vi-mobile-group{% if active_nav == item.key %} active{% endif %}">
-                    <summary class="vi-mobile-group__summary">
+                <details class="vi-mobile-group{% if active_nav == item.key %} active{% endif %}"{% if active_nav == item.key %} open{% endif %}>
+                    <summary class="vi-mobile-group__summary" aria-expanded="{% if active_nav == item.key %}true{% else %}false{% endif %}">
                         <i class="bi bi-{{ item.icon }}" aria-hidden="true"></i>
                         <span>{{ item.label }}</span>
                         <i class="bi bi-chevron-down vi-mobile-group__caret" aria-hidden="true"></i>
@@ -142,12 +142,46 @@
                 </a>
                 {% endif %}
             {% endfor %}
+
+            <!-- IDIOMA (solo móvil: en desktop el selector vive en el header). Misma vista set_language que lang_selector.html -->
+            <div class="vi-mobile-lang">
+                <span class="vi-mobile-lang__title" id="viMobileLangTitle">{% translate 'Idioma' %}</span>
+                <form action="{% url 'set_language' %}" method="post" class="vi-mobile-lang__switch"
+                    role="group" aria-labelledby="viMobileLangTitle">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    {% get_available_languages as LANGUAGES %}
+                    {% for code, nombre in LANGUAGES %}
+                    <button type="submit" name="language" value="{{ code }}" lang="{{ code }}"
+                        class="vi-mobile-lang__btn{% if code == LANGUAGE_CODE %} is-current{% endif %}"
+                        aria-pressed="{% if code == LANGUAGE_CODE %}true{% else %}false{% endif %}"
+                        aria-label="{% if code == 'es' %}Cambiar a español{% else %}Switch to English{% endif %}">
+                        <span class="vi-mobile-lang__flag" aria-hidden="true">{% if code == 'es' %}🇪🇸{% else %}🇺🇸{% endif %}</span>
+                    </button>
+                    {% endfor %}
+                </form>
+            </div>
         </div>
     </div>
 
 </header>
 
 <script>
+    // Menú móvil: acordeón de apertura única (<details> nativo + cierre de los demás al abrir uno).
+    (function () {
+        var grupos = Array.prototype.slice.call(document.querySelectorAll('.vi-mobile-group'));
+        function sync(g) {
+            var resumen = g.querySelector('.vi-mobile-group__summary');
+            if (resumen) resumen.setAttribute('aria-expanded', g.open ? 'true' : 'false');
+        }
+        grupos.forEach(function (g) {
+            g.addEventListener('toggle', function () {
+                if (g.open) grupos.forEach(function (otro) { if (otro !== g) otro.open = false; });
+                grupos.forEach(sync);
+            });
+        });
+    })();
+
     (function () {
         var header = document.querySelector('.vi-header');
         if (!header) return;

@@ -10,13 +10,27 @@ from .models import (
     ContactoSucursalEstablecimiento
 )
 from apps.gastronomia.models import PlatoEstablecimiento
+from apps.ubicaciones.admin_filtros import DistritoDependienteFilter, ProvinciaDependienteFilter
+
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — CategoriaEstablecimientoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CATEGORIA_ESTABLECIMIENTO_COLUMNAS_ADMIN = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CATEGORIA_ESTABLECIMIENTO_FILTROS_ADMIN = ("activo", "tipo_icono")
+# ==========================================================================
+
 
 @admin.register(CategoriaEstablecimiento)
 class CategoriaEstablecimientoAdmin(TranslationAdmin):
-    list_display = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
+    list_display = CATEGORIA_ESTABLECIMIENTO_COLUMNAS_ADMIN
     ordering = ("nombre",)
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
-    list_filter = ("activo", "tipo_icono")
+    list_filter = CATEGORIA_ESTABLECIMIENTO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ("creado", "actualizado")
     fieldsets = (
@@ -31,12 +45,25 @@ class CategoriaEstablecimientoAdmin(TranslationAdmin):
         }),
     )
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ServicioEstablecimientoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+SERVICIO_ESTABLECIMIENTO_COLUMNAS_ADMIN = ("nombre", "aplica_a", "tipo_icono", "icono_bootstrap", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+SERVICIO_ESTABLECIMIENTO_FILTROS_ADMIN = ("activo", "aplica_a", "tipo_icono")
+# ==========================================================================
+
+
 @admin.register(ServicioEstablecimiento)
 class ServicioEstablecimientoAdmin(TranslationAdmin):
-    list_display = ("nombre", "aplica_a", "tipo_icono", "icono_bootstrap", "activo", "creado")
+    list_display = SERVICIO_ESTABLECIMIENTO_COLUMNAS_ADMIN
     ordering = ("nombre",)
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
-    list_filter = ("activo", "aplica_a", "tipo_icono")
+    list_filter = SERVICIO_ESTABLECIMIENTO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ("creado", "actualizado")
     fieldsets = (
@@ -123,13 +150,31 @@ class ContactoSucursalEstablecimientoInline(TranslationTabularInline):
     extra = 1
     fields = ("tipo_contacto", "etiqueta", "valor", "es_principal", "orden", "activo")
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — EstablecimientoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+ESTABLECIMIENTO_COLUMNAS_ADMIN = (
+    "nombre", "tipo", "categoria_principal",
+    "total_sucursales", "sucursal_principal",
+    "rango_precio", "rango_precios_soles", "total_recomendaciones", "destacado", "activo"
+)
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+ESTABLECIMIENTO_FILTROS_ADMIN = (
+    "tipo", "categoria_principal", "categorias_secundarias",
+    "servicios", "rango_precio", "destacado", "activo",
+    "sucursales__distrito__provincia__departamento",
+    ("sucursales__distrito__provincia", ProvinciaDependienteFilter), ("sucursales__distrito", DistritoDependienteFilter)
+)
+# ==========================================================================
+
+
 @admin.register(Establecimiento)
 class EstablecimientoAdmin(TranslationAdmin):
-    list_display = (
-        "nombre", "tipo", "categoria_principal",
-        "total_sucursales", "sucursal_principal",
-        "rango_precio", "rango_precios_soles", "total_recomendaciones", "destacado", "activo"
-    )
+    list_display = ESTABLECIMIENTO_COLUMNAS_ADMIN
     # list_editable = ("destacado", "activo")
     ordering = ("tipo", "nombre")
     search_fields = (
@@ -139,12 +184,7 @@ class EstablecimientoAdmin(TranslationAdmin):
         "sucursales__direccion", "sucursales__distrito__nombre_oficial",
         "sucursales__localidad__nombre"
     )
-    list_filter = (
-        "tipo", "categoria_principal", "categorias_secundarias",
-        "servicios", "rango_precio", "destacado", "activo",
-        "sucursales__distrito__provincia__departamento",
-        "sucursales__distrito__provincia", "sucursales__distrito"
-    )
+    list_filter = ESTABLECIMIENTO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = ("categoria_principal",)
     filter_horizontal = ("categorias_secundarias", "servicios")
@@ -211,12 +251,29 @@ class EstablecimientoAdmin(TranslationAdmin):
     rango_precios_soles.short_description = "Rango en soles"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — SucursalEstablecimientoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+SUCURSAL_ESTABLECIMIENTO_COLUMNAS_ADMIN = (
+    "establecimiento", "nombre", "distrito",
+    "localidad", "es_principal", "activo"
+)
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+SUCURSAL_ESTABLECIMIENTO_FILTROS_ADMIN = (
+    "activo", "es_principal",
+    "distrito__provincia__departamento",
+    ("distrito__provincia", ProvinciaDependienteFilter), ("distrito", DistritoDependienteFilter)
+)
+# ==========================================================================
+
+
 @admin.register(SucursalEstablecimiento)
 class SucursalEstablecimientoAdmin(TranslationAdmin):
-    list_display = (
-        "establecimiento", "nombre", "distrito",
-        "localidad", "es_principal", "activo"
-    )
+    list_display = SUCURSAL_ESTABLECIMIENTO_COLUMNAS_ADMIN
     # list_editable = ("es_principal", "activo")
     ordering = (
         "establecimiento__nombre",
@@ -227,11 +284,7 @@ class SucursalEstablecimientoAdmin(TranslationAdmin):
         "establecimiento__nombre", "nombre", "direccion",
         "referencia", "distrito__nombre_oficial", "localidad__nombre"
     )
-    list_filter = (
-        "activo", "es_principal",
-        "distrito__provincia__departamento",
-        "distrito__provincia", "distrito"
-    )
+    list_filter = SUCURSAL_ESTABLECIMIENTO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = ("establecimiento", "distrito", "localidad")
     readonly_fields = ("creado", "actualizado")
@@ -262,9 +315,25 @@ class SucursalEstablecimientoAdmin(TranslationAdmin):
         }),
     )
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ImagenEstablecimientoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+IMAGEN_ESTABLECIMIENTO_COLUMNAS_ADMIN = ("establecimiento", "titulo", "orden", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+IMAGEN_ESTABLECIMIENTO_FILTROS_ADMIN = (
+    "activo",
+    "establecimiento",
+)
+# ==========================================================================
+
+
 @admin.register(ImagenEstablecimiento)
 class ImagenEstablecimientoAdmin(TranslationAdmin):
-    list_display = ("establecimiento", "titulo", "orden", "activo", "creado")
+    list_display = IMAGEN_ESTABLECIMIENTO_COLUMNAS_ADMIN
     # list_editable = ("orden", "activo")
     ordering = (
         "establecimiento__nombre",
@@ -276,22 +345,32 @@ class ImagenEstablecimientoAdmin(TranslationAdmin):
         "titulo",
         "texto_alt",
     )
-    list_filter = (
-        "activo",
-        "establecimiento",
-    )
+    list_filter = IMAGEN_ESTABLECIMIENTO_FILTROS_ADMIN
     autocomplete_fields = (
         "establecimiento",
     )
     list_per_page = 25
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — RecomendacionEstablecimientoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+RECOMENDACION_ESTABLECIMIENTO_COLUMNAS_ADMIN = ("establecimiento", "orden", "nombre", "tiene_imagen", "tiene_icono", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+RECOMENDACION_ESTABLECIMIENTO_FILTROS_ADMIN = ("activo", "orden", "establecimiento__tipo")
+# ==========================================================================
+
+
 @admin.register(RecomendacionEstablecimiento)
 class RecomendacionEstablecimientoAdmin(TranslationAdmin):
-    list_display = ("establecimiento", "orden", "nombre", "tiene_imagen", "tiene_icono", "activo", "creado")
+    list_display = RECOMENDACION_ESTABLECIMIENTO_COLUMNAS_ADMIN
     ordering = ("establecimiento__nombre", "orden", "id")
     search_fields = ("establecimiento__nombre", "nombre")
-    list_filter = ("activo", "orden", "establecimiento__tipo")
+    list_filter = RECOMENDACION_ESTABLECIMIENTO_FILTROS_ADMIN
     autocomplete_fields = ("establecimiento",)
     readonly_fields = ("creado", "actualizado")
     list_per_page = 25
@@ -316,9 +395,22 @@ class RecomendacionEstablecimientoAdmin(TranslationAdmin):
         return "Sí" if obj.icono_archivo else "No"
     tiene_icono.short_description = "Ícono alojamiento"
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ContactoSucursalEstablecimientoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CONTACTO_SUCURSAL_ESTABLECIMIENTO_COLUMNAS_ADMIN = ("sucursal", "tipo_contacto", "etiqueta", "valor", "es_principal", "orden", "activo")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CONTACTO_SUCURSAL_ESTABLECIMIENTO_FILTROS_ADMIN = ("activo", "es_principal", "tipo_contacto", "sucursal__establecimiento__tipo")
+# ==========================================================================
+
+
 @admin.register(ContactoSucursalEstablecimiento)
 class ContactoSucursalEstablecimientoAdmin(TranslationAdmin):
-    list_display = ("sucursal", "tipo_contacto", "etiqueta", "valor", "es_principal", "orden", "activo")
+    list_display = CONTACTO_SUCURSAL_ESTABLECIMIENTO_COLUMNAS_ADMIN
     # list_editable = ("es_principal", "orden", "activo")
     ordering = (
         "sucursal__establecimiento__nombre",
@@ -327,7 +419,7 @@ class ContactoSucursalEstablecimientoAdmin(TranslationAdmin):
         "id",
     )
     search_fields = ("sucursal__establecimiento__nombre", "sucursal__nombre", "etiqueta", "valor")
-    list_filter = ("activo", "es_principal", "tipo_contacto", "sucursal__establecimiento__tipo")
+    list_filter = CONTACTO_SUCURSAL_ESTABLECIMIENTO_FILTROS_ADMIN
     autocomplete_fields = ("sucursal",)
     readonly_fields = ("creado", "actualizado")
 

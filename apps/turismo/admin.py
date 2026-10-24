@@ -7,13 +7,27 @@ from .models import (
     ImagenLugarTuristico,
     RecomendacionLugarTuristico,
 )
+from apps.ubicaciones.admin_filtros import DistritoDependienteFilter, ProvinciaDependienteFilter
+
+
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — CategoriaLugarTuristicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CATEGORIA_LUGAR_TURISTICO_COLUMNAS_ADMIN = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CATEGORIA_LUGAR_TURISTICO_FILTROS_ADMIN = ("activo", "tipo_icono")
+# ==========================================================================
 
 
 @admin.register(CategoriaLugarTuristico)
 class CategoriaLugarTuristicoAdmin(TranslationAdmin):
-    list_display = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
+    list_display = CATEGORIA_LUGAR_TURISTICO_COLUMNAS_ADMIN
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
-    list_filter = ("activo", "tipo_icono")
+    list_filter = CATEGORIA_LUGAR_TURISTICO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ("creado", "actualizado")
     ordering = ("nombre",)
@@ -31,11 +45,24 @@ class CategoriaLugarTuristicoAdmin(TranslationAdmin):
     )
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ServicioLugarTuristicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+SERVICIO_LUGAR_TURISTICO_COLUMNAS_ADMIN = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+SERVICIO_LUGAR_TURISTICO_FILTROS_ADMIN = ("activo", "tipo_icono")
+# ==========================================================================
+
+
 @admin.register(ServicioLugarTuristico)
 class ServicioLugarTuristicoAdmin(TranslationAdmin):
-    list_display = ("nombre", "tipo_icono", "icono_bootstrap", "activo", "creado")
+    list_display = SERVICIO_LUGAR_TURISTICO_COLUMNAS_ADMIN
     search_fields = ("nombre", "descripcion", "icono_bootstrap")
-    list_filter = ("activo", "tipo_icono")
+    list_filter = SERVICIO_LUGAR_TURISTICO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ("creado", "actualizado")
     ordering = ("nombre",)
@@ -79,23 +106,36 @@ class RecomendacionLugarTuristicoInline(TranslationTabularInline):
     ordering = ("orden", "id")
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — LugarTuristicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+LUGAR_TURISTICO_COLUMNAS_ADMIN = (
+    "nombre", "categoria_principal", "distrito", "localidad",
+    "tipo_costo", "rango_precios_soles", "dificultad", "destacado", "activo"
+)
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+LUGAR_TURISTICO_FILTROS_ADMIN = (
+    "activo", "destacado", "categoria_principal", "categorias_secundarias",
+    "servicios", "tipo_costo", "dificultad",
+    "distrito__provincia__departamento", ("distrito__provincia", ProvinciaDependienteFilter), ("distrito", DistritoDependienteFilter)
+)
+# ==========================================================================
+
+
 @admin.register(LugarTuristico)
 class LugarTuristicoAdmin(TranslationAdmin):
-    list_display = (
-        "nombre", "categoria_principal", "distrito", "localidad",
-        "tipo_costo", "rango_precios_soles", "dificultad", "destacado", "activo"
-    )
+    list_display = LUGAR_TURISTICO_COLUMNAS_ADMIN
     search_fields = (
         "nombre", "descripcion_corta", "descripcion", "historia", "referencia",
         "distrito__nombre_oficial", "localidad__nombre",
         "categoria_principal__nombre", "categorias_secundarias__nombre",
         "servicios__nombre", "recomendaciones_items__titulo", "recomendaciones_items__descripcion"
     )
-    list_filter = (
-        "activo", "destacado", "categoria_principal", "categorias_secundarias",
-        "servicios", "tipo_costo", "dificultad",
-        "distrito__provincia__departamento", "distrito__provincia", "distrito"
-    )
+    list_filter = LUGAR_TURISTICO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = ("categoria_principal", "distrito", "localidad")
     filter_horizontal = ("categorias_secundarias", "servicios")
@@ -152,11 +192,24 @@ class LugarTuristicoAdmin(TranslationAdmin):
     rango_precios_soles.short_description = "Rango en soles"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — RecomendacionLugarTuristicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+RECOMENDACION_LUGAR_TURISTICO_COLUMNAS_ADMIN = ("lugar", "titulo", "orden", "activo", "actualizado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+RECOMENDACION_LUGAR_TURISTICO_FILTROS_ADMIN = ("activo", "lugar")
+# ==========================================================================
+
+
 @admin.register(RecomendacionLugarTuristico)
 class RecomendacionLugarTuristicoAdmin(TranslationAdmin):
-    list_display = ("lugar", "titulo", "orden", "activo", "actualizado")
+    list_display = RECOMENDACION_LUGAR_TURISTICO_COLUMNAS_ADMIN
     search_fields = ("lugar__nombre", "titulo", "descripcion", "icono_bootstrap")
-    list_filter = ("activo", "lugar")
+    list_filter = RECOMENDACION_LUGAR_TURISTICO_FILTROS_ADMIN
     autocomplete_fields = ("lugar",)
     ordering = ("lugar__nombre", "orden", "id")
     list_per_page = 25
@@ -167,11 +220,24 @@ class RecomendacionLugarTuristicoAdmin(TranslationAdmin):
     )
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ImagenLugarTuristicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+IMAGEN_LUGAR_TURISTICO_COLUMNAS_ADMIN = ("lugar", "tipo_media", "titulo", "orden", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+IMAGEN_LUGAR_TURISTICO_FILTROS_ADMIN = ("activo", "tipo_media", "lugar")
+# ==========================================================================
+
+
 @admin.register(ImagenLugarTuristico)
 class ImagenLugarTuristicoAdmin(TranslationAdmin):
-    list_display = ("lugar", "tipo_media", "titulo", "orden", "activo", "creado")
+    list_display = IMAGEN_LUGAR_TURISTICO_COLUMNAS_ADMIN
     search_fields = ("lugar__nombre", "titulo", "descripcion", "texto_alt", "video_url", "video_archivo")
-    list_filter = ("activo", "tipo_media", "lugar")
+    list_filter = IMAGEN_LUGAR_TURISTICO_FILTROS_ADMIN
     autocomplete_fields = ("lugar",)
     ordering = ("lugar__nombre", "orden", "id")
     list_per_page = 25

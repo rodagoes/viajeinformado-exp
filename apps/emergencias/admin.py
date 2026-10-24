@@ -33,12 +33,25 @@ class NumeroContactoAdicionalInline(TranslationTabularInline):
     fields = ["etiqueta", "numero_visible", "numero_tel", "orden"]
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ZonaAtencionEmergenciaAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+ZONA_ATENCION_EMERGENCIA_COLUMNAS_ADMIN = ["nombre_publico_o_distrito", "distrito", "provincia_relacionada", "slug", "orden", "activo"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+ZONA_ATENCION_EMERGENCIA_FILTROS_ADMIN = ["activo", "distrito__provincia"]
+# ==========================================================================
+
+
 @admin.register(ZonaAtencionEmergencia)
 class ZonaAtencionEmergenciaAdmin(admin.ModelAdmin):
-    list_display = ["nombre_publico_o_distrito", "distrito", "provincia_relacionada", "slug", "orden", "activo"]
+    list_display = ZONA_ATENCION_EMERGENCIA_COLUMNAS_ADMIN
     list_editable = ["orden", "activo"]
     search_fields = ["nombre_publico", "distrito__nombre_oficial", "distrito__provincia__nombre_oficial"]
-    list_filter = ["activo", "distrito__provincia"]
+    list_filter = ZONA_ATENCION_EMERGENCIA_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre_publico",)}
     autocomplete_fields = ["distrito"]
     ordering = ["orden", "nombre_publico"]
@@ -52,17 +65,30 @@ class ZonaAtencionEmergenciaAdmin(admin.ModelAdmin):
     provincia_relacionada.short_description = "Provincia"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ContactoEmergenciaAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CONTACTO_EMERGENCIA_COLUMNAS_ADMIN = [
+    "nombre", "ambito", "categoria", "numero_visible", "es_24_horas",
+    "fecha_verificacion", "aviso_verificacion", "activo", "orden",
+]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CONTACTO_EMERGENCIA_FILTROS_ADMIN = ["ambito", "categoria", "zonas", "es_24_horas", "activo", "fecha_verificacion"]
+# ==========================================================================
+
+
 @admin.register(ContactoEmergencia)
 class ContactoEmergenciaAdmin(TranslationAdmin):
     form = ContactoEmergenciaForm
     inlines = [NumeroContactoAdicionalInline]
-    list_display = [
-        "nombre", "ambito", "categoria", "numero_visible", "es_24_horas",
-        "fecha_verificacion", "aviso_verificacion", "activo", "orden",
-    ]
+    list_display = CONTACTO_EMERGENCIA_COLUMNAS_ADMIN
     list_editable = ["orden", "activo"]
     search_fields = ["nombre", "descripcion", "numero_visible", "numero_tel", "fuente_nombre"]
-    list_filter = ["ambito", "categoria", "zonas", "es_24_horas", "activo", "fecha_verificacion"]
+    list_filter = CONTACTO_EMERGENCIA_FILTROS_ADMIN
     filter_horizontal = ["zonas"]
     ordering = ["orden", "nombre"]
 

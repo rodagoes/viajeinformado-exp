@@ -60,6 +60,7 @@
     <!-- Custom JS -->
     <script src="{% static 'assets/js/main.js' %}"></script>
     <script src="{% static 'assets/js/skeleton.js' %}"></script>
+    {% if METRICAS_ACTIVAS %}<script src="{% static 'assets/js/metricas.js' %}" data-endpoint="{% url 'metricas:evento' %}" data-duracion="{% url 'metricas:duracion' %}" data-csrf="{{ csrf_token }}"></script>{% endif %}
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
     <script src="{% static 'assets/js/pillcobot.js' %}"></script>
 

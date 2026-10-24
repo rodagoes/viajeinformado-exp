@@ -1,0 +1,11 @@
+{# Cards del inicio del Admin. Textos e iconos: apps/base/templatetags/admin_dashboard.py (CARDS). #}
+<div class="vi-cards">
+  {% for card in cards %}
+    <a class="vi-card" href="{{ card.url }}">
+      <span class="vi-card-icon" aria-hidden="true"><i class="bi {{ card.icono }}"></i></span>
+      <span class="vi-card-count">{{ card.activos }}</span>
+      <span class="vi-card-title">{{ card.titulo }}</span>
+      <span class="vi-card-sub">{% if card.inactivos %}{{ card.inactivos }} inactivo{{ card.inactivos|pluralize }} · {% endif %}Gestionar registros</span>
+    </a>
+  {% endfor %}
+</div>

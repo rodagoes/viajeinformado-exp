@@ -7,6 +7,9 @@ from django.core.cache import cache
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
+from apps.metricas.choices import TipoInteraccion
+from apps.metricas.services import real as metricas
+
 from .services import chatbot_service, llm_client, quick_actions
 
 logger = logging.getLogger(__name__)
@@ -105,10 +108,19 @@ def enviar_mensaje(request):
             session_key=_session_key(request)
         )
 
+    # Métrica de uso (apps.metricas): una consulta por solicitud ACEPTADA (válida y sin rate limit), aunque luego
+    # falle el proveedor. Nunca copia el contenido del mensaje. Un fallo de métricas no afecta al chatbot.
+    evento_metrica = metricas.registrar_evento_real(
+        request, TipoInteraccion.CHATBOT_CONSULTA, meta={"via": "chip" if "accion" in payload else "texto"},
+    )
+
     inicio = time.perf_counter()
 
     def _resultado(status):
         # Métrica operativa mínima del turno HTTP: nunca contenido/reasoning/payload.
+        metricas.actualizar_meta_evento(
+            evento_metrica, resultado="ok" if status == 200 else ("error_interno" if status == 500 else "error_proveedor"),
+        )
         logger.info(
             "chatbot_request conversacion=%s http_status=%s success=%s ms=%.0f",
             conversacion.pk, status, status == 200, (time.perf_counter() - inicio) * 1000,

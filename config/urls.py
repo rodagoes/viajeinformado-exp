@@ -9,8 +9,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from apps.metricas.views import cambiar_idioma
+
 urlpatterns = [
-    path('i18n/', include('django.conf.urls.i18n')),
+    # Mismo endpoint y nombre que django.conf.urls.i18n, con la métrica de cambio de idioma.
+    path('i18n/setlang/', cambiar_idioma, name='set_language'),
     path('admin/', admin.site.urls),
     path('', include('apps.base.urls')),
     path('', include('apps.accounts.urls')),
@@ -27,6 +30,7 @@ urlpatterns = [
     path('planifica/', include('apps.servicios_turista.urls')),
     path('ubicaciones/', include('apps.ubicaciones.urls')),
     path('chatbot/', include('apps.chatbot.urls')),
+    path('metricas/', include('apps.metricas.urls')),
 ]
 
 if settings.DEBUG:

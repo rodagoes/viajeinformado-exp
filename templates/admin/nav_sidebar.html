@@ -1,0 +1,18 @@
+{% load i18n %}
+{# Sidebar del Admin de Viaje Informado. Copia de admin/nav_sidebar.html de Django: cabecera fija (marca + buscador) y lista con scroll propio. #}
+<button class="sticky toggle-nav-sidebar" id="toggle-nav-sidebar" aria-label="{% translate 'Toggle navigation' %}"></button>
+<nav class="sticky" id="nav-sidebar" aria-label="{% translate 'Sidebar' %}">
+  <div class="vi-nav-head">
+    <a class="vi-brand" href="{% url 'admin:index' %}">
+      <strong>Viaje Informado</strong>
+      <span>Administración</span>
+    </a>
+    <input type="search" id="nav-filter"
+           placeholder="Buscar…"
+           aria-label="{% translate 'Filter navigation items' %}">
+  </div>
+  <div class="vi-nav-scroll" id="vi-nav-scroll">
+    {% include 'admin/app_list.html' with app_list=available_apps show_changelinks=False %}
+    <div class="vi-nav-end"></div>
+  </div>
+</nav>
