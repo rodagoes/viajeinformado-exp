@@ -2,10 +2,10 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
+{% block title %}{% translate "Transporte y tarifas" %} {% translate "• Viaje Informado" %}{% endblock %}
+{% block meta_description %}{% translate "Conozca los medios de transporte más utilizados en Huánuco y sus tarifas para que planifique su viaje con confianza." %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="{% static 'assets/css/animaciones-entrada.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/tarifas-taxi.css' %}">
 {% endblock %}

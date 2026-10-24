@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block title %}{% translate "Tipo de Cambio • Viaje Informado" %}{% endblock %}
+{% block meta_description %}{% translate "Convierte soles y dólares de forma rápida utilizando el tipo de cambio referencial vigente." %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/tipo-cambio.css' %}">
@@ -214,5 +215,6 @@
 {% endblock %}
 
 {% block extra_js %}
+{% include 'partials/lottie_js.html' %}
 <script src="{% static 'assets/js/tipo-cambio.js' %}"></script>
 {% endblock %}

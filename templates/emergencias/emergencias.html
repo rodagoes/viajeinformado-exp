@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block title %}{% translate "Emergencias • Viaje Informado" %}{% endblock %}
+{% block meta_description %}{% translate "Encuentra rápidamente contactos nacionales y locales según la zona en la que te encuentres." %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/emergencias.css' %}">
@@ -444,5 +445,6 @@
 {% endblock %}
 
 {% block extra_js %}
+{% include 'partials/lottie_js.html' %}
 <script src="{% static 'assets/js/emergencias.js' %}"></script>
 {% endblock %}

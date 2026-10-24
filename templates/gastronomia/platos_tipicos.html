@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block title %}{% translate "Platos típicos de Huánuco | Viaje Informado" %}{% endblock %}
+{% block meta_description %}{{ subtitulo|striptags|truncatechars:155 }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/componentes/paginacion.css' %}">

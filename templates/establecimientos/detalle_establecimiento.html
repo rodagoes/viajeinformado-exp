@@ -2,7 +2,8 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% translate "Viaje Informado • Huánuco" %}{% endblock %}
+{% block title %}{{ establecimiento.nombre }} | Viaje Informado{% endblock %}
+{% block meta_description %}{% with d=establecimiento.descripcion_corta|default:establecimiento.descripcion|striptags|truncatechars:155 %}{% if d %}{{ d }}{% else %}{{ block.super }}{% endif %}{% endwith %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
