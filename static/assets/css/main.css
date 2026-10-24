@@ -191,25 +191,6 @@ main {
   color: var(--vi-muted);
 }
 
-/* Fix Safari Overflow and long text wrappers */
-.vi-business-email {
-  max-width: 100%;
-  width: 100%;
-  min-width: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  white-space: normal;
-}
-
-@media (max-width: 576px) {
-  .vi-business-email {
-    display: flex !important;
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-  }
-}
-
 .vi-business-section {
   max-width: 100%;
   overflow-x: hidden;

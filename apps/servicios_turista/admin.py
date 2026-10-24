@@ -14,13 +14,27 @@ from .models import (
 from .forms import SedeAdminForm
 from .services import horarios
 from .services.contactos import clave_dedup
+from apps.ubicaciones.admin_filtros import DistritoDependienteFilter, ProvinciaDependienteFilter
+
+
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — CategoriaServicioTuristaAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CATEGORIA_SERVICIO_TURISTA_COLUMNAS_ADMIN = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CATEGORIA_SERVICIO_TURISTA_FILTROS_ADMIN = ["activo", "tipo_icono"]
+# ==========================================================================
 
 
 @admin.register(CategoriaServicioTurista)
 class CategoriaServicioTuristaAdmin(TranslationAdmin):
-    list_display = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+    list_display = CATEGORIA_SERVICIO_TURISTA_COLUMNAS_ADMIN
     search_fields = ["nombre", "descripcion", "icono_bootstrap"]
-    list_filter = ["activo", "tipo_icono"]
+    list_filter = CATEGORIA_SERVICIO_TURISTA_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ["creado", "actualizado"]
     ordering = ["nombre"]
@@ -106,15 +120,28 @@ class SedeInline(admin.TabularInline):
         return super().get_formset(request, obj, **kwargs)
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ServicioTuristaAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+SERVICIO_TURISTA_COLUMNAS_ADMIN = ["nombre", "categoria_principal", "sedes", "destacado", "activo"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+SERVICIO_TURISTA_FILTROS_ADMIN = ["activo", "destacado", "categoria_principal", "sedes__distrito"]
+# ==========================================================================
+
+
 @admin.register(ServicioTurista)
 class ServicioTuristaAdmin(TranslationAdmin):
-    list_display = ["nombre", "categoria_principal", "sedes", "destacado", "activo"]
+    list_display = SERVICIO_TURISTA_COLUMNAS_ADMIN
     search_fields = [
         "nombre", "descripcion_corta", "telefono", "categoria_principal__nombre",
         "sedes__nombre", "sedes__direccion", "sedes__distrito__nombre_oficial",
         "contactos__valor",
     ]
-    list_filter = ["activo", "destacado", "categoria_principal", "sedes__distrito"]
+    list_filter = SERVICIO_TURISTA_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = ["categoria_principal"]
     filter_horizontal = ["categorias_secundarias"]
@@ -155,13 +182,26 @@ class ServicioTuristaAdmin(TranslationAdmin):
         return f"{obj._sedes_activas} / {obj._sedes_total}"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — SedeServicioTuristaAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+SEDE_SERVICIO_TURISTA_COLUMNAS_ADMIN = ["nombre_publico", "distrito", "direccion", "telefono", "activo"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+SEDE_SERVICIO_TURISTA_FILTROS_ADMIN = ["activo", "servicio__categoria_principal", ("distrito__provincia", ProvinciaDependienteFilter), ("distrito", DistritoDependienteFilter)]
+# ==========================================================================
+
+
 @admin.register(SedeServicioTurista)
 class SedeServicioTuristaAdmin(TranslationAdmin):
     form = SedeAdminForm
-    list_display = ["nombre_publico", "distrito", "direccion", "telefono", "activo"]
+    list_display = SEDE_SERVICIO_TURISTA_COLUMNAS_ADMIN
     list_select_related = ["servicio", "distrito"]
     search_fields = ["nombre", "servicio__nombre", "direccion", "telefono", "distrito__nombre_oficial"]
-    list_filter = ["activo", "servicio__categoria_principal", "distrito__provincia", "distrito"]
+    list_filter = SEDE_SERVICIO_TURISTA_FILTROS_ADMIN
     autocomplete_fields = ["servicio", "distrito", "localidad"]
     readonly_fields = ["vista_previa_horario", "creado", "actualizado"]
     ordering = ["servicio__nombre", "nombre", "id"]

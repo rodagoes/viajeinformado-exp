@@ -58,6 +58,9 @@
             '[data-sucursal][data-servicio-id="' + servicioId + '"]'
         );
         if (proxy) proxy.click();
+        // Métrica: el modal es único; los controles de mapa de su interior pertenecen al servicio abierto.
+        const envoltorio = modalComoLlegarEl.querySelector("[data-como-llegar]");
+        if (envoltorio) envoltorio.dataset.metricaEntidadId = servicioId;
 
         // Cada apertura arranca colapsada (mapa + CTA), igual que
         // establecimientos/turismo: el panel Desde/Hasta se expande solo

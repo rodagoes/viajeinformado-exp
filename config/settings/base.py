@@ -59,6 +59,16 @@ CHATBOT_EXTERNAL_SEARCH_PROVIDER = env("CHATBOT_EXTERNAL_SEARCH_PROVIDER", defau
 CHATBOT_RATE_LIMIT_REQUESTS = env.int("CHATBOT_RATE_LIMIT_REQUESTS", default=20)
 CHATBOT_RATE_LIMIT_WINDOW_SECONDS = env.int("CHATBOT_RATE_LIMIT_WINDOW_SECONDS", default=60)
 
+# Métricas REALES (apps.metricas): visitantes, sesiones, páginas vistas y eventos server-side.
+# Seguro por defecto: APAGADO. Local lo enciende en local.py; production.py lo lee de .env (METRICAS_REAL_HABILITADAS, default False).
+METRICAS_REAL_HABILITADAS = False
+# "Viaje Informado en cifras" (Home): se enciende/apaga en Admin > Configuración pública (ya no hay ajuste aquí).
+# Origen de las cifras: SIMULADO solo en local; production.py lo fija en REAL.
+METRICAS_HOME_ORIGEN = 'SIMULADO'
+# Herramientas de tesis/prueba en el Admin (Generaciones simuladas, Periodos de evaluación): visibles solo si es True.
+# Local: True (local.py). Producción: False. Se puede forzar con la variable de entorno METRICAS_ADMIN_PRUEBAS_VISIBLE.
+METRICAS_ADMIN_PRUEBAS_VISIBLE = env.bool('METRICAS_ADMIN_PRUEBAS_VISIBLE', default=False)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -96,6 +106,7 @@ INSTALLED_APPS = [
     'apps.servicios_turista',
     'apps.monedas',
     'apps.chatbot',
+    'apps.metricas',
 ]
 
 MIDDLEWARE = [
@@ -108,6 +119,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    # Al final: necesita request.user y la respuesta ya resuelta. Sin efecto si el flag está apagado.
+    'apps.metricas.middleware.MetricasMiddleware',
 ]
 
 SITE_ID = 1
@@ -128,6 +141,8 @@ TEMPLATES = [
                 'apps.base.context_processors.header_nav_items',
                 'apps.base.context_processors.active_nav',
                 'apps.base.context_processors.js_i18n',
+                'apps.base.publico.config_publica',
+                'apps.metricas.context_processors.metricas',
             ],
         },
     },

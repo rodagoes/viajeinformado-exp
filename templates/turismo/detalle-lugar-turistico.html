@@ -217,6 +217,7 @@
 
         {# Wrapper compartido del componente "Cómo llegar" (turismo y establecimientos) #}
         <div class="como-llegar-wrap"
+          data-metrica-entidad-tipo="lugar" data-metrica-entidad-id="{{ lugar.pk }}"
           data-como-llegar
           {% if route_url %}data-route-url="{{ route_url }}"{% endif %}
           {% if direccion_texto %}data-direccion="{{ direccion_texto }}"{% endif %}
@@ -227,6 +228,7 @@
 
             {% if route_url %}
             <button type="button" class="du-action primary" data-show-dir
+              data-metrica-evento="ubicacion_click" data-metrica-via="como_llegar"
               aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Cómo llegar a {{ nombre }} en Google Maps{% endblocktranslate %}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
@@ -237,7 +239,7 @@
 
             {% if open_url %}
             <a href="{{ open_url }}" target="_blank" rel="noopener noreferrer"
-              class="du-action"
+              class="du-action" data-metrica-evento="ubicacion_click" data-metrica-via="abrir_mapa"
               aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Abrir {{ nombre }} en Google Maps{% endblocktranslate %}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"></circle>
@@ -281,7 +283,7 @@
               class="du-action primary du-action-full"
               target="_blank"
               rel="noopener noreferrer"
-              data-enlace-ruta
+              data-enlace-ruta data-metrica-evento="ubicacion_click" data-metrica-via="iniciar_ruta" data-metrica-modo-desde="travelmode"
               aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Iniciar ruta a {{ nombre }} en Google Maps{% endblocktranslate %}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>

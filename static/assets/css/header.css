@@ -739,3 +739,75 @@
     .vi-lang-btn { padding: 7px 9px; gap: 4px; }
     .vi-lang-btn .bi-translate { display: none; }
 }
+
+/* =========================================================
+   MÓVIL (<= 1199px, mismo corte que d-xl-*): idioma dentro del menú
+   y barra del header robusta para nombres largos.
+   ========================================================= */
+
+/* Selector de idioma del menú móvil: oculto en desktop (el menú móvil entero lo está, d-xl-none) */
+.vi-mobile-lang {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 6px;
+    padding: 12px 14px 8px;
+    border-top: 1px solid rgba(0, 45, 137, .10);
+}
+
+.vi-mobile-lang__title {
+    font-family: "Inter", sans-serif;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--vi-h-muted);
+}
+
+.vi-mobile-lang__switch {
+    display: inline-flex;
+    padding: 3px;
+    gap: 2px;
+    border-radius: 999px;
+    background: rgba(0, 127, 255, .08);
+    border: 1px solid rgba(0, 45, 137, .12);
+}
+
+.vi-mobile-lang__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 38px;
+    padding: 6px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--vi-h-blue-dark);
+    font-family: "Inter", sans-serif;
+    font-size: .78rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color .18s ease, box-shadow .18s ease;
+}
+
+.vi-mobile-lang__btn.is-current {
+    background: var(--vi-h-white);
+    box-shadow: 0 2px 8px rgba(0, 45, 137, .18);
+}
+
+.vi-mobile-lang__btn:focus-visible { outline: 2px solid var(--vi-h-blue); outline-offset: 2px; }
+.vi-mobile-lang__flag { font-size: 1.15rem; line-height: 1; }
+
+@media (max-width: 1199px) {
+    /* El selector del header se mueve al menú: libera ancho para el botón de usuario (que no cambia). */
+    .vi-actions .vi-lang { display: none; }
+
+    /* Barra robusta (flex): la marca es lo único que se encoge; las acciones conservan su ancho natural y la
+       hamburguesa su espacio propio, sin importar la longitud de "Hola, Nombre". */
+    .vi-header__bar { display: flex; align-items: center; gap: 8px; }
+    .vi-brand { flex: 0 1 auto; min-width: 0; margin-right: auto; }
+    .vi-brand__img { width: auto; max-width: 100%; object-fit: contain; object-position: left center; }
+    .vi-actions { flex: 0 0 auto; }
+    .vi-mobile-toggle { flex: 0 0 40px; }
+}

@@ -6,6 +6,7 @@ from .models import (
     MES_CHOICES, CategoriaEvento, Evento, ImagenEvento, RecomendacionEvento, TagExperiencia,
     ocurrencia_pascua_relevante, ocurrencia_relativa_relevante,
 )
+from apps.ubicaciones.admin_filtros import DistritoDependienteFilter, ProvinciaDependienteFilter
 
 _MESES_NOMBRE = dict(MES_CHOICES)
 _ORDEN_SEMANA_NOMBRE = dict(Evento.ORDEN_SEMANA_CHOICES)
@@ -35,11 +36,24 @@ def _dia_mes_abreviado(dia, mes):
     return f"{dia} {_MESES_ABREV.get(mes, '')}".strip()
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — CategoriaEventoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CATEGORIA_EVENTO_COLUMNAS_ADMIN = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CATEGORIA_EVENTO_FILTROS_ADMIN = ["activo", "tipo_icono"]
+# ==========================================================================
+
+
 @admin.register(CategoriaEvento)
 class CategoriaEventoAdmin(TranslationAdmin):
-    list_display = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+    list_display = CATEGORIA_EVENTO_COLUMNAS_ADMIN
     search_fields = ["nombre", "descripcion", "icono_bootstrap"]
-    list_filter = ["activo", "tipo_icono"]
+    list_filter = CATEGORIA_EVENTO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ["creado", "actualizado"]
     ordering = ["nombre"]
@@ -57,11 +71,24 @@ class CategoriaEventoAdmin(TranslationAdmin):
     )
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — TagExperienciaAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+TAG_EXPERIENCIA_COLUMNAS_ADMIN = ["nombre", "icono_bootstrap", "activo"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+TAG_EXPERIENCIA_FILTROS_ADMIN = ["activo"]
+# ==========================================================================
+
+
 @admin.register(TagExperiencia)
 class TagExperienciaAdmin(TranslationAdmin):
-    list_display = ["nombre", "icono_bootstrap", "activo"]
+    list_display = TAG_EXPERIENCIA_COLUMNAS_ADMIN
     search_fields = ["nombre"]
-    list_filter = ["activo"]
+    list_filter = TAG_EXPERIENCIA_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ["creado", "actualizado"]
     ordering = ["nombre"]
@@ -80,24 +107,35 @@ class RecomendacionEventoInline(TranslationTabularInline):
     ordering = ["orden", "id"]
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — EventoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+EVENTO_COLUMNAS_ADMIN = [
+    "nombre", "categoria_principal", "fecha_resumen",
+    "modalidad", "distrito", "tipo_costo", "rango_precios_soles",
+    "estado", "destacado", "activo"
+]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+EVENTO_FILTROS_ADMIN = [
+    "activo","categoria_principal", "categorias_secundarias",
+    "distrito__provincia__departamento", ("distrito__provincia", ProvinciaDependienteFilter), ("distrito", DistritoDependienteFilter)
+]
+# ==========================================================================
+
+
 @admin.register(Evento)
 class EventoAdmin(TranslationAdmin):
-    list_display = [
-        "nombre", "categoria_principal", "fecha_resumen",
-        "modalidad", "distrito", "tipo_costo", "rango_precios_soles",
-        "estado", "destacado", "activo"
-    ]
+    list_display = EVENTO_COLUMNAS_ADMIN
     search_fields = [
         "nombre", "descripcion_corta", "descripcion", "organizador",
         "lugar", "direccion", "referencia", "distrito__nombre_oficial",
         "localidad__nombre", "categoria_principal__nombre", "categorias_secundarias__nombre"
     ]
-    list_filter = [
-        "activo", "destacado", "estado", "tipo_fecha", "tipo_ubicacion",
-        "categoria_principal", "categorias_secundarias",
-        "tipo_costo", "modalidad",
-        "distrito__provincia__departamento", "distrito__provincia", "distrito"
-    ]
+    list_filter = EVENTO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = ["categoria_principal", "provincia", "distrito", "localidad"]
     filter_horizontal = ["categorias_secundarias", "tags_experiencia"]
@@ -229,21 +267,47 @@ class EventoAdmin(TranslationAdmin):
     fecha_resumen.short_description = "Fecha"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ImagenEventoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+IMAGEN_EVENTO_COLUMNAS_ADMIN = ["evento", "titulo", "orden", "activo", "creado"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+IMAGEN_EVENTO_FILTROS_ADMIN = ["activo", "evento"]
+# ==========================================================================
+
+
 @admin.register(ImagenEvento)
 class ImagenEventoAdmin(TranslationAdmin):
-    list_display = ["evento", "titulo", "orden", "activo", "creado"]
+    list_display = IMAGEN_EVENTO_COLUMNAS_ADMIN
     search_fields = ["evento__nombre", "titulo", "texto_alt"]
-    list_filter = ["activo", "evento"]
+    list_filter = IMAGEN_EVENTO_FILTROS_ADMIN
     autocomplete_fields = ["evento"]
     ordering = ["evento__nombre", "orden", "id"]
     list_per_page = 25
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — RecomendacionEventoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+RECOMENDACION_EVENTO_COLUMNAS_ADMIN = ["evento", "titulo", "orden", "activo", "actualizado"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+RECOMENDACION_EVENTO_FILTROS_ADMIN = ["activo", "evento"]
+# ==========================================================================
+
+
 @admin.register(RecomendacionEvento)
 class RecomendacionEventoAdmin(TranslationAdmin):
-    list_display = ["evento", "titulo", "orden", "activo", "actualizado"]
+    list_display = RECOMENDACION_EVENTO_COLUMNAS_ADMIN
     search_fields = ["evento__nombre", "titulo", "descripcion"]
-    list_filter = ["activo", "evento"]
+    list_filter = RECOMENDACION_EVENTO_FILTROS_ADMIN
     autocomplete_fields = ["evento"]
     ordering = ["evento__nombre", "orden", "id"]
     list_per_page = 25

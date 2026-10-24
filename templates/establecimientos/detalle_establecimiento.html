@@ -324,13 +324,15 @@
 
                     {% if sucursal_mapa_principal.route_url %}
                     <a href="{{ sucursal_mapa_principal.route_url }}"
-                        target="_blank" rel="noopener">
+                        target="_blank" rel="noopener"
+                        data-metrica-evento="ubicacion_click" data-metrica-via="como_llegar" data-metrica-entidad-tipo="establecimiento" data-metrica-entidad-id="{{ establecimiento.pk }}">
                         <i class="bi bi-send"></i>
                         <span>{% translate "Cómo llegar" %}</span>
                     </a>
                     {% elif direccion_mapa %}
                     <a href="https://www.google.com/maps/dir/?api=1&destination={{ direccion_mapa|urlencode }}"
-                        target="_blank" rel="noopener">
+                        target="_blank" rel="noopener"
+                        data-metrica-evento="ubicacion_click" data-metrica-via="como_llegar" data-metrica-entidad-tipo="establecimiento" data-metrica-entidad-id="{{ establecimiento.pk }}">
                         <i class="bi bi-send"></i>
                         <span>{% translate "Cómo llegar" %}</span>
                     </a>
@@ -776,6 +778,7 @@
                     <!-- SECCIÓN CÓMO LLEGAR - UBICACION -->
                     {% if sucursal_mapa_principal %}
                     <section class="detalle-bloque du-card como-llegar-wrap" id="detalle-ubicacion" data-como-llegar
+                        data-metrica-entidad-tipo="establecimiento" data-metrica-entidad-id="{{ establecimiento.pk }}"
                         data-lat="{{ sucursal_mapa_principal.latitud }}" data-lng="{{ sucursal_mapa_principal.longitud }}"
                         data-nombre="{{ sucursal_mapa_principal.nombre|default:'Local principal' }}"
                         data-label="{{ sucursal_mapa_principal.label }}" data-direccion="{{ sucursal_mapa_principal.direccion|default:'' }}"
@@ -848,7 +851,7 @@
 
                         <!-- Acciones debajo del mapa -->
                         <div class="du-route-actions" data-cta-default>
-                            <button type="button" class="du-action primary" data-show-dir>
+                            <button type="button" class="du-action primary" data-show-dir data-metrica-evento="ubicacion_click" data-metrica-via="como_llegar">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
@@ -857,7 +860,7 @@
                             </button>
 
                             <a href="{{ sucursal_mapa_principal.open_url }}" target="_blank" rel="noopener" class="du-action"
-                                data-open-link>
+                                data-open-link data-metrica-evento="ubicacion_click" data-metrica-via="abrir_mapa">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -894,7 +897,7 @@
                             </div>
 
                             <a href="{{ sucursal_mapa_principal.route_url }}&travelmode=walking" class="du-action primary du-action-full"
-                                target="_blank" rel="noopener" data-enlace-ruta>
+                                target="_blank" rel="noopener" data-enlace-ruta data-metrica-evento="ubicacion_click" data-metrica-via="iniciar_ruta" data-metrica-modo-desde="travelmode">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>

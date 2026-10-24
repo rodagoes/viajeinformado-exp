@@ -28,10 +28,23 @@ def tipo_recurso(obj):
 tipo_recurso.short_description = "Tipo"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — FavoritoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+FAVORITO_COLUMNAS_ADMIN = ("usuario", "recurso", tipo_recurso, "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+FAVORITO_FILTROS_ADMIN = (TipoRecursoFilter, "creado")
+# ==========================================================================
+
+
 @admin.register(Favorito)
 class FavoritoAdmin(admin.ModelAdmin):
-    list_display = ("usuario", "recurso", tipo_recurso, "creado")
-    list_filter = (TipoRecursoFilter, "creado")
+    list_display = FAVORITO_COLUMNAS_ADMIN
+    list_filter = FAVORITO_FILTROS_ADMIN
     search_fields = ("usuario__username", "establecimiento__nombre", "lugar_turistico__nombre")
     autocomplete_fields = ("usuario", "establecimiento", "lugar_turistico")
     readonly_fields = ("creado",)
@@ -60,13 +73,26 @@ class TipoRecursoResenaFilter(admin.SimpleListFilter):
         return queryset
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ResenaAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+RESENA_COLUMNAS_ADMIN = (
+    "usuario", "recurso", "tipo_recurso_detallado",
+    "valoracion_estrellas", "comentario_resumido", "estado_visual", "creado",
+)
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+RESENA_FILTROS_ADMIN = ("estado", "valoracion", TipoRecursoResenaFilter, "creado")
+# ==========================================================================
+
+
 @admin.register(Resena)
 class ResenaAdmin(admin.ModelAdmin):
-    list_display = (
-        "usuario", "recurso", "tipo_recurso_detallado",
-        "valoracion_estrellas", "comentario_resumido", "estado_visual", "creado",
-    )
-    list_filter = ("estado", "valoracion", TipoRecursoResenaFilter, "creado")
+    list_display = RESENA_COLUMNAS_ADMIN
+    list_filter = RESENA_FILTROS_ADMIN
     search_fields = ("usuario__username", "establecimiento__nombre", "lugar_turistico__nombre", "comentario")
     list_select_related = ("usuario", "establecimiento", "lugar_turistico")
     ordering = ("-creado",)

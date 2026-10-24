@@ -78,3 +78,35 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+// Cifras: cuenta de 0 al valor la primera vez que la sección entra en pantalla (el HTML ya trae el valor final).
+document.addEventListener('DOMContentLoaded', function () {
+    var cifras = document.querySelectorAll('[data-home-metricas] [data-count]');
+    if (!cifras.length || !('IntersectionObserver' in window) ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var DURACION = 900;
+
+    function contar(el) {
+        var meta = parseInt(el.getAttribute('data-count'), 10);
+        var inicio = null;
+        function paso(t) {
+            if (inicio === null) inicio = t;
+            var p = Math.min((t - inicio) / DURACION, 1);
+            var ease = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(meta * ease).toLocaleString('en-US');
+            if (p < 1) requestAnimationFrame(paso);
+        }
+        el.textContent = '0';
+        requestAnimationFrame(paso);
+    }
+
+    var observer = new IntersectionObserver(function (entradas, obs) {
+        entradas.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            obs.unobserve(e.target);
+            contar(e.target);
+        });
+    }, { threshold: 0.4 });
+    cifras.forEach(function (el) { observer.observe(el); });
+});

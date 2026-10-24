@@ -244,7 +244,9 @@
                                 <!-- Acción -->
                                 <div class="lugar-accion">
                                     <a href="{% url 'turismo:detalle_lugar' lugar.slug %}"
-                                        class="btn btn-contorno-dorado">
+                                        class="btn btn-contorno-dorado"
+                                        data-metrica-evento="lugar_detalle_click" data-metrica-via="listado"
+                                        data-metrica-entidad-id="{{ lugar.pk }}">
                                         {% translate "Explorar &rarr;" %}
                                     </a>
                                 </div>

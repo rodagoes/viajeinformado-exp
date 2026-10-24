@@ -205,11 +205,15 @@
 
                             <div class="est-accion">
                                 {% if est.tipo == 'restaurante' %}
-                                    <a href="{% url 'establecimientos:detalle_restaurante' est.slug %}" class="btn btn-contorno-dorado text-uppercase">
+                                    <a href="{% url 'establecimientos:detalle_restaurante' est.slug %}" class="btn btn-contorno-dorado text-uppercase"
+                                       data-metrica-evento="restaurante_detalle_click" data-metrica-via="listado"
+                                       data-metrica-entidad-id="{{ est.pk }}">
                                         {% translate "Ver Más &rarr;" %}
                                     </a>
                                 {% else %}
-                                    <a href="{% url 'establecimientos:detalle_alojamiento' est.slug %}" class="btn btn-contorno-dorado text-uppercase">
+                                    <a href="{% url 'establecimientos:detalle_alojamiento' est.slug %}" class="btn btn-contorno-dorado text-uppercase"
+                                       data-metrica-evento="alojamiento_detalle_click" data-metrica-via="listado"
+                                       data-metrica-entidad-id="{{ est.pk }}">
                                         {% translate "Ver Más &rarr;" %}
                                     </a>
                                 {% endif %}

@@ -4,10 +4,23 @@ from modeltranslation.admin import TranslationAdmin, TranslationStackedInline, T
 from .models import CategoriaPlatoTipico, PlatoTipico, IngredienteClavePlato, PlatoEstablecimiento
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — CategoriaPlatoTipicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CATEGORIA_PLATO_TIPICO_COLUMNAS_ADMIN = ("nombre", "orden", "activo", "creado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CATEGORIA_PLATO_TIPICO_FILTROS_ADMIN = ("activo",)
+# ==========================================================================
+
+
 @admin.register(CategoriaPlatoTipico)
 class CategoriaPlatoTipicoAdmin(TranslationAdmin):
-    list_display = ("nombre", "orden", "activo", "creado")
-    list_filter = ("activo",)
+    list_display = CATEGORIA_PLATO_TIPICO_COLUMNAS_ADMIN
+    list_filter = CATEGORIA_PLATO_TIPICO_FILTROS_ADMIN
     search_fields = ("nombre",)
     ordering = ("orden", "nombre")
     prepopulated_fields = {"slug": ("nombre",)}
@@ -40,10 +53,23 @@ class RestauranteDondeSeOfreceInline(admin.TabularInline):
     verbose_name_plural = "RESTAURANTES DONDE SE OFRECE"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — PlatoTipicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+PLATO_TIPICO_COLUMNAS_ADMIN = ("nombre", "categoria", "es_plato_bandera", "orden", "activo", "actualizado")
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+PLATO_TIPICO_FILTROS_ADMIN = ("activo", "categoria", "es_plato_bandera")
+# ==========================================================================
+
+
 @admin.register(PlatoTipico)
 class PlatoTipicoAdmin(TranslationAdmin):
-    list_display = ("nombre", "categoria", "es_plato_bandera", "orden", "activo", "actualizado")
-    list_filter = ("activo", "categoria", "es_plato_bandera")
+    list_display = PLATO_TIPICO_COLUMNAS_ADMIN
+    list_filter = PLATO_TIPICO_FILTROS_ADMIN
     search_fields = ("nombre", "descripcion_corta")
     ordering = ("orden", "nombre")
     prepopulated_fields = {"slug": ("nombre",)}

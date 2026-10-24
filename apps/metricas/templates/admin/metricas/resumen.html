@@ -1,0 +1,112 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  .mt-barra { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 16px; }
+  .mt-barra label { display: block; font-weight: 600; margin-bottom: 4px; }
+  .mt-pestanas { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .mt-pestanas a { padding: 6px 14px; border: 1px solid var(--border-color); border-radius: 4px; text-decoration: none; }
+  .mt-pestanas a.activa { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+  .mt-scroll { overflow-x: auto; margin-bottom: 20px; }
+  .mt-scroll table { width: 100%; }
+  .mt-scroll td, .mt-scroll th { white-space: nowrap; }
+  .mt-scroll td + td, .mt-scroll th + th { text-align: right; }
+  .mt-nota { color: var(--body-quiet-color); margin: 4px 0 16px; }
+  .mt-estado { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: 600; border: 1px solid var(--border-color); }
+  .mt-estado.error { background: var(--error-fg, #ba2121); color: #fff; }
+  .mt-estado.ok { background: #2e7d32; color: #fff; }
+  .mt-estado.progreso { background: #f5a623; color: #000; }
+  .mt-lista li { margin: 4px 0; }
+  .mt-lista.error li { color: var(--error-fg, #ba2121); }
+  .mt-lista.aviso li { color: var(--body-fg); }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Inicio</a> &rsaquo;
+  <a href="{% url 'admin:app_list' 'metricas' %}">Métricas</a> &rsaquo;
+  <a href="{% url 'admin:metricas_periodoevaluacion_changelist' %}">Periodos de evaluación</a> &rsaquo; {{ title }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <form method="get" class="mt-barra">
+    <div>
+      <label for="mt-periodo">Periodo</label>
+      <select name="periodo" id="mt-periodo">
+        {% for p in periodos %}<option value="{{ p.pk }}"{% if periodo and p.pk == periodo.pk %} selected{% endif %}>{{ p.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="mt-origen">Origen del dato</label>
+      <select name="origen" id="mt-origen">
+        {% for valor, nombre in origenes %}<option value="{{ valor }}"{% if valor == origen %} selected{% endif %}>{{ nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    <input type="submit" value="Ver">
+  </form>
+
+  <nav class="mt-pestanas" aria-label="Resúmenes">
+    {% for p in pestanas %}<a href="{{ p.url }}"{% if p.activa %} class="activa" aria-current="page"{% endif %}>{{ p.titulo }}</a>{% endfor %}
+  </nav>
+
+  {% if not periodo %}
+    <p>Aún no hay periodos de evaluación. <a href="{% url 'admin:metricas_periodoevaluacion_add' %}">Crear uno</a>.</p>
+  {% else %}
+    <p class="mt-nota">
+      {{ periodo.nombre }} · {{ periodo.fecha_inicio|date:"d/m/Y" }} – {{ periodo.fecha_fin|date:"d/m/Y" }} ·
+      origen: <strong>{{ origen }}</strong>. Vista de solo lectura calculada desde las métricas diarias.
+    </p>
+
+    {% if validacion %}
+      <p>
+        Estado del periodo:
+        <span class="mt-estado {% if validacion.estado == 'Con errores' %}error{% elif validacion.estado == 'Completo' %}ok{% else %}progreso{% endif %}">{{ validacion.estado }}</span>
+        {{ validacion.mensaje_estado }}
+        {% if not mostrar_validacion %}<a class="button" href="{{ url_validar }}" style="margin-left:12px">Validar periodo</a>{% endif %}
+      </p>
+    {% endif %}
+
+    {% if mostrar_validacion %}
+      <div class="module" id="mt-validacion">
+        <h2>Validación del periodo (solo consulta; no modifica datos)</h2>
+        <div style="padding: 8px 12px">
+          {% if validacion.errores %}
+            <h3>Errores ({{ validacion.errores|length }})</h3>
+            <ul class="mt-lista error">{% for m in validacion.errores %}<li>{{ m }}</li>{% endfor %}</ul>
+          {% endif %}
+          {% if validacion.advertencias %}
+            <h3>Advertencias ({{ validacion.advertencias|length }})</h3>
+            <ul class="mt-lista aviso">{% for m in validacion.advertencias %}<li>{{ m }}</li>{% endfor %}</ul>
+          {% endif %}
+          {% if validacion.correctos %}
+            <h3>Correcto</h3>
+            <ul class="mt-lista">{% for m in validacion.correctos %}<li>{{ m }}</li>{% endfor %}</ul>
+          {% endif %}
+          <p class="mt-nota">
+            Días con datos: {{ validacion.resumen.dias_con_datos }} / {{ validacion.resumen.dias_esperados }} ·
+            intervalos de únicos: {{ validacion.resumen.intervalos_unicos_existentes }} / {{ validacion.resumen.intervalos_unicos_esperados }}.
+            Para crear los intervalos faltantes (con 0 recurrentes): <code>python manage.py asegurar_unicos_periodo --periodo {{ periodo.pk }}</code>
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
+    {% for t in tablas %}
+      <div class="module mt-scroll">
+        <table>
+          <caption>{{ t.titulo }}</caption>
+          <thead><tr>{% for h in t.encabezados %}<th scope="col">{{ h }}</th>{% endfor %}</tr></thead>
+          <tbody>
+            {% for fila in t.filas %}<tr>{% for celda in fila %}{% if forloop.first %}<th scope="row">{{ celda }}</th>{% else %}<td>{{ celda }}</td>{% endif %}{% endfor %}</tr>
+            {% empty %}<tr><td colspan="{{ t.encabezados|length }}">Sin datos.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if t.nota %}<p class="mt-nota">{{ t.nota }}</p>{% endif %}
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

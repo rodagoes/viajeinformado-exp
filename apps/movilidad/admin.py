@@ -10,12 +10,26 @@ from .models import (
     TransportePublico,
     ConsejoMovilidad,
 )
+from apps.ubicaciones.admin_filtros import DistritoDependienteFilter, ProvinciaDependienteFilter
+
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — CategoriaMovilidadAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CATEGORIA_MOVILIDAD_COLUMNAS_ADMIN = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CATEGORIA_MOVILIDAD_FILTROS_ADMIN = ["activo", "tipo_icono"]
+# ==========================================================================
+
 
 @admin.register(CategoriaMovilidad)
 class CategoriaMovilidadAdmin(TranslationAdmin):
-    list_display = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+    list_display = CATEGORIA_MOVILIDAD_COLUMNAS_ADMIN
     search_fields = ["nombre", "descripcion", "icono_bootstrap"]
-    list_filter = ["activo", "tipo_icono"]
+    list_filter = CATEGORIA_MOVILIDAD_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ["creado", "actualizado"]
     ordering = ["nombre"]
@@ -31,13 +45,26 @@ class CategoriaMovilidadAdmin(TranslationAdmin):
             "fields": ("activo", "creado", "actualizado")
         }),
     )
+
+
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ServicioMovilidadAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+SERVICIO_MOVILIDAD_COLUMNAS_ADMIN = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+SERVICIO_MOVILIDAD_FILTROS_ADMIN = ["activo", "tipo_icono"]
+# ==========================================================================
 
 
 @admin.register(ServicioMovilidad)
 class ServicioMovilidadAdmin(admin.ModelAdmin):
-    list_display = ["nombre", "tipo_icono", "icono_bootstrap", "activo", "creado"]
+    list_display = SERVICIO_MOVILIDAD_COLUMNAS_ADMIN
     search_fields = ["nombre", "descripcion", "icono_bootstrap"]
-    list_filter = ["activo", "tipo_icono"]
+    list_filter = SERVICIO_MOVILIDAD_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ["creado", "actualizado"]
     ordering = ["nombre"]
@@ -55,17 +82,30 @@ class ServicioMovilidadAdmin(admin.ModelAdmin):
     )
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — OperadorMovilidadAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+OPERADOR_MOVILIDAD_COLUMNAS_ADMIN = ["nombre", "tipo_operador", "distrito", "whatsapp", "destacado", "activo"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+OPERADOR_MOVILIDAD_FILTROS_ADMIN = [
+    "activo", "destacado", "tipo_operador", "servicios",
+    "distrito__provincia__departamento", ("distrito__provincia", ProvinciaDependienteFilter), ("distrito", DistritoDependienteFilter)
+]
+# ==========================================================================
+
+
 @admin.register(OperadorMovilidad)
 class OperadorMovilidadAdmin(admin.ModelAdmin):
-    list_display = ["nombre", "tipo_operador", "distrito", "whatsapp", "destacado", "activo"]
+    list_display = OPERADOR_MOVILIDAD_COLUMNAS_ADMIN
     search_fields = [
         "nombre", "descripcion_corta", "descripcion", "telefono", 
         "whatsapp", "correo", "distrito__nombre_oficial", "localidad__nombre"
     ]
-    list_filter = [
-        "activo", "destacado", "tipo_operador", "servicios", 
-        "distrito__provincia__departamento", "distrito__provincia", "distrito"
-    ]
+    list_filter = OPERADOR_MOVILIDAD_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = ["distrito", "localidad"]
     filter_horizontal = ["servicios"]
@@ -106,13 +146,32 @@ class ImagenRutaMovilidadInline(admin.TabularInline):
     fields = ["imagen", "titulo", "texto_alt", "orden", "activo"]
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — RutaMovilidadAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+RUTA_MOVILIDAD_COLUMNAS_ADMIN = [
+    "nombre", "seccion", "categoria_principal", "origen_texto", "destino_texto",
+    "duracion_estimada", "duracion_bus", "duracion_automovil", "tipo_costo",
+    "rango_precios_soles", "orden", "destacado", "activo"
+]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+RUTA_MOVILIDAD_FILTROS_ADMIN = [
+    "activo", "seccion", "destacado", "categoria_principal", "categorias_secundarias",
+    "servicios", "tipo_costo", "dificultad", "operador",
+    "origen_distrito__provincia__departamento", ("origen_distrito__provincia", ProvinciaDependienteFilter),
+    ("origen_distrito", DistritoDependienteFilter), "destino_distrito__provincia__departamento",
+    ("destino_distrito__provincia", ProvinciaDependienteFilter), ("destino_distrito", DistritoDependienteFilter)
+]
+# ==========================================================================
+
+
 @admin.register(RutaMovilidad)
 class RutaMovilidadAdmin(TranslationAdmin):
-    list_display = [
-        "nombre", "seccion", "categoria_principal", "origen_texto", "destino_texto",
-        "duracion_estimada", "duracion_bus", "duracion_automovil", "tipo_costo",
-        "rango_precios_soles", "orden", "destacado", "activo"
-    ]
+    list_display = RUTA_MOVILIDAD_COLUMNAS_ADMIN
     list_editable = ["orden", "activo"]
     search_fields = [
         "nombre", "descripcion_corta", "descripcion", "origen_texto",
@@ -122,13 +181,7 @@ class RutaMovilidadAdmin(TranslationAdmin):
         "categoria_principal__nombre", "categorias_secundarias__nombre",
         "servicios__nombre", "operador__nombre"
     ]
-    list_filter = [
-        "activo", "seccion", "destacado", "categoria_principal", "categorias_secundarias",
-        "servicios", "tipo_costo", "dificultad", "operador",
-        "origen_distrito__provincia__departamento", "origen_distrito__provincia",
-        "origen_distrito", "destino_distrito__provincia__departamento",
-        "destino_distrito__provincia", "destino_distrito"
-    ]
+    list_filter = RUTA_MOVILIDAD_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     autocomplete_fields = [
         "categoria_principal", "operador", "origen_distrito",
@@ -185,29 +238,55 @@ class RutaMovilidadAdmin(TranslationAdmin):
     rango_precios_soles.short_description = "Rango en soles"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ImagenRutaMovilidadAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+IMAGEN_RUTA_MOVILIDAD_COLUMNAS_ADMIN = ["ruta", "titulo", "orden", "activo", "creado"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+IMAGEN_RUTA_MOVILIDAD_FILTROS_ADMIN = ["activo", "ruta"]
+# ==========================================================================
+
+
 @admin.register(ImagenRutaMovilidad)
 class ImagenRutaMovilidadAdmin(admin.ModelAdmin):
-    list_display = ["ruta", "titulo", "orden", "activo", "creado"]
+    list_display = IMAGEN_RUTA_MOVILIDAD_COLUMNAS_ADMIN
     search_fields = ["ruta__nombre", "titulo", "texto_alt"]
-    list_filter = ["activo", "ruta"]
+    list_filter = IMAGEN_RUTA_MOVILIDAD_FILTROS_ADMIN
     autocomplete_fields = ["ruta"]
     ordering = ["ruta__nombre", "orden", "id"]
     list_per_page = 25
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — TransportePublicoAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+TRANSPORTE_PUBLICO_COLUMNAS_ADMIN = [
+    "miniatura",
+    "nombre",
+    "nombre_alternativo",
+    "tarifa_minima",
+    "orden",
+    "activo",
+]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+TRANSPORTE_PUBLICO_FILTROS_ADMIN = ["activo"]
+# ==========================================================================
+
+
 @admin.register(TransportePublico)
 class TransportePublicoAdmin(TranslationAdmin):
-    list_display = [
-        "miniatura",
-        "nombre",
-        "nombre_alternativo",
-        "tarifa_minima",
-        "orden",
-        "activo",
-    ]
+    list_display = TRANSPORTE_PUBLICO_COLUMNAS_ADMIN
     list_editable = ["tarifa_minima", "orden", "activo"]
     search_fields = ["nombre", "nombre_alternativo", "descripcion"]
-    list_filter = ["activo"]
+    list_filter = TRANSPORTE_PUBLICO_FILTROS_ADMIN
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ["creado", "actualizado", "vista_previa_imagen"]
     ordering = ["orden", "nombre"]
@@ -246,11 +325,24 @@ class TransportePublicoAdmin(TranslationAdmin):
     vista_previa_imagen.short_description = "Vista previa"
 
 
+# ==========================================================================
+# CONFIGURACIÓN DEL LISTADO — ConsejoMovilidadAdmin
+# --------------------------------------------------------------------------
+# COLUMNAS VISIBLES EN EL LISTADO.
+# Para ocultar una columna, elimínala de esta tupla; para mostrarla, agrégala (debe existir en el modelo/Admin).
+CONSEJO_MOVILIDAD_COLUMNAS_ADMIN = ["texto", "seccion", "orden", "activo"]
+
+# FILTROS VISIBLES EN LA BARRA DE FILTROS (el orden de aquí es el orden en pantalla).
+# Para ocultar un filtro, elimínalo de esta tupla; para volver a mostrarlo, agrégalo.
+CONSEJO_MOVILIDAD_FILTROS_ADMIN = ["seccion", "activo"]
+# ==========================================================================
+
+
 @admin.register(ConsejoMovilidad)
 class ConsejoMovilidadAdmin(TranslationAdmin):
-    list_display = ["texto", "seccion", "orden", "activo"]
+    list_display = CONSEJO_MOVILIDAD_COLUMNAS_ADMIN
     list_editable = ["orden", "activo"]
     search_fields = ["texto"]
-    list_filter = ["seccion", "activo"]
+    list_filter = CONSEJO_MOVILIDAD_FILTROS_ADMIN
     readonly_fields = ["creado", "actualizado"]
     ordering = ["orden", "id"]

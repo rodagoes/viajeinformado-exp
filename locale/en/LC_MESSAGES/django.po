@@ -3469,8 +3469,8 @@ msgid ""
 msgstr "We use the information we collect to improve our service, personalize your experience and communicate with you."
 
 #: .\templates\base\privacidad.html:21
-msgid "3. Contacto"
-msgstr "3. Contact"
+msgid "4. Contacto"
+msgstr "4. Contact"
 
 #: .\templates\base\privacidad.html:22
 msgid ""
@@ -3478,8 +3478,8 @@ msgid ""
 msgstr "If you have any questions about this privacy policy, contact us at:"
 
 #: .\templates\base\privacidad.html:24 .\templates\base\terminos.html:24
-msgid "Última actualización: Mayo 2026"
-msgstr "Last updated: May 2026"
+msgid "Última actualización: Octubre 2026"
+msgstr "Last updated: October 2026"
 
 #: .\templates\base\terminos.html:4
 msgid "Términos y Condiciones - Viaje Informado"
@@ -5199,6 +5199,15 @@ msgstr "Privacy policy"
 msgid "Términos y condiciones"
 msgstr "Terms and conditions"
 
+#: .\templates\partials\footer.html
+msgid "Nuestros sponsors"
+msgstr "Our sponsors"
+
+#: .\templates\partials\footer.html
+#, python-format
+msgid "© %(anio)s Viaje Informado Huánuco. Todos los derechos reservados."
+msgstr "© %(anio)s Viaje Informado Huánuco. All rights reserved."
+
 #: .\templates\partials\footer.html:62
 msgid "© 2026 Viaje Informado Huánuco. Todos los derechos reservados."
 msgstr "© 2026 Viaje Informado Huánuco. All rights reserved."
@@ -5500,3 +5509,31 @@ msgstr "Explore &rarr;"
 
 #~ msgid "Tips"
 #~ msgstr "Tips"
+
+#: templates/base/privacidad.html
+msgid "Para medir cómo se usa la plataforma y mejorarla, utilizamos dos cookies propias (no son de terceros ni de publicidad):"
+msgstr "To measure how the platform is used and to improve it, we use two first-party cookies (neither third-party nor advertising cookies):"
+
+#: templates/base/privacidad.html
+msgid "identifica de forma aleatoria a su navegador como visitante y dura aproximadamente 1 año. Si borra las cookies, se contará como otro visitante. No revela por sí sola quién es usted, pero si inicia sesión puede vincularse a su cuenta."
+msgstr "randomly identifies your browser as a visitor and lasts approximately 1 year. If you clear your cookies, you will be counted as a different visitor. On its own it does not reveal who you are, but if you sign in it may be linked to your account."
+
+#: templates/base/privacidad.html
+msgid "identifica una sesión de navegación. Se reutiliza mientras no pasen más de 30 minutos sin actividad; después se crea una sesión nueva."
+msgstr "identifies a browsing session. It is reused as long as there are no more than 30 minutes of inactivity; after that a new session is created."
+
+#: templates/base/privacidad.html
+msgid "Con ellas guardamos: un identificador aleatorio del visitante (y su cuenta, si ha iniciado sesión), fechas y horas, sesiones, páginas vistas, duración aproximada de la visita, el sitio de procedencia (solo el dominio, agrupado por tipo de fuente), el tipo de dispositivo, el idioma y las interacciones con funciones del sitio (por ejemplo lugares, restaurantes, eventos, mapas, cambio de idioma o uso del chatbot)."
+msgstr "With them we store: a random visitor identifier (and your account, if you are signed in), dates and times, sessions, page views, approximate visit duration, the site you came from (domain only, grouped by type of source), the type of device, the language and your interactions with site features (for example places, restaurants, events, maps, language changes or chatbot use)."
+
+#: templates/base/privacidad.html
+msgid "No guardamos su dirección IP completa, su User-Agent completo, la dirección completa de la página de la que viene ni el texto de sus conversaciones con el chatbot dentro de este sistema de métricas."
+msgstr "We do not store your full IP address, your full User-Agent, the full address of the page you came from, or the text of your chatbot conversations within this metrics system."
+
+#: templates/base/privacidad.html
+msgid "Usamos estos datos únicamente para conocer el uso de la plataforma, entender la navegación y mejorar los contenidos y servicios."
+msgstr "We use this data only to understand how the platform is used, how people navigate it, and to improve content and services."
+
+#: templates/base/privacidad.html
+msgid "3. Cookies y métricas de uso"
+msgstr "3. Cookies and usage metrics"

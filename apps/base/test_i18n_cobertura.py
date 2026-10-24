@@ -207,6 +207,17 @@ class TextosEstaticosAntesEnEspanolTests(RestauraIdiomaMixin, TestCase):
         self.assertIn("mailto:viajeinformadohuanuco@gmail.com", html)
         self.assertIn("Terms and Conditions", self.get_en("base:terminos"))
 
+    def test_privacidad_explica_cookies_de_metricas_en_es_y_en(self):
+        es = self.client.get(reverse("base:privacidad")).content.decode()
+        en = self.get_en("base:privacidad")
+        for html in (es, en):
+            self.assertIn("vi_vid", html)
+            self.assertIn("vi_sid", html)
+        self.assertIn("Cookies y métricas de uso", es)
+        self.assertIn("Cookies and usage metrics", en)
+        self.assertIn("30 minutes", en)
+        self.assertNotIn("No guardamos su dirección IP", en)  # sin texto español sin traducir
+
     def test_filtros_de_lugares_en_ingles(self):
         html = self.get_en("turismo:listado_lugares")
         for texto in ("Difficulty", "Easy", "Difficult", "Cost", "Paid", "Name A–Z"):

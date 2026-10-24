@@ -1,0 +1,13 @@
+{% extends "admin/index.html" %}
+{% load admin_dashboard %}
+{# Inicio: Django oculta el sidebar aquí; se muestra, y el catálogo de apps (duplicado del sidebar) se sustituye por cards. #}
+{% block nav-sidebar %}{% include "admin/nav_sidebar.html" %}{% endblock %}
+
+{# app_label solo existe en /admin/<app>/: ahí se conserva la pantalla de Django #}
+{% block content_title %}{% if app_label %}{{ block.super }}{% else %}<h1>Panel de administración</h1><p class="vi-lead">Gestiona el contenido principal de Viaje Informado.</p>{% endif %}{% endblock %}
+
+{% block content %}
+{% if app_label %}{{ block.super }}{% else %}<div id="content-main">
+  {% dashboard_cards %}
+</div>{% endif %}
+{% endblock %}

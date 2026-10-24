@@ -1,0 +1,951 @@
+/* ==========================================================================
+   ADMIN VIAJE INFORMADO · tema visual (solo presentación, sin lógica)
+   Se carga desde templates/admin/base_site.html, después del CSS de Django.
+   Para cambiar la identidad edita SOLO la sección 1.
+   Índice: 1 Variables · 2 Reset/tipografía · 3 Layout · 4 Sidebar · 5 Topbar
+           6 Dashboard · 7 Tablas · 8 Filtros · 9 Formularios · 10 Botones
+           11 Login · 12 Dark mode · 13 Responsive
+   ========================================================================== */
+
+/* ========================================
+   1. VARIABLES  (editar aquí colores, fuente, radios y anchos)
+   ======================================== */
+:root {
+    /* Colores base (modo claro) */
+    --vi-admin-sidebar: #002D89;        /* fondo del sidebar */
+    --vi-admin-primary: #002D89;        /* botones primarios, cabeceras fuertes */
+    --vi-admin-accent: #007FFF;         /* activo, hover, foco, links */
+    --vi-admin-bg: #F7F9FD;             /* fondo general */
+    --vi-admin-surface: #FFFFFF;        /* tarjetas, tablas, formularios */
+    --vi-admin-soft: #EEF3FB;           /* cabeceras suaves, hover, activos */
+    --vi-admin-text: #182033;
+    --vi-admin-muted: #61708C;
+    --vi-admin-border: #DFE7F3;
+    --vi-admin-heading: #002D89;        /* títulos y texto de cabeceras (cambia en dark) */
+    --vi-admin-link: #0B63CE;           /* links sobre fondo claro (accent oscurecido para contraste AA) */
+    --vi-admin-danger: #B42318;
+    --vi-admin-danger-hover: #8E1A10;
+    --vi-admin-active-bg: rgba(0, 127, 255, .08);
+
+    /* Tipografía */
+    --vi-admin-font: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --vi-admin-font-size: 14px;         /* texto base (tablas, formularios) */
+    --vi-admin-title-size: 28px;        /* título de pantalla */
+
+    /* Forma y medidas */
+    --vi-admin-radius: 10px;
+    --vi-admin-radius-lg: 14px;
+    --vi-admin-shadow: 0 1px 2px rgba(0, 45, 137, .06);
+    --vi-admin-sidebar-w: 260px;
+    --vi-admin-topbar-h: 64px;
+    --vi-admin-row-pad: 9px;            /* alto de filas de tabla */
+    --vi-admin-content-max: 1600px;
+}
+
+/* Puente: variables propias de Django Admin <- variables de arriba (alta especificidad para ganar a dark_mode.css) */
+:root:root:root {
+    --primary: var(--vi-admin-primary);
+    --secondary: var(--vi-admin-soft);
+    --accent: var(--vi-admin-accent);
+    --primary-fg: #fff;
+    --body-fg: var(--vi-admin-text);
+    --body-bg: var(--vi-admin-bg);
+    --body-quiet-color: var(--vi-admin-muted);
+    --body-medium-color: var(--vi-admin-muted);
+    --body-loud-color: var(--vi-admin-heading);
+    --header-color: var(--vi-admin-text);
+    --header-branding-color: var(--vi-admin-heading);
+    --header-bg: var(--vi-admin-surface);
+    --header-link-color: var(--vi-admin-link);
+    --breadcrumbs-fg: var(--vi-admin-muted);
+    --breadcrumbs-link-fg: var(--vi-admin-link);
+    --breadcrumbs-bg: transparent;
+    --link-fg: var(--vi-admin-link);
+    --link-hover-color: var(--vi-admin-heading);
+    --link-selected-fg: var(--vi-admin-heading);
+    --hairline-color: var(--vi-admin-border);
+    --border-color: var(--vi-admin-border);
+    --darkened-bg: var(--vi-admin-soft);
+    --selected-bg: var(--vi-admin-active-bg);
+    --selected-row: var(--vi-admin-soft);
+    --button-fg: #fff;
+    --button-bg: var(--vi-admin-primary);
+    --button-hover-bg: var(--vi-admin-accent);
+    --default-button-bg: var(--vi-admin-primary);
+    --default-button-hover-bg: var(--vi-admin-accent);
+    --close-button-bg: var(--vi-admin-muted);
+    --close-button-hover-bg: var(--vi-admin-text);
+    --delete-button-bg: var(--vi-admin-danger);
+    --delete-button-hover-bg: var(--vi-admin-danger-hover);
+    --object-tools-fg: #fff;
+    --object-tools-bg: var(--vi-admin-primary);
+    --object-tools-hover-bg: var(--vi-admin-accent);
+    --error-fg: var(--vi-admin-danger);
+    --font-family-primary: var(--vi-admin-font);
+}
+
+/* ========================================
+   2. RESET / TIPOGRAFÍA
+   ======================================== */
+html, body, input, select, textarea, button, table, .button {
+    font-family: var(--vi-admin-font);
+}
+body {
+    background: var(--vi-admin-bg);
+    color: var(--vi-admin-text);
+    font-size: var(--vi-admin-font-size);
+    line-height: 1.5;
+}
+a:link, a:visited { color: var(--vi-admin-link); }
+a:hover { color: var(--vi-admin-heading); }
+h1, h2, h3, h4 { font-family: var(--vi-admin-font); }
+#content > h1 {
+    font-size: var(--vi-admin-title-size);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -.01em;
+    color: var(--vi-admin-heading);
+    margin: 0 0 20px;
+    min-height: 36px;
+}
+#content > h2 { color: var(--vi-admin-muted); font-size: 1rem; font-weight: 500; margin: -12px 0 16px; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--vi-admin-accent);
+    outline-offset: 2px;
+}
+.skip-to-content-link { background: var(--vi-admin-primary); color: #fff; }
+
+/* ========================================
+   3. LAYOUT PRINCIPAL (grid: sidebar | topbar + contenido)
+   ======================================== */
+body:not(.popup) #container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: max-content max-content 1fr max-content;
+    min-height: 100vh;
+    height: auto;
+    width: 100%;
+    min-width: 0;
+}
+body:not(.popup) #container:has(#nav-sidebar) { grid-template-columns: var(--vi-admin-sidebar-w) minmax(0, 1fr); }
+body:not(.popup) #container:has(#main:not(.shifted)) { grid-template-columns: 0 minmax(0, 1fr); }
+body:not(.popup) #container > .main { display: contents; }
+body:not(.popup) #container > #header { grid-column: 2; grid-row: 1; }
+body:not(.popup) #container > nav { grid-column: 2; grid-row: 2; }
+body:not(.popup) #container #content-start { grid-column: 2; grid-row: 3; max-width: var(--vi-admin-content-max); }
+body:not(.popup) #footer { grid-column: 2; grid-row: 4; }
+/* sin sidebar (login, logout): una sola columna */
+body:not(.popup) #container:not(:has(#nav-sidebar)) > * { grid-column: 1; }
+
+.content, #content-start {
+    padding: 8px 32px 40px;
+    max-width: var(--vi-admin-content-max);
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+#content { padding: 0; }
+.colM, .colMS, .colSM { margin: 0; }
+
+/* ========================================
+   4. SIDEBAR
+   ======================================== */
+body:not(.popup) #nav-sidebar {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    width: auto;
+    left: auto;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    background: var(--vi-admin-sidebar);
+    border: 0;
+    color: #fff;
+    overflow: hidden;
+}
+#nav-sidebar .vi-nav-head { flex: 0 0 auto; background: var(--vi-admin-sidebar); border-bottom: 1px solid rgba(255, 255, 255, .14); padding-bottom: 12px; }
+#nav-sidebar .vi-nav-scroll {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+    scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .3) transparent;
+}
+body:not(.popup) .main:not(.shifted) > #nav-sidebar { display: none; }
+
+#nav-sidebar .vi-brand {
+    display: block;
+    padding: 20px 20px 0;
+    text-decoration: none;
+}
+#nav-sidebar .vi-brand strong {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #fff;
+}
+#nav-sidebar .vi-brand span { display: block; font-size: .8125rem; color: rgba(255, 255, 255, .78); margin-top: 2px; }
+
+#nav-sidebar #nav-filter {
+    width: calc(100% - 32px);
+    margin: 14px 16px 0;
+    padding: 8px 12px;
+    min-height: 38px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, .10);
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: var(--vi-admin-radius);
+    color: #fff;
+}
+#nav-sidebar #nav-filter::placeholder { color: rgba(255, 255, 255, .75); }
+#nav-sidebar #nav-filter:focus { border-color: #fff; outline: 0; background: rgba(255, 255, 255, .16); }
+#nav-sidebar #nav-filter.no-results { background: rgba(255, 255, 255, .10); border-color: #FFB4AB; }
+
+#nav-sidebar .module {
+    margin: 0 0 4px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+}
+#nav-sidebar .module table { width: 100%; border-collapse: collapse; }
+#nav-sidebar .module caption {
+    background: rgba(255, 255, 255, .10);
+    padding: 8px 20px;
+    margin: 0 0 2px;
+    text-align: left;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+}
+#nav-sidebar .module + .module { margin-top: 8px; }
+#nav-sidebar .current-app caption { background: rgba(255, 255, 255, .16); }
+#nav-sidebar .module caption a.section,
+#nav-sidebar .current-app .section:link, #nav-sidebar .current-app .section:visited {
+    color: rgba(255, 255, 255, .95);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    background: transparent;
+    padding: 0;
+}
+#nav-sidebar .current-app .section:link, #nav-sidebar .current-app .section:visited { color: #fff; }
+#nav-sidebar .module caption a.section:hover { color: #fff; text-decoration: none; }
+#nav-sidebar .module tr { background: transparent; }
+#nav-sidebar .module th, #nav-sidebar .module td { background: transparent; border: 0; padding: 0; }
+#nav-sidebar .module th {
+    font-weight: 500;
+    font-size: .875rem;
+    width: 100%;
+    color: #fff;
+}
+#nav-sidebar .module th a:link, #nav-sidebar .module th a:visited {
+    display: block;
+    padding: 5px 8px 5px 20px;
+    color: rgba(255, 255, 255, .92);
+    border-left: 3px solid transparent;
+    text-decoration: none;
+}
+#nav-sidebar .module th a:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+#nav-sidebar .module tr.current-model { background: rgba(0, 127, 255, .28); }
+#nav-sidebar .module tr.current-model th a:link, #nav-sidebar .module tr.current-model th a:visited {
+    color: #fff;
+    font-weight: 600;
+    border-left-color: var(--vi-admin-accent);
+}
+#nav-sidebar .module td a.addlink {
+    display: block;
+    padding: 5px 16px 5px 4px;
+    color: rgba(255, 255, 255, .7);
+    font-size: .75rem;
+    font-weight: 500;
+    background: none;
+    text-decoration: none;
+}
+#nav-sidebar .module td a.addlink:hover { color: #fff; }
+#nav-sidebar .module tr:hover td a.addlink { color: #fff; }
+#nav-sidebar .vi-nav-end { height: 24px; flex: 0 0 auto; }
+
+/* Botón hamburguesa (vive en la topbar) */
+body:not(.popup) #toggle-nav-sidebar {
+    position: fixed;
+    top: calc((var(--vi-admin-topbar-h) - 40px) / 2);
+    left: calc(var(--vi-admin-sidebar-w) + 16px);
+    z-index: 40;
+    width: 40px; height: 40px; flex: none;
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius);
+    background: var(--vi-admin-surface);
+    color: var(--vi-admin-heading);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+}
+body:not(.popup) .main:not(.shifted) > #toggle-nav-sidebar { left: 16px; }
+body:not(.popup) #toggle-nav-sidebar::before,
+body:not(.popup) .main.shifted #toggle-nav-sidebar::before { content: "\2630"; }
+body:not(.popup) #toggle-nav-sidebar:hover { background: var(--vi-admin-soft); }
+
+/* ========================================
+   5. TOPBAR (header) + breadcrumbs
+   ======================================== */
+#container > #header {
+    height: var(--vi-admin-topbar-h);
+    box-sizing: border-box;
+    padding: 0 32px 0 72px;
+    background: var(--vi-admin-surface);
+    border-bottom: 1px solid var(--vi-admin-border);
+    color: var(--vi-admin-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+#container:has(#nav-sidebar) #branding { display: none; }
+#container:has(#main:not(.shifted)) #branding { display: block; }
+#branding h1, #site-name, #site-name a:link, #site-name a:visited {
+    font-family: var(--vi-admin-font);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--vi-admin-heading);
+    margin: 0;
+}
+#container #user-tools {
+    margin: 0 0 0 auto;
+    padding: 0;
+    font-size: .8125rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--vi-admin-muted);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+}
+#user-tools strong { color: var(--vi-admin-text); text-transform: none; }
+#user-tools a:link, #user-tools a:visited,
+#user-tools button {
+    color: var(--vi-admin-link);
+    font-weight: 600;
+    border: 0;
+    background: none;
+    padding: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: inherit;
+    cursor: pointer;
+}
+#user-tools a:hover, #user-tools button:hover { color: var(--vi-admin-heading); text-decoration: underline; }
+#user-tools .theme-toggle { color: var(--vi-admin-muted); }
+#logout-form { display: inline; }
+
+div.breadcrumbs {
+    background: transparent;
+    border: 0;
+    padding: 18px 32px 6px;
+    font-size: .8125rem;
+    color: var(--vi-admin-muted);
+    text-transform: none;
+}
+div.breadcrumbs a:link, div.breadcrumbs a:visited { color: var(--vi-admin-link); }
+
+/* ========================================
+   6. DASHBOARD (índice del Admin)
+   ======================================== */
+.module {
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+    overflow: hidden;
+    margin-bottom: 0;
+}
+.module caption, .module h2, .module h3 { font-weight: 700; }
+a.addlink, a.changelink, a.viewlink { background: none; padding-left: 0; font-weight: 600; font-size: .8125rem; white-space: nowrap; }
+a.addlink::before { content: "+ "; }
+/* Inicio: cards de resumen (se generan en apps/base/templatetags/admin_dashboard.py) */
+.vi-lead { margin: -12px 0 20px; color: var(--vi-admin-muted); font-size: .9375rem; }
+body.dashboard #content { width: 100%; max-width: none; box-sizing: border-box; }
+body.dashboard #content-main { float: none; width: auto; }
+body.dashboard #content-related { float: none; width: auto; max-width: 560px; margin: 28px 0 0; }
+.vi-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+a.vi-card:link, a.vi-card:visited {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    padding: 20px;
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+    color: var(--vi-admin-text);
+    text-decoration: none;
+    transition: transform .15s ease, border-color .15s ease;
+}
+a.vi-card:hover, a.vi-card:focus-visible { transform: translateY(-2px); border-color: var(--vi-admin-accent); color: var(--vi-admin-text); }
+.vi-card-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; margin-bottom: 12px;
+    border-radius: var(--vi-admin-radius);
+    background: var(--vi-admin-soft); color: var(--vi-admin-heading);
+    font-size: 1.375rem;
+}
+.vi-card-count { font-size: 2.25rem; font-weight: 700; line-height: 1.1; color: var(--vi-admin-heading); font-variant-numeric: tabular-nums; }
+.vi-card-title { font-size: 1rem; font-weight: 600; }
+.vi-card-sub { margin-top: 6px; font-size: .8125rem; color: var(--vi-admin-muted); }
+a.vi-card:hover .vi-card-sub { color: var(--vi-admin-link); }
+/* Acciones recientes */
+#content-related .module { box-shadow: var(--vi-admin-shadow); }
+#content-related .module h2 {
+    background: var(--vi-admin-soft);
+    color: var(--vi-admin-heading);
+    font-size: .8125rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--vi-admin-border);
+}
+#content-related .module h3 { padding: 12px 16px 0; color: var(--vi-admin-muted); font-size: .8125rem; margin: 0; }
+#content-related .actionlist { padding: 8px 16px 14px; margin: 0; }
+#content-related .actionlist li { padding: 6px 0 6px 0; background-image: none; border-bottom: 1px solid var(--vi-admin-border); }
+#content-related .actionlist li:last-child { border-bottom: 0; }
+
+/* ========================================
+   7. TABLAS / CHANGELIST
+   ======================================== */
+#changelist { display: flex; flex-direction: column; align-items: stretch; gap: 0; min-width: 0; }
+#changelist .changelist-form-container { flex: 1 1 auto; min-width: 0; }
+#changelist-form { min-width: 0; }
+#changelist #toolbar {
+    padding: 12px;
+    margin: 0 0 16px;
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+}
+#changelist-search form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+#changelist-search label { display: none; }
+#changelist-search #searchbar { flex: 1 1 260px; max-width: 420px; height: 40px; }
+#changelist-search .quiet, #changelist-search span.small { color: var(--vi-admin-muted); }
+.object-tools { margin: -56px 0 14px; padding: 0; float: right; display: flex; gap: 8px; }
+.object-tools li { float: none; margin: 0; height: auto; }
+.object-tools a:link, .object-tools a:visited {
+    display: inline-flex; align-items: center;
+    height: 40px; padding: 0 18px; box-sizing: border-box;
+    border-radius: var(--vi-admin-radius);
+    background: var(--vi-admin-primary);
+    color: #fff;
+    font-size: .875rem; font-weight: 600; text-transform: none; letter-spacing: 0;
+}
+.object-tools a:hover, .object-tools a:focus { background: var(--vi-admin-accent); color: #fff; }
+.object-tools a.addlink::before { content: "+ "; margin-right: 6px; }
+.object-tools a.historylink, .object-tools a.viewsitelink {
+    background: var(--vi-admin-surface); color: var(--vi-admin-text); border: 1px solid var(--vi-admin-border);
+}
+.object-tools a.historylink:hover, .object-tools a.viewsitelink:hover { background: var(--vi-admin-soft); color: var(--vi-admin-heading); }
+.object-tools a::before, .object-tools a.addlink::after { background-image: none; }
+
+#changelist .results {
+    overflow-x: auto;
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+}
+#result_list { width: 100%; font-size: var(--vi-admin-font-size); border-collapse: collapse; }
+#result_list thead th {
+    background: var(--vi-admin-soft);
+    color: var(--vi-admin-heading);
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    border-bottom: 1px solid var(--vi-admin-border);
+    padding: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+#result_list thead th .text { display: inline-block; vertical-align: middle; padding: 11px 4px 11px 12px; }
+#result_list thead th .text a:link, #result_list thead th .text a:visited, #result_list thead th > a:link, #result_list thead th > a:visited { color: var(--vi-admin-heading); display: inline; padding: 0; }
+#result_list thead th .sortoptions { display: inline-flex; align-items: center; float: none; vertical-align: middle; padding: 0 10px 0 0; gap: 2px; }
+#result_list thead th.sorted .sortoptions { display: inline-flex; }
+#result_list thead th.sorted .sortoptions a { float: none; }
+#result_list th.vi-center, #result_list td.vi-center { text-align: center; }
+#result_list thead th.vi-center .text { padding-left: 12px; padding-right: 4px; }
+#result_list thead th.action-checkbox-column { width: 1.5em; }
+#result_list tbody td, #result_list tbody th {
+    padding: var(--vi-admin-row-pad) 12px;
+    border-bottom: 1px solid var(--vi-admin-border);
+    background: var(--vi-admin-surface);
+    vertical-align: middle;
+    color: var(--vi-admin-text);
+}
+#result_list tbody tr:last-child td, #result_list tbody tr:last-child th { border-bottom: 0; }
+#result_list tbody tr:nth-child(even) td, #result_list tbody tr:nth-child(even) th {
+    background: color-mix(in srgb, var(--vi-admin-bg) 70%, var(--vi-admin-surface));
+}
+#result_list tbody tr:hover td, #result_list tbody tr:hover th { background: var(--vi-admin-soft); }
+#result_list tbody tr.selected td, #result_list tbody tr.selected th { background: var(--vi-admin-active-bg); }
+#result_list tbody th a:link, #result_list tbody th a:visited { font-weight: 600; color: var(--vi-admin-link); }
+#result_list td.num, #result_list th.num { text-align: right; font-variant-numeric: tabular-nums; }
+#result_list tbody td img { vertical-align: middle; }
+
+#changelist .actions {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius);
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    color: var(--vi-admin-muted);
+}
+#changelist .actions label { display: inline-flex; align-items: center; gap: 6px; }
+#changelist .actions .action-counter { color: var(--vi-admin-muted); }
+#changelist .actions .button { height: 38px; }
+
+.paginator {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    background: transparent;
+    border: 0;
+    padding: 16px 0 4px;
+    margin: 0;
+    font-size: .875rem;
+    color: var(--vi-admin-muted);
+}
+.paginator a:link, .paginator a:visited, .paginator .this-page {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 36px; height: 36px; padding: 0 10px; box-sizing: border-box;
+    margin: 0;
+    border-radius: var(--vi-admin-radius);
+    font-weight: 600;
+    text-decoration: none;
+}
+.paginator a:link, .paginator a:visited {
+    background: var(--vi-admin-surface); color: var(--vi-admin-text); border: 1px solid var(--vi-admin-border);
+}
+.paginator a:hover { background: var(--vi-admin-soft); color: var(--vi-admin-heading); }
+.paginator .this-page { background: var(--vi-admin-accent); color: #fff; border: 1px solid var(--vi-admin-accent); padding: 0 10px; }
+.paginator a.showall { border: 0; background: none; }
+
+/* ========================================
+   8. FILTROS (#changelist-filter)
+   ======================================== */
+#changelist > #changelist-filter {
+    order: -1;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    float: none;
+    margin: 0 0 16px;
+    box-sizing: border-box;
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px 14px;
+    padding: 12px 16px 14px;
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+    color: var(--vi-admin-text);
+}
+#changelist > #changelist-filter > h2 {
+    flex: 0 0 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--vi-admin-heading);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+/* Cada filtro es un <select> (templates/admin/filter.html); la URL de cada opción la calcula Django */
+.vi-filter { display: flex; flex-direction: column; gap: 4px; flex: 1 1 170px; min-width: 150px; max-width: 240px; }
+.vi-filter-label { font-size: .75rem; font-weight: 600; color: var(--vi-admin-muted); }
+.vi-filter select { width: 100%; }
+.vi-filter.is-active select { border-color: var(--vi-admin-accent); background-color: var(--vi-admin-active-bg); font-weight: 600; }
+#changelist-filter #changelist-filter-extra-actions {
+    order: 99; margin-left: auto; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center;
+}
+#changelist-filter #changelist-filter-extra-actions h3 { margin: 0; padding: 0; font-size: .8125rem; font-weight: 600; }
+
+/* ========================================
+   9. FORMULARIOS
+   ======================================== */
+fieldset.module {
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+    margin: 0 0 20px;
+    padding: 0;
+    overflow: hidden;
+}
+fieldset.module > h2 {
+    background: var(--vi-admin-soft);
+    color: var(--vi-admin-heading);
+    font-size: .9375rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    padding: 13px 18px;
+    margin: 0;
+    border-bottom: 1px solid var(--vi-admin-border);
+}
+fieldset.module .form-row { padding: 12px 18px; border-bottom: 1px solid var(--vi-admin-border); overflow: visible; }
+fieldset.module .form-row:last-child { border-bottom: 0; }
+fieldset.module .description { padding: 12px 18px 0; color: var(--vi-admin-muted); font-size: .8125rem; margin: 0; }
+fieldset.module.collapsed h2 { border-bottom: 0; }
+label, .aligned label { color: var(--vi-admin-text); font-weight: 600; font-size: .875rem; }
+.help, form .aligned p.help, form .aligned div.help, .form-row .help {
+    color: var(--vi-admin-muted); font-size: .8125rem; line-height: 1.45;
+}
+input[type=text], input[type=password], input[type=email], input[type=url], input[type=number],
+input[type=tel], input[type=date], input[type=time], input[type=search], textarea, select,
+.vTextField, .vLargeTextField, .vURLField, .vIntegerField, .vDateField, .vTimeField {
+    background: var(--vi-admin-surface);
+    color: var(--vi-admin-text);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-height: 40px;
+    box-sizing: border-box;
+    font-size: var(--vi-admin-font-size);
+}
+select { padding-right: 28px; }
+textarea { min-height: 96px; line-height: 1.5; }
+input:focus, textarea:focus, select:focus {
+    border-color: var(--vi-admin-accent);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(0, 127, 255, .18);
+}
+input:disabled, select:disabled, textarea:disabled { background: var(--vi-admin-soft); color: var(--vi-admin-muted); }
+input[type=checkbox], input[type=radio] { accent-color: var(--vi-admin-accent); width: 1rem; height: 1rem; min-height: 0; }
+.readonly { color: var(--vi-admin-text); }
+.errornote { border-radius: var(--vi-admin-radius); background: var(--message-error-bg, #FDE8E6); color: var(--vi-admin-danger); border: 1px solid var(--vi-admin-danger); }
+ul.errorlist { color: var(--vi-admin-danger); }
+.errors input, .errors select, .errors textarea { border-color: var(--vi-admin-danger); }
+.form-row.errors { background: transparent; }
+
+/* M2M / FilteredSelectMultiple */
+.selector { gap: 10px; display: flex; align-items: stretch; }
+.selector .selector-available, .selector .selector-chosen {
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius);
+    overflow: hidden;
+}
+#container .selector .selector-available h2, #container .selector .selector-chosen h2 {
+    background: var(--vi-admin-soft);
+    color: var(--vi-admin-heading);
+    font-size: .8125rem; font-weight: 700; margin: 0; padding: 8px 10px;
+    border-bottom: 1px solid var(--vi-admin-border);
+}
+.selector select { border: 0; border-radius: 0; background: var(--vi-admin-surface); color: var(--vi-admin-text); }
+.selector .selector-filter { background: var(--vi-admin-surface); border: 0; border-bottom: 1px solid var(--vi-admin-border); color: var(--vi-admin-muted); padding: 8px 10px; }
+.selector .selector-filter input { width: calc(100% - 28px); }
+.selector ul.selector-chooser { background: transparent; }
+.selector-chooseall, .selector-clearall { color: var(--vi-admin-link); font-weight: 600; background: var(--vi-admin-surface); border-top: 1px solid var(--vi-admin-border); }
+.selector-chooser-link, .selector .selector-chooser li a { color: var(--vi-admin-link); }
+.stacked .selector-available h2, .stacked .selector-chosen h2 { background: var(--vi-admin-soft); color: var(--vi-admin-heading); }
+select[multiple] option:checked { background: var(--vi-admin-accent) linear-gradient(0deg, var(--vi-admin-accent), var(--vi-admin-accent)); color: #fff; }
+
+/* Inlines */
+.inline-group {
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+    overflow: hidden;
+    margin: 0 0 20px;
+    padding: 0;
+}
+.inline-group .tabular, .inline-group .module { border: 0; box-shadow: none; border-radius: 0; margin: 0; }
+.inline-group h2 {
+    background: var(--vi-admin-soft);
+    color: var(--vi-admin-heading);
+    border-bottom: 1px solid var(--vi-admin-border);
+    padding: 13px 18px;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: .9375rem;
+}
+/* Inlines: nunca recortar. Si la tabla no cabe, scroll horizontal DENTRO del inline (no de la página). */
+.inline-group fieldset.module, .inline-group .tabular { overflow-x: auto; overflow-y: visible; max-width: 100%; }
+.inline-group .tabular table { width: 100%; min-width: max-content; }
+.inline-group .tabular td input[type=text], .inline-group .tabular td input[type=number] { min-width: 90px; }
+.inline-group .tabular td textarea { min-width: 240px; }
+.inline-group .tabular td select { min-width: 140px; }
+.inline-group .tabular td input[type=number] { min-width: 70px; }
+.inline-group .tabular thead th { white-space: nowrap; }
+.inline-group .related-widget-wrapper { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+.inline-group .related-widget-wrapper > select { flex: 1 1 auto; min-width: 140px; }
+.inline-group .related-widget-wrapper-link { flex: 0 0 auto; }
+.inline-group thead th {
+    background: var(--vi-admin-surface);
+    color: var(--vi-admin-muted);
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    border-bottom: 1px solid var(--vi-admin-border);
+}
+.inline-group td { border-bottom: 1px solid var(--vi-admin-border); }
+.inline-group .inline-related h3 { background: var(--vi-admin-soft); color: var(--vi-admin-text); border-bottom: 1px solid var(--vi-admin-border); }
+.inline-group .add-row td, .inline-group .add-row a:link, .inline-group .add-row a:visited { color: var(--vi-admin-link); font-weight: 600; background: var(--vi-admin-surface); }
+.inline-group div.add-row { padding: 10px 18px; border-top: 1px solid var(--vi-admin-border); }
+
+/* ========================================
+   10. BOTONES (principal / secundaria / peligro)
+   ======================================== */
+input[type=submit], input[type=button], button.button, .button, a.button {
+    height: 40px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    border-radius: var(--vi-admin-radius);
+    font-size: .875rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    transition: background-color .15s ease, border-color .15s ease;
+}
+/* Principal (por defecto de Django: botones de formulario, buscar, ir) */
+input[type=submit], input[type=button], .button {
+    background: var(--vi-admin-primary);
+    color: #fff;
+    border: 1px solid var(--vi-admin-primary);
+}
+input[type=submit]:hover, input[type=button]:hover, .button:hover, input[type=submit]:focus { background: var(--vi-admin-accent); border-color: var(--vi-admin-accent); }
+/* Secundarias: "Guardar y añadir otro", "Guardar y continuar editando" */
+.submit-row input[type=submit]:not(.default) {
+    background: var(--vi-admin-surface);
+    color: var(--vi-admin-text);
+    border: 1px solid var(--vi-admin-border);
+}
+.submit-row input[type=submit]:not(.default):hover { background: var(--vi-admin-soft); border-color: var(--vi-admin-border); color: var(--vi-admin-heading); }
+/* Peligro: Eliminar */
+.submit-row a.deletelink:link, .submit-row a.deletelink:visited, a.deletelink-box:link, .button.delete-confirmation, input[name=post].default[value*="liminar"], form .submit-row a.deletelink {
+    background: var(--vi-admin-danger);
+    color: #fff;
+    height: 40px; line-height: 40px; padding: 0 18px; box-sizing: border-box;
+    border-radius: var(--vi-admin-radius);
+    font-size: .875rem; font-weight: 600;
+    display: inline-block;
+}
+.submit-row a.deletelink:hover, .submit-row a.deletelink:focus { background: var(--vi-admin-danger-hover); color: #fff; }
+.submit-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: var(--vi-admin-shadow);
+    padding: 12px 18px;
+    margin: 20px 0 0;
+    overflow: visible;
+}
+.submit-row input, .submit-row a { float: none; margin: 0; }
+.submit-row p.deletelink-box { margin: 0 auto 0 0; order: -1; }
+.submit-row a.closelink { display: inline-flex; align-items: center; height: 40px; border-radius: var(--vi-admin-radius); background: var(--vi-admin-surface); border: 1px solid var(--vi-admin-border); color: var(--vi-admin-text); padding: 0 18px; box-sizing: border-box; }
+
+/* ========================================
+   11. MENSAJES (success / warning / error / info)
+   ======================================== */
+ul.messagelist { padding: 0; margin: 0 0 16px; }
+ul.messagelist li {
+    border-radius: var(--vi-admin-radius);
+    border: 1px solid var(--vi-admin-border);
+    border-left-width: 4px;
+    padding: 12px 16px 12px 44px;
+    color: var(--vi-admin-text);
+    margin: 0 0 8px;
+    background-position: 14px 14px;
+    font-size: .875rem;
+}
+ul.messagelist li.success { background-color: #E7F6EC; border-left-color: #1E8E4E; }
+ul.messagelist li.warning { background-color: #FFF4DB; border-left-color: #B7791F; }
+ul.messagelist li.error   { background-color: #FDE8E6; border-left-color: var(--vi-admin-danger); }
+ul.messagelist li.info    { background-color: var(--vi-admin-soft); border-left-color: var(--vi-admin-accent); }
+ul.messagelist li { color: #182033; }
+
+/* ========================================
+   12. LOGIN
+   ======================================== */
+body.login {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 24px 16px; box-sizing: border-box;
+    background: var(--vi-admin-bg);
+}
+body.login #container {
+    display: block;
+    width: 400px; max-width: 100%; min-height: 0;
+    background: var(--vi-admin-surface);
+    border: 1px solid var(--vi-admin-border);
+    border-radius: var(--vi-admin-radius-lg);
+    box-shadow: 0 8px 24px rgba(0, 45, 137, .08);
+    overflow: hidden;
+}
+body.login #container > #header { height: auto; padding: 28px 28px 8px; border: 0; flex-direction: column; justify-content: center; gap: 8px; text-align: center; background: transparent; }
+body.login #container #branding { display: block; }
+body.login #site-name a:link, body.login #site-name a:visited { font-size: 1.25rem; color: var(--vi-admin-heading); }
+body.login #content-start, body.login .content { padding: 8px 28px 28px; max-width: none; }
+body.login #content { padding: 0; }
+body.login .form-row { padding: 8px 0; }
+body.login .form-row label { display: block; margin-bottom: 4px; }
+body.login .form-row input[type=text], body.login .form-row input[type=password], body.login .form-row input[type=email] { width: 100%; }
+body.login .submit-row { display: block; border: 0; box-shadow: none; padding: 12px 0 0; margin: 0; background: transparent; }
+body.login .submit-row input[type=submit] { width: 100%; background: var(--vi-admin-primary); color: #fff; border: 1px solid var(--vi-admin-primary); }
+body.login .submit-row input[type=submit]:hover { background: var(--vi-admin-accent); border-color: var(--vi-admin-accent); }
+body.login #container > nav { display: none; }
+body.login #footer { display: none; }
+body.login .password-reset-link { text-align: center; padding-top: 12px; }
+
+/* ========================================
+   13. DARK MODE (sistema propio; Django alterna con data-theme / prefers-color-scheme)
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --vi-admin-sidebar: #0A2060;
+        --vi-admin-primary: #1555C0;
+        --vi-admin-accent: #67AEFF;
+        --vi-admin-bg: #0F172A;
+        --vi-admin-surface: #111827;
+        --vi-admin-soft: #182033;
+        --vi-admin-text: #F7F9FD;
+        --vi-admin-muted: #B6C2D3;
+        --vi-admin-border: #2C3A52;
+        --vi-admin-heading: #E6EEFF;
+        --vi-admin-link: #67AEFF;
+        --vi-admin-danger: #D9453A;
+        --vi-admin-danger-hover: #B93228;
+        --vi-admin-active-bg: rgba(103, 174, 255, .14);
+        --vi-admin-shadow: none;
+    }
+}
+:root[data-theme="dark"] {
+    --vi-admin-sidebar: #0A2060;
+    --vi-admin-primary: #1555C0;
+    --vi-admin-accent: #67AEFF;
+    --vi-admin-bg: #0F172A;
+    --vi-admin-surface: #111827;
+    --vi-admin-soft: #182033;
+    --vi-admin-text: #F7F9FD;
+    --vi-admin-muted: #B6C2D3;
+    --vi-admin-border: #2C3A52;
+    --vi-admin-heading: #E6EEFF;
+    --vi-admin-link: #67AEFF;
+    --vi-admin-danger: #D9453A;
+    --vi-admin-danger-hover: #B93228;
+    --vi-admin-active-bg: rgba(103, 174, 255, .14);
+    --vi-admin-shadow: none;
+}
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .object-tools a.addlink:hover { background: #2A6BDB; }
+    :root:not([data-theme="light"]) ul.messagelist li.success { background-color: #12341F; color: #F7F9FD; }
+    :root:not([data-theme="light"]) ul.messagelist li.warning { background-color: #3A2F0E; color: #F7F9FD; }
+    :root:not([data-theme="light"]) ul.messagelist li.error   { background-color: #3D1714; color: #F7F9FD; }
+    :root:not([data-theme="light"]) ul.messagelist li.info    { color: #F7F9FD; }
+    :root:not([data-theme="light"]) .errornote { background: #3D1714; }
+}
+:root[data-theme="dark"] ul.messagelist li.success { background-color: #12341F; color: #F7F9FD; }
+:root[data-theme="dark"] ul.messagelist li.warning { background-color: #3A2F0E; color: #F7F9FD; }
+:root[data-theme="dark"] ul.messagelist li.error   { background-color: #3D1714; color: #F7F9FD; }
+:root[data-theme="dark"] ul.messagelist li.info    { color: #F7F9FD; }
+:root[data-theme="dark"] .errornote { background: #3D1714; }
+
+/* ========================================
+   14. RESPONSIVE
+   ======================================== */
+@media (max-width: 1199px) {
+    :root { --vi-admin-sidebar-w: 232px; }
+    .content, #content-start { padding: 8px 24px 32px; }
+    #container > #header { padding: 0 24px 0 72px; }
+    div.breadcrumbs { padding: 16px 24px 4px; }
+    #changelist .changelist-form-container { width: 100%; }
+}
+@media (max-width: 1023px) {
+    /* el sidebar pasa a panel superpuesto; la columna del grid desaparece */
+    body:not(.popup) #container:has(#nav-sidebar),
+    body:not(.popup) #container:has(#main:not(.shifted)) { grid-template-columns: minmax(0, 1fr); }
+    body:not(.popup) #nav-sidebar {
+        position: fixed; top: 0; left: 0; bottom: 0;
+        width: min(var(--vi-admin-sidebar-w), 86vw);
+        height: 100dvh; max-height: none;
+        box-shadow: 8px 0 24px rgba(0, 0, 0, .28);
+    }
+    body:not(.popup) .main.shifted > #nav-sidebar { display: flex; visibility: visible; }
+    body:not(.popup) #toggle-nav-sidebar,
+    body:not(.popup) .main:not(.shifted) > #toggle-nav-sidebar { display: flex; left: 16px; }
+    body:not(.popup) .main.shifted > #toggle-nav-sidebar { left: calc(min(var(--vi-admin-sidebar-w), 86vw) - 52px); background: var(--vi-admin-sidebar); color: #fff; border-color: rgba(255, 255, 255, .3); }
+    #container:has(#nav-sidebar) #branding { display: block; }
+    #nav-sidebar .vi-brand { padding-right: 68px; }
+    #container > #header { height: auto; min-height: var(--vi-admin-topbar-h); flex-wrap: wrap; padding: 8px 24px 8px 72px; row-gap: 4px; }
+    body:not(.popup) #container > #header, body:not(.popup) #container > nav,
+    body:not(.popup) #container #content-start, body:not(.popup) #footer { grid-column: 1; }
+}
+@media (max-width: 767px) {
+    :root { --vi-admin-title-size: 22px; --vi-admin-topbar-h: auto; }
+    #container > #header { display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; height: auto; min-height: 64px; padding: 10px 16px 10px 68px; }
+    #container #branding { margin-bottom: 4px; }
+    #container #user-tools { margin-left: 0; font-size: .75rem; flex: 1 0 100%; }
+    .content, #content-start { padding: 8px 12px 28px; }
+    div.breadcrumbs { padding: 14px 12px 4px; }
+    #content > h1 { min-height: 0; }
+    .object-tools { float: none; margin: 0 0 12px; flex-wrap: wrap; }
+    #changelist-search #searchbar { max-width: none; }
+    fieldset.module .form-row { padding: 10px 12px; }
+    .submit-row { padding: 8px; gap: 6px; }
+    .submit-row p.deletelink-box { margin: 0; order: 2; flex: 1 1 100%; }
+    .submit-row input, .submit-row a { flex: 1 1 calc(50% - 6px); height: 44px; text-align: center; justify-content: center; }
+    .paginator { overflow-x: auto; flex-wrap: nowrap; white-space: nowrap; }
+    .selector { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+}
+
+/* ========================================
+   15. STICKY (topbar, filtros, barra de guardado) y filtros plegables
+   ======================================== */
+@media (min-width: 768px) {
+    body:not(.popup) #container > #header { position: sticky; top: 0; z-index: 25; }
+}
+.submit-row { position: sticky; bottom: 0; z-index: 20; }
+@media (max-width: 767px) {
+    /* el JS (viaje-admin.js) añade .vi-filter-collapsed y convierte el título en botón */
+    #changelist > #changelist-filter.vi-filter-collapsed > :not(h2) { display: none; }
+    #changelist-filter > h2[role="button"] { cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    #changelist-filter > h2[role="button"]::after { content: "\25B4"; font-size: .75rem; }
+    #changelist-filter.vi-filter-collapsed > h2[role="button"]::after { content: "\25BE"; }
+    #changelist-filter .vi-filter { flex: 1 1 100%; max-width: none; }
+}
+/* #changelist lleva la clase .module de Django: sin tarjeta ni overflow  */
+#changelist.module { overflow: visible; background: none; border: 0; box-shadow: none; border-radius: 0; }
+body.dashboard #content-start { padding-top: 24px; }
+@media (max-width: 767px) {
+    /* cards compactas: icono | título + texto | número */
+    a.vi-card:link, a.vi-card:visited { display: grid; grid-template-columns: auto 1fr auto; column-gap: 14px; align-items: center; padding: 14px 16px; }
+    .vi-card-icon { grid-row: 1 / 3; margin: 0; }
+    .vi-card-title { grid-column: 2; grid-row: 1; align-self: end; }
+    .vi-card-sub { grid-column: 2; grid-row: 2; margin: 0; align-self: start; }
+    .vi-card-count { grid-column: 3; grid-row: 1 / 3; font-size: 1.75rem; }
+    .vi-cards { gap: 10px; }
+}
+@media (min-width: 768px) {
+    /* títulos largos no se montan sobre el botón "Añadir" */
+    #content > h1 { max-width: calc(100% - 240px); }
+    body.dashboard #content > h1 { max-width: none; }
+}
+#changelist input[type=submit], #changelist button.button {
+    background: var(--vi-admin-primary); color: #fff; border: 1px solid var(--vi-admin-primary);
+}
+#changelist input[type=submit]:hover, #changelist button.button:hover { background: var(--vi-admin-accent); border-color: var(--vi-admin-accent); }
+#result_list thead th .clear { display: none; }  /* separador de floats de Django: forzaba las flechas de orden a otra línea */

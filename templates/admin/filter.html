@@ -1,0 +1,10 @@
+{% load i18n %}
+{# Filtro como <select> (barra horizontal). Cada <option> trae la URL que ya calculó Django (conserva q, o y otros filtros). #}
+<label class="vi-filter" data-filter-title="{{ title }}">
+  <span class="vi-filter-label">{{ title|capfirst }}</span>
+  <select data-vi-nav>
+    {% for choice in choices %}
+      <option value="{{ choice.query_string|iriencode }}"{% if choice.selected %} selected{% endif %}>{{ choice.display }}</option>
+    {% endfor %}
+  </select>
+</label>

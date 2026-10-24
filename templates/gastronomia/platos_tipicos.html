@@ -74,7 +74,9 @@
                             {% endif %}
 
                             <a href="{% url 'establecimientos:listado_restaurantes' %}?plato={{ plato.slug }}"
-                                class="pt-card__action">
+                                class="pt-card__action"
+                                data-metrica-evento="gastronomia_donde_comer_click" data-metrica-via="platos_tipicos"
+                                data-metrica-entidad-id="{{ plato.pk }}">
                                 <i class="bi bi-geo-alt" aria-hidden="true"></i>
                                 {% translate "Dónde comer" %}
                             </a>
