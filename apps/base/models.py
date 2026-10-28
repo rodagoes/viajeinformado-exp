@@ -5,7 +5,8 @@ from django.core.files.base import ContentFile
 from django.db import models
 from PIL import Image, ImageOps
 
-HERO_ANCHO_MAX = 1600
+HERO_ANCHO_MAX = 2000
+HERO_CALIDAD_WEBP = 85  # q75 ensuciaba la textura fina y los móviles amplían la imagen ~1,7x
 
 
 def _a_webp(archivo):
@@ -16,9 +17,9 @@ def _a_webp(archivo):
                 archivo.seek(0)
                 return archivo  # ya es WebP razonable: no se recomprime
             img = ImageOps.exif_transpose(img)
-            img.thumbnail((HERO_ANCHO_MAX, HERO_ANCHO_MAX * 2))  # solo reduce, nunca amplía
+            img.thumbnail((HERO_ANCHO_MAX, HERO_ANCHO_MAX * 2), Image.LANCZOS)  # solo reduce, nunca amplía
             buf = BytesIO()
-            img.convert("RGBA" if img.has_transparency_data else "RGB").save(buf, "WEBP", quality=75, method=6)
+            img.convert("RGBA" if img.has_transparency_data else "RGB").save(buf, "WEBP", quality=HERO_CALIDAD_WEBP, method=6)
     except (OSError, ValueError):
         archivo.seek(0)  # Image.open ya leyó el archivo: sin rebobinar se guardaría vacío
         return archivo

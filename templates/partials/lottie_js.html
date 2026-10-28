@@ -1,8 +1,19 @@
-{# Lottie (iconos decorativos): se carga tras el evento load para no competir con el LCP. Versión fija, no @latest. #}
+{# Lottie (iconos decorativos): el script (~100 KB) se pide solo cuando algún <lottie-player> está cerca de verse. Versión fija, no @latest. #}
 <script>
-    window.addEventListener('load', function () {
-        var s = document.createElement('script');
-        s.src = 'https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2.0.12/dist/lottie-player.js';
-        document.head.appendChild(s);
-    });
+    (function () {
+        var players = document.querySelectorAll('lottie-player');
+        if (!players.length) return;
+        function cargar() {
+            var s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2.0.12/dist/lottie-player.js';
+            document.head.appendChild(s);
+        }
+        var io = new IntersectionObserver(function (entries) {
+            if (entries.some(function (e) { return e.isIntersecting; })) {
+                io.disconnect();
+                cargar();
+            }
+        }, { rootMargin: '300px' });
+        players.forEach(function (p) { io.observe(p.parentElement); });
+    })();
 </script>

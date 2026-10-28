@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from PIL import Image
 
-from .models import HomeHeroSlide
+from .models import HERO_ANCHO_MAX, HomeHeroSlide
 
 
 def _subida(nombre, formato, tam=(2400, 1200)):
@@ -21,11 +21,11 @@ class HeroWebpTests(TestCase):
             etiqueta="e", titulo_principal="t", titulo_resaltado="r", descripcion="d", archivo=archivo, **extra)
 
     def test_imagen_subida_se_guarda_como_webp_y_se_reduce(self):
-        slide = self.crear(_subida("hero.png", "PNG"))
+        slide = self.crear(_subida("hero.png", "PNG", (HERO_ANCHO_MAX + 800, (HERO_ANCHO_MAX + 800) // 2)))
         self.assertTrue(slide.archivo.name.endswith(".webp"))
         with Image.open(slide.archivo.path) as img:
             self.assertEqual(img.format, "WEBP")
-            self.assertEqual(img.size, (1600, 800))
+            self.assertEqual(img.size, (HERO_ANCHO_MAX, HERO_ANCHO_MAX // 2))
 
     def test_no_recomprime_al_guardar_de_nuevo(self):
         slide = self.crear(_subida("hero.png", "PNG", (800, 400)))
