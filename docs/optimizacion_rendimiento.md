@@ -7,7 +7,7 @@ ni cachea, así que los números absolutos de CSS/JS son más pesados que en pro
 
 | Hallazgo | Causa real | Solución aplicada |
 |---|---|---|
-| LCP móvil 10,9 s | El LCP es la primera imagen del hero: un PNG de 2,9 MB (`media/home/hero/*.png`). Ya llevaba `fetchpriority="high"` y sin `lazy`; el problema era el peso | `HomeHeroSlide.save()` convierte las imágenes subidas a WebP (≤1600 px, ~250 KB). Ver «Hero» |
+| LCP móvil 10,9 s | El LCP es la primera imagen del hero: un PNG de 2,9 MB (`media/home/hero/*.png`). Ya llevaba `fetchpriority="high"` y sin `lazy`; el problema era el peso | `HomeHeroSlide.save()` convierte las imágenes subidas a WebP (≤2000 px, q85, ~370 KB). Ver «Hero» |
 | Imágenes pesadas en chrome del sitio | Logo del header (PNG 600 KB para 162 px), `pillcobot.webp` (186 KB para ≤92 px) y `logo-footer.webp` (167 KB para ≤190 px) | Reescalados a ~2-3× del tamaño de render (WebP). Footer con `width`/`height` y `loading="lazy"` |
 | Lottie | `base.html` cargaba `lottie-player@latest` desde UNPKG en todas las páginas (100 KB sin usar en la mayoría) y competía con el LCP. `static/assets/js/lottie-player.js` era HTML de UNPKG guardado como `.js`, sin ninguna referencia | Archivo eliminado. Versión fija `2.0.12` (jsDelivr, mismo origen que Bootstrap) en `partials/lottie_js.html`, incluido solo en las 6 páginas que usan `<lottie-player>` y cargado tras el evento `load` |
 | Animate.css (CDN) | 4 páginas lo cargaban solo para `animate__animated` + `animate__fadeInUp`; el proyecto ya redefinía el keyframe | Eliminado el CDN; las 2 reglas viven en `animaciones-entrada.css` |
@@ -17,7 +17,7 @@ ni cachea, así que los números absolutos de CSS/JS son más pesados que en pro
 | A11y (listados/detalle) | `<select>` sin nombre, estrellas `span` con `aria-label` sin rol, `tablist` en carrusel 3D, `h3` sin `h2` | `aria-label` con msgids existentes, `role="img"`, `role="group"`, `<h2 class="visually-hidden">Resultados</h2>` |
 | SEO: sin meta description | No existía | `{% block meta_description %}` en `base.html` (fallback traducido). Cada página reutiliza el texto de su hero (ya traducido); detalles usan `descripcion_corta`/`descripcion` truncada a 155 |
 | SEO: títulos genéricos | Listados y detalles heredaban «Viaje Informado • Huánuco» | Título con el nombre/título de la página |
-| Consola: 404 | No había favicon (`/favicon.ico`) | `favicon.png` (96 px) enlazado en `base.html` |
+| Consola: 404 | No había favicon (`/favicon.ico`) | `favicon-viaje-informado.ico` enlazado en `base.html` |
 
 ## Hero
 
@@ -67,3 +67,24 @@ sin `Cache-Control` largo. No se tocó Nginx ni `settings`:
 - `hreflang`: el idioma se elige por cookie/POST (`set_language`), no por URL; no hay URLs alternativas que anunciar.
 - Contraste de color en varias páginas (eyebrows, chips, precios), `target-size` de los puntos del carrusel 3D y
   `label-content-name-mismatch`: requieren decisión de diseño, el diseño está aprobado.
+
+## V2 (rama `optimizacion-v2`)
+
+- **Destello gris del hero:** los slides 2+ son `loading="lazy"` (para no competir con el LCP). Al iniciar el crossfade la
+  imagen entrante aún no se había pedido; cuando el saliente pasaba a `opacity: 0` se veía el fondo de la página (`#f7f8fa`).
+  Bootstrap `carousel-fade` ya hace un crossfade correcto (el saliente se queda en 1 hasta que el entrante llega a 1).
+  `home.js` → `precargar()` pide el siguiente slide tras `load` y en cada cambio (con `decode()`), sin precargar todos.
+  Salto manual (puntos/flechas) a un slide aún no descargado: el handler de `slide.bs.carousel` cancela la transición,
+  espera a `decode()` de esa imagen y reanuda con `carousel.to()`; si el usuario elige otro destino mientras tanto, gana el último.
+- **Nitidez:** WebP q75 suavizaba la textura fina (ladrillos, melena) y los móviles amplían la imagen ~1,7×. Ahora q85,
+  filtro Lanczos y ancho máx. 2000 px. Los slides ya subidos **no se reprocesan**: hay que re-subir los originales.
+  Las fuentes originales miden 1448 px (vi1/vi2) y 1974 px (vi3): más resolución en móvil exige originales mayores.
+- **Lottie:** el script solo se pide cuando un `<lottie-player>` está a ≤300 px de verse (antes, tras `load`).
+- **Logo/bot:** logo 450×150 (29 KB), `pillcobot.webp` 192 px (16 KB).
+- **Techo móvil (Lighthouse simulado):** con un hero artificialmente de ~100 KB el Home sólo llega a ~91 (FCP 2,3 s lo fija
+  la cadena Bootstrap/Icons/Google Fonts en CDN). Con hero de calidad (~370 KB) el rango es 80-85 local. 97+ exigiría
+  degradar el hero o rehacer la entrega de CSS/fuentes.
+- **Self-hosting de Bootstrap, Icons y fuentes:** probado con un proxy gzip local: no mejoró (FCP 2,6-2,9 s vs 2,3 s,
+  LCP 5,8 s vs 4,4 s). Descartado.
+- **Favicon `.ico`:** pesa ~122 KB (capas PNG grandes); se carga tras `load`, no afecta al LCP, pero conviene regenerarlo
+  (16/32/48 px ≈ 15 KB).
