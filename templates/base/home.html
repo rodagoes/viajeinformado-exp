@@ -26,9 +26,12 @@
                         <source src="{{ slide.archivo.url }}" type="video/mp4">
                     </video>
                     {% else %}
-                    <img src="{{ slide.archivo.url }}" alt="{{ slide.texto_alt|default:slide.titulo_principal }}"
-                        class="inicio-hero-img" decoding="async"
-                        {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+                    <picture>
+                        {% if slide.archivo_movil %}<source media="(max-width: 575.98px)" srcset="{{ slide.archivo_movil.url }}">{% endif %}
+                        <img src="{{ slide.archivo.url }}" alt="{{ slide.texto_alt|default:slide.titulo_principal }}"
+                            class="inicio-hero-img" decoding="async"
+                            {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+                    </picture>
                     {% endif %}
 
                     <!-- Overlay -->

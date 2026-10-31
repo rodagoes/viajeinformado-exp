@@ -9,13 +9,14 @@
     <meta name="description" content="{% block meta_description %}{% translate "Tu guía para descubrir Huánuco con información clara, destinos únicos y experiencias que conectan con nuestra identidad." %}{% endblock %}">
     <link rel="icon" type="image/x-icon" href="{% static 'assets/img/logo/favicon-viaje-informado.ico' %}">
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: no bloquea el primer render (medido: ~0,3 s de FCP); font-display=swap muestra el texto con la fuente de reserva -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"></noscript>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

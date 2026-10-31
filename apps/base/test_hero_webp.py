@@ -5,7 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from PIL import Image
 
-from .models import HERO_ANCHO_MAX, HomeHeroSlide
+from .models import HERO_ANCHO_MAX, HERO_ASPECTO_MOVIL, HomeHeroSlide
 
 
 def _subida(nombre, formato, tam=(2400, 1200)):
@@ -59,3 +59,23 @@ class HeroWebpTests(TestCase):
         slide = self.crear(SimpleUploadedFile("t.png", buf.getvalue()))
         with Image.open(slide.archivo.path) as img:
             self.assertIn("A", img.getbands())
+
+    def test_panoramica_genera_recorte_movil_vertical(self):
+        slide = self.crear(_subida("hero.png", "PNG", (1600, 1000)))
+        with Image.open(slide.archivo_movil.path) as movil:
+            self.assertEqual(movil.format, "WEBP")
+            self.assertEqual(movil.size, (round(1000 * HERO_ASPECTO_MOVIL), 1000))
+
+    def test_imagen_ya_vertical_no_genera_recorte(self):
+        slide = self.crear(_subida("vertical.png", "PNG", (600, 1000)))
+        self.assertFalse(slide.archivo_movil)
+
+    def test_guardar_de_nuevo_no_regenera_el_recorte(self):
+        slide = self.crear(_subida("hero.png", "PNG", (1600, 1000)))
+        nombre = slide.archivo_movil.name
+        slide.save()
+        self.assertEqual(slide.archivo_movil.name, nombre)
+
+    def test_gif_y_archivo_ilegible_no_generan_recorte(self):
+        self.assertFalse(self.crear(_subida("a.gif", "GIF", (200, 100)), tipo_archivo="gif").archivo_movil)
+        self.assertFalse(self.crear(SimpleUploadedFile("roto.png", b"no es una imagen")).archivo_movil)
