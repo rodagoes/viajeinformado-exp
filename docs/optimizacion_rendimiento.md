@@ -88,3 +88,50 @@ sin `Cache-Control` largo. No se tocó Nginx ni `settings`:
   LCP 5,8 s vs 4,4 s). Descartado.
 - **Favicon `.ico`:** pesa ~122 KB (capas PNG grandes); se carga tras `load`, no afecta al LCP, pero conviene regenerarlo
   (16/32/48 px ≈ 15 KB).
+
+## V3 (rama `optimizacion-v3`)
+
+Medido con un proxy de medición local **HTTP/2 + gzip** (emula Nginx; no es parte del proyecto) y Lighthouse 12 móvil.
+Mediana de 3-5 corridas; la dispersión del LCP simulado es ±0,5 s entre corridas (bimodal 3,1 / 4,0 s).
+
+**Desglose del LCP (local sin throttling):** TTFB 20 ms, load delay 17 ms, load duration 58 ms, **render delay 863 ms**.
+La imagen llega a los ~95 ms; el primer pintado espera al CSS de Google Fonts (el último bloqueante, ~780 ms).
+Con throttling simulado el LCP es FCP + descarga del hero (~1,5 s de ancho de banda compartido con CSS/JS/logos).
+`fetchpriority="high"` funciona (Prioridad High, pedido a los ~50 ms, sin preload redundante); `decoding="async"` no
+cambia nada (3 corridas sin él: igual).
+
+| Cambio | Resultado (mediana) |
+|---|---|
+| Base (V2, h2) | perf 78, FCP 2,2 s, LCP 5,2 s |
+| + recorte móvil del hero (`<picture>`) | perf 88, FCP 2,2 s, LCP 3,5 s |
+| + Google Fonts sin bloquear el render | perf 92, FCP 1,9 s, LCP 3,1 s |
+
+- **Hero móvil:** `HomeHeroSlide.archivo_movil` (no editable, se genera sola al subir) = recorte central de aspecto 0,65
+  (altura ≤1500 px, WebP q85). Son los mismos píxeles que `object-fit: cover; object-position: center` ya muestra en <576 px,
+  así que no pierde nitidez: 365→164 KB, 389→186 KB, 361→107 KB. ≥576 px y escritorio siguen con la imagen completa.
+  Imágenes ya casi verticales no generan recorte. Si la imagen subida ya es WebP, el recorte se re-codifica una vez desde ella:
+  para la mejor calidad, re-subir el original. Los slides existentes no tienen recorte hasta volver a guardarlos (snippet de «Hero»).
+- **Google Fonts:** `media="print" onload` + `<noscript>`. Texto con fuente de reserva hasta que llega la web font
+  (`display=swap` ya estaba); CLS sin cambios (0,048).
+- **Precarga del slide 2:** se pide tras `load` con prioridad Low (~0,8 s en local, después del LCP). Quitarla no mejoró
+  el LCP (3 corridas), así que se deja como está: es lo que evita el flash gris.
+
+**Descartado (medido):**
+- Self-hosting de Bootstrap, Icons y fuentes con HTTP/2: perf 86, FCP 2,3 s (sin mejora), LCP 3,8 s y TBT 80 ms (peor que con CDN) y +~600 KB de vendor.
+- Bootstrap Icons sin bloquear: FCP 1,9→1,8 s, a cambio de iconos sin estilo en el primer pintado.
+- CSS propios no críticos (footer, pillcobot, skeleton) con `media="print"`: sin cambio de FCP.
+- `pillcobot.js` bajo demanda: quitarlo por completo no mejoró nada medible (JS al final del body, 11 KB gzip); no justifica el riesgo con métricas/primer clic.
+- Minificar / purgar CSS-JS: ≈10 KB con gzip; sin pipeline de build no compensa.
+
+**Techo:** ~92 local (LCP 3,1 s). Lo que queda es ancho de banda: ~300 KB antes del LCP (hero 164 KB + logo, bot, Bootstrap CSS/JS)
+a 1,6 Mbps. Bajarlo más exige degradar el hero o quitar Bootstrap de la ruta crítica.
+
+### Caché de producción (propuesta Nginx, NO aplicada)
+
+Solo ayuda a visitas repetidas (los ~988 KiB «sin TTL» ya están descargados); no cambia el LCP de una primera visita.
+
+```nginx
+location /static/ { expires 7d; add_header Cache-Control "public"; }   # nombres sin hash: nada de immutable/1y
+location /media/  { expires 30d; add_header Cache-Control "public"; }  # Django no sobrescribe: re-subir cambia la URL
+```
+Terceros (jsDelivr, Google Fonts) ya traen su propio `Cache-Control`.

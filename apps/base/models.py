@@ -7,6 +7,8 @@ from PIL import Image, ImageOps
 
 HERO_ANCHO_MAX = 2000
 HERO_CALIDAD_WEBP = 85  # q75 ensuciaba la textura fina y los móviles amplían la imagen ~1,7x
+HERO_ASPECTO_MOVIL = 0.65  # ancho/alto del recorte para móviles (< 576 px); el hero ahí es casi vertical (~0,52-0,62)
+HERO_ALTO_MOVIL_MAX = 1500
 
 
 def _a_webp(archivo):
@@ -25,6 +27,27 @@ def _a_webp(archivo):
         return archivo
     return ContentFile(buf.getvalue(), name=os.path.splitext(os.path.basename(archivo.name))[0] + ".webp")
 
+def _recorte_movil(archivo):
+    """Recorte central vertical del hero para móviles: son exactamente los píxeles que `object-fit: cover` ya muestra
+    ahí, con la misma calidad y ~la mitad de peso. None si la imagen ya es casi vertical o no se puede leer."""
+    try:
+        with Image.open(archivo) as img:
+            img = ImageOps.exif_transpose(img)
+            if img.width / img.height <= HERO_ASPECTO_MOVIL:
+                return None
+            ancho = round(img.height * HERO_ASPECTO_MOVIL)
+            izq = (img.width - ancho) // 2
+            img = img.crop((izq, 0, izq + ancho, img.height))
+            img.thumbnail((img.width, HERO_ALTO_MOVIL_MAX), Image.LANCZOS)
+            buf = BytesIO()
+            img.convert("RGB").save(buf, "WEBP", quality=HERO_CALIDAD_WEBP, method=6)
+    except (OSError, ValueError):
+        return None
+    finally:
+        archivo.seek(0)
+    return ContentFile(buf.getvalue(), name=os.path.splitext(os.path.basename(archivo.name))[0] + "_movil.webp")
+
+
 class HomeHeroSlide(models.Model):
     TIPO_ARCHIVO_CHOICES = [
         ('image', 'Imagen'),
@@ -39,6 +62,7 @@ class HomeHeroSlide(models.Model):
     
     tipo_archivo = models.CharField(max_length=10, choices=TIPO_ARCHIVO_CHOICES, default='image')
     archivo = models.FileField(upload_to="home/hero/", help_text="Acepta imagen, video o gif")
+    archivo_movil = models.ImageField(upload_to="home/hero/movil/", blank=True, editable=False)  # recorte móvil, se genera solo
     poster_video = models.ImageField(upload_to="home/hero/posters/", blank=True, null=True, help_text="Imagen previa para videos (recomendado)")
     texto_alt = models.CharField(max_length=255, blank=True, help_text="Para accesibilidad de imágenes/gifs")
     
@@ -60,6 +84,7 @@ class HomeHeroSlide(models.Model):
     def save(self, *args, **kwargs):
         # El hero es el LCP del Home: un PNG de ~3 MB se sirve como WebP de ~150 KB. Solo imágenes recién subidas.
         if self.tipo_archivo == 'image' and self.archivo and not self.archivo._committed:
+            self.archivo_movil = _recorte_movil(self.archivo) or ""
             self.archivo = _a_webp(self.archivo)
         super().save(*args, **kwargs)
 
