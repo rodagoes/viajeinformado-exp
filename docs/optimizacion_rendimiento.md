@@ -135,3 +135,68 @@ location /static/ { expires 7d; add_header Cache-Control "public"; }   # nombres
 location /media/  { expires 30d; add_header Cache-Control "public"; }  # Django no sobrescribe: re-subir cambia la URL
 ```
 Terceros (jsDelivr, Google Fonts) ya traen su propio `Cache-Control`.
+
+## V4 (rama `optimizacion-v4`)
+
+Misma metodología que V3 (proxy local HTTP/2 + gzip, Lighthouse 12 móvil), más corridas con `--throttling-method=devtools`
+(red real estrangulada, sin simulación) para comprobar que las conclusiones no dependen de Lantern. El LCP simulado oscila
+±0,5 s entre corridas idénticas, así que solo cuenta lo que se repite en pares A/B alternados.
+
+**Aplicado: assets pequeños** (-18 KB antes del LCP, sin cambio visual)
+- Logo del header 450×150 → 330×110 (29 → 19 KB, WebP q85 desde el PNG original). Se muestra a 126-162×42-54 px: 2× en escritorio, 3× en móviles.
+- Icono del botón flotante/avatar del Pillco Bot: nuevo `pillcobot-sm.webp` 120 px (16 → 7,5 KB) en `includes/pillcobot.html` (se muestra a 36-40 px). La mockup del Home sigue usando `pillcobot.webp` (192 px).
+- En Lighthouse el efecto no se distingue del ruido (perf 84-92 en ambos lados); el beneficio es de bytes reales en primera carga.
+
+**CSS bloqueante (Home carga 12 hojas):** Bootstrap, Icons (CDN) + main, header, pages, home, footer, responsive, pillcobot,
+skeleton, animaciones-entrada (propias, h2, 0,3-22 KB cada una, ≈80 KB sin comprimir en total).
+
+| CSS | Tamaño | Clases usadas en Home | Veredicto |
+|---|---:|---:|---|
+| main / header / home | 4,7 / 21 / 20 KB | 86 / 90 / 83 % | Críticos (layout inicial, header, hero) |
+| pillcobot | 22 KB | 96 % | Botón flotante visible desde el primer pintado |
+| footer | 18 KB | 91 % | Below the fold, pero diferirlo no mejora (abajo) |
+| skeleton / animaciones-entrada | 1,7 / 3,1 KB | 100 / 62 % | Mínimos |
+| pages | 4 KB | 40 % | Se podría mover a otras páginas: -2 KB, no compensa |
+| responsive | 0,3 KB | 0 % | Casi vacío |
+
+Prueba de techo: diferir con `media="print" onload` footer, pillcobot, skeleton, pages, responsive, animaciones **e** Icons
+a la vez → FCP 2,1-2,6 s vs 2,0-2,3 s de la base (no mejora; con 12 pedidos h2 en paralelo el CSS propio no es el cuello).
+Con throttling real, Icons diferido tampoco cambió el LCP (3,5 vs 3,4-3,7 s) y una corrida bajó Best Practices a 96.
+Descartado: no hay CSS propio muerto relevante (80-96 % usado) y diferirlo no compensa el riesgo de FOUC.
+
+**Bootstrap Icons:** Home renderiza ~42 iconos distintos (header, footer, Pillco Bot, mockup) más 9 que inyecta
+`pillcobot.js`/`home.js`, y el resto del sitio los usa por todas partes (`bi-*` en casi todas las plantillas). Reemplazarlos por
+SVG sería una librería casera y una carga condicional es imposible (header y footer son globales). Se mantiene el CDN
+(CSS 13 KB + woff2 128 KB); subsetear la fuente exige herramienta de build y regenerar al añadir cada icono.
+
+**Bootstrap CSS:** sin cambios (ver V3: self-hosting HTTP/2 medido peor). **Minificación:** sin herramienta ya disponible en
+el proyecto; ~10 KB reales con gzip (30 KB CSS / 27 KB JS son sin comprimir). Exigiría build + archivos duplicados. Descartado.
+**`stroke-dashoffset` del anillo del hero:** anillo SVG de 18 px; no es medible en TBT (0-40 ms) ni toca CLS (0,048). Se deja.
+
+**Techo:** ~88-92 local con el simulador; lo que queda es FCP ≈ HTML + Bootstrap CSS desde un origen de CDN (≈2 s simulados)
+y ~300 KB de ancho de banda antes del LCP. Bajarlo más exige quitar Bootstrap de la ruta crítica (Critical CSS duplicado o
+purga), que es deuda técnica.
+
+### Caché de producción (Nginx) — instrucciones, NO aplicadas
+
+Dentro del `server { ... }` del sitio (los `location` ya existentes de `/static/` y `/media/` deben conservar su `alias`/`root`):
+
+```nginx
+location /static/ {
+    alias /ruta/a/staticfiles/;        # el que ya tengas
+    expires 7d;
+    add_header Cache-Control "public";
+}
+location /media/ {
+    alias /ruta/a/media/;              # el que ya tengas
+    expires 30d;
+    add_header Cache-Control "public";
+}
+```
+1. `sudo nginx -t` y `sudo systemctl reload nginx` (reload, no restart).
+2. Verificar: `curl -sI https://DOMINIO/static/assets/css/home.css | grep -i -E "cache-control|expires"` → `max-age=604800`; igual con una imagen de `/media/` → `max-age=2592000`.
+3. Rollback: quitar las dos líneas `expires`/`add_header` y `reload`.
+- `/static/` no lleva hash en el nombre: sin `immutable` ni 1 año. Tras cada despliegue que cambie CSS/JS, los visitantes recurrentes pueden tardar hasta 7 días en verlo; si es un problema, bajar a `1d` o activar un manifest de estáticos (V3).
+- `/media/`: Django no sobrescribe, re-subir un archivo cambia su URL.
+- `add_header` dentro de un `location` anula los `add_header` heredados del `server`; repetir allí los de seguridad si los hay.
+- Mejora visitas repetidas; no cambia el LCP de una primera visita.
