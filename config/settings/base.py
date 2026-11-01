@@ -236,7 +236,14 @@ LOGOUT_REDIRECT_URL = '/'
 # django-allauth: solo se usa para login social (Google/Facebook).
 # El registro/login normal usa las vistas propias de apps.accounts.
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+# Recuperación de contraseña: usa el flujo de allauth (/cuentas/password/reset/).
+# ACCOUNT_PREVENT_ENUMERATION (por defecto True) responde igual exista o no el correo.
+ACCOUNT_FORMS = {
+    'reset_password': 'apps.accounts.forms.RecuperarPasswordForm',
+    'reset_password_from_key': 'apps.accounts.forms.NuevaPasswordForm',
+}
 SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_ADAPTER = 'apps.accounts.adapters.ViajeInformadoAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'apps.accounts.adapters.ViajeInformadoSocialAccountAdapter'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_PROVIDERS = {
@@ -269,6 +276,8 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='Viaje Informado <no-responder@viajeinformado.digital>')
+# Reply-To común de los correos de accounts (vacío = sin Reply-To). El From sigue siendo DEFAULT_FROM_EMAIL.
+EMAIL_REPLY_TO = env('EMAIL_REPLY_TO', default='Viaje Informado <viajeinformadohuanuco@gmail.com>')
 
 # Destinatario de los formularios de "Promociona tu evento" / "Reportar un
 # problema" del módulo Eventos. Reutiliza el backend/credenciales SMTP de

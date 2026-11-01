@@ -1,3 +1,4 @@
+from urllib.parse import urlencode
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 from django.contrib import messages
@@ -13,6 +14,7 @@ from apps.interacciones.forms import ResenaForm
 from apps.interacciones.models import Favorito, Resena
 from apps.interacciones.services import construir_contexto_resenas
 from apps.monedas.models import TipoCambio
+from apps.ubicaciones.filtros import filtro_distrito
 from .models import (
     CategoriaLugarTuristico,
     ServicioLugarTuristico,
@@ -25,11 +27,6 @@ from .models import (
 def listado_lugares(request):
     qs = LugarTuristico.objects.filter(activo=True).select_related(
         "categoria_principal", "distrito", "localidad"
-    ).prefetch_related(
-        Prefetch(
-            "servicios",
-            queryset=ServicioLugarTuristico.objects.filter(activo=True).order_by("nombre")
-        )
     )
 
     # Categorías usadas en los lugares activos
@@ -46,8 +43,6 @@ def listado_lugares(request):
     # Parámetros GET
     q = request.GET.get("q", "").strip()
     categoria_id = request.GET.get("categoria", "").strip()
-    dificultad_sel = request.GET.get("dificultad", "").strip()
-    tipo_costo_sel = request.GET.get("tipo_costo", "").strip()
     orden = request.GET.get("orden", "").strip()
 
     # Filtros
@@ -62,11 +57,13 @@ def listado_lugares(request):
             Q(categorias_secundarias__id=categoria_id)
         ).distinct()
 
-    if dificultad_sel:
-        qs = qs.filter(dificultad=dificultad_sel)
-
-    if tipo_costo_sel:
-        qs = qs.filter(tipo_costo=tipo_costo_sel)
+    # ponytail: dificultad/tipo_costo ya no se filtran en el listado (los datos siguen en BD/Admin);
+    # los query params antiguos simplemente se ignoran.
+    distrito_sel, distritos_agrupados = filtro_distrito(
+        request, LugarTuristico.objects.filter(activo=True).values_list("distrito_id", flat=True)
+    )
+    if distrito_sel:
+        qs = qs.filter(distrito_id=distrito_sel)
 
     # Ordenamiento
     if orden == "nombre_asc":
@@ -104,20 +101,6 @@ def listado_lugares(request):
         for c in categorias
     ]
 
-    dificultad_opciones = [
-        {"value": "", "label": gettext("Dificultad"), "selected": dificultad_sel == ""},
-        {"value": "facil", "label": gettext("Fácil"), "selected": dificultad_sel == "facil"},
-        {"value": "moderada", "label": gettext("Moderada"), "selected": dificultad_sel == "moderada"},
-        {"value": "dificil", "label": gettext("Difícil"), "selected": dificultad_sel == "dificil"},
-    ]
-
-    tipo_costo_opciones = [
-        {"value": "", "label": gettext("Costo"), "selected": tipo_costo_sel == ""},
-        {"value": "gratis", "label": gettext("Gratis"), "selected": tipo_costo_sel == "gratis"},
-        {"value": "pagado", "label": gettext("Pagado"), "selected": tipo_costo_sel == "pagado"},
-        {"value": "consultar", "label": gettext("Consultar"), "selected": tipo_costo_sel == "consultar"},
-    ]
-
     opciones_orden = [
         {"value": "", "label": gettext("Seleccione"), "selected": orden == ""},
         {"value": "nombre_asc", "label": gettext("Nombre A–Z"), "selected": orden == "nombre_asc"},
@@ -132,12 +115,13 @@ def listado_lugares(request):
         "subtitulo": gettext("Descubre los mejores atractivos naturales, históricos y culturales de la región."),
         "q": q,
         "categoria_sel": categoria_id,
-        "dificultad_sel": dificultad_sel,
-        "tipo_costo_sel": tipo_costo_sel,
+        "distrito_sel": distrito_sel,
+        "distritos_agrupados": distritos_agrupados,
+        "query_filtros": urlencode({
+            k: v for k, v in {"q": q, "categoria": categoria_id, "distrito": distrito_sel, "orden": orden}.items() if v
+        }),
         "orden_sel": orden,
         "categorias_opciones": categorias_opciones,
-        "dificultad_opciones": dificultad_opciones,
-        "tipo_costo_opciones": tipo_costo_opciones,
         "opciones_orden": opciones_orden,
         "total_resultados": paginator.count,
     }

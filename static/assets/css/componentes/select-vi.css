@@ -1,0 +1,137 @@
+/* Select Viaje Informado — mismo lenguaje visual que el selector de Emergencias.
+   Uso:  <div class="vi-select-campo"><select class="vi-select [vi-select--sm]">…</select>
+         <i class="bi bi-chevron-down vi-select-icono" aria-hidden="true"></i></div>
+   Siempre es un <select> nativo. El desplegable personalizado (::picker) es mejora
+   progresiva: sin soporte queda el campo ovalado con el desplegable nativo. */
+.vi-select-campo {
+    --vi-select-azul: #007FFF;
+    --vi-select-azul-oscuro: #002D89;
+    --vi-select-borde: #DFE7F3;
+    --vi-select-fondo-hover: #EEF3FB;
+    --vi-select-texto: #182033;
+    --vi-select-texto-sec: #61708C;
+    position: relative;
+    display: flex;
+    min-width: 0;
+}
+
+.vi-select {
+    width: 100%;
+    min-height: 45px;
+    padding: 8px 38px 8px 18px;
+    border: 1px solid var(--vi-select-borde);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--vi-select-texto);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    appearance: none;
+    -webkit-appearance: none;
+    box-shadow: inset 0 1px 2px rgba(0, 45, 137, 0.05);
+    text-overflow: ellipsis;
+    transition: border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.vi-select:hover {
+    border-color: var(--vi-select-azul);
+}
+
+.vi-select:focus-visible {
+    outline: none;
+    border-color: var(--vi-select-azul);
+    box-shadow: inset 0 1px 2px rgba(0, 45, 137, 0.05), 0 0 0 3px rgba(0, 127, 255, 0.22);
+}
+
+/* Variante compacta (Ordenar) */
+.vi-select--sm {
+    min-height: 36px;
+    min-width: 150px;
+    padding: 5px 34px 5px 14px;
+    font-size: 0.86rem;
+}
+
+.vi-select-icono {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    color: var(--vi-select-azul);
+    font-size: 0.78rem;
+    pointer-events: none;
+}
+
+@supports (appearance: base-select) {
+    .vi-select {
+        appearance: base-select;
+    }
+
+    /* La flecha nativa se oculta: el chevron de Bootstrap Icons es el mismo con o sin soporte. */
+    .vi-select::picker-icon {
+        display: none;
+    }
+
+    .vi-select::picker(select) {
+        appearance: base-select;
+        margin-top: 10px;
+        min-width: 240px;
+        max-height: min(320px, 50vh);
+        overflow-y: auto;
+        padding: 8px;
+        border: 1px solid var(--vi-select-borde);
+        border-radius: 16px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 45, 137, 0.05), 0 24px 48px -16px rgba(0, 45, 137, 0.3);
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        transition: opacity 180ms ease-out, transform 180ms ease-out;
+    }
+
+    @starting-style {
+        .vi-select:open::picker(select) {
+            opacity: 0;
+            transform: scale(0.96) translateY(-6px);
+        }
+    }
+
+    .vi-select optgroup {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--vi-select-texto-sec);
+        padding: 10px 10px 4px;
+    }
+
+    .vi-select option {
+        padding: 10px 12px;
+        margin: 1px 0;
+        border-radius: 10px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--vi-select-texto);
+        transition: background-color 120ms ease-out;
+    }
+
+    .vi-select option:hover {
+        background: var(--vi-select-fondo-hover);
+    }
+
+    .vi-select option:checked {
+        background: color-mix(in srgb, var(--vi-select-azul) 12%, white);
+        color: var(--vi-select-azul-oscuro);
+    }
+
+    .vi-select option::checkmark {
+        color: var(--vi-select-azul);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vi-select,
+    .vi-select::picker(select) {
+        transition: none;
+    }
+}

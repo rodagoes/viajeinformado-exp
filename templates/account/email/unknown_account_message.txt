@@ -1,0 +1,8 @@
+{% load i18n %}{% autoescape off %}{% translate "Hola," %}
+
+{% blocktranslate %}Alguien solicitó restablecer la contraseña con el correo {{ email }}, pero no existe ninguna cuenta de Viaje Informado con ese correo.{% endblocktranslate %}
+
+{% translate "Si fuiste tú, puede que te hayas registrado con otro correo, o con Google o Facebook. También puedes crear una cuenta nueva desde la página de registro. Si no fuiste tú, ignora este correo." %}
+
+{% translate "Equipo de Viaje Informado" %}
+{% endautoescape %}

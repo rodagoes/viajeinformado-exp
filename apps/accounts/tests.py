@@ -1,6 +1,7 @@
 import os
 import re
 import tempfile
+import time
 from datetime import timedelta
 from io import BytesIO
 from unittest.mock import patch
@@ -9,11 +10,13 @@ from urllib.parse import unquote
 from allauth.core.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.models import SocialAccount, SocialLogin
 from allauth.socialaccount.providers.base import AuthProcess
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser, User
 from django.core import mail
+from django.core.cache import cache
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import Client, RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from PIL import Image
@@ -603,7 +606,7 @@ class CambiarEmailTests(CuentaTestBase):
         self.marcar_reauth_cliente()
         self.client.post(reverse('accounts:cambiar_email'), {'nuevo_email': 'nuevo@example.com'})
         codigo = self._extraer_codigo()
-        with patch('apps.accounts.views.send_mail', side_effect=Exception('smtp caído')):
+        with patch('apps.accounts.views.enviar_correo', side_effect=Exception('smtp caído')):
             response = self.client.post(reverse('accounts:verificar_nuevo_email'), {'codigo': codigo})
         self.assertRedirects(response, reverse('accounts:cuenta'))
         self.usuario.refresh_from_db()
@@ -894,7 +897,7 @@ class EliminarCuentaTests(CuentaTestBase):
     def test_fallo_de_notificacion_no_impide_eliminar(self):
         self.marcar_reauth_cliente()
         usuario_pk = self.usuario.pk
-        with patch('apps.accounts.views.send_mail', side_effect=Exception('smtp caído')):
+        with patch('apps.accounts.views.enviar_correo', side_effect=Exception('smtp caído')):
             response = self.client.post(reverse('accounts:eliminar_cuenta'), {'confirmacion': 'cuentaqa'})
         self.assertRedirects(response, reverse('accounts:cuenta_eliminada'))
         self.assertFalse(User.objects.filter(pk=usuario_pk).exists())
@@ -991,3 +994,302 @@ class ConnectServerSideGuardTests(CuentaTestBase):
         match = re.search(r'href="([^"]*google[^"]*process=connect[^"]*)"', contenido)
         self.assertIsNotNone(match)
         self.assertEqual(match.group(1).count('?'), 1)
+
+
+class RecuperarPasswordTests(TestCase):
+    """Recuperación de contraseña sobre allauth (/cuentas/password/reset/)."""
+
+    def setUp(self):
+        cache.clear()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(username="turista", email="t@example.com", password="Vieja123!")
+
+    def test_login_muestra_enlace(self):
+        r = self.client.get(reverse("accounts:login"))
+        self.assertContains(r, reverse("account_reset_password"))
+
+    def test_correo_existente_e_inexistente_responden_igual(self):
+        url = reverse("account_reset_password")
+        r1 = self.client.post(url, {"email": "t@example.com"})
+        r2 = self.client.post(url, {"email": "nadie@example.com"})
+        self.assertRedirects(r1, reverse("account_reset_password_done"))
+        self.assertRedirects(r2, reverse("account_reset_password_done"))
+        # allauth anti-enumeración: ambos reciben correo; el inexistente sin enlace de reset.
+        self.assertEqual([m.to for m in mail.outbox], [["t@example.com"], ["nadie@example.com"]])
+        self.assertIn("/password/reset/key/", mail.outbox[0].body)
+        self.assertNotIn("/password/reset/key/", mail.outbox[1].body)
+
+    def test_flujo_completo_y_login_posterior(self):
+        self.client.post(reverse("account_reset_password"), {"email": "t@example.com"})
+        enlace = re.search(r"http\S+/password/reset/key/\S+", mail.outbox[0].body).group(0)
+        r = self.client.get(enlace, follow=True)  # allauth guarda el token en sesión y redirige
+        self.assertContains(r, "vi-auth-card")
+        r = self.client.post(r.request["PATH_INFO"], {"password1": "Nueva123!x", "password2": "Nueva123!x"})
+        self.assertRedirects(r, reverse("account_reset_password_from_key_done"))
+        self.assertTrue(self.client.login(username="turista", password="Nueva123!x"))
+
+    def test_politica_de_registro_se_aplica_en_reset(self):
+        self.client.post(reverse("account_reset_password"), {"email": "t@example.com"})
+        enlace = re.search(r"http\S+/password/reset/key/\S+", mail.outbox[0].body).group(0)
+        r = self.client.get(enlace, follow=True)
+        r = self.client.post(r.request["PATH_INFO"], {"password1": "sinsimbolo123A", "password2": "sinsimbolo123A"})
+        self.assertContains(r, "símbolo")
+
+    def test_token_invalido(self):
+        r = self.client.get(reverse("account_reset_password_from_key", kwargs={"uidb36": "1", "key": "xxx-yyy"}), follow=True)
+        self.assertContains(r, "Enlace no válido")
+
+
+class NuevaPasswordValidacionTests(TestCase):
+    """Pantalla de nueva contraseña (allauth password_reset_from_key): errores y reutilización."""
+    ANTERIOR = "Vieja123!"
+
+    def setUp(self):
+        cache.clear()  # allauth limita los pedidos de reset por IP (cache compartido entre tests)
+        self.user = User.objects.create_user(username="turista", email="t@example.com", password=self.ANTERIOR)
+        self.client.post(reverse("account_reset_password"), {"email": "t@example.com"})
+        enlace = re.search(r"http\S+/password/reset/key/\S+", mail.outbox[0].body).group(0)
+        self.url = self.client.get(enlace, follow=True).request["PATH_INFO"]
+
+    def _post(self, p1, p2=None):
+        return self.client.post(self.url, {"password1": p1, "password2": p1 if p2 is None else p2})
+
+    def _sin_cambio(self):
+        self.assertTrue(User.objects.get(pk=self.user.pk).check_password(self.ANTERIOR))
+
+    def test_igual_a_la_anterior_muestra_solo_su_mensaje(self):
+        r = self._post(self.ANTERIOR)
+        self.assertContains(r, "La nueva contraseña debe ser diferente a tu contraseña anterior.")
+        self.assertNotContains(r, "debe cumplir")
+        self.assertEqual(r.content.decode().count("vi-auth-error"), 1)
+        self._sin_cambio()
+
+    def test_nueva_valida_cambia_y_la_anterior_deja_de_funcionar(self):
+        self.assertRedirects(self._post("Nueva123!x"), reverse("account_reset_password_from_key_done"))
+        self.assertFalse(self.client.login(username="turista", password=self.ANTERIOR))
+        self.assertTrue(self.client.login(username="turista", password="Nueva123!x"))
+
+    def test_debil_muestra_checklist_en_vivo_sin_bloque_de_errores(self):
+        for clave in ("Ab1!x", "19283746501"):  # corta; solo numérica
+            r = self._post(clave)
+            self.assertContains(r, 'id="password-checklist"')
+            self.assertContains(r, 'data-check="symbol"')
+            self.assertNotContains(r, "vi-auth-error")
+            self.assertNotContains(r, "debe cumplir")
+        self._sin_cambio()
+
+    def test_demasiado_comun_muestra_su_error_aparte(self):
+        r = self._post("password")
+        self.assertContains(r, "demasiado común")
+        self.assertContains(r, 'id="password-checklist"')
+        self._sin_cambio()
+
+    def test_confirmacion_distinta_va_en_su_propio_error(self):
+        r = self._post("Nueva123!x", "Otra123!xx")
+        html = r.content.decode()
+        self.assertEqual(r.context["form"].errors.keys(), {"password2"})
+        self.assertIn("vi-auth-error", html)
+        self._sin_cambio()
+
+    def test_textos_en_ingles(self):
+        self.client.post(reverse("set_language"), {"language": "en", "next": "/"})
+        html = self._post(self.ANTERIOR).content.decode()
+        self.assertIn("Your new password must be different from your previous password.", html)
+        self.assertNotIn("Mínimo 8 caracteres", html)  # checklist traducido
+
+
+class ReenvioRecuperacionTests(TestCase):
+    """"Volver a enviar" en la pantalla "Revisa tu correo": mismo correo (sesión), POST + CSRF y cooldown en servidor."""
+
+    def setUp(self):
+        cache.clear()
+        User.objects.create_user(username="turista", email="t@example.com", password="Vieja123!")
+        self.reset_url = reverse("account_reset_password")
+        self.done_url = reverse("account_reset_password_done")
+        self.reenviar_url = reverse("accounts:reenviar_recuperacion")
+
+    def _solicitar(self, email="t@example.com"):
+        respuesta = self.client.post(self.reset_url, {"email": email})
+        self.t0 = time.time()  # justo después: la sesión guardó un instante <= t0
+        return respuesta
+
+    def _reenviar(self, despues_de):
+        with patch("apps.accounts.recuperacion.time") as reloj:
+            reloj.time.return_value = self.t0 + despues_de
+            return self.client.post(self.reenviar_url, follow=True)
+
+    def _restante(self, despues_de):
+        with patch("apps.accounts.recuperacion.time") as reloj:
+            reloj.time.return_value = self.t0 + despues_de
+            html = self.client.get(self.done_url).content.decode()
+        return int(re.search(r'data-cooldown="(\d+)"', html).group(1)), html
+
+    def test_boton_del_formulario_es_y_en(self):
+        self.assertContains(self.client.get(self.reset_url), "Solicitar correo de recuperación")
+        self.client.post(reverse("set_language"), {"language": "en", "next": "/"})
+        html = self.client.get(self.reset_url).content.decode()
+        self.assertIn("Request recovery email", html)
+        self.assertNotIn("Solicitar correo de recuperación", html)
+
+    def test_reenvio_inmediato_se_rechaza_sin_enviar(self):
+        self._solicitar()
+        r = self._reenviar(5)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertContains(r, "Espera a que termine el contador")
+        self.assertContains(r, "Volver a enviar en")
+
+    def test_reenvio_tras_el_cooldown_envia_al_mismo_correo_y_reinicia(self):
+        self._solicitar()
+        with patch("apps.accounts.recuperacion.time") as reloj:
+            reloj.time.return_value = self.t0 + 121
+            r = self.client.post(self.reenviar_url, follow=True)
+            restante = int(re.search(r'data-cooldown="(\d+)"', r.content.decode()).group(1))
+        self.assertEqual([m.to for m in mail.outbox], [["t@example.com"], ["t@example.com"]])
+        self.assertContains(r, "Correo de recuperación reenviado.")
+        self.assertEqual(restante, 120)  # el contador vuelve a empezar
+
+    def test_recargar_no_salta_la_espera(self):
+        self._solicitar()
+        r60, _ = self._restante(60)
+        self.assertEqual(r60, 60)
+        restante, html = self._restante(1)
+        self.assertEqual(restante, 119)
+        self.assertIn("disabled", html)
+        restante, html = self._restante(130)
+        self.assertEqual(restante, 0)
+        self.assertNotIn("disabled", html.split('id="btn-reenviar-recuperacion"')[1].split(">")[0])
+
+    def test_correo_inexistente_misma_experiencia_sin_errores(self):
+        r = self._solicitar("nadie@example.com")
+        self.assertRedirects(r, self.done_url)
+        existente = self._reenviar(130)
+        self.assertEqual(existente.status_code, 200)
+        self.assertContains(existente, "Correo de recuperación reenviado.")
+        self.assertContains(existente, "En unos momentos recibirás un enlace")
+        self.assertNotContains(existente, "no registrado")
+        self.assertEqual([m.to for m in mail.outbox], [["nadie@example.com"], ["nadie@example.com"]])
+
+    def test_get_no_envia_nada(self):
+        self._solicitar()
+        self.assertEqual(self.client.get(self.reenviar_url).status_code, 405)
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_csrf_se_mantiene(self):
+        cliente = Client(enforce_csrf_checks=True)
+        self.assertEqual(cliente.post(self.reenviar_url).status_code, 403)
+        self._solicitar()
+        self.assertIn("csrfmiddlewaretoken", self.client.get(self.done_url).content.decode())
+
+    def test_sin_solicitud_previa_no_hay_reenvio(self):
+        html = self.client.get(self.done_url).content.decode()
+        self.assertNotIn("btn-reenviar-recuperacion", html)
+        r = self.client.post(self.reenviar_url)
+        self.assertRedirects(r, self.reset_url, fetch_redirect_response=False)
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_pantalla_de_aviso_es_y_en(self):
+        self._solicitar()
+        _, es = self._restante(10)
+        self.assertIn("¿No te llegó el correo?", es)
+        self.assertIn("Volver a enviar en 01:50", es)
+        self.assertNotIn("otro correo", es)
+        self.client.post(reverse("set_language"), {"language": "en", "next": "/"})
+        _, en = self._restante(10)
+        self.assertIn("Didn&#x27;t receive the email?", en.replace("Didn't", "Didn&#x27;t"))
+        self.assertIn("Resend in 01:50", en)
+        self.assertIn('data-listo="Resend"', en)
+        self.assertIn('data-espera="Resend in %(tiempo)s"', en)  # plantilla que usa el JS
+
+    # Contrato HTML que consume auth.js (el contador en sí solo se valida en navegador)
+    def test_cooldown_activo_entrega_datos_para_js_y_boton_deshabilitado(self):
+        self._solicitar()
+        restante, html = self._restante(0)
+        boton = html.split('id="btn-reenviar-recuperacion"')[1].split("</button>")[0]
+        self.assertEqual(restante, 120)
+        self.assertIn("disabled", boton)
+        self.assertIn('data-espera="Volver a enviar en %(tiempo)s"', boton)
+        self.assertIn('data-listo="Volver a enviar"', boton)
+        self.assertIn("Volver a enviar en 02:00", boton)
+
+    def test_cooldown_terminado_boton_habilitado_sin_tiempo(self):
+        self._solicitar()
+        restante, html = self._restante(121)
+        boton = html.split('id="btn-reenviar-recuperacion"')[1].split("</button>")[0]
+        self.assertEqual(restante, 0)
+        self.assertNotIn("disabled", boton.split(">")[0])
+        self.assertNotIn("en 0", boton)
+
+    def test_recarga_devuelve_menos_segundos_sin_reiniciar(self):
+        self._solicitar()
+        primero, _ = self._restante(20)
+        segundo, _ = self._restante(45)
+        self.assertGreater(primero, segundo)
+        self.assertLess(segundo, 120)
+
+    def test_js_y_css_de_auth_van_versionados_para_evitar_cache_viejo(self):
+        self._solicitar()
+        html = self.client.get(self.done_url).content.decode()
+        self.assertRegex(html, r"assets/js/auth\.js\?v=\d+")
+        self.assertRegex(html, r"assets/css/auth\.css\?v=\d+")
+
+
+class ReplyToCorreosTests(TestCase):
+    """From = DEFAULT_FROM_EMAIL; Reply-To = EMAIL_REPLY_TO en todos los correos de accounts."""
+
+    def setUp(self):
+        cache.clear()
+        self.user = User.objects.create_user(username="turista", email="t@example.com", password="Vieja123!")
+
+    def _assert_identidad(self, mensaje, reply_to=None):
+        self.assertEqual(mensaje.from_email, settings.DEFAULT_FROM_EMAIL)
+        self.assertEqual(mensaje.reply_to, [settings.EMAIL_REPLY_TO] if reply_to is None else reply_to)
+        self.assertIn(f"Reply-To: {settings.EMAIL_REPLY_TO}", mensaje.message().as_string().replace("\n ", " "))
+
+    def test_otp_de_registro(self):
+        self.client.post(reverse("accounts:registro"), datos_registro())
+        self.assertEqual(len(mail.outbox), 1)
+        self._assert_identidad(mail.outbox[0])
+
+    def test_recuperacion_y_cuenta_desconocida(self):
+        url = reverse("account_reset_password")
+        self.client.post(url, {"email": "t@example.com"})
+        self.client.post(url, {"email": "nadie@example.com"})
+        self.assertEqual(len(mail.outbox), 2)  # existente + aviso de cuenta desconocida (allauth)
+        for mensaje in mail.outbox:
+            self._assert_identidad(mensaje)
+
+    def test_reenvio_de_recuperacion(self):
+        self.client.post(reverse("account_reset_password"), {"email": "t@example.com"})
+        t0 = time.time()
+        with patch("apps.accounts.recuperacion.time") as reloj:
+            reloj.time.return_value = t0 + 130
+            self.client.post(reverse("accounts:reenviar_recuperacion"))
+        self.assertEqual(len(mail.outbox), 2)
+        self._assert_identidad(mail.outbox[1])
+
+    def test_notificacion_de_seguridad_propia(self):
+        PerfilUsuario.objects.create(user=self.user, nombres_apellidos="T T", verificado=True)
+        self.client.force_login(self.user)
+        self.client.post(reverse("accounts:gestionar_password"), {
+            "old_password": "Vieja123!", "new_password1": "Nueva123!x", "new_password2": "Nueva123!x"})
+        self.assertEqual(len(mail.outbox), 1)
+        self._assert_identidad(mail.outbox[0])
+
+    def test_valor_configurable_por_entorno(self):
+        with override_settings(EMAIL_REPLY_TO="Soporte <otro@example.com>"):
+            self.client.post(reverse("account_reset_password"), {"email": "t@example.com"})
+            self.client.post(reverse("accounts:registro"), datos_registro())
+        self.assertEqual(len(mail.outbox), 2)
+        for mensaje in mail.outbox:
+            self.assertEqual(mensaje.reply_to, ["Soporte <otro@example.com>"])
+
+    def test_sin_reply_to_no_rompe(self):
+        with override_settings(EMAIL_REPLY_TO=""):
+            self.client.post(reverse("account_reset_password"), {"email": "t@example.com"})
+            self.client.post(reverse("accounts:registro"), datos_registro())
+        self.assertEqual(len(mail.outbox), 2)
+        for mensaje in mail.outbox:
+            self.assertEqual(mensaje.reply_to, [])
+            self.assertNotIn("Reply-To", mensaje.message().as_string())

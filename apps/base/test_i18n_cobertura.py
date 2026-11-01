@@ -220,9 +220,10 @@ class TextosEstaticosAntesEnEspanolTests(RestauraIdiomaMixin, TestCase):
 
     def test_filtros_de_lugares_en_ingles(self):
         html = self.get_en("turismo:listado_lugares")
-        for texto in ("Difficulty", "Easy", "Difficult", "Cost", "Paid", "Name A–Z"):
+        for texto in ("Whole region", "Name A–Z"):
             self.assertIn(texto, html)
-        self.assertNotIn(">Dificultad<", html)
+        for texto in ("Difficulty", "Dificultad", ">Cost<", ">Costo<"):  # filtros retirados del listado
+            self.assertNotIn(texto, html)
 
     def test_clima_atribucion_y_consejos(self):
         html = self.get_en("clima:clima_temporadas")

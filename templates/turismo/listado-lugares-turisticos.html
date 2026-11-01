@@ -6,6 +6,7 @@
 {% block meta_description %}{{ subtitulo|striptags|truncatechars:155 }}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/select-vi.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/listado-lugar-turistico.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/componentes/paginacion.css' %}">
@@ -48,8 +49,9 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-4">
-                            <select name="categoria" class="form-select" aria-label="{% translate "Categoría" %}">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="vi-select-campo">
+                            <select name="categoria" class="vi-select" aria-label="{% translate "Categoría" %}">
                                 <option value="">{% translate "Categoría" %}</option>
                                 {% for categoria in categorias_opciones %}
                                     <option value="{{ categoria.id }}"
@@ -58,28 +60,12 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                            <i class="bi bi-chevron-down vi-select-icono" aria-hidden="true"></i>
+                            </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-4">
-                            <select name="dificultad" class="form-select" aria-label="{% translate "Dificultad" %}">
-                                {% for opcion in dificultad_opciones %}
-                                    <option value="{{ opcion.value }}"
-                                        {% if opcion.selected %}selected{% endif %}>
-                                        {{ opcion.label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="col-lg-2 col-md-4">
-                            <select name="tipo_costo" class="form-select" aria-label="{% translate "Costo" %}">
-                                {% for opcion in tipo_costo_opciones %}
-                                    <option value="{{ opcion.value }}"
-                                        {% if opcion.selected %}selected{% endif %}>
-                                        {{ opcion.label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
+                        <div class="col-lg-3 col-md-6">
+                            {% include "includes/filtro_distrito.html" %}
                         </div>
 
                         <div class="col-lg-2 col-md-12">
@@ -104,7 +90,8 @@
                         </span>
                         <div class="orden-caja">
                             <label for="orden_select">{% translate "Ordenar:" %}</label>
-                            <select name="orden" id="orden_select" class="form-select form-select-sm"
+                            <div class="vi-select-campo">
+                            <select name="orden" id="orden_select" class="vi-select vi-select--sm"
                                 onchange="this.form.submit()">
                                 {% for opcion in opciones_orden %}
                                     <option value="{{ opcion.value }}"
@@ -113,6 +100,8 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                            <i class="bi bi-chevron-down vi-select-icono" aria-hidden="true"></i>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -138,17 +127,10 @@
                                     </div>
                                 {% endif %}
 
-                                {% if lugar.dificultad != 'no_aplica' %}
-                                    <span class="lugar-badge-dificultad lugar-dificultad--{{ lugar.dificultad }}">
-                                        <i class="bi bi-lightning-charge-fill"></i>
-                                        {% translate lugar.get_dificultad_display %}
-                                    </span>
-                                {% endif %}
-
                                 {% if lugar.destacado %}
                                     <span class="lugar-badge-destacado">
                                         <i class="bi bi-star-fill"></i>
-                                        {% translate "Destacado" %}
+                                        {% translate "Recomendado" %}
                                     </span>
                                 {% endif %}
 
@@ -218,31 +200,6 @@
 
                                 </div>
 
-                                <!-- Servicios destacados (hasta 3) -->
-                                {% with servicios=lugar.servicios.all %}
-                                    {% if servicios %}
-                                        <div class="lugar-servicios-mini">
-                                            {% for servicio in servicios|slice:":3" %}
-                                                <span class="lugar-servicio-chip" title="{{ servicio.nombre }}">
-                                                    {% if servicio.tipo_icono == 'bootstrap' and servicio.icono_bootstrap %}
-                                                        <i class="bi {{ servicio.icono_bootstrap }}"></i>
-                                                    {% elif servicio.tipo_icono == 'imagen' and servicio.icono_archivo %}
-                                                        <img src="{{ servicio.icono_archivo.url }}"
-                                                            alt="{{ servicio.nombre }}"
-                                                            class="lugar-servicio-img">
-                                                    {% else %}
-                                                        <i class="bi bi-check-circle-fill"></i>
-                                                    {% endif %}
-                                                    <span class="lugar-servicio-nombre">{{ servicio.nombre }}</span>
-                                                </span>
-                                            {% endfor %}
-                                            {% if servicios|length > 3 %}
-                                                <span class="lugar-servicios-mas">+{{ servicios|length|add:"-3" }} {% translate "más" %}</span>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                {% endwith %}
-
                                 <!-- Acción -->
                                 <div class="lugar-accion">
                                     <a href="{% url 'turismo:detalle_lugar' lugar.slug %}"
@@ -287,14 +244,14 @@
                         {% if page_obj.has_previous %}
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page=1{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    href="?page=1{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Primera" %}">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    href="?page={{ page_obj.previous_page_number }}{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Anterior" %}">
                                     <span aria-hidden="true">&lsaquo;</span>
                                 </a>
@@ -318,7 +275,7 @@
                             {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
                                 <li class="page-item page-number">
                                     <a class="page-link"
-                                        href="?page={{ i }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}">
+                                        href="?page={{ i }}{% if query_filtros %}&{{ query_filtros }}{% endif %}">
                                         <span>{{ i }}</span>
                                     </a>
                                 </li>
@@ -328,14 +285,14 @@
                         {% if page_obj.has_next %}
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    href="?page={{ page_obj.next_page_number }}{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Siguiente" %}">
                                     <span aria-hidden="true">&rsaquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if dificultad_sel %}&dificultad={{ dificultad_sel }}{% endif %}{% if tipo_costo_sel %}&tipo_costo={{ tipo_costo_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}"
+                                    href="?page={{ page_obj.paginator.num_pages }}{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Última" %}">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>

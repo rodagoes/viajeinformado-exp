@@ -5542,3 +5542,104 @@ msgstr "3. Cookies and usage metrics"
 #: templates/turismo/listado-lugares-turisticos.html
 msgid "Resultados"
 msgstr "Results"
+
+#: ponytail fase modificaciones-visualesv1
+msgid "Toda la región"
+msgstr "Whole region"
+
+msgid "Recomendado"
+msgstr "Recommended"
+
+msgid "Recuperar contraseña - Viaje Informado"
+msgstr "Recover password - Viaje Informado"
+
+msgid "Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña."
+msgstr "Enter your email and we will send you a link to create a new password."
+
+msgid "Enviar enlace"
+msgstr "Send link"
+
+msgid "Volver a iniciar sesión"
+msgstr "Back to sign in"
+
+msgid "Revisa tu correo - Viaje Informado"
+msgstr "Check your email - Viaje Informado"
+
+msgid "Revisa tu correo"
+msgstr "Check your email"
+
+msgid "En unos momentos recibirás un enlace para restablecer tu contraseña. Revisa también tu bandeja de spam o correo no deseado."
+msgstr "In a few moments you will receive a link to reset your password. Also check your spam or junk folder."
+
+msgid "Nueva contraseña - Viaje Informado"
+msgstr "New password - Viaje Informado"
+
+msgid "Enlace no válido"
+msgstr "Invalid link"
+
+msgid "Este enlace ya fue utilizado o expiró. Solicita uno nuevo para continuar."
+msgstr "This link has already been used or has expired. Request a new one to continue."
+
+msgid "Solicitar un nuevo enlace"
+msgstr "Request a new link"
+
+msgid "Crea tu nueva contraseña"
+msgstr "Create your new password"
+
+msgid "Elige una contraseña segura para volver a ingresar."
+msgstr "Choose a strong password to sign back in."
+
+msgid "Nueva contraseña"
+msgstr "New password"
+
+msgid "Contraseña actualizada - Viaje Informado"
+msgstr "Password updated - Viaje Informado"
+
+msgid "Contraseña actualizada"
+msgstr "Password updated"
+
+msgid "Tu contraseña fue cambiada. Ya puedes iniciar sesión."
+msgstr "Your password has been changed. You can now sign in."
+
+msgid "Restablece tu contraseña - Viaje Informado"
+msgstr "Reset your password - Viaje Informado"
+
+msgid "Hola,"
+msgstr "Hello,"
+
+msgid "Recibimos una solicitud para restablecer la contraseña de tu cuenta de Viaje Informado. Abre el siguiente enlace para crear una nueva contraseña:"
+msgstr "We received a request to reset the password of your Viaje Informado account. Open the following link to create a new password:"
+
+msgid "Si no solicitaste este cambio, ignora este correo: tu contraseña seguirá siendo la misma."
+msgstr "If you did not request this change, ignore this email: your password will stay the same."
+
+msgid "Solicitud de recuperación de contraseña - Viaje Informado"
+msgstr "Password recovery request - Viaje Informado"
+
+msgid "Alguien solicitó restablecer la contraseña con el correo %(email)s, pero no existe ninguna cuenta de Viaje Informado con ese correo."
+msgstr "Someone requested a password reset for %(email)s, but there is no Viaje Informado account with that email."
+
+msgid "Si fuiste tú, puede que te hayas registrado con otro correo, o con Google o Facebook. También puedes crear una cuenta nueva desde la página de registro. Si no fuiste tú, ignora este correo."
+msgstr "If it was you, you may have signed up with another email, or with Google or Facebook. You can also create a new account from the sign-up page. If it was not you, ignore this email."
+
+msgid "La nueva contraseña debe ser diferente a tu contraseña anterior."
+msgstr "Your new password must be different from your previous password."
+
+
+msgid "Solicitar correo de recuperación"
+msgstr "Request recovery email"
+
+msgid "¿No te llegó el correo?"
+msgstr "Didn't receive the email?"
+
+msgid "Volver a enviar"
+msgstr "Resend"
+
+msgid "Volver a enviar en %(tiempo)s"
+msgstr "Resend in %(tiempo)s"
+
+msgid "Correo de recuperación reenviado."
+msgstr "Recovery email resent."
+
+msgid "Espera a que termine el contador para volver a enviar el correo."
+msgstr "Wait for the countdown to finish before resending the email."

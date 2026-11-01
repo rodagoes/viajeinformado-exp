@@ -36,6 +36,10 @@
         {% endfor %}
     </div>
 
+    <p class="vi-auth-footer-link text-end mt-0 mb-3">
+        <a href="{% url 'account_reset_password' %}">{% translate "¿Olvidaste tu contraseña?" %}</a>
+    </p>
+
     {% for message in messages %}
     {% if 'login_error' in message.tags %}
     <div class="vi-auth-login-error">{{ message }}</div>

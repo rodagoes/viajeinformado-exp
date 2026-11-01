@@ -10,6 +10,7 @@ urlpatterns = [
     path('cerrar-sesion/', views.cerrar_sesion, name='logout'),
     path('verificar-codigo/', views.verificar_codigo, name='verificar_codigo'),
     path('reenviar-codigo/', views.reenviar_codigo, name='reenviar_codigo'),
+    path('recuperar-contrasena/reenviar/', views.reenviar_recuperacion, name='reenviar_recuperacion'),
     path('mi-cuenta/perfil/', views.perfil, name='perfil'),
     path('mi-cuenta/cuenta/', views.cuenta, name='cuenta'),
     path('mi-cuenta/cuenta/email/', views.cambiar_email, name='cambiar_email'),

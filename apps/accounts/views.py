@@ -1,5 +1,6 @@
 import logging
 
+from allauth.core import ratelimit
 from allauth.socialaccount.forms import DisconnectForm
 from allauth.socialaccount.models import SocialAccount
 from django.conf import settings
@@ -8,7 +9,6 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from django.db import transaction
 from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect, render
@@ -18,9 +18,11 @@ from django.utils.http import url_has_allowed_host_and_scheme, urlencode
 from django.views.decorators.http import require_POST
 from django.utils.translation import gettext
 
+from . import recuperacion
+from .correo import enviar_correo
 from .forms import (
     ApellidoForm, CambiarEmailForm, EliminarCuentaForm, FotoPerfilForm, LoginForm,
-    NombreForm, OTPForm, ReauthPasswordForm, RegistroForm, UsernameForm,
+    NombreForm, OTPForm, ReauthPasswordForm, RecuperarPasswordForm, RegistroForm, UsernameForm,
 )
 from .models import CodigoOTP, PerfilUsuario
 from .security import marcar_reauth, tiene_reauth_reciente
@@ -46,21 +48,20 @@ SESSION_EMAIL_PENDIENTE = 'cuenta_email_pendiente'
 def _enviar_otp(user, destino=None, proposito=CodigoOTP.PROPOSITO_VERIFICACION, asunto=None):
     codigo = CodigoOTP.generar(user, proposito=proposito)
     # Los correos salen en el idioma activo de la sesión del usuario (gettext en tiempo de petición).
-    send_mail(
+    enviar_correo(
         asunto or gettext('Tu código de verificación - Viaje Informado'),
         gettext('Hola %(nombre)s,') % {'nombre': user.first_name or user.username} + '\n\n'
         + gettext('Tu código de verificación es: %(codigo)s') % {'codigo': codigo} + '\n\n'
         + gettext('Este código expira en %(minutos)s minutos.') % {'minutos': settings.OTP_EXPIRATION_MINUTES} + '\n\n'
         + gettext('Si no solicitaste este código, ignora este correo.') + '\n\n'
         + gettext('Equipo de Viaje Informado'),
-        None,
         [destino or user.email],
     )
 
 
 def _notificar_best_effort(destino, asunto, cuerpo):
     try:
-        send_mail(asunto, cuerpo, None, [destino])
+        enviar_correo(asunto, cuerpo, [destino])
     except Exception:
         logger.exception('No se pudo enviar una notificación de seguridad: %s', asunto)
 
@@ -492,3 +493,24 @@ def eliminar_cuenta(request):
 
 def cuenta_eliminada(request):
     return render(request, 'accounts/cuenta_eliminada.html')
+
+
+@require_POST
+def reenviar_recuperacion(request):
+    """Reenvía el enlace de recuperación al correo de la solicitud original (guardado en sesión,
+    nunca llega por el request). Respeta el cooldown en servidor y el rate limit de allauth; la
+    respuesta es la misma exista o no la cuenta."""
+    email = recuperacion.email_pendiente(request.session)
+    if email is None:
+        return redirect('account_reset_password')
+    if recuperacion.segundos_restantes(request.session) > 0:
+        messages.warning(request, gettext('Espera a que termine el contador para volver a enviar el correo.'))
+        return redirect('account_reset_password_done')
+    limitado = ratelimit.consume_or_429(request, action='reset_password', key=email.lower())
+    if limitado:
+        return limitado
+    form = RecuperarPasswordForm({'email': email})
+    if form.is_valid():
+        form.save(request)
+        messages.success(request, gettext('Correo de recuperación reenviado.'))
+    return redirect('account_reset_password_done')

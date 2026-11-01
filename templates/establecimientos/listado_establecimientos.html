@@ -6,6 +6,7 @@
 {% block meta_description %}{{ subtitulo|striptags|truncatechars:155 }}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/componentes/select-vi.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/establecimientos.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/componentes/favorito.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/componentes/paginacion.css' %}">
@@ -73,7 +74,7 @@
                     {% if plato_sel %}<input type="hidden" name="plato" value="{{ plato_sel }}">{% endif %}
                     <div class="row g-3 align-items-center">
 
-                        <div class="col-lg-5 col-md-12">
+                        <div class="col-lg-4 col-md-12">
                             <div class="input-group filtro-busqueda-grupo">
                                 <span class="input-group-text">
                                     <i class="bi bi-search"></i>
@@ -83,8 +84,9 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-12">
-                            <select name="categoria" class="form-select" aria-label="{% translate "Categoría" %}">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="vi-select-campo">
+                            <select name="categoria" class="vi-select" aria-label="{% translate "Categoría" %}">
                                 <option value="">{% translate "Categoría" %}</option>
                                 {% for categoria in categorias_opciones %}
                                     <option value="{{ categoria.id }}" {% if categoria.selected %}selected{% endif %}>
@@ -92,9 +94,15 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                            <i class="bi bi-chevron-down vi-select-icono" aria-hidden="true"></i>
+                            </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-12">
+                        <div class="col-lg-3 col-md-6">
+                            {% include "includes/filtro_distrito.html" %}
+                        </div>
+
+                        <div class="col-lg-2 col-md-12">
                             <div class="d-flex gap-2">
                                 <button type="submit" class="btn btn-dorado flex-grow-1">
                                     <i class="bi bi-funnel"></i>
@@ -117,7 +125,8 @@
 
                         <div class="orden-caja">
                             <label for="orden_select">{% translate "Ordenar por:" %}</label>
-                            <select name="orden" id="orden_select" class="form-select form-select-sm"
+                            <div class="vi-select-campo">
+                            <select name="orden" id="orden_select" class="vi-select vi-select--sm"
                                 onchange="this.form.submit()">
                                 {% for opcion in opciones_orden %}
                                     <option value="{{ opcion.value }}" {% if opcion.selected %}selected{% endif %}>
@@ -125,6 +134,8 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                            <i class="bi bi-chevron-down vi-select-icono" aria-hidden="true"></i>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -189,7 +200,7 @@
                                     </span>
                                 </div>
 
-                                {% with sucursal=est.sucursales.all.0 %}
+                                {% with sucursal=est.sucursal_card %}
                                     {% if sucursal and sucursal.direccion %}
                                         <div class="est-info-item est-info-item--direccion">
                                             <span class="est-info-icono"><i class="bi bi-geo-alt"></i></span>
@@ -256,7 +267,7 @@
                         {% if page_obj.has_previous %}
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page=1{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
+                                    href="?page=1{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Primera" %}">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
@@ -264,7 +275,7 @@
 
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
+                                    href="?page={{ page_obj.previous_page_number }}{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Anterior" %}">
                                     <span aria-hidden="true">&lsaquo;</span>
                                 </a>
@@ -288,7 +299,7 @@
                             {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
                                 <li class="page-item page-number">
                                     <a class="page-link"
-                                        href="?page={{ i }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}">
+                                        href="?page={{ i }}{% if query_filtros %}&{{ query_filtros }}{% endif %}">
                                         <span>{{ i }}</span>
                                     </a>
                                 </li>
@@ -298,7 +309,7 @@
                         {% if page_obj.has_next %}
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
+                                    href="?page={{ page_obj.next_page_number }}{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Siguiente" %}">
                                     <span aria-hidden="true">&rsaquo;</span>
                                 </a>
@@ -306,7 +317,7 @@
 
                             <li class="page-item">
                                 <a class="page-link"
-                                    href="?page={{ page_obj.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}{% if categoria_sel %}&categoria={{ categoria_sel }}{% endif %}{% if orden_sel %}&orden={{ orden_sel }}{% endif %}{% if plato_sel %}&plato={{ plato_sel }}{% endif %}"
+                                    href="?page={{ page_obj.paginator.num_pages }}{% if query_filtros %}&{{ query_filtros }}{% endif %}"
                                     aria-label="{% translate "Última" %}">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>

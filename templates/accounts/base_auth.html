@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load static %}
+{% load static accounts_extras %}
 
 {% block site_header %}{% endblock site_header %}
 {% block site_messages %}{% endblock site_messages %}
@@ -8,7 +8,7 @@
 {% block pillcobot_widget %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'assets/css/auth.css' %}">
+<link rel="stylesheet" href="{% static_v 'assets/css/auth.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -28,7 +28,7 @@
             </a>
         </p>
         <a href="{% url 'base:home' %}" class="vi-auth-logo-link" aria-label="{% translate "Ir al inicio de Viaje Informado" %}">
-            <img src="{% static 'assets/img/logo/viaje-informado-logo.png' %}"
+            <img src="{% static 'assets/img/logo/viaje-informado-logo.webp' %}"
                  alt="Viaje Informado" class="vi-auth-logo">
         </a>
         {% if messages %}
@@ -48,5 +48,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'assets/js/auth.js' %}"></script>
+<script src="{% static_v 'assets/js/auth.js' %}"></script>
 {% endblock %}

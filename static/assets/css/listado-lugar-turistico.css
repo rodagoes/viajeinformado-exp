@@ -197,13 +197,6 @@
     white-space: nowrap;
 }
 
-.lugares-pagina .orden-caja .form-select {
-    min-height: 36px;
-    width: auto;
-    min-width: 142px;
-    font-size: 0.88rem;
-}
-
 /* =========================================================
    Grilla de tarjetas
 ========================================================= */
@@ -343,7 +336,6 @@
    Badges sobre la imagen
 ========================================================= */
 
-.lugares-pagina .lugar-badge-dificultad,
 .lugares-pagina .lugar-badge-destacado {
     position: absolute;
     bottom: 10px;
@@ -360,33 +352,11 @@
     backdrop-filter: blur(6px);
 }
 
-.lugares-pagina .lugar-badge-dificultad {
-    left: 12px;
-}
-
 .lugares-pagina .lugar-badge-destacado {
     right: 12px;
     background: rgba(0, 45, 137, 0.82);
     color: #fff;
     border: 1px solid rgba(255,255,255,0.25);
-}
-
-.lugares-pagina .lugar-dificultad--facil {
-    background: rgba(26, 156, 91, 0.88);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.lugares-pagina .lugar-dificultad--moderada {
-    background: rgba(212, 138, 0, 0.88);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.lugares-pagina .lugar-dificultad--dificil {
-    background: rgba(192, 57, 43, 0.88);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.2);
 }
 
 /* =========================================================
@@ -462,53 +432,6 @@
 }
 
 /* =========================================================
-   Servicios mini (chips)
-========================================================= */
-
-.lugares-pagina .lugar-servicios-mini {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 16px;
-}
-
-.lugares-pagina .lugar-servicio-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 9px;
-    background: rgba(0, 45, 137, 0.06);
-    border: 1px solid rgba(0, 45, 137, 0.10);
-    border-radius: 999px;
-    color: var(--lug-azul-oscuro);
-    font-size: 0.74rem;
-    font-weight: 600;
-    line-height: 1;
-}
-
-.lugares-pagina .lugar-servicio-chip i {
-    font-size: 0.8rem;
-}
-
-.lugares-pagina .lugar-servicio-img {
-    width: 14px;
-    height: 14px;
-    object-fit: contain;
-}
-
-.lugares-pagina .lugar-servicios-mas {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 9px;
-    background: rgba(0, 45, 137, 0.04);
-    border: 1px dashed rgba(0, 45, 137, 0.18);
-    border-radius: 999px;
-    color: var(--lug-texto-secundario);
-    font-size: 0.74rem;
-    font-style: italic;
-}
-
-/* =========================================================
    Acción
 ========================================================= */
 
@@ -570,9 +493,6 @@
     .lugares-pagina .orden-caja {
         justify-content: space-between;
         width: 100%;
-    }
-    .lugares-pagina .orden-caja .form-select {
-        min-width: 150px;
     }
     .lugares-pagina .filtros-contenedor {
         margin-left: 4px;

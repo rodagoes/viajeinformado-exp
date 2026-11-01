@@ -15,6 +15,7 @@ from apps.interacciones.forms import ResenaForm
 from apps.interacciones.models import Favorito, Resena
 from apps.interacciones.services import construir_contexto_resenas
 from apps.monedas.models import TipoCambio
+from apps.ubicaciones.filtros import filtro_distrito
 
 
 from .models import (
@@ -98,6 +99,18 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
             Q(categorias_secundarias__id=categoria_id)
         ).distinct()
 
+    # Ubicación: en establecimientos el territorio vive en la sucursal (no en el
+    # establecimiento), así que un establecimiento aparece si tiene al menos una
+    # sucursal activa en el distrito elegido.
+    distrito_sel, distritos_agrupados = filtro_distrito(
+        request,
+        SucursalEstablecimiento.objects.filter(
+            activo=True, establecimiento__activo=True, establecimiento__tipo=tipo_establecimiento
+        ).values_list("distrito_id", flat=True),
+    )
+    if distrito_sel:
+        qs = qs.filter(sucursales__activo=True, sucursales__distrito_id=distrito_sel).distinct()
+
     # Filtro por plato típico (llegada desde "Dónde comer").
     # Solo aplica para restaurantes; un slug inválido se ignora sin generar error.
     plato_filtro = None
@@ -146,6 +159,13 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
     for est in page_obj:
         est.es_favorito = est.pk in favoritos_ids
 
+    # La card muestra la sucursal del distrito filtrado (si hay), si no la principal.
+    for est in page_obj:
+        sucursales = list(est.sucursales.all())
+        est.sucursal_card = next(
+            (s for s in sucursales if s.distrito_id == distrito_sel), sucursales[0] if sucursales else None
+        )
+
     # Opciones de categorías preparadas para el template.
     # Así evitamos usar comparaciones tipo categoria_sel == c.id dentro del HTML.
     categorias_opciones = []
@@ -188,11 +208,15 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
 
     # URL para quitar el filtro de plato sin perder los demás parámetros activos.
     parametros_sin_plato = {
-        clave: valor for clave, valor in {"q": q, "categoria": categoria_id, "orden": orden}.items() if valor
+        clave: valor for clave, valor in {"q": q, "categoria": categoria_id, "distrito": distrito_sel, "orden": orden}.items() if valor
     }
     quitar_plato_url = request.path
     if parametros_sin_plato:
         quitar_plato_url = f"{request.path}?{urlencode(parametros_sin_plato)}"
+
+    query_filtros = urlencode({
+        **parametros_sin_plato, **({"plato": plato_slug} if plato_slug else {})
+    })
 
     context = {
         "page_obj": page_obj,
@@ -201,6 +225,9 @@ def get_listado_context(request, tipo_establecimiento, titulo, subtitulo):
         "tipo": tipo_establecimiento,
         "q": q,
         "categoria_sel": categoria_id,
+        "distrito_sel": distrito_sel,
+        "distritos_agrupados": distritos_agrupados,
+        "query_filtros": query_filtros,
         "orden_sel": orden,
         "categorias": categorias,
         "categorias_opciones": categorias_opciones,

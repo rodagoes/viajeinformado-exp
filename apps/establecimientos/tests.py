@@ -310,3 +310,50 @@ class N1DetalleEstablecimientoTests(ResenaEstablecimientoTestBase):
         response = self.client.get(self._url())
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "resenas")
+
+
+class ListadoFiltroUbicacionTests(TestCase):
+    """El territorio vive en la sucursal: un establecimiento aparece si tiene una sucursal activa en el distrito."""
+
+    @classmethod
+    def setUpTestData(cls):
+        from apps.ubicaciones.models import Departamento, Distrito, Provincia
+        from .models import SucursalEstablecimiento
+
+        dep = Departamento.objects.create(nombre_oficial="Huánuco", slug="huanuco")
+        prov = Provincia.objects.create(nombre_oficial="Huánuco", slug="huanuco", departamento=dep)
+        cls.d1 = Distrito.objects.create(nombre_oficial="Huánuco", slug="huanuco", codigo_inei="100101", provincia=prov)
+        cls.d2 = Distrito.objects.create(nombre_oficial="Amarilis", slug="amarilis", codigo_inei="100102", provincia=prov)
+        cat = CategoriaEstablecimiento.objects.create(nombre="Restaurantes", slug="restaurantes")
+        cls.rest = Establecimiento.objects.create(tipo="restaurante", categoria_principal=cat, nombre="Fogón", slug="fogon")
+        cls.otro = Establecimiento.objects.create(tipo="restaurante", categoria_principal=cat, nombre="Brasa", slug="brasa")
+        cls.hotel = Establecimiento.objects.create(tipo="alojamiento", categoria_principal=cat, nombre="Hotel", slug="hotel")
+        for est, d, principal, activo in (
+            (cls.rest, cls.d1, True, True), (cls.rest, cls.d2, False, True),
+            (cls.otro, cls.d1, True, True), (cls.hotel, cls.d2, True, True),
+        ):
+            SucursalEstablecimiento.objects.create(
+                establecimiento=est, nombre=f"S {d.nombre_oficial}", slug=f"s-{d.slug}", distrito=d,
+                direccion=f"Jr. {d.nombre_oficial}", es_principal=principal, activo=activo)
+        cls.url = reverse("establecimientos:listado_restaurantes")
+
+    def _nombres(self, r):
+        return sorted(e.nombre for e in r.context["page_obj"])
+
+    def test_filtra_por_distrito_de_cualquier_sucursal_sin_duplicar(self):
+        self.assertEqual(self._nombres(self.client.get(self.url, {"distrito": self.d2.pk})), ["Fogón"])
+        self.assertEqual(self._nombres(self.client.get(self.url, {"distrito": self.d1.pk})), ["Brasa", "Fogón"])
+
+    def test_card_muestra_la_sucursal_del_distrito_filtrado(self):
+        html = self.client.get(self.url, {"distrito": self.d2.pk}).content.decode()
+        self.assertIn("Jr. Amarilis", html)
+        self.assertNotIn("Jr. Huánuco", html)
+
+    def test_opciones_solo_del_tipo_actual(self):
+        r = self.client.get(reverse("establecimientos:listado_alojamientos"))
+        self.assertEqual([d["nombre"] for g in r.context["distritos_agrupados"] for d in g["distritos"]], ["Amarilis"])
+
+    def test_combina_con_otros_filtros_y_conserva_query_en_paginacion(self):
+        r = self.client.get(self.url, {"distrito": self.d1.pk, "q": "Fog", "orden": "nombre_asc"})
+        self.assertEqual(self._nombres(r), ["Fogón"])
+        self.assertEqual(r.context["query_filtros"], f"q=Fog&distrito={self.d1.pk}&orden=nombre_asc")

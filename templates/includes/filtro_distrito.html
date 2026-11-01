@@ -1,0 +1,15 @@
+{% load i18n %}
+{# Select territorial agrupado por provincia (mismo patrón que Emergencias). Requiere: distritos_agrupados #}
+<div class="vi-select-campo">
+<select name="distrito" class="vi-select" aria-label="{% translate "Ubicación" %}">
+    <option value="">{% translate "Toda la región" %}</option>
+    {% for grupo in distritos_agrupados %}
+    <optgroup label="{% blocktranslate with nombre=grupo.provincia|title %}Provincia de {{ nombre }}{% endblocktranslate %}">
+        {% for d in grupo.distritos %}
+        <option value="{{ d.id }}" {% if d.selected %}selected{% endif %}>{{ d.nombre|title }}</option>
+        {% endfor %}
+    </optgroup>
+    {% endfor %}
+</select>
+<i class="bi bi-chevron-down vi-select-icono" aria-hidden="true"></i>
+</div>

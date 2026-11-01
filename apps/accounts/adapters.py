@@ -1,5 +1,6 @@
 import re
 
+from allauth.account.adapter import DefaultAccountAdapter
 from allauth.core.exceptions import ImmediateHttpResponse
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.providers.base import AuthProcess
@@ -7,11 +8,21 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.urls import reverse
 
+from .correo import reply_to
 from .forms import USERNAME_RE
 from .security import tiene_reauth_reciente
 
 USERNAME_MIN_LENGTH = 4
 USERNAME_MAX_LENGTH = 30
+
+
+class ViajeInformadoAccountAdapter(DefaultAccountAdapter):
+    """Todos los correos de allauth (recuperación, cuenta desconocida, etc.) salen por render_mail."""
+
+    def render_mail(self, template_prefix, email, context, headers=None):
+        mensaje = super().render_mail(template_prefix, email, context, headers=headers)
+        mensaje.reply_to = reply_to()
+        return mensaje
 
 
 def _limpiar_username_base(texto):

@@ -178,3 +178,56 @@ class SelectorUiverseLugarTests(ResenaLugarTestBase):
         self._post(1, "")
         html = self.client.get(self._url()).content.decode()
         self.assertIsNotNone(re.search(r'<input[^>]*value="1"[^>]*checked', html))
+
+
+class ListadoLugaresFiltrosTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        dep = Departamento.objects.create(nombre_oficial="Huánuco", slug="huanuco")
+        prov_h = Provincia.objects.create(nombre_oficial="Huánuco", slug="huanuco", departamento=dep)
+        prov_a = Provincia.objects.create(nombre_oficial="Ambo", slug="ambo", departamento=dep)
+        cls.d_huanuco = Distrito.objects.create(nombre_oficial="Huánuco", slug="huanuco", codigo_inei="100101", provincia=prov_h)
+        cls.d_ambo = Distrito.objects.create(nombre_oficial="Ambo", slug="ambo", codigo_inei="100201", provincia=prov_a)
+        cls.d_vacio = Distrito.objects.create(nombre_oficial="Amarilis", slug="amarilis", codigo_inei="100102", provincia=prov_h)
+        cat = CategoriaLugarTuristico.objects.create(nombre="Plazas", slug="plazas")
+        cls.plaza = LugarTuristico.objects.create(
+            categoria_principal=cat, nombre="Plaza", slug="plaza", distrito=cls.d_huanuco,
+            dificultad="facil", destacado=True)
+        cls.puente = LugarTuristico.objects.create(
+            categoria_principal=cat, nombre="Puente", slug="puente", distrito=cls.d_ambo, dificultad="dificil")
+        cls.url = reverse("turismo:listado_lugares")
+
+    def _nombres(self, response):
+        return [l.nombre for l in response.context["page_obj"]]
+
+    def test_filtra_por_distrito_y_conserva_seleccion(self):
+        r = self.client.get(self.url, {"distrito": self.d_ambo.pk, "orden": "nombre_asc"})
+        self.assertEqual(self._nombres(r), ["Puente"])
+        self.assertEqual(r.context["query_filtros"], f"distrito={self.d_ambo.pk}&orden=nombre_asc")
+
+    def test_solo_ofrece_distritos_con_datos_agrupados_por_provincia(self):
+        grupos = self.client.get(self.url).context["distritos_agrupados"]
+        self.assertEqual([g["provincia"] for g in grupos], ["Ambo", "Huánuco"])
+        self.assertNotIn("Amarilis", [d["nombre"] for g in grupos for d in g["distritos"]])
+
+    def test_distrito_invalido_o_sin_datos_se_ignora(self):
+        for valor in ("abc", str(self.d_vacio.pk), "99999"):
+            r = self.client.get(self.url, {"distrito": valor})
+            self.assertEqual(r.status_code, 200)
+            self.assertEqual(len(self._nombres(r)), 2)
+
+    def test_dificultad_y_costo_ya_no_filtran_ni_se_muestran(self):
+        r = self.client.get(self.url, {"dificultad": "facil", "tipo_costo": "gratis"})
+        self.assertEqual(len(self._nombres(r)), 2)  # params antiguos ignorados
+        html = r.content.decode()
+        self.assertNotIn('name="dificultad"', html)
+        self.assertNotIn('name="tipo_costo"', html)
+        self.assertNotIn("lugar-badge-dificultad", html)
+        self.assertNotIn("lugar-servicio", html)
+
+    def test_destacado_se_muestra_como_recomendado(self):
+        html = self.client.get(self.url).content.decode()
+        self.assertIn("Recomendado", html)
+        self.assertNotIn("Destacado", html)
+        self.assertEqual(html.count("lugar-badge-destacado"), 1)
+        self.assertTrue(LugarTuristico.objects.get(pk=self.plaza.pk).destacado)  # el dato no cambia

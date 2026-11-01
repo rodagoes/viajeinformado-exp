@@ -2,8 +2,10 @@ import re
 
 from django import forms
 from django.contrib.auth.models import User
+from allauth.account.forms import ResetPasswordForm, ResetPasswordKeyForm
 from django.contrib.auth.password_validation import validate_password
 
+from . import recuperacion
 from .models import PerfilUsuario
 from django.utils.translation import gettext_lazy
 
@@ -11,6 +13,25 @@ USERNAME_RE = re.compile(r'^[A-Za-z0-9](?:[._-]?[A-Za-z0-9])+$')
 PASSWORD_SYMBOLS = r'!@#%&*?$.\-_+=,;:()\[\]{}/\\|~^<>\'"`'
 FOTO_PERFIL_TIPOS_VALIDOS = {'image/jpeg', 'image/png', 'image/webp'}
 FOTO_PERFIL_TAMANO_MAXIMO_MB = 5
+
+
+def validar_politica_password(password):
+    """Política de contraseña de Viaje Informado (registro y recuperación)."""
+    errores = []
+    if len(password) < 8:
+        errores.append(gettext_lazy('Tu contraseña debe tener al menos 8 caracteres.'))
+    if not re.search(r'[A-ZÁÉÍÓÚÑ]', password):
+        errores.append(gettext_lazy('Debe incluir una letra mayúscula.'))
+    if not re.search(r'[a-záéíóúñ]', password):
+        errores.append(gettext_lazy('Debe incluir una letra minúscula.'))
+    if not re.search(r'\d', password):
+        errores.append(gettext_lazy('Debe incluir al menos un número.'))
+    if not re.search(f'[{PASSWORD_SYMBOLS}]', password):
+        errores.append(gettext_lazy('Debe incluir al menos un símbolo (! @ # % & * ? $ . -).'))
+    if errores:
+        raise forms.ValidationError(errores)
+    validate_password(password)
+    return password
 
 
 class RegistroForm(forms.Form):
@@ -71,22 +92,7 @@ class RegistroForm(forms.Form):
         return email
 
     def clean_password1(self):
-        password = self.cleaned_data['password1']
-        errores = []
-        if len(password) < 8:
-            errores.append(gettext_lazy('Tu contraseña debe tener al menos 8 caracteres.'))
-        if not re.search(r'[A-ZÁÉÍÓÚÑ]', password):
-            errores.append(gettext_lazy('Debe incluir una letra mayúscula.'))
-        if not re.search(r'[a-záéíóúñ]', password):
-            errores.append(gettext_lazy('Debe incluir una letra minúscula.'))
-        if not re.search(r'\d', password):
-            errores.append(gettext_lazy('Debe incluir al menos un número.'))
-        if not re.search(f'[{PASSWORD_SYMBOLS}]', password):
-            errores.append(gettext_lazy('Debe incluir al menos un símbolo (! @ # % & * ? $ . -).'))
-        if errores:
-            raise forms.ValidationError(errores)
-        validate_password(password)
-        return password
+        return validar_politica_password(self.cleaned_data['password1'])
 
     def clean(self):
         cleaned = super().clean()
@@ -263,3 +269,33 @@ class OTPForm(forms.Form):
         if not codigo.isdigit():
             raise forms.ValidationError(gettext_lazy('El código debe tener 4 dígitos.'))
         return codigo
+
+
+# Formularios de recuperación de contraseña de allauth (ACCOUNT_FORMS): mismo
+# flujo y tokens de allauth; solo se ajusta presentación (label flotante) y se
+# aplica la política de contraseña del registro.
+class RecuperarPasswordForm(ResetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({'placeholder': ' ', 'autocomplete': 'email', 'inputmode': 'email'})
+
+    def save(self, request, **kwargs):
+        email = super().save(request, **kwargs)
+        recuperacion.recordar(request, email)  # para "Volver a enviar" en la pantalla de aviso
+        return email
+
+
+class NuevaPasswordForm(ResetPasswordKeyForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for campo in ('password1', 'password2'):
+            self.fields[campo].widget.attrs.update({'placeholder': ' ', 'autocomplete': 'new-password'})
+
+    def clean_password1(self):
+        password = validar_politica_password(self.cleaned_data['password1'])
+        # Solo contra la contraseña vigente (hash de Django); no hay historial.
+        if self.user is not None and self.user.check_password(password):
+            raise forms.ValidationError(
+                gettext_lazy('La nueva contraseña debe ser diferente a tu contraseña anterior.'), code='password_reutilizada'
+            )
+        return password

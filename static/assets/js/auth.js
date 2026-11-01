@@ -56,6 +56,26 @@
     }
   }
 
+  // Cooldown de "Volver a enviar" (recuperación de contraseña). Es solo presentación:
+  // el servidor vuelve a validar el tiempo en cada POST.
+  var btnReenvio = document.getElementById('btn-reenviar-recuperacion');
+  var restanteReenvio = btnReenvio ? parseInt(btnReenvio.dataset.cooldown || '0', 10) : 0;
+  if (btnReenvio && restanteReenvio > 0) {
+    var fin = Date.now() + restanteReenvio * 1000;
+    var pintarReenvio = function () {
+      var seg = Math.max(0, Math.ceil((fin - Date.now()) / 1000));
+      if (seg === 0) {
+        btnReenvio.disabled = false;
+        btnReenvio.textContent = btnReenvio.dataset.listo;
+        return;
+      }
+      var mmss = ('0' + Math.floor(seg / 60)).slice(-2) + ':' + ('0' + (seg % 60)).slice(-2);
+      btnReenvio.textContent = btnReenvio.dataset.espera.replace('%(tiempo)s', mmss);
+      setTimeout(pintarReenvio, 250);
+    };
+    pintarReenvio();
+  }
+
   // Solo dígitos en el input OTP
   var otp = document.querySelector('.vi-auth-otp-input');
   if (otp) {
