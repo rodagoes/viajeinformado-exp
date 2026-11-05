@@ -1,0 +1,45 @@
+{% load i18n %}
+<ul class="detalle-hero-datos">
+    <li class="detalle-dato detalle-dato--valoracion">
+        <span class="detalle-dato-icono" aria-hidden="true"><i class="bi bi-star-fill"></i></span>
+        <div class="detalle-dato-texto">
+            <span class="detalle-dato-label">{% translate "Puntuación" %}</span>
+            {% if resumen_resenas.total %}
+            <strong>{{ resumen_resenas.promedio|floatformat:1 }} / {{ 5|floatformat:1 }}</strong>
+            <span class="detalle-dato-nota">{% blocktranslate count counter=resumen_resenas.total %}{{ counter }} reseña{% plural %}{{ counter }} reseñas{% endblocktranslate %}</span>
+            {% else %}
+            <strong>{% translate "Sin valoraciones" %}</strong>
+            <span class="detalle-dato-nota">{% translate "Aún no hay reseñas" %}</span>
+            {% endif %}
+        </div>
+    </li>
+
+    {% if establecimiento.precio_desde or establecimiento.precio_hasta %}
+    <li class="detalle-dato detalle-dato--precio">
+        <span class="detalle-dato-icono" aria-hidden="true"><i class="bi bi-cash-coin"></i></span>
+        <div class="detalle-dato-texto">
+            <span class="detalle-dato-label">{% if es_restaurante %}{% translate "Rango de precios" %}{% else %}{% translate "Rango de tarifas" %}{% endif %}</span>
+            <strong>
+                {% if establecimiento.precio_desde and establecimiento.precio_hasta %}
+                {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 hasta=establecimiento.precio_hasta|floatformat:0 %}Precios desde S/. {{ desde }} hasta S/. {{ hasta }}{% endblocktranslate %}
+                {% elif establecimiento.precio_desde %}
+                {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 %}Precios desde S/. {{ desde }}{% endblocktranslate %}
+                {% elif establecimiento.precio_hasta %}
+                {% blocktranslate trimmed with hasta=establecimiento.precio_hasta|floatformat:0 %}Precios hasta S/. {{ hasta }}{% endblocktranslate %}
+                {% endif %}
+            </strong>
+            <span class="detalle-dato-nota">{% if es_restaurante %}{% translate "Consumo aproximado por plato" %}{% else %}{% translate "Rango aproximado por noche" %}{% endif %}</span>
+        </div>
+    </li>
+    {% endif %}
+
+    {% if sucursal_principal and sucursal_principal.direccion %}
+    <li class="detalle-dato detalle-dato--direccion">
+        <span class="detalle-dato-icono" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></span>
+        <div class="detalle-dato-texto">
+            <span class="detalle-dato-label">{% translate "Dirección" %}</span>
+            <strong>{{ sucursal_principal.direccion }}</strong>
+        </div>
+    </li>
+    {% endif %}
+</ul>

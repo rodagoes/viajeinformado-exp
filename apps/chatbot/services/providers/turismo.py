@@ -116,7 +116,7 @@ def obtener_lugar(slug):
             "descripcion": lugar.descripcion,
             "categorias_secundarias": [c.nombre for c in lugar.categorias_secundarias.all()],
             "servicios": [s.nombre for s in lugar.servicios.all()],
-            "tiempo_visita_estimado": lugar.tiempo_visita_estimado,
+            "tiempo_visita_estimado": lugar.tiempo_visita_texto,
             "como_llegar": lugar.como_llegar,
             "recomendaciones": lugar.recomendaciones,
             "recomendaciones_items": [

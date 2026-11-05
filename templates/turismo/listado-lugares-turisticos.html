@@ -129,8 +129,16 @@
 
                                 {% if lugar.destacado %}
                                     <span class="lugar-badge-destacado">
-                                        <i class="bi bi-star-fill"></i>
+                                        <img src="{% static 'assets/img/icons/recomendado-iconolt.svg' %}" alt="">
                                         {% translate "Recomendado" %}
+                                    </span>
+                                {% endif %}
+
+                                <!-- Ubicación (pill sobre la imagen, arriba a la izquierda) -->
+                                {% if lugar.ubicacion_corta %}
+                                    <span class="lugar-ubicacion" title="{{ lugar.ubicacion_corta }}">
+                                        <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                                        <span>{{ lugar.ubicacion_corta }}</span>
                                     </span>
                                 {% endif %}
 
@@ -157,47 +165,48 @@
 
                                 <!-- Nombre -->
                                 <h3 class="lugar-titulo">{{ lugar.nombre }}</h3>
-                                <div class="lugar-divisor"></div>
 
-                                <!-- Info -->
-                                <div class="lugar-info">
-
-                                    <!-- Ubicación -->
-                                    <div class="lugar-info-elemento">
-                                        <i class="bi bi-geo-alt-fill"></i>
-                                        <span>
-                                            {{ lugar.distrito }}{% if lugar.localidad %}, {{ lugar.localidad }}{% endif %}
-                                        </span>
-                                    </div>
-
-                                    <!-- Tiempo estimado -->
-                                    {% if lugar.tiempo_visita_estimado %}
-                                        <div class="lugar-info-elemento">
-                                            <i class="bi bi-clock"></i>
-                                            <span>{{ lugar.tiempo_visita_estimado }}</span>
+                                <!-- Visita estimada y tarifa -->
+                                <div class="lugar-meta">
+                                    {% if lugar.tiempo_visita_texto %}
+                                        <div class="lugar-meta-item lugar-meta-item--tiempo">
+                                            {# Icono propio: sustituir el <i> por <img src="{% static 'assets/img/icon-lugarturistico/visita.svg' %}" alt=""> (el archivo debe existir) #}
+                                            <span class="lugar-meta-icono" aria-hidden="true"><i class="bi bi-clock-fill"></i></span>
+                                            <span class="lugar-meta-texto">
+                                                <span class="lugar-meta-label">{% translate "Visita estimada:" %}</span>
+                                                <span class="lugar-meta-valor">{{ lugar.tiempo_visita_texto }}</span>
+                                            </span>
                                         </div>
                                     {% endif %}
 
-                                    <!-- Costo -->
-                                    <div class="lugar-info-elemento">
-                                        <i class="bi bi-ticket-perforated"></i>
-                                        <span>
-                                            {% if lugar.tipo_costo == 'gratis' %}
-                                                {% translate "Entrada gratuita" %}
-                                            {% elif lugar.tipo_costo == 'pagado' %}
-                                                {% if lugar.precio_desde and lugar.precio_hasta %}
-                                                    S/ {{ lugar.precio_desde|floatformat:0 }} – {{ lugar.precio_hasta|floatformat:0 }}
-                                                {% elif lugar.precio_desde %}
-                                                    {% translate "Desde" %} S/ {{ lugar.precio_desde|floatformat:0 }}
+                                    <div class="lugar-meta-item lugar-meta-item--tarifa">
+                                        {# Icono propio: sustituir el <i> por <img src="{% static 'assets/img/icon-lugarturistico/tarifa.svg' %}" alt=""> (el archivo debe existir) #}
+                                        <span class="lugar-meta-icono" aria-hidden="true"><i class="bi bi-ticket-perforated-fill"></i></span>
+                                        <span class="lugar-meta-texto">
+                                            <span class="lugar-meta-label">{% translate "Tarifa:" %}</span>
+                                            <span class="lugar-meta-valor">
+                                                {% if lugar.tipo_costo == 'no_requiere' %}
+                                                    {% translate "Acceso libre" %}
+                                                {% elif lugar.tipo_costo == 'gratis' %}
+                                                    {% translate "Gratis" %}
+                                                {% elif lugar.tipo_costo == 'pagado' %}
+                                                    {% if lugar.precio_desde and lugar.precio_hasta and lugar.precio_desde != lugar.precio_hasta %}
+                                                        S/ {{ lugar.precio_desde|floatformat:0 }} – S/ {{ lugar.precio_hasta|floatformat:0 }}
+                                                    {% elif lugar.precio_desde and lugar.precio_hasta %}
+                                                        S/ {{ lugar.precio_desde|floatformat:0 }}
+                                                    {% elif lugar.precio_desde %}
+                                                        {% translate "Desde" %} S/ {{ lugar.precio_desde|floatformat:0 }}
+                                                    {% elif lugar.precio_hasta %}
+                                                        {% blocktranslate trimmed with precio=lugar.precio_hasta|floatformat:0 %}Hasta S/ {{ precio }}{% endblocktranslate %}
+                                                    {% else %}
+                                                        {% translate "Consultar tarifa" %}
+                                                    {% endif %}
                                                 {% else %}
-                                                    {% translate "Pagado" %}
+                                                    {% translate "Consultar tarifa" %}
                                                 {% endif %}
-                                            {% else %}
-                                                {% translate "Consultar precio" %}
-                                            {% endif %}
+                                            </span>
                                         </span>
                                     </div>
-
                                 </div>
 
                                 <!-- Acción -->
@@ -206,7 +215,7 @@
                                         class="btn btn-contorno-dorado"
                                         data-metrica-evento="lugar_detalle_click" data-metrica-via="listado"
                                         data-metrica-entidad-id="{{ lugar.pk }}">
-                                        {% translate "Explorar &rarr;" %}
+                                        {% translate "Descubrir lugar" %} <i class="bi bi-arrow-right" aria-hidden="true"></i>
                                     </a>
                                 </div>
 

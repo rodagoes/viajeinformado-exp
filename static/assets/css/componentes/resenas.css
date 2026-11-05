@@ -61,9 +61,9 @@ body.vi-modal-scroll-lock {
 
 .vi-resenas-encabezado__titulo {
     margin: 0;
-    text-transform: uppercase;
+    font-family: "DM Sans", system-ui, sans-serif;
     letter-spacing: 0.02em;
-    color: #002D89;
+    color: #182033;
     font-weight: 800;
     font-size: clamp(1.3rem, 1.05rem + 1.1vw, 1.75rem);
     line-height: 1.15;

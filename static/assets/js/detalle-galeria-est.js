@@ -162,63 +162,11 @@
         });
     }
 
-    function updateMarqueeState(item) {
-        const marquee = item.querySelector(".detalle-marquee");
-        const track = item.querySelector(".detalle-marquee-track");
-        const firstText = track ? track.querySelector("span:not([aria-hidden='true'])") : null;
-
-        if (!marquee || !track || !firstText) {
-            return;
-        }
-
-        item.classList.remove("is-overflowing");
-        track.style.removeProperty("animation-duration");
-
-        const visibleWidth = marquee.clientWidth;
-        const textWidth = firstText.scrollWidth;
-        const shouldAnimate = textWidth > visibleWidth + 4;
-
-        if (!shouldAnimate) {
-            return;
-        }
-
-        item.classList.add("is-overflowing");
-
-        const duration = Math.max(10, Math.min(30, Math.round(textWidth / 16)));
-        track.style.setProperty("animation-duration", `${duration}s`);
-    }
-
-    function initAddressMarquees() {
-        const items = Array.from(document.querySelectorAll(".detalle-marquee-item"));
-
-        if (!items.length) {
-            return;
-        }
-
-        const refresh = function () {
-            items.forEach(updateMarqueeState);
-        };
-
-        refresh();
-        window.requestAnimationFrame(refresh);
-        window.setTimeout(refresh, 250);
-        window.setTimeout(refresh, 900);
-
-        window.addEventListener("load", refresh);
-        window.addEventListener("resize", refresh);
-        window.addEventListener("orientationchange", function () {
-            window.setTimeout(refresh, 250);
-            window.setTimeout(refresh, 900);
-        });
-    }
-
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", function () {
             initGalleryModal();
-            initAddressMarquees();
         });
     } else {
         initGalleryModal();
-        initAddressMarquees();
     }
 })();

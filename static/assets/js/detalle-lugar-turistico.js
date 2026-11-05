@@ -136,4 +136,37 @@
   document.querySelectorAll('[data-action="share"]').forEach(function (btn) {
     btn.addEventListener('click', doShare);
   });
+
+  /* ── Pestañas de «Datos del lugar» ──
+     Funcionan igual en todas las resoluciones (2 o 3 pestañas). El estado vive en
+     aria-selected / .is-active; el CSS oculta los paneles no activos. */
+  var tabsBar = document.querySelector('[data-dl-tabs]');
+  if (tabsBar) {
+    var tabs = Array.prototype.slice.call(tabsBar.querySelectorAll('[role="tab"]'));
+
+    var seleccionarTab = function (tab, enfocar) {
+      tabs.forEach(function (t) {
+        var activa = t === tab;
+        t.setAttribute('aria-selected', activa ? 'true' : 'false');
+        t.tabIndex = activa ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).classList.toggle('is-active', activa);
+      });
+      if (enfocar) tab.focus();
+    };
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { seleccionarTab(tab, false); });
+      tab.addEventListener('keydown', function (e) {
+        var destino = null;
+        if (e.key === 'ArrowRight') destino = tabs[(i + 1) % tabs.length];
+        else if (e.key === 'ArrowLeft') destino = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === 'Home') destino = tabs[0];
+        else if (e.key === 'End') destino = tabs[tabs.length - 1];
+        if (destino) {
+          e.preventDefault();
+          seleccionarTab(destino, true);
+        }
+      });
+    });
+  }
 })();

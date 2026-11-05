@@ -1,7 +1,8 @@
 from django.db import models
-from django.core.exceptions import ValidationError
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.core.validators import FileExtensionValidator
 from django.urls import reverse
+from django.utils.translation import gettext, ngettext
 from PIL import Image, ImageSequence, UnidentifiedImageError
 from apps.ubicaciones.models import Distrito, Localidad
 
@@ -24,6 +25,41 @@ DIFICULTAD_CHOICES = (
     ("moderada", "Moderada"),
     ("dificil", "Difícil"),
 )
+
+# Duración estructurada de la visita: se guarda en minutos (máximo 7 días).
+DURACION_MAX_MINUTOS = 10080
+
+def _duracion_valor(minutos):
+    """Un valor de duración legible, sin decimales (p. ej. «30 min», «1 hora», «1 h 30 min», «1 día 2 horas»)."""
+    dias, resto = divmod(minutos, 1440)
+    horas, mins = divmod(resto, 60)
+    partes = []
+    if dias:
+        partes.append(ngettext("%(n)s día", "%(n)s días", dias) % {"n": dias})
+    if horas:
+        if mins:
+            partes.append(gettext("%(n)s h") % {"n": horas})
+        else:
+            partes.append(ngettext("%(n)s hora", "%(n)s horas", horas) % {"n": horas})
+    if mins:
+        partes.append(gettext("%(n)s min") % {"n": mins})
+    return " ".join(partes)
+
+
+def formatear_duracion(minimo, maximo=None):
+    """Texto de la duración en el idioma activo, a partir de minutos. Vacío si no hay mínimo."""
+    if not minimo:
+        return ""
+    if not maximo or maximo == minimo:
+        return _duracion_valor(minimo)
+    # Ambos extremos enteros en días u horas: la unidad se escribe una sola vez («2 a 3 días», «1 a 2 horas»).
+    for tamano, plantilla in ((1440, ("%(a)s a %(b)s día", "%(a)s a %(b)s días")), (60, ("%(a)s a %(b)s hora", "%(a)s a %(b)s horas"))):
+        if minimo % tamano == 0 and maximo % tamano == 0:
+            return ngettext(*plantilla, maximo // tamano) % {"a": minimo // tamano, "b": maximo // tamano}
+    if maximo < 60 and minimo < 60:
+        return gettext("%(a)s a %(b)s min") % {"a": minimo, "b": maximo}
+    return gettext("%(a)s a %(b)s") % {"a": _duracion_valor(minimo), "b": _duracion_valor(maximo)}
+
 
 TIPO_MEDIA_CHOICES = (
     ("imagen", "Imagen / GIF"),
@@ -131,6 +167,14 @@ class LugarTuristico(models.Model):
     precio_desde = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, verbose_name="Precio desde", help_text="Monto mínimo referencial en soles, si aplica.")
     precio_hasta = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, verbose_name="Precio hasta", help_text="Monto máximo referencial en soles, si aplica.")
     tiempo_visita_estimado = models.CharField(max_length=120, blank=True, help_text="Ejemplo: 1 hora, medio día, 2 horas.")
+    duracion_min_minutos = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="Duración mínima (minutos)",
+        help_text="Duración mínima de la visita, en minutos.",
+    )
+    duracion_max_minutos = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="Duración máxima (minutos)",
+        help_text="Opcional. Requiere duración mínima.",
+    )
     dificultad = models.CharField(max_length=20, choices=DIFICULTAD_CHOICES, default="no_aplica")
     recomendaciones = models.TextField(blank=True, help_text="Consejos para el turista: ropa, horario ideal, clima, seguridad, etc.")
     como_llegar = models.TextField(blank=True, help_text="Indicaciones generales para llegar al lugar.")
@@ -158,9 +202,52 @@ class LugarTuristico(models.Model):
         return self.nombre
 
     def clean(self):
+        errores = {}
         if self.precio_desde is not None and self.precio_hasta is not None:
             if self.precio_hasta < self.precio_desde:
-                raise ValidationError("El precio hasta no puede ser menor que el precio desde.")
+                errores[NON_FIELD_ERRORS] = ["El precio hasta no puede ser menor que el precio desde."]
+
+        minimo, maximo = self.duracion_min_minutos, self.duracion_max_minutos
+        rango = f"entre 1 y {DURACION_MAX_MINUTOS} minutos (7 días)"
+        if minimo is not None and not 1 <= minimo <= DURACION_MAX_MINUTOS:
+            errores["duracion_min_minutos"] = [f"La duración mínima debe estar {rango}."]
+        if maximo is not None:
+            if minimo is None:
+                errores["duracion_max_minutos"] = ["Indica primero la duración mínima."]
+            elif not 1 <= maximo <= DURACION_MAX_MINUTOS:
+                errores["duracion_max_minutos"] = [f"La duración máxima debe estar {rango}."]
+            elif maximo < minimo:
+                errores["duracion_max_minutos"] = ["La duración máxima no puede ser menor que la mínima."]
+        if errores:
+            raise ValidationError(errores)
+
+    @property
+    def ubicacion_corta(self):
+        """Un único topónimo para la pill del listado: localidad, si no distrito, si no provincia."""
+        if self.localidad_id and (self.localidad.nombre or "").strip():
+            return self.localidad.nombre.strip()
+        if self.distrito_id:
+            if (self.distrito.nombre_oficial or "").strip():
+                return self.distrito.nombre_oficial.strip()
+            return (self.distrito.provincia.nombre_oficial or "").strip()
+        return ""
+
+    @property
+    def ubicacion_descriptiva(self):
+        """Hasta dos topónimos, del más específico al contexto: «localidad|distrito, provincia»."""
+        provincia = ""
+        if self.distrito_id:
+            provincia = (self.distrito.provincia.nombre_oficial or "").strip()
+        partes = []
+        for nombre in (self.ubicacion_corta, provincia):
+            if nombre and nombre.casefold() not in (p.casefold() for p in partes):
+                partes.append(nombre)
+        return ", ".join(partes)
+
+    @property
+    def tiempo_visita_texto(self):
+        """Duración a mostrar: la estructurada si existe; si no, el texto histórico del idioma activo."""
+        return formatear_duracion(self.duracion_min_minutos, self.duracion_max_minutos) or self.tiempo_visita_estimado or ""
 
     def get_absolute_url(self):
         return reverse("turismo:detalle_lugar", kwargs={"slug": self.slug})

@@ -46,57 +46,7 @@
 
                     <h1>{{ establecimiento.nombre|title }}</h1>
 
-                    {% if establecimiento.descripcion_corta %}
-                    <p class="detalle-hero-subtitulo">
-                        {{ establecimiento.descripcion_corta }}
-                    </p>
-                    {% endif %}
-
-                    <div class="detalle-hero-meta">
-
-                        <div class="detalle-meta-item detalle-meta-rating-preview">
-                            {% if resumen_resenas.total %}
-                            <i class="bi bi-star-fill"></i>
-                            <span>{{ resumen_resenas.promedio|floatformat:1 }} · {% blocktranslate count counter=resumen_resenas.total %}{{ counter }} valoración{% plural %}{{ counter }} valoraciones{% endblocktranslate %}</span>
-                            {% else %}
-                            <i class="bi bi-chat-square-heart"></i>
-                            <span>{% translate "Aún sin valoraciones" %}</span>
-                            {% endif %}
-                        </div>
-
-                        <div class="detalle-hero-meta-line">
-                            {% if establecimiento.precio_desde or establecimiento.precio_hasta %}
-                            <div class="detalle-meta-item detalle-meta-precio">
-                                <i class="bi bi-tag"></i>
-
-                                <span>
-                                    {% if establecimiento.precio_desde and establecimiento.precio_hasta %}
-                                    {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 hasta=establecimiento.precio_hasta|floatformat:0 %}Precios desde S/. {{ desde }} hasta S/. {{ hasta }}{% endblocktranslate %}
-                                    {% elif establecimiento.precio_desde %}
-                                    {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 %}Precios desde S/. {{ desde }}{% endblocktranslate %}
-                                    {% elif establecimiento.precio_hasta %}
-                                    {% blocktranslate trimmed with hasta=establecimiento.precio_hasta|floatformat:0 %}Precios hasta S/. {{ hasta }}{% endblocktranslate %}
-                                    {% endif %}
-                                </span>
-                            </div>
-                            {% endif %}
-
-                            {% if sucursal_principal and sucursal_principal.direccion %}
-                            <div
-                                class="detalle-meta-item detalle-meta-direccion detalle-marquee-item {% if sucursal_principal.direccion|length > 32 %}is-long{% endif %}">
-                                <i class="bi bi-geo-alt"></i>
-                                <span class="detalle-marquee" title="{{ sucursal_principal.direccion }}">
-                                    <span class="detalle-marquee-track">
-                                        <span>{{ sucursal_principal.direccion }}</span>
-                                        <span aria-hidden="true">{{ sucursal_principal.direccion }}</span>
-                                    </span>
-                                </span>
-                            </div>
-                            {% endif %}
-                        </div>
-
-                    </div>
-
+                    {% include "establecimientos/includes/hero_datos.html" %}
                 </div>
 
                 <!-- Carrusel escritorio -->
@@ -258,49 +208,7 @@
 
                 <h1>{{ establecimiento.nombre|title }}</h1>
 
-                {% if establecimiento.descripcion_corta %}
-                <p>{{ establecimiento.descripcion_corta }}</p>
-                {% endif %}
-
-                <div class="detalle-mobile-meta">
-                    <div class="detalle-mobile-rating-preview">
-                        {% if resumen_resenas.total %}
-                        <i class="bi bi-star-fill"></i>
-                        <span>{{ resumen_resenas.promedio|floatformat:1 }} · {% blocktranslate count counter=resumen_resenas.total %}{{ counter }} valoración{% plural %}{{ counter }} valoraciones{% endblocktranslate %}</span>
-                        {% else %}
-                        <i class="bi bi-chat-square-heart"></i>
-                        <span>{% translate "Aún sin valoraciones" %}</span>
-                        {% endif %}
-                    </div>
-
-                    {% if establecimiento.precio_desde or establecimiento.precio_hasta %}
-                    <div>
-                        <i class="bi bi-tag"></i>
-                        <span>
-                            {% if establecimiento.precio_desde and establecimiento.precio_hasta %}
-                            {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 hasta=establecimiento.precio_hasta|floatformat:0 %}Precios desde S/. {{ desde }} hasta S/. {{ hasta }}{% endblocktranslate %}
-                            {% elif establecimiento.precio_desde %}
-                            {% blocktranslate trimmed with desde=establecimiento.precio_desde|floatformat:0 %}Precios desde S/. {{ desde }}{% endblocktranslate %}
-                            {% elif establecimiento.precio_hasta %}
-                            {% blocktranslate trimmed with hasta=establecimiento.precio_hasta|floatformat:0 %}Precios hasta S/. {{ hasta }}{% endblocktranslate %}
-                            {% endif %}
-                        </span>
-                    </div>
-                    {% endif %}
-
-                    {% if sucursal_principal and sucursal_principal.direccion %}
-                    <div
-                        class="detalle-mobile-direccion detalle-marquee-item {% if sucursal_principal.direccion|length > 32 %}is-long{% endif %}">
-                        <i class="bi bi-geo-alt"></i>
-                        <span class="detalle-marquee" title="{{ sucursal_principal.direccion }}">
-                            <span class="detalle-marquee-track">
-                                <span>{{ sucursal_principal.direccion }}</span>
-                                <span aria-hidden="true">{{ sucursal_principal.direccion }}</span>
-                            </span>
-                        </span>
-                    </div>
-                    {% endif %}
-                </div>
+                {% include "establecimientos/includes/hero_datos.html" %}
 
                 {% if contacto_whatsapp %}
                 <a href="https://wa.me/{{ contacto_whatsapp }}" target="_blank" rel="noopener"
@@ -375,15 +283,7 @@
                     <section class="detalle-bloque detalle-sobre-card detalle-sobre-card--nuevo" id="detalle-sobre">
                         <div class="detalle-sobre-encabezado">
                             <div>
-                                <span>
-                                    {% if es_restaurante %}
-                                    {% translate "Propuesta gastronómica" %}
-                                    {% else %}
-                                    {% translate "Sobre el establecimiento" %}
-                                    {% endif %}
-                                </span>
-
-                                <h2>{% translate "Sobre el establecimiento" %}</h2>
+                                <h2 class="detalle-titulo-seccion">{% translate "Sobre el establecimiento" %}</h2>
                             </div>
 
                             {% if es_restaurante %}
@@ -491,40 +391,26 @@
                     {% if establecimiento.servicios.all %}
                     <section class="detalle-bloque detalle-servicios-card" id="detalle-servicios">
                         <div class="detalle-bloque-encabezado detalle-servicios-encabezado">
-                            <span>
-                                {% if es_restaurante %}
-                                {% translate "Servicios" %}
-                                {% else %}
-                                {% translate "Amenidades y servicios" %}
-                                {% endif %}
-                            </span>
-
-                            <h2>
-                                {% if es_restaurante %}
-                                {% translate "Servicios" %}
-                                {% else %}
-                                {% translate "Amenidades y servicios" %}
-                                {% endif %}
-                            </h2>
+                            <h2 class="detalle-titulo-seccion">{% translate "Servicios y comodidades" %}</h2>
                         </div>
 
-                        <div class="detalle-servicios-grid">
+                        <ul class="detalle-servicios-grid">
                             {% for servicio in establecimiento.servicios.all %}
-                            <article class="detalle-servicio-card">
-                                <div class="detalle-servicio-icono">
+                            <li class="detalle-servicio-card">
+                                <span class="detalle-servicio-icono" aria-hidden="true">
                                     {% if servicio.tipo_icono == "imagen" and servicio.icono_archivo %}
-                                    <img src="{{ servicio.icono_archivo.url }}" alt="" aria-hidden="true">
+                                    <img src="{{ servicio.icono_archivo.url }}" alt="">
                                     {% elif servicio.icono_bootstrap %}
                                     <i class="bi {{ servicio.icono_bootstrap }}"></i>
                                     {% else %}
                                     <i class="bi bi-check2-circle"></i>
                                     {% endif %}
-                                </div>
+                                </span>
 
-                                <h3>{{ servicio.nombre }}</h3>
-                            </article>
+                                <span class="detalle-servicio-nombre">{{ servicio.nombre }}</span>
+                            </li>
                             {% endfor %}
-                        </div>
+                        </ul>
                     </section>
                     {% endif %}
 
@@ -532,26 +418,13 @@
                     <section class="detalle-bloque detalle-tarifas-card" id="detalle-tarifas">
                         <div class="detalle-tarifas-top">
                             <div class="detalle-tarifas-heading">
-                                <span class="detalle-tarifas-eyebrow">
-                                    {% if es_restaurante %}
-                                    {% translate "Rango de precios" %}
-                                    {% else %}
-                                    {% translate "Tarifas referenciales" %}
-                                    {% endif %}
-                                </span>
-
-                                <h2>
+                                <h2 class="detalle-titulo-seccion">
                                     {% if es_restaurante %}
                                     {% translate "Precios de referencia" %}
                                     {% else %}
                                     {% translate "Tarifas de alojamiento" %}
                                     {% endif %}
                                 </h2>
-                            </div>
-
-                            <div class="detalle-tarifas-moneda" aria-label="{% translate "Moneda principal: soles peruanos" %}">
-                                <span class="detalle-tarifas-moneda-icon" aria-hidden="true">S/</span>
-                                <span>{% translate "Moneda: PEN" %}</span>
                             </div>
                         </div>
 
@@ -792,15 +665,13 @@
                         <!-- Encabezado -->
                         <div class="du-hd">
                             <div>
+                                {% if sucursales_mapa|length > 1 %}
                                 <div class="du-kicker">
-                                    {% if sucursales_mapa|length > 1 %}
                                     {% blocktranslate count counter=sucursales_mapa|length %}{{ counter }} sucursal en Huánuco{% plural %}{{ counter }} sucursales en Huánuco{% endblocktranslate %}
-                                    {% else %}
-                                    {% translate "Cómo llegar" %}
-                                    {% endif %}
                                 </div>
+                                {% endif %}
 
-                                <h2 class="du-title">
+                                <h2 class="detalle-titulo-seccion">
                                     {% if sucursales_mapa|length > 1 %}
                                     {% translate "Ubicaciones" %}
                                     {% else %}
@@ -808,10 +679,6 @@
                                     {% endif %}
                                 </h2>
                             </div>
-
-                            {% if sucursal_mapa_principal.es_principal %}
-                            <span class="du-pill-solid">{% translate "Sucursal Principal" %}</span>
-                            {% endif %}
                         </div>
 
                         <!-- Tabs de sucursales -->
@@ -958,9 +825,7 @@
                 <aside class="detalle-lateral">
                     <div class="detalle-panel-contacto">
 
-                        <span class="detalle-panel-small">{% translate "Contacto directo" %}</span>
-
-                        <h2>
+                        <h2 class="detalle-titulo-seccion">
                             {% if es_restaurante %}
                             {% translate "Haz tu pedido" %}
                             {% else %}

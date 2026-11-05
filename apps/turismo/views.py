@@ -26,7 +26,7 @@ from .models import (
 
 def listado_lugares(request):
     qs = LugarTuristico.objects.filter(activo=True).select_related(
-        "categoria_principal", "distrito", "localidad"
+        "categoria_principal", "distrito__provincia", "localidad"
     )
 
     # Categorías usadas en los lugares activos
@@ -297,7 +297,7 @@ def detalle_lugar(request, slug):
     ]
     direccion_maps_texto = ", ".join([p for p in direccion_maps_partes if p])
 
-    ubicacion_resumen = " - ".join([p for p in [provincia_nombre, distrito_nombre] if p])
+    ubicacion_resumen = lugar.ubicacion_descriptiva
 
     embed_url, open_url, route_url = construir_urls_mapa(
         latitud=latitud,

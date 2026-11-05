@@ -39,49 +39,6 @@
     max-width: 100%;
 }
 
-/* ==== 1. BREADCRUMB MOVIL ==== */
-
-.dl-crumb-bar {
-    display: none;
-    position: relative;
-    z-index: 5;
-    background: #ffffff;
-    border-bottom: 1px solid rgba(0, 45, 137, 0.10);
-}
-
-.dl-crumb {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    list-style: none;
-    padding: 12px 0;
-    margin: 0;
-    color: var(--dl-navy);
-    font-size: 0.88rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-}
-
-.dl-crumb-cur {
-    min-width: 0;
-    color: var(--dl-navy);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-}
-
-.dl-crumb a {
-    color: rgba(0, 45, 137, 0.72);
-    font-weight: 500;
-}
-
-.dl-crumb-sep {
-    color: rgba(0, 45, 137, 0.38);
-    font-weight: 400;
-}
-
 /* ==== 2. HERO ==== */
 
 .dl-banner {
@@ -635,68 +592,194 @@
     background: #ffffff;
 }
 
-.dl-datos-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    width: min(900px, calc(100% - 48px));
-    margin: 42px auto 0;
+/* ==== Datos del lugar: pestañas en escritorio, secciones continuas en móvil ==== */
+
+.dl-datos-cuerpo {
+    width: min(1080px, calc(100% - 32px));
+    margin: 36px auto 0;
 }
 
-.dl-dato-card {
-    min-height: 162px;
+/* Pestañas (todas las resoluciones): una sola fila; etiqueta corta + icono por debajo de 1200 px */
+.dl-datos-tabs {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    width: min(100%, 520px);
+    margin: 0 auto 16px;
+}
+
+.dl-datos-tab {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 40px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 24px 18px;
-    border: 1px solid rgba(0, 45, 137, 0.08);
-    border-radius: 18px;
-    background: #f2f5fb;
+    gap: 5px;
+    padding: 0 8px;
+    border: 1px solid #dfe7f3;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #61708c;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.dl-datos-tab i {
+    font-size: 0.9rem;
+}
+
+.dl-datos-tab:hover {
+    background: #eef3fb;
     color: var(--dl-navy);
-    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 
-.dl-dato-card:hover {
-    border-color: rgba(0, 45, 137, 0.18);
-    box-shadow: 0 18px 38px rgba(0, 45, 137, 0.08);
+.dl-datos-tab[aria-selected="true"] {
+    border-color: var(--dl-navy);
+    background: var(--dl-navy);
+    color: #ffffff;
 }
 
-@media (hover: hover) and (pointer: fine) {
-    .dl-dato-card:hover {
-        transform: translateY(-2px);
-    }
+.dl-datos-tab:focus-visible {
+    outline: 3px solid var(--dl-blue);
+    outline-offset: 2px;
+}
+
+.dl-tab-full {
+    display: none;
+}
+
+/* Solo el panel seleccionado (oculto también para tecnologías asistivas) */
+.dl-datos-panel:not(.is-active) {
+    display: none;
+}
+
+/* Móvil: datos en una columna de filas de ancho completo; servicios en 2 columnas (1 en anchos muy estrechos) */
+.dl-datos-grid,
+.dl-servicios-grid {
+    display: flex;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dl-datos-grid {
+    flex-direction: column;
+}
+
+.dl-servicios-grid {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.dl-dato-card,
+.dl-servicio-card {
+    min-width: 0;
+    border: 1px solid #dfe7f3;
+}
+
+.dl-servicio-card {
+    flex: 1 1 150px;
+}
+
+/* Fila de dato (móvil): icono | etiqueta (columna fija compartida) | valor que ocupa el resto y puede envolver */
+.dl-dato-card {
+    display: grid;
+    grid-template-columns: auto 4.5rem minmax(0, 1fr);
+    column-gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #f7f9fd;
+    color: var(--dl-navy);
+    text-align: left;
 }
 
 .dl-dato-icon {
-    width: 48px;
-    height: 48px;
+    width: 38px;
+    height: 38px;
     display: grid;
     place-items: center;
-    margin-bottom: 14px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--dl-blue), var(--dl-navy));
-    color: #ffffff;
-    font-size: 1.18rem;
-    box-shadow: 0 12px 24px rgba(0, 127, 255, 0.22);
+    border-radius: 10px;
+    /* Glassmorphism: relleno translúcido con degradado, borde claro, brillo interior y desenfoque */
+    background: linear-gradient(135deg, rgba(var(--ic-rgb, 0, 45, 137), 0.28), rgba(var(--ic-rgb, 0, 45, 137), 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 6px 16px rgba(var(--ic-rgb, 0, 45, 137), 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    backdrop-filter: blur(10px) saturate(150%);
+    color: var(--ic-acento, var(--dl-navy));
+    font-size: 1.05rem;
+}
+
+/* Color (RGB para el cristal) y acento del icono de cada dato fijo (el SVG/PNG propio conserva sus colores) */
+.dl-dato-icon--categoria {
+    --ic-rgb: 0, 87, 200;
+    --ic-acento: #0057c8;
+}
+
+.dl-dato-icon--ubicacion {
+    --ic-rgb: 85, 70, 200;
+    --ic-acento: #5546c8;
+}
+
+.dl-dato-icon--duracion {
+    --ic-rgb: 185, 108, 0;
+    --ic-acento: #b96c00;
+}
+
+.dl-dato-icon--horario {
+    --ic-rgb: 8, 125, 145;
+    --ic-acento: #087d91;
+}
+
+.dl-dato-icon--entrada {
+    --ic-rgb: 20, 128, 74;
+    --ic-acento: #14804a;
+}
+
+.dl-dato-icon img {
+    width: 60%;
+    height: 60%;
+    display: block;
+    object-fit: contain;
 }
 
 .dl-dato-label {
-    margin: 0 0 8px;
-    color: #8a94a6;
-    font-size: 0.66rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    line-height: 1;
+    margin: 0;
+    color: #61708c;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
     text-transform: uppercase;
+}
+
+/* Etiqueta compacta en móvil; la completa desde tablet */
+.dl-label-full {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .dl-label-full {
+        display: inline;
+    }
+
+    .dl-label-short {
+        display: none;
+    }
 }
 
 .dl-dato-val {
     margin: 0;
-    color: var(--dl-text);
-    font-size: 0.92rem;
-    font-weight: 900;
-    line-height: 1.38;
+    color: #182033;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: break-word;
 }
 
 .dl-dato-val.free strong,
@@ -706,7 +789,7 @@
 
 .dl-dato-val-entrada {
     display: grid;
-    gap: 5px;
+    gap: 4px;
 }
 
 .dl-dato-val-entrada strong {
@@ -719,40 +802,207 @@
     font-style: normal;
     color: #5b6678;
     font-size: 0.76rem;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.25;
 }
 
 .dl-dato-val-entrada em {
-    color: rgba(0, 45, 137, 0.58);
+    color: #61708c;
     font-size: 0.68rem;
 }
 
-.dl-dif-badge {
-    display: inline-flex;
+.dl-servicio-card {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-height: 28px;
-    padding: 0 12px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 900;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 14px;
+    background: #ffffff;
+    text-align: left;
 }
 
-.dl-dif-facil {
-    background: rgba(20, 128, 68, 0.12);
-    color: #148044;
+.dl-servicio-icono {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #eef3fb;
+    color: var(--dl-navy);
+    font-size: 1.1rem;
 }
 
-.dl-dif-moderada {
-    background: rgba(214, 154, 45, 0.14);
-    color: #a86500;
+.dl-servicio-icono img {
+    width: 24px;
+    height: 24px;
+    display: block;
+    object-fit: contain;
 }
 
-.dl-dif-dificil {
-    background: rgba(192, 57, 43, 0.12);
-    color: #b8322b;
+.dl-servicio-texto {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+    overflow-wrap: break-word;
+}
+
+.dl-servicio-texto strong {
+    color: #182033;
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.dl-servicio-texto small {
+    color: #61708c;
+    font-size: 0.74rem;
+    line-height: 1.35;
+}
+
+/* Tablet: tarjetas en filas que se reparten el ancho; servicios con ancho cómodo */
+@media (min-width: 768px) {
+    .dl-datos-grid,
+    .dl-servicios-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .dl-dato-card,
+    .dl-servicio-card {
+        flex: 1 1 150px;
+    }
+
+    .dl-servicio-card {
+        flex-basis: 220px;
+    }
+
+    .dl-dato-card {
+        grid-template-columns: auto minmax(0, 1fr);
+        padding: 12px;
+    }
+
+    .dl-dato-icon {
+        grid-row: 1 / span 2;
+    }
+
+    .dl-dato-label {
+        align-self: end;
+        margin-bottom: 2px;
+    }
+
+    .dl-dato-val {
+        align-self: start;
+    }
+}
+
+@media (min-width: 1200px) {
+    .dl-datos-cuerpo {
+        width: min(1080px, calc(100% - 64px));
+    }
+
+    .dl-datos-tabs {
+        width: auto;
+        gap: 10px;
+        margin-bottom: 32px;
+    }
+
+    .dl-datos-tab {
+        flex: 0 0 auto;
+        min-height: 46px;
+        gap: 8px;
+        padding: 0 24px;
+        font-size: 0.95rem;
+    }
+
+    .dl-datos-tab i {
+        font-size: 1rem;
+    }
+
+    .dl-tab-full {
+        display: inline;
+    }
+
+    .dl-tab-short {
+        display: none;
+    }
+
+    .dl-datos-grid,
+    .dl-servicios-grid {
+        gap: 20px;
+    }
+
+    /* Tres columnas; dos en «Horarios y acceso» */
+    .dl-dato-card,
+    .dl-servicio-card {
+        flex: 0 1 calc((100% - 40px) / 3);
+    }
+
+    .dl-datos-grid--2 .dl-dato-card {
+        flex-basis: calc((100% - 20px) / 2);
+    }
+
+    .dl-dato-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 22px;
+        border-radius: 18px;
+        text-align: center;
+    }
+
+    .dl-dato-icon {
+        width: 56px;
+        height: 56px;
+        margin-bottom: 16px;
+        border-radius: 16px;
+        font-size: 1.4rem;
+    }
+
+    .dl-dato-label {
+        align-self: auto;
+        margin-bottom: 8px;
+        font-size: 0.72rem;
+    }
+
+    .dl-dato-val {
+        align-self: auto;
+        font-size: 1.05rem;
+    }
+
+    .dl-dato-val-entrada small {
+        font-size: 0.82rem;
+    }
+
+    .dl-servicio-card {
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: 16px;
+    }
+
+    .dl-servicio-icono {
+        width: 52px;
+        height: 52px;
+        flex-basis: 52px;
+        border-radius: 14px;
+        font-size: 1.35rem;
+    }
+
+    .dl-servicio-icono img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .dl-servicio-texto strong {
+        font-size: 1rem;
+    }
+
+    .dl-servicio-texto small {
+        font-size: 0.84rem;
+    }
 }
 
 .dl-sec-cats {
@@ -875,21 +1125,12 @@
         margin-left: auto;
     }
 
-    .dl-datos-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .detalle-lugar {
         padding-bottom: 0;
     }
 }
 
 @media (max-width: 767.98px) {
-    .dl-crumb-bar {
-        display: block;
-        padding-top: var(--vi-header-height-mobile, 68px);
-    }
-
     .dl-banner {
         min-height: 760px;
         height: 100vh;
@@ -1038,37 +1279,6 @@
     .dl-section-datos {
         padding: 56px 0 62px;
     }
-
-    .dl-datos-grid {
-        width: calc(100% - 24px);
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-        margin-top: 34px;
-    }
-
-    .dl-dato-card {
-        min-height: 122px;
-        padding: 14px 7px;
-        border-radius: 15px;
-    }
-
-    .dl-dato-icon {
-        width: 36px;
-        height: 36px;
-        margin-bottom: 10px;
-        border-radius: 12px;
-        font-size: 0.9rem;
-    }
-
-    .dl-dato-label {
-        font-size: 0.52rem;
-        letter-spacing: 0.08em;
-    }
-
-    .dl-dato-val {
-        font-size: 0.68rem;
-        line-height: 1.25;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1102,44 +1312,12 @@
         width: 62px;
         height: 62px;
     }
-
-    .dl-datos-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 7px;
-    }
-
-    .dl-dato-card {
-        min-height: 116px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 12px 6px;
-    }
-
-    .dl-dato-icon {
-        grid-row: auto;
-        width: 34px;
-        height: 34px;
-        margin-bottom: 9px;
-    }
-
-    .dl-dato-label {
-        margin-bottom: 6px;
-        font-size: 0.48rem;
-    }
-
-    .dl-dato-val {
-        font-size: 0.64rem;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .dl-banner-scroll i,
     .dl-feature-media img,
-    .dl-icon-circle,
-    .dl-dato-card {
+    .dl-icon-circle {
         animation: none;
         transition: none;
     }

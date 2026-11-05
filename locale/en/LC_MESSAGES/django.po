@@ -5643,3 +5643,99 @@ msgstr "Recovery email resent."
 
 msgid "Espera a que termine el contador para volver a enviar el correo."
 msgstr "Wait for the countdown to finish before resending the email."
+
+msgid "Servicios y comodidades"
+msgstr "Services & amenities"
+
+msgid "Sin valoraciones"
+msgstr "No ratings"
+
+msgid "Aún no hay reseñas"
+msgstr "No reviews yet"
+
+msgid "Puntuación"
+msgstr "Rating"
+
+msgid "Rango de tarifas"
+msgstr "Rate range"
+
+msgid "Información esencial"
+msgstr "Essential information"
+
+msgid "Servicios y actividades"
+msgstr "Services & activities"
+
+msgid "Horarios y acceso"
+msgstr "Hours & admission"
+
+msgid "Información"
+msgstr "Info"
+
+msgid "Horarios"
+msgstr "Hours"
+
+msgid "Duración"
+msgstr "Duration"
+
+msgid "Visita estimada:"
+msgstr "Estimated visit:"
+
+msgid "Consultar tarifa"
+msgstr "Check rates"
+
+msgid "Descubrir lugar"
+msgstr "Discover place"
+
+msgid "Tarifa"
+msgstr "Rate"
+
+#, python-format
+msgid "Entrada desde S/ %(precio)s"
+msgstr "Admission from S/ %(precio)s"
+
+#, python-format
+msgid "Hasta S/ %(precio)s"
+msgstr "Up to S/ %(precio)s"
+
+msgid "Tarifa:"
+msgstr "Rate:"
+
+#, python-format
+msgid "%(n)s hora"
+msgid_plural "%(n)s horas"
+msgstr[0] "%(n)s hour"
+msgstr[1] "%(n)s hours"
+
+#, python-format
+msgid "%(n)s h"
+msgstr "%(n)s h"
+
+#, python-format
+msgid "%(n)s min"
+msgstr "%(n)s min"
+
+#, python-format
+msgid "%(a)s a %(b)s día"
+msgid_plural "%(a)s a %(b)s días"
+msgstr[0] "%(a)s to %(b)s day"
+msgstr[1] "%(a)s to %(b)s days"
+
+#, python-format
+msgid "%(a)s a %(b)s hora"
+msgid_plural "%(a)s a %(b)s horas"
+msgstr[0] "%(a)s to %(b)s hour"
+msgstr[1] "%(a)s to %(b)s hours"
+
+#, python-format
+msgid "%(a)s a %(b)s min"
+msgstr "%(a)s to %(b)s min"
+
+#, python-format
+msgid "%(a)s a %(b)s"
+msgstr "%(a)s to %(b)s"
+
+msgid "Recorrido estimado"
+msgstr "Estimated tour"
+
+msgid "Recorrido"
+msgstr "Tour"

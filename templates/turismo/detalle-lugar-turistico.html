@@ -28,23 +28,6 @@
 >
 
   {# ================================================================ #}
-  {# 1. BREADCRUMB MÓVIL                                             #}
-  {# ================================================================ #}
-  <div class="dl-crumb-bar">
-    <div class="container-xl">
-      <nav aria-label="{% translate "Ruta de navegación" %}">
-        <ol class="dl-crumb">
-          <li>
-            <a href="{% url 'turismo:listado_lugares' %}">{% translate "Lugares turísticos" %}</a>
-          </li>
-          <li><span class="dl-crumb-sep">›</span></li>
-          <li><span class="dl-crumb-cur">{{ lugar.nombre }}</span></li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-
-  {# ================================================================ #}
   {# 2. HERO                                                         #}
   {# ================================================================ #}
   <section class="dl-banner" id="dl-top" aria-label="{{ lugar.nombre }}">
@@ -438,100 +421,131 @@
 
       <h2 class="dl-section-title" id="dl-datos-title" data-animar="animate__fadeInUp">{% translate "Datos del lugar" %}</h2>
 
-      <div class="dl-datos-grid animar-delay-1" aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Ficha técnica de {{ nombre }}{% endblocktranslate %}" data-animar="animate__fadeInUp">
+      {% with servicios=lugar.servicios.all %}
+      <div class="dl-datos-cuerpo animar-delay-1" aria-label="{% blocktranslate trimmed with nombre=lugar.nombre %}Ficha técnica de {{ nombre }}{% endblocktranslate %}" data-animar="animate__fadeInUp">
 
-        {% if lugar.categoria_principal %}
-        <div class="dl-dato-card">
-          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-tag-fill"></i></div>
-          <p class="dl-dato-label">{% translate "Categoría" %}</p>
-          <p class="dl-dato-val">{{ lugar.categoria_principal.nombre }}</p>
+        {# Pestañas en todas las resoluciones; etiqueta corta (con icono) por debajo de 1200 px, completa en escritorio. #}
+        <div class="dl-datos-tabs" role="tablist" aria-label="{% translate "Datos del lugar" %}" data-dl-tabs>
+          <button type="button" class="dl-datos-tab is-active" role="tab" id="dl-tab-esencial" aria-controls="dl-panel-esencial" aria-selected="true"><i class="bi bi-info-circle-fill" aria-hidden="true"></i><span class="dl-tab-full">{% translate "Información esencial" %}</span><span class="dl-tab-short">{% translate "Información" %}</span></button>
+          {% if servicios %}
+          <button type="button" class="dl-datos-tab" role="tab" id="dl-tab-servicios" aria-controls="dl-panel-servicios" aria-selected="false" tabindex="-1"><i class="bi bi-stars" aria-hidden="true"></i><span class="dl-tab-full">{% translate "Servicios y actividades" %}</span><span class="dl-tab-short">{% translate "Servicios" %}</span></button>
+          {% endif %}
+          <button type="button" class="dl-datos-tab" role="tab" id="dl-tab-acceso" aria-controls="dl-panel-acceso" aria-selected="false" tabindex="-1"><i class="bi bi-clock-fill" aria-hidden="true"></i><span class="dl-tab-full">{% translate "Horarios y acceso" %}</span><span class="dl-tab-short">{% translate "Horarios" %}</span></button>
         </div>
-        {% endif %}
 
-        {% if ubicacion_resumen %}
-        <div class="dl-dato-card">
-          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-geo-alt-fill"></i></div>
-          <p class="dl-dato-label">{% translate "Ubicación" %}</p>
-          <p class="dl-dato-val">{{ ubicacion_resumen }}</p>
-        </div>
-        {% endif %}
+        <div class="dl-datos-panel is-active" role="tabpanel" id="dl-panel-esencial" aria-labelledby="dl-tab-esencial">
+          <div class="dl-datos-grid">
 
-        {% if lugar.dificultad and lugar.dificultad != 'no_aplica' %}
-        <div class="dl-dato-card">
-          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-bar-chart-fill"></i></div>
-          <p class="dl-dato-label">{% translate "Dificultad" %}</p>
-          <p class="dl-dato-val">
-            <span class="dl-dif-badge dl-dif-{{ lugar.dificultad }}">
-              {% if lugar.dificultad == 'facil' %}<i class="bi bi-check-circle-fill" aria-hidden="true"></i>{% endif %}
-              {% if lugar.dificultad == 'moderada' %}<i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>{% endif %}
-              {% if lugar.dificultad == 'dificil' %}<i class="bi bi-x-circle-fill" aria-hidden="true"></i>{% endif %}
-              {% translate lugar.get_dificultad_display %}
-            </span>
-          </p>
-        </div>
-        {% endif %}
-
-        {% if lugar.tiempo_visita_estimado %}
-        <div class="dl-dato-card">
-          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-clock-fill"></i></div>
-          <p class="dl-dato-label">{% translate "Duración estimada" %}</p>
-          <p class="dl-dato-val">{{ lugar.tiempo_visita_estimado }}</p>
-        </div>
-        {% endif %}
-
-        {% if lugar.horario_visita %}
-        <div class="dl-dato-card">
-          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-calendar3"></i></div>
-          <p class="dl-dato-label">{% translate "Horario" %}</p>
-          <p class="dl-dato-val">{{ lugar.horario_visita }}</p>
-        </div>
-        {% endif %}
-
-        <div class="dl-dato-card dl-dato-card--entrada">
-          <div class="dl-dato-icon" aria-hidden="true"><i class="bi bi-ticket-perforated-fill"></i></div>
-          <p class="dl-dato-label">{% translate "Entrada" %}</p>
-          <div class="dl-dato-val dl-dato-val-entrada{% if lugar.tipo_costo == 'no_requiere' or lugar.tipo_costo == 'gratis' %} free{% endif %}">
-            {% if lugar.tipo_costo == 'no_requiere' %}
-              <strong>{% translate "Acceso libre" %}</strong>
-            {% elif lugar.tipo_costo == 'gratis' %}
-              <strong>{% translate "Ingreso gratuito" %}</strong>
-            {% elif lugar.tipo_costo == 'pagado' %}
-              {% if lugar.precio_desde and lugar.precio_hasta %}
-                {% if lugar.precio_desde == lugar.precio_hasta %}
-                  <strong>S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
-                {% else %}
-                  <strong>S/. {{ lugar.precio_desde|floatformat:0 }} — S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
-                {% endif %}
-              {% elif lugar.precio_desde %}
-                <strong>{% translate "Desde" %} S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
-              {% elif lugar.precio_hasta %}
-                <strong>{% translate "Hasta" %} S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
-              {% else %}
-                <strong>{% translate "Consultar" %}</strong>
-              {% endif %}
-
-              {% if entrada_usd_disponible %}
-              <small>
-                ≈
-                {% if lugar.precio_desde and lugar.precio_hasta and lugar.precio_desde == lugar.precio_hasta and precio_desde_usd_txt %}
-                  US$ {{ precio_desde_usd_txt }}
-                {% elif precio_desde_usd_txt and precio_hasta_usd_txt %}
-                  US$ {{ precio_desde_usd_txt }} — US$ {{ precio_hasta_usd_txt }}
-                {% elif precio_desde_usd_txt %}
-                  US$ {{ precio_desde_usd_txt }}
-                {% elif precio_hasta_usd_txt %}
-                  US$ {{ precio_hasta_usd_txt }}
-                {% endif %}
-              </small>
-              <em>{% translate "TC" %} S/. {{ tipo_cambio_venta_txt }} · {{ fecha_tipo_cambio_txt }}</em>
-              {% endif %}
-            {% else %}
-              <strong>{% translate "Consultar" %}</strong>
+            {% if lugar.categoria_principal %}
+            <div class="dl-dato-card">
+              <div class="dl-dato-icon dl-dato-icon--categoria" aria-hidden="true"><img src="{% static 'assets/img/icon-lugarturistico/categoria.svg' %}" alt=""></div>
+              <p class="dl-dato-label">{% translate "Categoría" %}</p>
+              <p class="dl-dato-val">{{ lugar.categoria_principal.nombre }}</p>
+            </div>
             {% endif %}
+
+            {% if lugar.tiempo_visita_texto %}
+            <div class="dl-dato-card">
+              <div class="dl-dato-icon dl-dato-icon--duracion" aria-hidden="true"><img src="{% static 'assets/img/icon-lugarturistico/recorrido.svg' %}" alt=""></div>
+              <p class="dl-dato-label"><span class="dl-label-full">{% translate "Recorrido estimado" %}</span><span class="dl-label-short">{% translate "Recorrido" %}</span></p>
+              <p class="dl-dato-val">{{ lugar.tiempo_visita_texto }}</p>
+            </div>
+            {% endif %}
+
+            {% if ubicacion_resumen %}
+            <div class="dl-dato-card">
+              <div class="dl-dato-icon dl-dato-icon--ubicacion" aria-hidden="true"><img src="{% static 'assets/img/icon-lugarturistico/locacion.svg' %}" alt=""></div>
+              <p class="dl-dato-label">{% translate "Ubicación" %}</p>
+              <p class="dl-dato-val">{{ ubicacion_resumen }}</p>
+            </div>
+            {% endif %}
+
+          </div>
+        </div>
+
+        {% if servicios %}
+        <div class="dl-datos-panel" role="tabpanel" id="dl-panel-servicios" aria-labelledby="dl-tab-servicios">
+          <ul class="dl-servicios-grid">
+            {% for servicio in servicios %}
+            <li class="dl-servicio-card">
+              <span class="dl-servicio-icono" aria-hidden="true">
+                {% if servicio.tipo_icono == "imagen" and servicio.icono_archivo %}
+                <img src="{{ servicio.icono_archivo.url }}" alt="">
+                {% elif servicio.icono_bootstrap %}
+                <i class="bi {{ servicio.icono_bootstrap }}"></i>
+                {% else %}
+                <i class="bi bi-check2-circle"></i>
+                {% endif %}
+              </span>
+              <span class="dl-servicio-texto">
+                <strong>{{ servicio.nombre }}</strong>
+                {% if servicio.descripcion %}<small>{{ servicio.descripcion }}</small>{% endif %}
+              </span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <div class="dl-datos-panel" role="tabpanel" id="dl-panel-acceso" aria-labelledby="dl-tab-acceso">
+          <div class="dl-datos-grid dl-datos-grid--2">
+
+            {% if lugar.horario_visita %}
+            <div class="dl-dato-card">
+              <div class="dl-dato-icon dl-dato-icon--horario" aria-hidden="true"><img src="{% static 'assets/img/icon-lugarturistico/horario.svg' %}" alt=""></div>
+              <p class="dl-dato-label">{% translate "Horario" %}</p>
+              <p class="dl-dato-val">{{ lugar.horario_visita }}</p>
+            </div>
+            {% endif %}
+
+            <div class="dl-dato-card dl-dato-card--entrada">
+              <div class="dl-dato-icon dl-dato-icon--entrada" aria-hidden="true"><img src="{% static 'assets/img/icon-lugarturistico/entrada.svg' %}" alt=""></div>
+              <p class="dl-dato-label">{% translate "Entrada" %}</p>
+              <div class="dl-dato-val dl-dato-val-entrada{% if lugar.tipo_costo == 'no_requiere' or lugar.tipo_costo == 'gratis' %} free{% endif %}">
+                {% if lugar.tipo_costo == 'no_requiere' %}
+                  <strong>{% translate "Acceso libre" %}</strong>
+                {% elif lugar.tipo_costo == 'gratis' %}
+                  <strong>{% translate "Ingreso gratuito" %}</strong>
+                {% elif lugar.tipo_costo == 'pagado' %}
+                  {% if lugar.precio_desde and lugar.precio_hasta %}
+                    {% if lugar.precio_desde == lugar.precio_hasta %}
+                      <strong>S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
+                    {% else %}
+                      <strong>S/. {{ lugar.precio_desde|floatformat:0 }} — S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
+                    {% endif %}
+                  {% elif lugar.precio_desde %}
+                    <strong>{% translate "Desde" %} S/. {{ lugar.precio_desde|floatformat:0 }}</strong>
+                  {% elif lugar.precio_hasta %}
+                    <strong>{% translate "Hasta" %} S/. {{ lugar.precio_hasta|floatformat:0 }}</strong>
+                  {% else %}
+                    <strong>{% translate "Consultar" %}</strong>
+                  {% endif %}
+
+                  {% if entrada_usd_disponible %}
+                  <small>
+                    ≈
+                    {% if lugar.precio_desde and lugar.precio_hasta and lugar.precio_desde == lugar.precio_hasta and precio_desde_usd_txt %}
+                      US$ {{ precio_desde_usd_txt }}
+                    {% elif precio_desde_usd_txt and precio_hasta_usd_txt %}
+                      US$ {{ precio_desde_usd_txt }} — US$ {{ precio_hasta_usd_txt }}
+                    {% elif precio_desde_usd_txt %}
+                      US$ {{ precio_desde_usd_txt }}
+                    {% elif precio_hasta_usd_txt %}
+                      US$ {{ precio_hasta_usd_txt }}
+                    {% endif %}
+                  </small>
+                  <em>{% translate "TC" %} S/. {{ tipo_cambio_venta_txt }} · {{ fecha_tipo_cambio_txt }}</em>
+                  {% endif %}
+                {% else %}
+                  <strong>{% translate "Consultar" %}</strong>
+                {% endif %}
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
+      {% endwith %}
 
       {% if lugar.categorias_secundarias.all %}
       <div class="dl-sec-cats" aria-label="{% translate "Categorías adicionales" %}">
